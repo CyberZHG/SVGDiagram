@@ -1,5 +1,6 @@
 #include "svg_draw.h"
 #include "svg_text_size.h"
+#include "attribute_utils.h"
 
 #include <format>
 #include <regex>
@@ -216,4 +217,43 @@ string SVGDrawLine::render() const {
 
 SVGDrawBoundingBox SVGDrawLine::boundingBox() const {
     return {x1, y1, x2, y2};
+}
+
+SVGDrawPath::SVGDrawPath(const string& d) {
+    this->d = d;
+}
+
+string SVGDrawPath::render() const {
+    const auto commands = AttributeUtils::parseDCommands(d);
+    string reformat;
+    for (int i = 0; i < commands.size(); ++i) {
+        const auto& [command, parameters] = commands[i];
+        if (i > 0) {
+            reformat += ' ';
+        }
+        reformat += command;
+        for (const auto& parameter : parameters) {
+            reformat += format(" {}", formatDouble(parameter));
+        }
+    }
+    string svg = format(R"(<path d="{}")", reformat);
+    svg += renderAttributes();
+    svg += " />\n";
+    return svg;
+}
+
+SVGDrawBoundingBox SVGDrawPath::boundingBox() const {
+    double xMin = 0.0, yMin = 0.0, xMax = 0.0, yMax = 0.0;
+    const auto commands = AttributeUtils::parseDCommands(d);
+    if (const auto points = AttributeUtils::computeDPathPoints(commands); !points.empty()) {
+        xMin = xMax = points[0].first;
+        yMin = yMax = points[0].second;
+        for (const auto&[x, y] : points) {
+            xMin = min(xMin, x);
+            yMin = min(yMin, y);
+            xMax = max(xMax, x);
+            yMax = max(yMax, y);
+        }
+    }
+    return {xMin, yMin, xMax, yMax};
 }

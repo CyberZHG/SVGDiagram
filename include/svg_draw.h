@@ -143,6 +143,17 @@ namespace svg_diagram {
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
     };
 
+    class SVGDrawPath final : public SVGDrawEntity {
+    public:
+        using SVGDrawEntity::SVGDrawEntity;
+        explicit SVGDrawPath(const std::string& d);
+
+        std::string d;
+
+        [[nodiscard]] std::string render() const override;
+        [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
+    };
+
 }
 
 #endif //SVGDIAGRAM_SVG_DRAW_H

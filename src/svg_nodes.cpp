@@ -238,6 +238,9 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDraws(const NodesMapping& nodes) 
     if (splines == EDGE_SPLINES_LINE) {
         return produceSVGDrawsLine(nodes);
     }
+    if (splines == EDGE_SPLINES_SPLINE) {
+        return produceSVGDrawsSpline(nodes);
+    }
     return {};
 }
 
@@ -261,6 +264,47 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
     }
     for (const auto& line : svgDraws) {
         dynamic_cast<SVGDrawLine*>(line.get())->setStroke("black");
+    }
+    return svgDraws;
+}
+
+vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& nodes) {
+    const auto& nodeFrom = nodes.at(_nodeFrom);
+    const auto& nodeTo = nodes.at(_nodeTo);
+    vector<unique_ptr<SVGDraw>> svgDraws;
+    if (_connectionPoints.empty()) {
+        const auto [x1, y1] = nodeFrom->computeConnectionPoint(nodeTo->center());
+        const auto [x2, y2] = nodeTo->computeConnectionPoint(nodeFrom->center());
+        auto line = make_unique<SVGDrawLine>(x1, y1, x2, y2);
+        line->setStroke("black");
+        svgDraws.emplace_back(std::move(line));
+    } else {
+        vector<pair<double, double>> points;
+        auto [sx, sy] = nodeFrom->computeConnectionPoint(_connectionPoints[0]);
+        points.emplace_back(sx, sy);
+        points.emplace_back(sx, sy);
+        for (const auto [x, y] : _connectionPoints) {
+            points.emplace_back(x, y);
+        }
+        auto [ex, ey] = nodeTo->computeConnectionPoint(_connectionPoints[_connectionPoints.size() - 1]);
+        points.emplace_back(ex, ey);
+        points.emplace_back(ex, ey);
+        auto d = format("M {} {}", points[1].first, points[1].second);
+        for (int i = 1; i + 2 < points.size(); ++i) {
+            const auto [x0, y0] = points[i - 1];
+            const auto [x1, y1] = points[i];
+            const auto [x2, y2] = points[i + 1];
+            const auto [x3, y3] = points[i + 2];
+            const double c1x = x1 + (x2 - x0) / 6.0;
+            const double c1y = y1 + (y2 - y0) / 6.0;
+            const double c2x = x2 - (x3 - x1) / 6.0;
+            const double c2y = y2 - (y3 - y1) / 6.0;
+            d += format(" C {} {} {} {} {} {}", c1x, c1y, c2x, c2y, x2, y2);
+        }
+        auto path = make_unique<SVGDrawPath>(d);
+        path->setStroke("black");
+        path->setFill("none");
+        svgDraws.emplace_back(std::move(path));
     }
     return svgDraws;
 }

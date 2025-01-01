@@ -87,7 +87,8 @@ namespace svg_diagram {
         SVGEdge(const std::string& idFrom, const std::string& idTo);
 
         static constexpr std::string_view EDGE_SPLINES_LINE = "line";
-        static constexpr std::string_view EDGE_SPLINES_DEFAULT = EDGE_SPLINES_LINE;
+        static constexpr std::string_view EDGE_SPLINES_SPLINE = "spline";
+        static constexpr std::string_view EDGE_SPLINES_DEFAULT = EDGE_SPLINES_SPLINE;
 
         using NodesMapping = std::unordered_map<std::string, std::unique_ptr<SVGNode>>;
 
@@ -107,6 +108,7 @@ namespace svg_diagram {
         std::vector<std::pair<double, double>> _connectionPoints;
 
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsLine(const NodesMapping& nodes);
+        std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsSpline(const NodesMapping& nodes);
     };
 
 }

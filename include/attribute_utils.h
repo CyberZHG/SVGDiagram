@@ -2,6 +2,7 @@
 #define SVGDIAGRAM_ATTRIBUTE_UTILS_H
 
 #include <string>
+#include <vector>
 
 namespace svg_diagram {
 
@@ -13,6 +14,10 @@ namespace svg_diagram {
         static std::pair<double, double> parseMarginToPixels(const std::string& margin);
 
         static bool parseBool(const std::string& value);
+
+        using DCommands = std::vector<std::pair<char, std::vector<double>>>;
+        static DCommands parseDCommands(const std::string& d);
+        static std::vector<std::pair<double, double>> computeDPathPoints(const DCommands& commands);
     };
 
 }

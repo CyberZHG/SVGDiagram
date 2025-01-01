@@ -83,6 +83,7 @@ PYBIND11_MODULE(_core, m, py::mod_gil_not_used()) {
     ;
     py::class_<SVGDiagram>(m, "SVGDiagram")
         .def(py::init<>())
+        .def("set_background_color", &SVGDiagram::setBackgroundColor)
         .def("add_node", py::overload_cast<const string&>(&SVGDiagram::addNode))
         .def("add_edge", py::overload_cast<const string&, const string&>(&SVGDiagram::addEdge))
         .def("add_subgraph", py::overload_cast<const string&>(&SVGDiagram::addSubgraph))

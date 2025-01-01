@@ -87,6 +87,7 @@ EMSCRIPTEN_BINDINGS(SVGDiagramWASM) {
     ;
     class_<SVGDiagram>("SVGDiagram")
         .constructor<>()
+        .function("setBackgroundColor", &SVGDiagram::setBackgroundColor)
         .function("addNode", select_overload<const shared_ptr<SVGNode>&(const string&)>(&SVGDiagram::addNode))
         .function("addEdge", select_overload<const shared_ptr<SVGEdge>&(const string&, const string&)>(&SVGDiagram::addEdge))
         .function("addSubgraph", select_overload<const shared_ptr<SVGGraph>&(const string&)>(&SVGDiagram::addSubgraph))

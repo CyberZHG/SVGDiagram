@@ -88,6 +88,7 @@ def test_color():
     svg = diagram.render()
     compare_svg("node_attr", "color", svg)
 
+
 def test_pen_width():
     diagram = SVGDiagram()
     for i in range(3):

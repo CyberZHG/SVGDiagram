@@ -128,6 +128,7 @@ if(SVG_DIAGRAM_ENABLE_TESTS)
             tests/svg_node/test_double_circle.cpp
             tests/test_svg_diagram.cpp
             tests/svg_edge/test_arrow_empty.cpp
+            tests/docs/test_concept.cpp
     )
 
     target_link_libraries(runTests

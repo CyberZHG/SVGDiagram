@@ -132,3 +132,53 @@ TEST(TestSVGNodeEllipse, FillGradientColor3) {
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
+
+TEST(TestSVGNodeEllipse, FillColorSegment2) {
+    SVGDiagram diagram;
+    const auto node = diagram.addNode("A");
+    node->setShape(SVGNode::SHAPE_ELLIPSE);
+    node->setMargin(8, 4);
+    node->setColor("none");
+    node->setFillColor("red;0.4:gold");
+    const auto svg = diagram.render();
+    const auto expected = R"s(<!-- Node: A -->
+<g class="node" id="A">
+  <title>A</title>
+  <defs>
+    <linearGradient id="A__fill_color">
+      <stop offset="39.9999%" stop-color="red"/>
+      <stop offset="40%" stop-color="gold"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="0" cy="0" rx="16.263455967290593" ry="15.556349186104047" fill="url('#A__fill_color')" stroke="none"/>
+</g>)s";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodeEllipse, FillColorSegment3) {
+    SVGDiagram diagram;
+    const auto node = diagram.addNode("A");
+    node->setShape(SVGNode::SHAPE_ELLIPSE);
+    node->setMargin(8, 4);
+    node->setColor("none");
+    node->setFillColor("red:gold;.2:#FF00FF88");
+    const auto svg = diagram.render();
+    const auto expected = R"s(<!-- Node: A -->
+<g class="node" id="A">
+  <title>A</title>
+  <defs>
+    <linearGradient id="A__fill_color">
+      <stop offset="39.9999%" stop-color="red"/>
+      <stop offset="40%" stop-color="gold"/>
+      <stop offset="59.9999%" stop-color="gold"/>
+      <stop offset="60%" stop-color="#FF00FF" stop-opacity="0.5333333333333333"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="0" cy="0" rx="16.263455967290593" ry="15.556349186104047" fill="url('#A__fill_color')" stroke="none"/>
+</g>)s";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}

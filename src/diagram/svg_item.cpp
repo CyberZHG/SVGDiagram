@@ -279,23 +279,34 @@ void SVGItem::setFillStyles(SVGDraw* draw, vector<unique_ptr<SVGDraw>>& svgDraws
                 }
             }
         } else if (colorList.size() > 1) {
+            vector<unique_ptr<SVGDraw>> stops;
             if (const auto& firstColor = colorList[0]; firstColor.weight < 0.0) {
                 // Linear gradient
-                vector<unique_ptr<SVGDraw>> stops;
                 const double offset = 1.0 / static_cast<double>(colorList.size() - 1);
                 for (int i = 0; i < static_cast<int>(colorList.size()); ++i) {
                     const auto& color = colorList[i];
                     stops.emplace_back(make_unique<SVGDrawStop>(i * offset, color.color, color.opacity));
                 }
-                const auto gradientID = id() + "__fill_color";
-                auto linearGradient = make_unique<SVGDrawLinearGradient>(stops);
-                linearGradient->setID(gradientID);
-                auto defs = make_unique<SVGDrawDefs>(std::move(linearGradient));
-                svgDraws.emplace_back(std::move(defs));
-                draw->setFill(format("url('#{}')", gradientID));
             } else {
                 // Color segments
+                double last = 0.0;
+                for (int i = 0; i < static_cast<int>(colorList.size()); ++i) {
+                    const auto&[color, opacity, weight] = colorList[i];
+                    if (i > 0) {
+                        stops.emplace_back(make_unique<SVGDrawStop>(last, color, opacity));
+                    }
+                    last += weight;
+                    if (i + 1 < static_cast<int>(colorList.size())) {
+                        stops.emplace_back(make_unique<SVGDrawStop>(last - 1e-6, color, opacity));
+                    }
+                }
             }
+            const auto gradientID = id() + "__fill_color";
+            auto linearGradient = make_unique<SVGDrawLinearGradient>(stops);
+            linearGradient->setID(gradientID);
+            auto defs = make_unique<SVGDrawDefs>(std::move(linearGradient));
+            svgDraws.emplace_back(std::move(defs));
+            draw->setFill(format("url('#{}')", gradientID));
         }
     }
 }

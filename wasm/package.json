@@ -1,10 +1,12 @@
 {
   "name": "sp-svg-diagram",
-  "version": "1.2.3",
+  "version": "1.2.6",
   "type": "module",
   "main": "index.js",
+  "types": "index.d.ts",
   "files": [
     "index.js",
+    "index.d.ts",
     "wasm/SVGDiagramWASM.js",
     "wasm/SVGDiagramWASM.wasm"
   ],

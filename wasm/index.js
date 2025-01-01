@@ -35,6 +35,7 @@ const createSVGEdge = SVGDiagramWASM.createSVGEdge;
  */
 const createSVGGraph = SVGDiagramWASM.createSVGGraph;
 const SVGDiagram = SVGDiagramWASM.SVGDiagram;
+const SVGItem = SVGDiagramWASM.SVGItem;
 const SVGNode = SVGDiagramWASM.SVGNode;
 const SVGEdge = SVGDiagramWASM.SVGEdge;
 const SVGGraph = SVGDiagramWASM.SVGGraph;
@@ -75,6 +76,7 @@ export {
     createSVGEdge,
     createSVGGraph,
     SVGDiagram,
+    SVGItem,
     SVGNode,
     SVGEdge,
     SVGGraph,

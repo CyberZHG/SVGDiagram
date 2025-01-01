@@ -2,6 +2,14 @@
 using namespace std;
 using namespace svg_diagram;
 
+double AttributeUtils::pointToSVGPixel(const double points) {
+    return points / POINTS_PER_INCH * SVG_DEFAULT_DPI;
+}
+
+double AttributeUtils::inchToSVGPixel(const double inch) {
+    return inch * SVG_DEFAULT_DPI;
+}
+
 pair<double, double> AttributeUtils::parseMargin(const string& margin) {
     if (const auto pos = margin.find(','); pos != string::npos) {
         const string left  = margin.substr(0, pos);
@@ -14,7 +22,7 @@ pair<double, double> AttributeUtils::parseMargin(const string& margin) {
 
 pair<double, double> AttributeUtils::parseMarginToPixels(const string& margin) {
     const auto [width, height] = parseMargin(margin);
-    return {width * SVG_DEFAULT_DPI, height * SVG_DEFAULT_DPI};
+    return {inchToSVGPixel(width), inchToSVGPixel(height)};
 }
 
 bool AttributeUtils::parseBool(const string& value) {

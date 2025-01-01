@@ -1,4 +1,5 @@
 #include "svg_text_size.h"
+#include "attribute_utils.h"
 
 #include <format>
 
@@ -42,7 +43,7 @@ pair<double, double> SVGTextSize::computeTextSize(const string& text, const doub
 #endif
 }
 
-pair<double, double> SVGTextSize::computeApproximateTextSize(const string& text, const double fontSize) const {
+pair<double, double> SVGTextSize::computeApproximateTextSize(const string& text, double fontSize) const {
     if (text.empty()) {
         return {0.0, 0.0};
     }
@@ -60,6 +61,7 @@ pair<double, double> SVGTextSize::computeApproximateTextSize(const string& text,
             ++numCharsInLine;
         }
     }
+    fontSize = AttributeUtils::pointToSVGPixel(fontSize);
     maxCharsInLine = max(maxCharsInLine, numCharsInLine);
     const double approximateHeight = fontSize * (numLines * _heightScale + (numLines - 1) * _lineSpacingScale);
     const double approximateWidth = fontSize * (maxCharsInLine * _widthScale);

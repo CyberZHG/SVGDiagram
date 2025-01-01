@@ -6,10 +6,14 @@
 
 namespace svg_diagram {
 
+    constexpr int POINTS_PER_INCH = 72;
     constexpr int SVG_DEFAULT_DPI = 96;
 
     class AttributeUtils {
     public:
+        static double pointToSVGPixel(double points);
+        static double inchToSVGPixel(double inch);
+
         static std::pair<double, double> parseMargin(const std::string& margin);
         static std::pair<double, double> parseMarginToPixels(const std::string& margin);
 

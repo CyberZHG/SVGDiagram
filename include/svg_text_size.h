@@ -25,7 +25,7 @@ namespace svg_diagram {
          * If PangoCairo is enabled, the text is rendered for precise measurement.
          *
          * @param text Text.
-         * @param fontSize Font size.
+         * @param fontSize Font size in pt.
          * @param fontName Font family.
          * @return Width and height.
          */
@@ -35,7 +35,7 @@ namespace svg_diagram {
          * based on the number of lines and the maximum number of characters per line.
          *
          * @param text Text.
-         * @param fontSize Font size.
+         * @param fontSize Font size in pt.
          * @return Width and height.
          */
         [[nodiscard]] std::pair<double, double> computeApproximateTextSize(const std::string& text, double fontSize) const;

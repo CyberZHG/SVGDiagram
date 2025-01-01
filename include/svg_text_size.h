@@ -4,7 +4,7 @@
 
 namespace svg_diagram {
 
-    class SVGTextSize {
+    class SVGTextSize final {
     public:
         SVGTextSize() = default;
         ~SVGTextSize() = default;

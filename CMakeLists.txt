@@ -14,6 +14,12 @@ add_library(SVGDiagram STATIC
         src/svg_diagram.cpp
         include/svg_text_size.h
         src/svg_text_size.cpp
+        include/svg_nodes.h
+        src/svg_nodes.cpp
+        include/attribute_utils.h
+        src/attribute_utils.cpp
+        include/svg_draw.h
+        src/svg_draw.cpp
 )
 
 target_include_directories(SVGDiagram
@@ -67,6 +73,8 @@ if(SVG_DIAGRAM_BUILD_TESTS)
     add_executable(runTests
             tests/test_main.cpp
             tests/test_svg_text_size.cpp
+            tests/test_attribute_utils.cpp
+            tests/svg_draw/test_comment.cpp
     )
 
     target_link_libraries(runTests

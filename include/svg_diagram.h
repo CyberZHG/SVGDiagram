@@ -1,7 +1,31 @@
 #ifndef SVGDIAGRAM_SVG_DIAGRAM_H
 #define SVGDIAGRAM_SVG_DIAGRAM_H
 
+#include <vector>
+
+#include "svg_draw.h"
+
 namespace svg_diagram {
+
+    class SVGDiagram final {
+    public:
+        SVGDiagram();
+        ~SVGDiagram() = default;
+
+        static constexpr double DEFAULT_MARGIN = 10;
+
+        [[nodiscard]] std::string render() const;
+        void render(const std::string& filePath) const;
+
+    private:
+        std::vector<std::unique_ptr<SVGDraw>> _svgDraws;
+        double _width = 0.0;
+        double _height = 0.0;
+        std::pair<double, double> _margin = {DEFAULT_MARGIN, DEFAULT_MARGIN};
+
+        [[nodiscard]] std::string generateSVGOpen() const;
+        [[nodiscard]] std::string generateSVGClose() const;
+    };
 
 }
 

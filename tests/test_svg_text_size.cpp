@@ -14,36 +14,39 @@ TEST(TestTextSizeApproximation, EmptyText) {
 TEST(TestTextSizeApproximation, SpecialCase1) {
     const SVGTextSize textSize;
     auto [width, height] =  textSize.computeApproximateTextSize("A", 16);
-    EXPECT_EQ(width, 16 * 0.6);
+    EXPECT_EQ(width, 16 * textSize.widthScale());
     EXPECT_EQ(height, 16);
 }
 
 TEST(TestTextSizeApproximation, SpecialCase2) {
     const SVGTextSize textSize;
     auto [width, height] =  textSize.computeApproximateTextSize("ABC", 16);
-    EXPECT_EQ(width, 16 * 0.6 * 3);
-    EXPECT_EQ(height, 16);
+    EXPECT_EQ(width, 16 * 3 * textSize.widthScale());
+    EXPECT_EQ(height, 16 * textSize.heightScale());
 }
 
 TEST(TestTextSizeApproximation, SpecialCase3) {
     const SVGTextSize textSize;
     auto [width, height] =  textSize.computeApproximateTextSize("\nABC", 16);
-    EXPECT_EQ(width, 16 * 0.6 * 3);
-    EXPECT_EQ(height, 16 * (2 + 0.2));
+    EXPECT_EQ(width, 16 * 3 * textSize.widthScale());
+    EXPECT_EQ(height, 16 * (2 * textSize.heightScale() + 1 * textSize.lineSpacingScale()));
 }
 
 TEST(TestTextSizeApproximation, SpecialCase4) {
-    const SVGTextSize textSize;
-    auto [width, height] =  textSize.computeApproximateTextSize("ABC\r", 16);
-    EXPECT_EQ(width, 16 * 0.6 * 3);
-    EXPECT_EQ(height, 16 * (2 + 0.2));
+    SVGTextSize textSize;
+    textSize.setHeightScale(1.2);
+    textSize.setWidthScale(0.8);
+    textSize.setLineSpacingScale(0.15);
+    auto [width, height] =  textSize.computeApproximateTextSize("ABC\r", 32);
+    EXPECT_EQ(width, 32 * 3 * textSize.widthScale());
+    EXPECT_EQ(height, 32 * (2 * textSize.heightScale() + 1 * textSize.lineSpacingScale()));
 }
 
 TEST(TestTextSizeApproximation, SpecialCase5) {
     const SVGTextSize textSize;
     auto [width, height] =  textSize.computeApproximateTextSize("\n\r\r\n", 32);
     EXPECT_EQ(width, 0);
-    EXPECT_EQ(height, 32 * (4 + 3 * 0.2));
+    EXPECT_EQ(height, 32 * (4 * textSize.heightScale() + 3 * textSize.lineSpacingScale()));
 }
 
 #ifdef SVG_DIAGRAM_ENABLE_PANGO_CAIRO

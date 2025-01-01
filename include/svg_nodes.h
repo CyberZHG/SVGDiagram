@@ -76,6 +76,7 @@ namespace svg_diagram {
         [[nodiscard]] std::pair<double, double> computeTextSizeWithMargin();
 
         void setStrokeStyles(SVGDraw* draw) const;
+        void setFillStyles(SVGDraw* draw) const;
 
     private:
         SVGGraph* _parent = nullptr;

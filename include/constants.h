@@ -58,6 +58,8 @@ namespace svg_diagram {
     constexpr std::string_view SVG_ATTR_KEY_OFFSET = "offset";
     constexpr std::string_view SVG_ATTR_KEY_STOP_COLOR = "stop-color";
     constexpr std::string_view SVG_ATTR_KEY_STOP_OPACITY = "stop-opacity";
+
+    constexpr std::string_view SVG_ATTR_COLOR_NONE = "none";
 }
 
 #endif //SVGDIAGRAM_CONSTANTS_H

@@ -252,17 +252,33 @@ void SVGItem::setStrokeStyles(SVGDraw* draw) const {
     if (const auto colorList = AttributeUtils::parseColorList(color()); !colorList.empty()) {
         const auto& color = colorList[0];
         draw->setStroke(color.color);
-        if (color.opacity < 1.0) {
-            draw->setStrokeOpacity(color.opacity);
+        if (color.color != SVG_ATTR_COLOR_NONE) {
+            if (0.0 <= color.opacity && color.opacity < 1.0) {
+                draw->setStrokeOpacity(color.opacity);
+            }
+            if (const auto strokeWidth = penWidth(); strokeWidth != 1.0) {
+                draw->setStrokeWidth(strokeWidth);
+            }
         }
-    }
-    if (const auto strokeWidth = penWidth(); strokeWidth != 1.0) {
-        draw->setStrokeWidth(strokeWidth);
     }
     if (const auto parsedStyle = style(); parsedStyle.dashed) {
         draw->setStrokeDashArray("5,2");
     } else if (parsedStyle.dotted) {
         draw->setStrokeDashArray("1,5");
+    }
+}
+
+void SVGItem::setFillStyles(SVGDraw* draw) const {
+    if (const auto colorList = AttributeUtils::parseColorList(fillColor()); !colorList.empty()) {
+        if (colorList.size() == 1) {
+            const auto& color = colorList[0];
+            draw->setFill(color.color);
+            if (color.color != SVG_ATTR_COLOR_NONE) {
+                if (0.0 <= color.opacity && color.opacity < 1.0) {
+                    draw->setFillOpacity(color.opacity);
+                }
+            }
+        }
     }
 }
 

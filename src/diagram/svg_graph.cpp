@@ -241,7 +241,7 @@ std::vector<std::unique_ptr<SVGDraw>> SVGGraph::produceClusterSVGDraws() {
             group->setAttribute("class", "cluster");
             auto rect = make_unique<SVGDrawRect>(_cx, _cy, _width, _height);
             setStrokeStyles(rect.get());
-            rect->setFill(fillColor());
+            setFillStyles(rect.get());
             group->addChild(std::move(rect));
             if (enabledDebug()) {
                 const auto [marginX, marginY] = margin();

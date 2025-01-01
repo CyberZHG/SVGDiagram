@@ -25,7 +25,7 @@ namespace svg_diagram {
          *
          * @return XML elements.
          */
-        [[nodiscard]] virtual XMLElement::ChildrenType generateXMLElements() const = 0;
+        [[nodiscard]] virtual XMLElement::ChildrenType generateXMLElements() const;
 
         /** Compute a bounding box for this object.
          *
@@ -43,6 +43,7 @@ namespace svg_diagram {
         void setAttribute(const std::string_view& key, double value);
         void copyAttributes(const SVGDraw* other);
 
+        void setID(const std::string& id);
         void setFill(const std::string& value);
         void setFillOpacity(double opacity);
         void setStroke(const std::string& value);
@@ -52,6 +53,7 @@ namespace svg_diagram {
         void setStrokeOpacity(double opacity);
 
     protected:
+        virtual std::string tag() const = 0;
         std::map<std::string_view, std::string> _attributes;
 
         void addAttributesToXMLElement(const XMLElement::ChildType& element) const;
@@ -82,6 +84,8 @@ namespace svg_diagram {
 
         void addChild(std::unique_ptr<SVGDraw> child);
         void addChildren(std::vector<std::unique_ptr<SVGDraw>>& draws);
+
+        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
     };
 
     class SVGDrawComment final : public SVGDrawNoEntity {
@@ -92,6 +96,8 @@ namespace svg_diagram {
         std::string comment;
 
         [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
+
+        std::string tag() const override;
     };
 
     class SVGDrawTitle final : public SVGDrawNoEntity {
@@ -102,6 +108,9 @@ namespace svg_diagram {
         std::string title;
 
         [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
+
+    protected:
+        std::string tag() const override;
     };
 
     class SVGDrawNode : public SVGDrawEntity {
@@ -125,6 +134,9 @@ namespace svg_diagram {
 
         [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
+
+    protected:
+        std::string tag() const override;
     };
 
     class SVGDrawCircle final : public SVGDrawNode {
@@ -141,6 +153,9 @@ namespace svg_diagram {
          * @return Bounding box.
          */
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
+
+    protected:
+        std::string tag() const override;
     };
 
     class SVGDrawRect final : public SVGDrawNode {
@@ -148,6 +163,9 @@ namespace svg_diagram {
         using SVGDrawNode::SVGDrawNode;
 
         [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
+
+    protected:
+        std::string tag() const override;
     };
 
     class SVGDrawEllipse final : public SVGDrawNode {
@@ -155,6 +173,9 @@ namespace svg_diagram {
         using SVGDrawNode::SVGDrawNode;
 
         [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
+
+    protected:
+        std::string tag() const override;
     };
 
     class SVGDrawPolygon final : public SVGDrawNode {
@@ -166,6 +187,9 @@ namespace svg_diagram {
 
         [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
+
+    protected:
+        std::string tag() const override;
     };
 
     class SVGDrawLine final : public SVGDrawEntity {
@@ -177,6 +201,9 @@ namespace svg_diagram {
 
         [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
+
+    protected:
+        std::string tag() const override;
     };
 
     class SVGDrawPath final : public SVGDrawEntity {
@@ -188,32 +215,38 @@ namespace svg_diagram {
 
         [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
+
+    protected:
+        std::string tag() const override;
     };
 
     class SVGDrawGroup final : public SVGDrawContainer {
     public:
         using SVGDrawContainer::SVGDrawContainer;
 
-        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
         [[nodiscard]] bool hasEntity() const override;
+
+    protected:
+        std::string tag() const override;
     };
 
     class SVGDrawDefs final : public SVGDrawContainer, public SVGDrawNoEntity {
     public:
         using SVGDrawContainer::SVGDrawContainer;
 
-        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
+    protected:
+        std::string tag() const override;
     };
 
     class SVGDrawLinearGradient final : public SVGDrawContainer, public SVGDrawNoEntity {
     public:
         using SVGDrawContainer::SVGDrawContainer;
 
-        void setID(const std::string& id);
         void setRotation(double angle);
 
-        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
+    protected:
+        std::string tag() const override;
     };
 
     class SVGDrawStop final : public SVGDrawNoEntity {
@@ -225,7 +258,8 @@ namespace svg_diagram {
         void setColor(const std::string& color);
         void setOpacity(double opacity);
 
-        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
+    protected:
+        std::string tag() const override;
     };
 
 }

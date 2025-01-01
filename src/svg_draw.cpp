@@ -23,6 +23,12 @@ SVGDrawBoundingBox::SVGDrawBoundingBox(double x1, double y1, double x2, double y
     this->y2 = y2;
 }
 
+XMLElement::ChildrenType SVGDraw::generateXMLElements() const {
+    const auto element = make_shared<XMLElement>(tag());
+    addAttributesToXMLElement(element);
+    return {element};
+}
+
 void SVGDraw::setAttribute(const string_view& key, const string& value) {
     _attributes[key] = value;
 }
@@ -33,6 +39,10 @@ void SVGDraw::setAttribute(const string_view& key, const double value) {
 
 void SVGDraw::copyAttributes(const SVGDraw* other) {
     _attributes = other->_attributes;
+}
+
+void SVGDraw::setID(const string& id) {
+    setAttribute(SVG_ATTR_KEY_ID, id);
 }
 
 void SVGDraw::setFill(const string& value) {
@@ -82,6 +92,10 @@ XMLElement::ChildrenType SVGDrawComment::generateXMLElements() const {
     return {make_shared<XMLElementComment>(comment)};
 }
 
+string SVGDrawComment::tag() const {
+    return "!--";
+}
+
 SVGDrawContainer::SVGDrawContainer(unique_ptr<SVGDraw> draw) {
     this->addChild(std::move(draw));
 }
@@ -100,13 +114,13 @@ void SVGDrawContainer::addChildren(vector<unique_ptr<SVGDraw>>& draws) {
     }
 }
 
-XMLElement::ChildrenType SVGDrawGroup::generateXMLElements() const {
-    const auto groupElement = make_shared<XMLElement>("g");
-    addAttributesToXMLElement(groupElement);
+XMLElement::ChildrenType SVGDrawContainer::generateXMLElements() const {
+    const auto element = make_shared<XMLElement>(tag());
+    addAttributesToXMLElement(element);
     for (const auto& child : children) {
-        groupElement->addChildren(child->generateXMLElements());
+        element->addChildren(child->generateXMLElements());
     }
-    return {groupElement};
+    return {element};
 }
 
 SVGDrawBoundingBox SVGDrawGroup::boundingBox() const {
@@ -139,30 +153,20 @@ bool SVGDrawGroup::hasEntity() const {
     return false;
 }
 
-XMLElement::ChildrenType SVGDrawDefs::generateXMLElements() const {
-    const auto groupElement = make_shared<XMLElement>("defs");
-    addAttributesToXMLElement(groupElement);
-    for (const auto& child : children) {
-        groupElement->addChildren(child->generateXMLElements());
-    }
-    return {groupElement};
+string SVGDrawGroup::tag() const {
+    return "g";
 }
 
-void SVGDrawLinearGradient::setID(const string& id) {
-    setAttribute(SVG_ATTR_KEY_ID, id);
+string SVGDrawDefs::tag() const {
+    return "defs";
 }
 
 void SVGDrawLinearGradient::setRotation(const double angle) {
     setAttribute(SVG_ATTR_KEY_GRADIENT_TRANSFORM, format("rotate({})", angle));
 }
 
-XMLElement::ChildrenType SVGDrawLinearGradient::generateXMLElements() const {
-    const auto groupElement = make_shared<XMLElement>("linearGradient");
-    addAttributesToXMLElement(groupElement);
-    for (const auto& child : children) {
-        groupElement->addChildren(child->generateXMLElements());
-    }
-    return {groupElement};
+string SVGDrawLinearGradient::tag() const {
+    return "linearGradient";
 }
 
 SVGDrawStop::SVGDrawStop(const double offset, const string& color, const double opacity) {
@@ -185,10 +189,8 @@ void SVGDrawStop::setOpacity(const double opacity) {
     }
 }
 
-XMLElement::ChildrenType SVGDrawStop::generateXMLElements() const {
-    const auto groupElement = make_shared<XMLElement>("stop");
-    addAttributesToXMLElement(groupElement);
-    return {groupElement};
+string SVGDrawStop::tag() const {
+    return "stop";
 }
 
 SVGDrawTitle::SVGDrawTitle(const string& title) {
@@ -196,10 +198,14 @@ SVGDrawTitle::SVGDrawTitle(const string& title) {
 }
 
 XMLElement::ChildrenType SVGDrawTitle::generateXMLElements() const {
-    const auto titleElement = make_shared<XMLElement>("title");
+    const auto titleElement = make_shared<XMLElement>(tag());
     addAttributesToXMLElement(titleElement);
     titleElement->setContent(title);
     return {titleElement};
+}
+
+string SVGDrawTitle::tag() const {
+    return "title";
 }
 
 bool SVGDrawEntity::hasEntity() const {
@@ -250,7 +256,7 @@ XMLElement::ChildrenType SVGDrawText::generateXMLElements() const {
         sregex_token_iterator end;
         return {it, end};
     };
-    const auto textElement = make_shared<XMLElement>("text");
+    const auto textElement = make_shared<XMLElement>(tag());
     textElement->addAttribute("x", cx);
     textElement->addAttribute("y", cy);
     textElement->addAttribute("text-anchor", "middle");
@@ -284,6 +290,10 @@ SVGDrawBoundingBox SVGDrawText::boundingBox() const {
     return {cx - width / 2.0, cy - height / 2.0, cx + width / 2.0, cy + height / 2.0};
 }
 
+string SVGDrawText::tag() const {
+    return "text";
+}
+
 SVGDrawCircle::SVGDrawCircle(const double x, const double y, const double radius) {
     cx = x;
     cy = y;
@@ -292,7 +302,7 @@ SVGDrawCircle::SVGDrawCircle(const double x, const double y, const double radius
 
 XMLElement::ChildrenType SVGDrawCircle::generateXMLElements() const {
     const double radius = min(width, height) / 2;
-    const auto circleElement = make_shared<XMLElement>("circle");
+    const auto circleElement = make_shared<XMLElement>(tag());
     circleElement->addAttribute("cx", cx);
     circleElement->addAttribute("cy", cy);
     circleElement->addAttribute("r", radius);
@@ -305,10 +315,14 @@ SVGDrawBoundingBox SVGDrawCircle::boundingBox() const {
     return {cx - radius, cy - radius, cx + radius, cy + radius};
 }
 
+string SVGDrawCircle::tag() const {
+    return "circle";
+}
+
 XMLElement::ChildrenType SVGDrawRect::generateXMLElements() const {
     const double x = cx - width / 2;
     const double y = cy - height / 2;
-    const auto rectElement = make_shared<XMLElement>("rect");
+    const auto rectElement = make_shared<XMLElement>(tag());
     rectElement->addAttribute("x", x);
     rectElement->addAttribute("y", y);
     rectElement->addAttribute("width", width);
@@ -317,10 +331,14 @@ XMLElement::ChildrenType SVGDrawRect::generateXMLElements() const {
     return {rectElement};
 }
 
+string SVGDrawRect::tag() const {
+    return "rect";
+}
+
 XMLElement::ChildrenType SVGDrawEllipse::generateXMLElements() const {
     const double rx = width / 2;
     const double ry = height / 2;
-    const auto ellipseElement = make_shared<XMLElement>("ellipse");
+    const auto ellipseElement = make_shared<XMLElement>(tag());
     ellipseElement->addAttribute("cx", cx);
     ellipseElement->addAttribute("cy", cy);
     ellipseElement->addAttribute("rx", rx);
@@ -329,12 +347,16 @@ XMLElement::ChildrenType SVGDrawEllipse::generateXMLElements() const {
     return {ellipseElement};
 }
 
+string SVGDrawEllipse::tag() const {
+    return "ellipse";
+}
+
 SVGDrawPolygon::SVGDrawPolygon(const vector<pair<double, double>>& points) {
     this->points = points;
 }
 
 XMLElement::ChildrenType SVGDrawPolygon::generateXMLElements() const {
-    const auto polygonElement = make_shared<XMLElement>("polygon");
+    const auto polygonElement = make_shared<XMLElement>(tag());
     string path;
     if (!points.empty()) {
         path += format("{},{}", points[0].first, points[0].second);
@@ -362,6 +384,10 @@ SVGDrawBoundingBox SVGDrawPolygon::boundingBox() const {
     return {xMin, yMin, xMax, yMax};
 }
 
+string SVGDrawPolygon::tag() const {
+    return "polygon";
+}
+
 SVGDrawLine::SVGDrawLine(const double x1, const double y1, const double x2, const double y2) {
     this->x1 = x1;
     this->y1 = y1;
@@ -370,7 +396,7 @@ SVGDrawLine::SVGDrawLine(const double x1, const double y1, const double x2, cons
 }
 
 XMLElement::ChildrenType SVGDrawLine::generateXMLElements() const {
-    const auto lineElement = make_shared<XMLElement>("line");
+    const auto lineElement = make_shared<XMLElement>(tag());
     lineElement->addAttribute("x1", x1);
     lineElement->addAttribute("y1", y1);
     lineElement->addAttribute("x2", x2);
@@ -381,6 +407,10 @@ XMLElement::ChildrenType SVGDrawLine::generateXMLElements() const {
 
 SVGDrawBoundingBox SVGDrawLine::boundingBox() const {
     return {x1, y1, x2, y2};
+}
+
+string SVGDrawLine::tag() const {
+    return "line";
 }
 
 SVGDrawPath::SVGDrawPath(const string& d) {
@@ -400,7 +430,7 @@ XMLElement::ChildrenType SVGDrawPath::generateXMLElements() const {
             reformat += format(" {}", parameter);
         }
     }
-    const auto pathElement = make_shared<XMLElement>("path");
+    const auto pathElement = make_shared<XMLElement>(tag());
     pathElement->addAttribute("d", reformat);
     addAttributesToXMLElement(pathElement);
     return {pathElement};
@@ -420,4 +450,8 @@ SVGDrawBoundingBox SVGDrawPath::boundingBox() const {
         }
     }
     return {xMin, yMin, xMax, yMax};
+}
+
+string SVGDrawPath::tag() const {
+    return "path";
 }

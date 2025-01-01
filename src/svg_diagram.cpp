@@ -47,6 +47,7 @@ const shared_ptr<SVGNode>& SVGDiagram::addNode(const string& id) {
     }
     _nodeIds.emplace_back(id);
     auto node = make_shared<SVGNode>();
+    node->setID(id);
     _graph.addNode(node);
     return _nodes[id] = node;
 }
@@ -56,6 +57,7 @@ void SVGDiagram::addNode(const string& id, shared_ptr<SVGNode>& node) {
         throw runtime_error("SVGDiagram::addNode: Node id already exists");
     }
     _nodeIds.emplace_back(id);
+    node->setID(id);
     _nodes[id] = node;
     _graph.addNode(node);
 }
@@ -66,6 +68,7 @@ const shared_ptr<SVGEdge>& SVGDiagram::addEdge(const string& id) {
     }
     _edgeIds.emplace_back(id);
     auto edge = make_shared<SVGEdge>();
+    edge->setID(id);
     _graph.addEdge(edge);
     return _edges[id] = edge;
 }
@@ -82,6 +85,7 @@ void SVGDiagram::addEdge(const string& id, shared_ptr<SVGEdge>& edge) {
         throw runtime_error("SVGDiagram::addEdge: Edge id already exists");
     }
     _edgeIds.emplace_back(id);
+    edge->setID(id);
     _edges[id] = edge;
     _graph.addEdge(edge);
 }
@@ -122,36 +126,10 @@ string SVGDiagram::newEdgeId() {
 }
 
 void SVGDiagram::produceSVGDrawsDynamic() {
-    _svgDrawsDynamic.clear();
-    for (const auto& id : _nodeIds) {
-        const auto& node = _nodes.at(id);
-        if (_enabledDebug) {
-            node->enableDebug();
-        }
-        node->adjustNodeSize();
-        _svgDrawsDynamic.emplace_back(make_unique<SVGDrawComment>(format("Node: {}", id)));
-        auto group = make_unique<SVGDrawGroup>();
-        group->setAttribute("id", id);
-        group->setAttribute("class", "node");
-        group->addChild(make_unique<SVGDrawTitle>(id));
-        auto svgDraws = node->produceSVGDraws();
-        group->addChildren(svgDraws);
-        _svgDrawsDynamic.emplace_back(std::move(group));
+    if (_enabledDebug) {
+        _graph.enableDebug();
     }
-    for (const auto& id : _edgeIds) {
-        const auto& edge = _edges.at(id);
-        if (_enabledDebug) {
-            edge->enableDebug();
-        }
-        _svgDrawsDynamic.emplace_back(make_unique<SVGDrawComment>(format("Edge: {} ({} -> {})", id, edge->nodeFrom(), edge->nodeTo())));
-        auto group = make_unique<SVGDrawGroup>();
-        group->setAttribute("id", id);
-        group->setAttribute("class", "edge");
-        group->addChild(make_unique<SVGDrawTitle>(format("{}->{}", edge->nodeFrom(), edge->nodeTo())));
-        auto svgDraws = edge->produceSVGDraws(_nodes);
-        group->addChildren(svgDraws);
-        _svgDrawsDynamic.emplace_back(std::move(group));
-    }
+    _svgDrawsDynamic = _graph.produceSVGDraws(_nodes);
 }
 
 pair<XMLElement::ChildType, XMLElement::ChildType> SVGDiagram::generateSVGElement() const {

@@ -36,8 +36,20 @@ void SVGItem::setPrecomputedTextSize(const double width, const double height) {
     _precomputedTextHeight = height;
 }
 
-std::pair<double, double> SVGItem::precomputedTextSize() const {
+pair<double, double> SVGItem::precomputedTextSize() const {
     return {_precomputedTextWidth, _precomputedTextHeight};
+}
+
+const string& SVGItem::id() const {
+    const auto it = _attributes.find(DOT_ATTR_KEY_ID);
+    if (it == _attributes.end()) {
+        throw runtime_error("Attribute 'ID' not found");
+    }
+    return it->second;
+}
+
+void SVGItem::setID(const string& id) {
+    setAttribute(DOT_ATTR_KEY_ID, id);
 }
 
 void SVGItem::setLabel(const string& label) {
@@ -138,6 +150,10 @@ std::pair<double, double> SVGItem::computeTextSizeWithMargin() {
     return {width + marginX * 2, height + marginY * 2};
 }
 
+SVGItem::SVGItem(const string& id) {
+    setID(id);
+}
+
 void SVGItem::enableDebug() {
     _enabledDebug = true;
 }
@@ -157,10 +173,6 @@ SVGGraph * SVGItem::parent() const {
 SVGNode::SVGNode(const double cx, const double cy) {
     _cx = cx;
     _cy = cy;
-}
-
-SVGItem::Type SVGNode::type() const {
-    return Type::NODE;
 }
 
 void SVGNode::setAttributeIfNotExist(const std::string_view &key, const std::string &value) {
@@ -409,10 +421,6 @@ pair<double, double> SVGNode::computeConnectionPointEllipse(const double angle) 
 SVGEdge::SVGEdge(const string& idFrom, const string& idTo) {
     _nodeFrom = idFrom;
     _nodeTo = idTo;
-}
-
-SVGItem::Type SVGEdge::type() const {
-    return Type::EDGE;
 }
 
 void SVGEdge::setAttributeIfNotExist(const std::string_view &key, const std::string &value) {
@@ -735,10 +743,6 @@ pair<double, double> SVGEdge::addArrowNormal(vector<unique_ptr<SVGDraw>>& svgDra
     return {x0 + ARROW_WIDTH * cos(angle), y0 + ARROW_WIDTH * sin(angle)};
 }
 
-SVGItem::Type SVGGraph::type() const {
-    return Type::GRAPH;
-}
-
 void SVGGraph::addNode(shared_ptr<SVGNode>& node) {
     node->setParent(this);
     _nodes.emplace_back(node);
@@ -791,12 +795,33 @@ void SVGGraph::adjustNodeSizes() const {
     }
 }
 
+vector<unique_ptr<SVGDraw>> SVGGraph::produceSVGDraws(const NodesMapping &nodes) const {
+    vector<unique_ptr<SVGDraw>> svgDraws;
+    for (auto& draw : produceNodeSVGDraws()) {
+        svgDraws.emplace_back(std::move(draw));
+    }
+    for (auto& draw : produceEdgeSVGDraws(nodes)) {
+        svgDraws.emplace_back(std::move(draw));
+    }
+    return svgDraws;
+}
+
 vector<unique_ptr<SVGDraw>> SVGGraph::produceNodeSVGDraws() const {
+    adjustNodeSizes();
     vector<unique_ptr<SVGDraw>> svgDraws;
     for (auto& node : _nodes) {
-        for (auto subDraws = node->produceSVGDraws(); auto& subDraw : subDraws) {
-            svgDraws.emplace_back(std::move(subDraw));
+        if (enabledDebug()) {
+            node->enableDebug();
         }
+        const auto& id = node->id();
+        svgDraws.emplace_back(make_unique<SVGDrawComment>(format("Node: {}", id)));
+        auto group = make_unique<SVGDrawGroup>();
+        group->setAttribute("id", id);
+        group->setAttribute("class", "node");
+        group->addChild(make_unique<SVGDrawTitle>(id));
+        auto subDraws = node->produceSVGDraws();
+        group->addChildren(subDraws);
+        svgDraws.emplace_back(std::move(group));
     }
     for (auto& graph : _graphs) {
         for (auto subDraws = graph->produceNodeSVGDraws(); auto& subDraw : subDraws) {
@@ -809,9 +834,18 @@ vector<unique_ptr<SVGDraw>> SVGGraph::produceNodeSVGDraws() const {
 vector<unique_ptr<SVGDraw>> SVGGraph::produceEdgeSVGDraws(const NodesMapping& nodes) const {
     vector<unique_ptr<SVGDraw>> svgDraws;
     for (auto& edge : _edges) {
-        for (auto subDraws = edge->produceSVGDraws(nodes); auto& subDraw : subDraws) {
-            svgDraws.emplace_back(std::move(subDraw));
+        if (enabledDebug()) {
+            edge->enableDebug();
         }
+        const auto& id = edge->id();
+        svgDraws.emplace_back(make_unique<SVGDrawComment>(format("Edge: {} ({} -> {})", id, edge->nodeFrom(), edge->nodeTo())));
+        auto group = make_unique<SVGDrawGroup>();
+        group->setAttribute("id", id);
+        group->setAttribute("class", "edge");
+        group->addChild(make_unique<SVGDrawTitle>(format("{}->{}", edge->nodeFrom(), edge->nodeTo())));
+        auto subDraws = edge->produceSVGDraws(nodes);
+        group->addChildren(subDraws);
+        svgDraws.emplace_back(std::move(group));
     }
     for (auto& graph : _graphs) {
         for (auto subDraws = graph->produceEdgeSVGDraws(nodes); auto& subDraw : subDraws) {

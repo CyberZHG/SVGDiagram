@@ -229,6 +229,9 @@ bool SVGItem::enabledDebug() const {
 }
 
 void SVGItem::setParent(SVGGraph* parent) {
+    if (_parent != nullptr) {
+        _parent->removeChild(this);
+    }
     _parent = parent;
 }
 
@@ -866,6 +869,39 @@ void SVGGraph::addEdge(shared_ptr<SVGEdge>& edge) {
 void SVGGraph::addSubgraph(shared_ptr<SVGGraph>& subgraph) {
     subgraph->setParent(this);
     _graphs.emplace_back(subgraph);
+}
+
+void SVGGraph::removeNode(const SVGNode* node) {
+    for (int i = 0; i < static_cast<int>(_nodes.size()); ++i) {
+        if (_nodes[i].get() == node) {
+            _nodes.erase(_nodes.begin() + i);  // Need to keep the original order
+            break;
+        }
+    }
+}
+
+void SVGGraph::removeEdge(const SVGEdge* edge) {
+    for (int i = 0; i < static_cast<int>(_edges.size()); ++i) {
+        if (_edges[i].get() == edge) {
+            _edges.erase(_edges.begin() + i);
+            break;
+        }
+    }
+}
+
+void SVGGraph::removeSubgraph(const SVGGraph* subgraph) {
+    for (int i = 0; i < static_cast<int>(_graphs.size()); ++i) {
+        if (_graphs[i].get() == subgraph) {
+            _graphs.erase(_graphs.begin() + i);
+            break;
+        }
+    }
+}
+
+void SVGGraph::removeChild(const SVGItem* item) {
+    removeNode(dynamic_cast<const SVGNode*>(item));
+    removeEdge(dynamic_cast<const SVGEdge*>(item));
+    removeSubgraph(dynamic_cast<const SVGGraph*>(item));
 }
 
 SVGNode& SVGGraph::defaultNodeAttributes() {

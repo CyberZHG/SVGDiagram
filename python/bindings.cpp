@@ -72,6 +72,11 @@ PYBIND11_MODULE(_core, m, py::mod_gil_not_used()) {
         .def("set_font_name", &SVGGraph::setFontName)
         .def("set_font_size", &SVGGraph::setFontSize)
         .def("set_font", &SVGGraph::setFont)
+        .def("default_node_attributes", &SVGGraph::defaultNodeAttributes, py::return_value_policy::reference_internal)
+        .def("default_edge_attributes", &SVGGraph::defaultEdgeAttributes, py::return_value_policy::reference_internal)
+        .def("add_node", &SVGGraph::addNode)
+        .def("add_edge", &SVGGraph::addEdge)
+        .def("add_subgraph", &SVGGraph::addSubgraph)
     ;
     py::class_<SVGDiagram>(m, "SVGDiagram")
         .def(py::init<>())

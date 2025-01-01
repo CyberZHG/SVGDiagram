@@ -63,6 +63,11 @@ EMSCRIPTEN_BINDINGS(SVGDiagramWASM) {
     class_<SVGGraph, base<SVGItem>>("SVGGraph")
         .constructor<>()
         .smart_ptr<shared_ptr<SVGGraph>>("SVGGraph")
+        .function("defaultNodeAttributes", &SVGGraph::defaultNodeAttributes, return_value_policy::reference())
+        .function("defaultEdgeAttributes", &SVGGraph::defaultEdgeAttributes, return_value_policy::reference())
+        .function("addNode", &SVGGraph::addNode)
+        .function("addEdge", &SVGGraph::addEdge)
+        .function("addSubgraph", &SVGGraph::addSubgraph)
     ;
     class_<SVGDiagram>("SVGDiagram")
         .constructor<>()

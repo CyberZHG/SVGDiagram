@@ -1,4 +1,6 @@
 #include "attribute_utils.h"
+
+#include <iostream>
 using namespace std;
 using namespace svg_diagram;
 
@@ -10,18 +12,66 @@ double AttributeUtils::inchToSVGPixel(const double inch) {
     return inch * SVG_DEFAULT_DPI;
 }
 
-pair<double, double> AttributeUtils::parseMargin(const string& margin) {
+double AttributeUtils::pointToInch(const double points) {
+    return points / POINTS_PER_INCH;
+}
+
+double AttributeUtils::centimeterToInch(const double centimeters) {
+    return centimeters / CENTIMETERS_PER_INCH;
+}
+
+bool AttributeUtils::isPartOfDouble(const char ch) {
+    return std::isdigit(ch) ||
+           ch == '+' || ch == '-' ||
+           ch == '.' || ch == 'e' || ch == 'E';
+}
+
+double AttributeUtils::parseLengthToInch(const string& s) {
+    int numberStart = -1;
+    for (int i = 0; i < s.length(); ++i) {
+        if (isPartOfDouble(s[i])) {
+            numberStart = i;
+            break;
+        }
+    }
+    if (numberStart == -1) {
+        cerr << "[AttributeUtils::parseLengthToInch] Unable to parse: " << s << endl;
+        return 0.0;
+    }
+    int numberEnd = static_cast<int>(s.length());
+    for (int i = numberStart + 1; i < s.length(); ++i) {
+        if (!isPartOfDouble(s[i])) {
+            numberEnd = i;
+            break;
+        }
+    }
+    const double value = stod(s.substr(numberStart, numberEnd - numberStart));
+    for (int i = numberEnd; i + 1 < s.length(); ++i) {
+        if (s[i] == 'i' && s[i + 1] == 'n') {
+            return value;
+        }
+        if (s[i] == 'p' && s[i + 1] == 't') {
+            return pointToInch(value);
+        }
+        if (s[i] == 'c' && s[i + 1] == 'm') {
+            return centimeterToInch(value);
+        }
+    }
+    return value;
+}
+
+pair<double, double> AttributeUtils::parseMarginToInches(const string& margin) {
     if (const auto pos = margin.find(','); pos != string::npos) {
         const string left  = margin.substr(0, pos);
         const string right = margin.substr(pos + 1);
-        return {stod(left), stod(right)};
+        return {parseLengthToInch(left), parseLengthToInch(right)};
     }
-    double m = stod(margin);
+    double m = parseLengthToInch(margin);
     return {m, m};
 }
 
 pair<double, double> AttributeUtils::parseMarginToPixels(const string& margin) {
-    const auto [width, height] = parseMargin(margin);
+    const auto [width, height] = parseMarginToInches(margin);
     return {inchToSVGPixel(width), inchToSVGPixel(height)};
 }
 
@@ -37,10 +87,7 @@ bool AttributeUtils::parseBool(const string& value) {
 }
 
 AttributeUtils::DCommands AttributeUtils::parseDCommands(const string& d) {
-    auto isPartOfDouble = [](const char ch) {
-        return ch == '.' || ch == '-' || ('0' <= ch && ch <= '9');
-    };
-    auto readDouble = [&d, isPartOfDouble](const int start) -> pair<int, double> {
+    auto readDouble = [&](const int start) -> pair<int, double> {
         int end = static_cast<int>(d.size());
         for (int i = start + 1; i < d.size(); ++i) {
             if (!isPartOfDouble(d[i])) {

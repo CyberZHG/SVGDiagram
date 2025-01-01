@@ -20,12 +20,14 @@ namespace svg_diagram {
         void render(const std::string& filePath) const;
 
         void setCanvasSize(int width, int height);
+        void setBackgroundColor(const std::string& backgroundColor);
 
     private:
         std::vector<std::unique_ptr<SVGDraw>> _svgDraws;
         double _width = 0.0;
         double _height = 0.0;
         std::pair<double, double> _margin = {DEFAULT_MARGIN, DEFAULT_MARGIN};
+        std::string _backgroundColor;
 
         [[nodiscard]] std::string generateSVGOpen() const;
         [[nodiscard]] std::string generateSVGClose() const;

@@ -6,6 +6,7 @@ using namespace svg_diagram;
 
 TEST(TestSVGDrawCircle, OneCircleAutoSize) {
     SVGDiagram diagram;
+    diagram.setBackgroundColor("white");
     auto circle = make_unique<SVGDrawCircle>(0.0, 0.0, 20.0);
     const auto svg = circle->render();
     EXPECT_EQ(svg, R"(<circle cx="0" cy="0" r="20" />)" + string("\n"));
@@ -16,6 +17,7 @@ TEST(TestSVGDrawCircle, OneCircleAutoSize) {
 
 TEST(TestSVGDrawCircle, OneCircleFixedSize) {
     SVGDiagram diagram;
+    diagram.setBackgroundColor("white");
     diagram.setCanvasSize(100, 100);
     auto circle = make_unique<SVGDrawCircle>(0.0, 0.0, 20.0);
     const auto svg = circle->render();
@@ -27,6 +29,7 @@ TEST(TestSVGDrawCircle, OneCircleFixedSize) {
 
 TEST(TestSVGDrawCircle, TwoCirclesAutoSize) {
     SVGDiagram diagram;
+    diagram.setBackgroundColor("white");
     auto circle1 = make_unique<SVGDrawCircle>(0.0, 0.0, 20.0);
     auto svg = circle1->render();
     EXPECT_EQ(svg, R"(<circle cx="0" cy="0" r="20" />)" + string("\n"));
@@ -41,6 +44,7 @@ TEST(TestSVGDrawCircle, TwoCirclesAutoSize) {
 
 TEST(TestSVGDrawCircle, TwoCirclesFixedSize) {
     SVGDiagram diagram;
+    diagram.setBackgroundColor("white");
     diagram.setCanvasSize(100, 100);
     auto circle1 = make_unique<SVGDrawCircle>(0.0, 0.0, 20.0);
     auto svg = circle1->render();

@@ -33,6 +33,10 @@ void SVGDiagram::setCanvasSize(const int width, const int height) {
     _height = height;
 }
 
+void SVGDiagram::setBackgroundColor(const std::string& backgroundColor) {
+    _backgroundColor = backgroundColor;
+}
+
 string SVGDiagram::generateSVGOpen() const {
     string svg = R"(<?xml version="1.0" encoding="UTF-8"?>)" + string("\n");
     double width = _width, height = _height;
@@ -71,6 +75,10 @@ string SVGDiagram::generateSVGOpen() const {
     svg += format(R"(<svg xmlns="http://www.w3.org/2000/svg" width="{}" height="{}")", width, height);
     svg += format(R"( viewBox="{} {} {} {}">)", viewBoxX, viewBoxY, width, height);
     svg += "\n";
+    if (!_backgroundColor.empty()) {
+        svg += format(R"(<rect x="{}" y="{}" width="{}" height="{}" fill="{}" />)", viewBoxX, viewBoxY, width, height, _backgroundColor);
+        svg += "\n";
+    }
     return svg;
 }
 

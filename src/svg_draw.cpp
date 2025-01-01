@@ -1,6 +1,8 @@
 #include "svg_draw.h"
+#include "svg_text_size.h"
 
 #include <format>
+#include <regex>
 #include <sstream>
 using namespace std;
 using namespace svg_diagram;
@@ -16,9 +18,6 @@ SVGDrawBoundingBox::SVGDrawBoundingBox(double x1, double y1, double x2, double y
     this->x2 = x2;
     this->y1 = y1;
     this->y2 = y2;
-}
-
-SVGDraw::SVGDraw(const string& label) : label(label) {
 }
 
 string SVGDraw::renderWithIndent(const int indent) const {
@@ -37,16 +36,21 @@ string SVGDraw::singletonName() const {
     return "";
 }
 
+SVGDrawComment::SVGDrawComment(const string& comment) {
+    this->comment = comment;
+}
+
 string SVGDrawComment::render() const {
-    string escapedLabel;
-    for (const auto ch : label) {
-        if (ch == '-') {
-            escapedLabel += "‑";
+    string escapedComment;
+    for (int i = 0; i < comment.length(); ++i) {
+        if (i + 1 < comment.length() && comment[i] == '-' && comment[i + 1] == '-') {
+            escapedComment += "‑‑";
+            ++i;
         } else {
-            escapedLabel += ch;
+            escapedComment += comment[i];
         }
     }
-    return format("<!-- {} -->\n", escapedLabel);
+    return format("<!-- {} -->\n", escapedComment);
 }
 
 SVGDrawBoundingBox SVGDrawComment::boundingBox() const {
@@ -76,6 +80,45 @@ string SVGDrawNode::renderAttributes() const {
         svg += format(R"( stroke="{}")", stroke);
     }
     return svg;
+}
+
+SVGDrawText::SVGDrawText(const double x, const double y, const string& text) {
+    cx = x;
+    cy = y;
+    this->text = text;
+}
+
+string SVGDrawText::render() const {
+    auto splitLines = [](const string& s) -> vector<string> {
+        regex re("\r\n|\r|\n");
+        sregex_token_iterator it(s.begin(), s.end(), re, -1);
+        sregex_token_iterator end;
+        return {it, end};
+    };
+    string svg = format(R"(<text x="{}" y="{}" text-anchor="middle" dominant-baseline="central")", cx, cy);
+    svg += format(R"( font-family="{}" font-size="{}")", fontFamily, fontSize);
+    svg += " >";
+    if (const auto lines = splitLines(text); lines.size() == 1) {
+        svg += this->text;
+    } else {
+        svg += "\n";
+        for (int i = 0; i < lines.size(); ++i) {
+            double dy = SVGTextSize::DEFAULT_APPROXIMATION_HEIGHT_SCALE + SVGTextSize::DEFAULT_APPROXIMATION_LINE_SPACING_SCALE;
+            if (i == 0) {
+                dy = -(static_cast<double>(lines.size()) - 1) / 2 * dy;
+            }
+            svg += format(R"(  <tspan x="{}" dy="{}em">{}</tspan>)", cx, dy, lines[i]);
+            svg += "\n";
+        }
+    }
+    svg += "</text>\n";
+    return svg;
+}
+
+SVGDrawBoundingBox SVGDrawText::boundingBox() const {
+    const SVGTextSize textSize;
+    const auto [width, height] = textSize.computeTextSize(text, fontSize, fontFamily);
+    return {cx - width / 2.0, cy - height / 2.0, cx + width / 2.0, cy + height / 2.0};
 }
 
 SVGDrawCircle::SVGDrawCircle(const double x, const double y, const double radius) {

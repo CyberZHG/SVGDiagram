@@ -76,6 +76,7 @@ if(SVG_DIAGRAM_BUILD_TESTS)
             tests/test_attribute_utils.cpp
             tests/svg_draw/test_comment.cpp
             tests/svg_draw/test_circle.cpp
+            tests/svg_draw/test_text.cpp
     )
 
     target_link_libraries(runTests

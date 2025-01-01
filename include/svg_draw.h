@@ -15,10 +15,7 @@ namespace svg_diagram {
     class SVGDraw {
     public:
         SVGDraw() = default;
-        explicit SVGDraw(const std::string& label);
         virtual ~SVGDraw() = default;
-
-        std::string label;
 
         /** Generate a SVG string.
          *
@@ -50,6 +47,9 @@ namespace svg_diagram {
     class SVGDrawComment final : public SVGDraw {
     public:
         using SVGDraw::SVGDraw;
+        explicit SVGDrawComment(const std::string& comment);
+
+        std::string comment;
 
         [[nodiscard]] std::string render() const override;
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
@@ -74,6 +74,19 @@ namespace svg_diagram {
 
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
         [[nodiscard]] std::string renderAttributes() const;
+    };
+
+    class SVGDrawText final : public SVGDrawNode {
+    public:
+        using SVGDrawNode::SVGDrawNode;
+        SVGDrawText(double x, double y, const std::string& text);
+
+        std::string text;
+        std::string fontFamily = "Serif";
+        double fontSize = 16.0;
+
+        [[nodiscard]] std::string render() const override;
+        [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
     };
 
     class SVGDrawCircle final : public SVGDrawNode {

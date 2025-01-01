@@ -10,7 +10,7 @@ namespace svg_diagram {
         ~SVGTextSize() = default;
 
         static constexpr double DEFAULT_APPROXIMATION_HEIGHT_SCALE = 1.0;
-        static constexpr double DEFAULT_APPROXIMATION_WIDTH_SCALE = 0.6;
+        static constexpr double DEFAULT_APPROXIMATION_WIDTH_SCALE = 0.5;
         static constexpr double DEFAULT_APPROXIMATION_LINE_SPACING_SCALE = 0.2;
 
         [[nodiscard]] double heightScale() const;

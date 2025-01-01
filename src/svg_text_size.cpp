@@ -55,6 +55,7 @@ pair<double, double> SVGTextSize::computeApproximateTextSize(const string& text,
                 ++i;
             }
             ++numLines;
+            numCharsInLine = 0;
         } else {
             ++numCharsInLine;
         }

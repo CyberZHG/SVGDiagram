@@ -1,4 +1,4 @@
-from sp_svg_diagram import SVGDiagram
+from sp_svg_diagram import SVGDiagram, SVGGraph, SVGNode
 
 from .utils import compare_svg
 
@@ -41,3 +41,31 @@ def test_inherited():
 
     svg = diagram.render()
     compare_svg("subgraph_attr", "inherited", svg)
+
+
+def test_draw():
+    diagram = SVGDiagram()
+    subgraph_inner = SVGGraph("subgraph-inner")
+    subgraph_inner.set_label("Inner")
+    subgraph_inner.set_color("black")
+    subgraph_inner.set_fill_color("lightgreen")
+
+    subgraph_outer = diagram.add_subgraph("subgraph-outer")
+    subgraph_outer.add_subgraph(subgraph_inner)
+    subgraph_outer.set_label("Outer")
+    subgraph_outer.set_color("black")
+    subgraph_outer.set_fill_color("papayawhip")
+
+    node1 = SVGNode("A")
+    node1.set_label("A")
+    node1.set_center(0, 0)
+    node2 = SVGNode("B")
+    node2.set_label("B")
+    node2.set_center(150, 0)
+    edge = diagram.add_edge("A", "B")
+    edge.set_arrow_head()
+    subgraph_inner.add_node(node1)
+    subgraph_outer.add_node(node2)
+
+    svg = diagram.render()
+    compare_svg("subgraph_attr", "draw", svg)

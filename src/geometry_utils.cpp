@@ -61,7 +61,10 @@ optional<GeometryUtils::Point2D> GeometryUtils::intersect(const double angle, co
     return nullopt;
 }
 
-// B'(t) = 3(1-t)^2 (P_1 - P_0) + 6(1-t)t (P_2 - P_1) + 3t^2 (P_3 - P_2)
+/** Compute the derivative with the given t.
+ *
+ * B'(t) = 3(1-t)^2 (P_1 - P_0) + 6(1-t)t (P_2 - P_1) + 3t^2 (P_3 - P_2)
+ */
 GeometryUtils::Point2D GeometryUtils::computeBezierDerivative(const Point2D& p0, const Point2D& p1, const Point2D& p2, const Point2D& p3, const double t) {
     const auto x0 = p0.first, y0 = p0.second;
     const auto x1 = p1.first, y1 = p1.second;
@@ -77,15 +80,13 @@ GeometryUtils::Point2D GeometryUtils::computeBezierDerivative(const Point2D& p0,
     return {dx, dy};
 }
 
+GeometryUtils::Point2D GeometryUtils::computeBezierDerivative(const vector<Point2D>& points, const double t) {
+    return computeBezierDerivative(points[0], points[1], points[2], points[3], t);
+}
+
 /** Compute the length of a bezier spline using 16-point Gauss-Legendre.
  *
  * B(t) = (1-t)^3 P_0 + 3(1-t)^2t P_1 + 3(1-t)t^2 P_2 + t^3 P_3
- *
- * @param p0
- * @param p1
- * @param p2
- * @param p3
- * @return Length.
  */
 double GeometryUtils::computeBezierLength(const Point2D& p0, const Point2D& p1, const Point2D& p2, const Point2D& p3) {
     // See: https://github.com/ampl/gsl/blob/d00bd4fcac4fbdac1b211df97950b0df53993738/integration/glfixed.c#L68-L69
@@ -132,4 +133,28 @@ double GeometryUtils::computeBezierLength(const Point2D& p0, const Point2D& p1, 
         total += w16[i] * distance(dx, dy);
     }
     return total / 2.0;
+}
+
+/** Compute the point location on a bezier spline.
+ *
+ * B(t) = (1-t)^3 P_0 + 3(1-t)^2t P_1 + 3(1-t)t^2 P_2 + t^3 P_3
+ */
+GeometryUtils::Point2D GeometryUtils::computeBezierAt(const Point2D& p0, const Point2D& p1, const Point2D& p2, const Point2D& p3, const double t) {
+    const auto x0 = p0.first, y0 = p0.second;
+    const auto x1 = p1.first, y1 = p1.second;
+    const auto x2 = p2.first, y2 = p2.second;
+    const auto x3 = p3.first, y3 = p3.second;
+
+    const double a = (1 - t) * (1 - t) * (1 - t);
+    const double b = 3 * (1 - t) * (1 - t) * t;
+    const double c = 3 * (1 - t) * t * t;
+    const double d = t * t * t;
+
+    const double x = a * x0 + b * x1 + c * x2 + d * x3;
+    const double y = a * y0 + b * y1 + c * y2 + d * y3;
+    return {x, y};
+}
+
+GeometryUtils::Point2D GeometryUtils::computeBezierAt(const vector<Point2D>& points, const double t) {
+    return computeBezierAt(points[0], points[1], points[2], points[3], t);
 }

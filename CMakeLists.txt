@@ -45,7 +45,7 @@ if (SVG_DIAGRAM_ENABLE_PANGO_CAIRO)
             PUBLIC ${PANGO_CFLAGS_OTHER})
 
     target_compile_definitions(SVGDiagram
-            PUBLIC SVG_DIAGRAM_ENABLE_SVG
+            PUBLIC SVG_DIAGRAM_ENABLE_PANGO_CAIRO
     )
 endif()
 

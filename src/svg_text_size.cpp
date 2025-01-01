@@ -1,4 +1,12 @@
 #include "svg_text_size.h"
+
+#include <format>
+
+#ifdef SVG_DIAGRAM_ENABLE_PANGO_CAIRO
+#include <cairo.h>
+#include <cairo-svg.h>
+#include <pango/pangocairo.h>
+#endif
 using namespace std;
 using namespace svg_diagram;
 
@@ -27,7 +35,11 @@ void SVGTextSize::setLineSpacingScale(const double scale) {
 }
 
 pair<double, double> SVGTextSize::computeTextSize(const string& text, const double fontSize, const string& fontFamily) const {
+#ifdef SVG_DIAGRAM_ENABLE_PANGO_CAIRO
+    return computePangoCairoTextSize(text, fontSize, fontFamily);
+#else
     return computeApproximateTextSize(text, fontSize);
+#endif
 }
 
 pair<double, double> SVGTextSize::computeApproximateTextSize(const string& text, const double fontSize) const {
@@ -52,3 +64,30 @@ pair<double, double> SVGTextSize::computeApproximateTextSize(const string& text,
     const double approximateWidth = fontSize * (maxCharsInLine * _widthScale);
     return {approximateWidth, approximateHeight};
 }
+
+#ifdef SVG_DIAGRAM_ENABLE_PANGO_CAIRO
+cairo_status_t dummy_cairo_write_func(void*, const unsigned char*, unsigned int) {
+    return CAIRO_STATUS_SUCCESS;
+}
+
+pair<double, double> SVGTextSize::computePangoCairoTextSize(const string& text, const double fontSize, const string& fontFamily) {
+    constexpr double PANGO_SCALE_DOUBLE = PANGO_SCALE;
+    if (text.empty()) {
+        return {0.0, 0.0};
+    }
+    const string font = format("{} {}", fontFamily, fontSize);
+    const auto surface = cairo_svg_surface_create_for_stream(&dummy_cairo_write_func, nullptr, 400, 300);
+    const auto cr = cairo_create(surface);
+    PangoLayout* layout = pango_cairo_create_layout(cr);
+    pango_layout_set_text(layout, text.c_str(), -1);
+    PangoFontDescription* font_desc = pango_font_description_from_string(font.c_str());
+    pango_layout_set_font_description(layout, font_desc);
+    pango_font_description_free(font_desc);
+    PangoRectangle ink_rect, logical_rect;
+    pango_layout_get_extents(layout, &ink_rect, &logical_rect);
+    g_object_unref(layout);
+    cairo_destroy(cr);
+    cairo_surface_destroy(surface);
+    return {ink_rect.width / PANGO_SCALE_DOUBLE, ink_rect.height / PANGO_SCALE_DOUBLE};
+}
+#endif

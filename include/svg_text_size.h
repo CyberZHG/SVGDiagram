@@ -44,7 +44,9 @@ namespace svg_diagram {
         double _heightScale = DEFAULT_APPROXIMATION_HEIGHT_SCALE;
         double _widthScale = DEFAULT_APPROXIMATION_WIDTH_SCALE;
         double _lineSpacingScale = DEFAULT_APPROXIMATION_LINE_SPACING_SCALE;
-
+#ifdef SVG_DIAGRAM_ENABLE_PANGO_CAIRO
+        static std::pair<double, double> computePangoCairoTextSize(const std::string& text, double fontSize, const std::string& fontFamily = "Serif") ;
+#endif
     };
 }
 

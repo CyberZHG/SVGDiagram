@@ -2,8 +2,14 @@
 #define SVGDIAGRAM_SVG_DRAW_H
 
 #include <string>
+#include <map>
 
 namespace svg_diagram {
+
+    constexpr std::string_view SVG_ATTRIBUTE_FILL = "fill";
+    constexpr std::string_view SVG_ATTRIBUTE_STROKE = "stroke";
+    constexpr std::string_view SVG_ATTRIBUTE_FONT_FAMILY = "font-family";
+    constexpr std::string_view SVG_ATTRIBUTE_FONT_SIZE = "font-size";
 
     struct SVGDrawBoundingBox {
         double x1, y1, x2, y2;
@@ -62,6 +68,12 @@ namespace svg_diagram {
         using SVGDraw::SVGDraw;
 
         [[nodiscard]] bool hasEntity() const override;
+        void setAttribute(const std::string_view& key, const std::string& value);
+
+    protected:
+        std::map<std::string_view, std::string> _attributes;
+
+        [[nodiscard]] std::string renderAttributes() const;
     };
 
     class SVGDrawNode : public SVGDrawEntity {
@@ -69,21 +81,18 @@ namespace svg_diagram {
         using SVGDrawEntity::SVGDrawEntity;
 
         double cx, cy, width, height;
-        std::string fill;
-        std::string stroke;
 
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
-        [[nodiscard]] std::string renderAttributes() const;
     };
 
     class SVGDrawText final : public SVGDrawNode {
     public:
-        using SVGDrawNode::SVGDrawNode;
+        SVGDrawText();
         SVGDrawText(double x, double y, const std::string& text);
 
         std::string text;
-        std::string fontFamily = "Serif";
-        double fontSize = 16.0;
+
+        void setFont(const std::string& fontFamily, double fontSize);
 
         [[nodiscard]] std::string render() const override;
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
@@ -102,6 +111,17 @@ namespace svg_diagram {
          *
          * @return Bounding box.
          */
+        [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
+    };
+
+    class SVGDrawLine final : public SVGDrawEntity {
+    public:
+        using SVGDrawEntity::SVGDrawEntity;
+        SVGDrawLine(double x1, double y1, double x2, double y2);
+
+        double x1, y1, x2, y2;
+
+        [[nodiscard]] std::string render() const override;
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
     };
 

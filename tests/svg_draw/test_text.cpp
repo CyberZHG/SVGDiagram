@@ -4,6 +4,7 @@
 using namespace std;
 using namespace svg_diagram;
 
+#ifndef SVG_DIAGRAM_ENABLE_PANGO_CAIRO
 TEST(TestSVGDrawText, OneLineTextAutoSize) {
     SVGDiagram diagram;
     diagram.clearSVGDraw();
@@ -81,3 +82,4 @@ TEST(TestSVGDrawText, ThreeLinesAutoSize) {
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
+#endif

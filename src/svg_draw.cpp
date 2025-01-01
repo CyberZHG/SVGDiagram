@@ -65,27 +65,40 @@ bool SVGDrawEntity::hasEntity() const {
     return true;
 }
 
+void SVGDrawEntity::setAttribute(const string_view& key, const string& value) {
+    _attributes[key] = value;
+}
+
+string SVGDrawEntity::renderAttributes() const {
+    string svg;
+    for (const auto& [key, value] : _attributes) {
+        if (!value.empty()) {
+            svg += format(R"( {}="{}")", key, value);
+        }
+    }
+    return svg;
+}
+
 SVGDrawBoundingBox SVGDrawNode::boundingBox() const {
     const double halfWidth = width / 2.0;
     const double halfHeight = height / 2.0;
     return {cx - halfWidth, cy - halfHeight, cx + halfWidth, cy + halfHeight};
 }
 
-string SVGDrawNode::renderAttributes() const {
-    string svg;
-    if (!fill.empty()) {
-        svg += format(R"( fill="{}")", fill);
-    }
-    if (!stroke.empty()) {
-        svg += format(R"( stroke="{}")", stroke);
-    }
-    return svg;
+SVGDrawText::SVGDrawText() {
+    setFont("Serif", 16);
 }
 
 SVGDrawText::SVGDrawText(const double x, const double y, const string& text) {
     cx = x;
     cy = y;
     this->text = text;
+    setFont("Serif", 16);
+}
+
+void SVGDrawText::setFont(const string& fontFamily, double fontSize) {
+    setAttribute(SVG_ATTRIBUTE_FONT_FAMILY, fontFamily);
+    setAttribute(SVG_ATTRIBUTE_FONT_SIZE, format("{}", fontSize));
 }
 
 string SVGDrawText::render() const {
@@ -96,7 +109,7 @@ string SVGDrawText::render() const {
         return {it, end};
     };
     string svg = format(R"(<text x="{}" y="{}" text-anchor="middle" dominant-baseline="central")", cx, cy);
-    svg += format(R"( font-family="{}" font-size="{}")", fontFamily, fontSize);
+    svg += renderAttributes();
     svg += " >";
     if (const auto lines = splitLines(text); lines.size() == 1) {
         svg += this->text;
@@ -117,6 +130,8 @@ string SVGDrawText::render() const {
 
 SVGDrawBoundingBox SVGDrawText::boundingBox() const {
     const SVGTextSize textSize;
+    const auto fontSize = stod(_attributes.at(SVG_ATTRIBUTE_FONT_SIZE));
+    const auto fontFamily = _attributes.at(SVG_ATTRIBUTE_FONT_FAMILY);
     const auto [width, height] = textSize.computeTextSize(text, fontSize, fontFamily);
     return {cx - width / 2.0, cy - height / 2.0, cx + width / 2.0, cy + height / 2.0};
 }
@@ -138,4 +153,22 @@ string SVGDrawCircle::render() const {
 SVGDrawBoundingBox SVGDrawCircle::boundingBox() const {
     const double radius = min(width, height) / 2;
     return {cx - radius, cy - radius, cx + radius, cy + radius};
+}
+
+SVGDrawLine::SVGDrawLine(const double x1, const double y1, const double x2, const double y2) {
+    this->x1 = x1;
+    this->y1 = y1;
+    this->x2 = x2;
+    this->y2 = y2;
+}
+
+string SVGDrawLine::render() const {
+    string svg = format(R"(<line x1="{}" y1="{}" x2="{}" y2="{}")", x1, y1, x2, y2);
+    svg += renderAttributes();
+    svg += " />\n";
+    return svg;
+}
+
+SVGDrawBoundingBox SVGDrawLine::boundingBox() const {
+    return {x1, y1, x2, y2};
 }

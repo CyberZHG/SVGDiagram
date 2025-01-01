@@ -33,7 +33,7 @@ bool AttributeUtils::isPartOfDouble(const char ch) {
 
 double AttributeUtils::parseLengthToInch(const string& s) {
     int numberStart = -1;
-    for (int i = 0; i < s.length(); ++i) {
+    for (int i = 0; i < static_cast<int>(s.length()); ++i) {
         if (isPartOfDouble(s[i])) {
             numberStart = i;
             break;
@@ -44,14 +44,14 @@ double AttributeUtils::parseLengthToInch(const string& s) {
         return 0.0;
     }
     int numberEnd = static_cast<int>(s.length());
-    for (int i = numberStart + 1; i < s.length(); ++i) {
+    for (int i = numberStart + 1; i < static_cast<int>(s.length()); ++i) {
         if (!isPartOfDouble(s[i])) {
             numberEnd = i;
             break;
         }
     }
     const double value = stod(s.substr(numberStart, numberEnd - numberStart));
-    for (int i = numberEnd; i + 1 < s.length(); ++i) {
+    for (int i = numberEnd; i + 1 < static_cast<int>(s.length()); ++i) {
         if (s[i] == 'i' && s[i + 1] == 'n') {
             return value;
         }
@@ -94,7 +94,7 @@ bool AttributeUtils::parseBool(const string& value) {
 AttributeUtils::DCommands AttributeUtils::parseDCommands(const string& d) {
     auto readDouble = [&](const int start) -> pair<int, double> {
         int end = static_cast<int>(d.size());
-        for (int i = start + 1; i < d.size(); ++i) {
+        for (int i = start + 1; i < static_cast<int>(d.size()); ++i) {
             if (!isPartOfDouble(d[i])) {
                 end = i;
                 break;
@@ -103,7 +103,7 @@ AttributeUtils::DCommands AttributeUtils::parseDCommands(const string& d) {
         return {end, stod(d.substr(start, end - start))};
     };
     vector<pair<char, vector<double>>> commands;
-    for (int i = 0; i < d.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(d.size()); ++i) {
         if (d[i] == ' ' || d[i] == ',' || d[i] == '\n' || d[i] == '\r' || d[i] == '\t') {
             continue;
         }
@@ -128,8 +128,8 @@ std::vector<std::pair<double, double>> AttributeUtils::computeDPathPoints(const 
             case 'S':  // Draw a smooth cubic Bézier curve to absolute
             case 'Q':  // Draw a quadratic Bézier curve to absolute
             case 'T':  // Draw a smooth quadratic Bézier curve to absolute
-                for (int i = 0; i < parameters.size(); i += 2) {
-                    if (i + 1 < parameters.size()) {
+                for (int i = 0; i < static_cast<int>(parameters.size()); i += 2) {
+                    if (i + 1 < static_cast<int>(parameters.size())) {
                         points.emplace_back(parameters[i], parameters[i + 1]);
                     }
                 }
@@ -140,8 +140,8 @@ std::vector<std::pair<double, double>> AttributeUtils::computeDPathPoints(const 
             case 's':  // Draw a smooth cubic Bézier curve to relative
             case 'q':  // Draw a quadratic Bézier curve to relative
             case 't':  // Draw a smooth quadratic Bézier curve to relative
-                for (int i = 0; i < parameters.size(); i += 2) {
-                    if (i + 1 < parameters.size()) {
+                for (int i = 0; i < static_cast<int>(parameters.size()); i += 2) {
+                    if (i + 1 < static_cast<int>(parameters.size())) {
                         const auto& [lastX, lastY] = points[points.size() - 1];
                         points.emplace_back(lastX + parameters[i], lastY + parameters[i + 1]);
                     }
@@ -172,15 +172,15 @@ std::vector<std::pair<double, double>> AttributeUtils::computeDPathPoints(const 
                 }
                 break;
             case 'A':  // Draw an arc curve to absolute
-                for (int i = 5; i < parameters.size(); i += 7) {
-                    if (i + 1 < parameters.size()) {
+                for (int i = 5; i < static_cast<int>(parameters.size()); i += 7) {
+                    if (i + 1 < static_cast<int>(parameters.size())) {
                         points.emplace_back(parameters[i], parameters[i + 1]);
                     }
                 }
                 break;
             case 'a':  // Draw an arc curve to relative
-                for (int i = 5; i < parameters.size(); i += 7) {
-                    if (i + 1 < parameters.size()) {
+                for (int i = 5; i < static_cast<int>(parameters.size()); i += 7) {
+                    if (i + 1 < static_cast<int>(parameters.size())) {
                         const auto& [lastX, lastY] = points[points.size() - 1];
                         points.emplace_back(lastX + parameters[i], lastY + parameters[i + 1]);
                     }

@@ -2,6 +2,20 @@ cmake_minimum_required(VERSION 4.0)
 project(SVGDiagram)
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+    add_compile_options(
+            -Wall
+            -Wextra
+            -Werror
+            -Wpedantic
+            -Wmissing-include-dirs
+            -Wundef
+            -Wredundant-decls
+    )
+endif()
 
 option(SVG_DIAGRAM_ENABLE_PANGO_CAIRO "Enable PangoCairo for computing SVG text sizes" OFF)
 

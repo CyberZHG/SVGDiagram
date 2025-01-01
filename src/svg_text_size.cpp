@@ -35,13 +35,15 @@ void SVGTextSize::setLineSpacingScale(const double scale) {
     _lineSpacingScale = scale;
 }
 
-pair<double, double> SVGTextSize::computeTextSize(const string& text, const double fontSize, const string& fontName) const {
 #ifdef SVG_DIAGRAM_ENABLE_PANGO_CAIRO
+pair<double, double> SVGTextSize::computeTextSize(const string& text, const double fontSize, const string& fontName) const {
     return computePangoCairoTextSize(text, fontSize, fontName);
-#else
-    return computeApproximateTextSize(text, fontSize);
-#endif
 }
+#else
+pair<double, double> SVGTextSize::computeTextSize(const string& text, const double fontSize, const string&) const {
+    return computeApproximateTextSize(text, fontSize);
+}
+#endif
 
 pair<double, double> SVGTextSize::computeApproximateTextSize(const string& text, const double fontSize) const {
     if (text.empty()) {
@@ -49,10 +51,10 @@ pair<double, double> SVGTextSize::computeApproximateTextSize(const string& text,
     }
     int numLines = 1, maxCharsInLine = 0;
     int numCharsInLine = 0;
-    for (int i = 0; i < text.length(); ++i) {
+    for (int i = 0; i < static_cast<int>(text.length()); ++i) {
         if (text[i] == '\n' || text[i] == '\r') {
             maxCharsInLine = max(maxCharsInLine, numCharsInLine);
-            if (i + 1 < text.length() && text[i + 1] == '\n') {
+            if (i + 1 < static_cast<int>(text.length()) && text[i + 1] == '\n') {
                 ++i;
             }
             ++numLines;

@@ -187,7 +187,7 @@ XMLElement::ChildrenType SVGDrawText::generateXMLElements() const {
         textElement->setContent(text);
     } else {
         XMLElement::ChildrenType spans;
-        for (int i = 0; i < lines.size(); ++i) {
+        for (int i = 0; i < static_cast<int>(lines.size()); ++i) {
             double dy = SVGTextSize::DEFAULT_APPROXIMATION_HEIGHT_SCALE + SVGTextSize::DEFAULT_APPROXIMATION_LINE_SPACING_SCALE;
             if (i == 0) {
                 dy = -(static_cast<double>(lines.size()) - 1) / 2 * dy;
@@ -317,7 +317,7 @@ SVGDrawPath::SVGDrawPath(const string& d) {
 XMLElement::ChildrenType SVGDrawPath::generateXMLElements() const {
     const auto commands = AttributeUtils::parseDCommands(d);
     string reformat;
-    for (int i = 0; i < commands.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(commands.size()); ++i) {
         const auto& [command, parameters] = commands[i];
         if (i > 0) {
             reformat += ' ';

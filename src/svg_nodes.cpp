@@ -320,7 +320,7 @@ pair<double, double> SVGNode::computeConnectionPointRect(const double angle) con
             return {_cx + x, _cy + y};
         }
     }
-    for (int i = 0; i < vertices.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(vertices.size()); ++i) {
         x1 = vertices[i].first;
         y1 = vertices[i].second;
         x2 = vertices[(i + 1) % vertices.size()].first;
@@ -350,8 +350,6 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsEllipse() {
     }
     svgDraws.emplace_back(std::move(ellipse));
     appendSVGDrawsLabel(svgDraws);
-    const auto [textWidth, textHeight] = computeTextSize();
-    const auto [marginX, marginY] = computeMarginInPixels();
     return svgDraws;
 }
 
@@ -495,7 +493,7 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
     auto [sx, sy] = addArrow(arrowTailShape, svgDrawArrows, nodeFrom->computeConnectionPoint(angleFrom), angleFrom);
     points.emplace_back(sx, sy);
     points.emplace_back(sx, sy);
-    for (const auto [x, y] : _connectionPoints) {
+    for (const auto& [x, y] : _connectionPoints) {
         points.emplace_back(x, y);
     }
     const double angleTo = nodeTo->computeAngle(_connectionPoints[_connectionPoints.size() - 1]);
@@ -503,7 +501,7 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
     points.emplace_back(ex, ey);
     points.emplace_back(ex, ey);
     auto d = format("M {} {}", points[1].first, points[1].second);
-    for (int i = 1; i + 2 < points.size(); ++i) {
+    for (int i = 1; i + 2 < static_cast<int>(points.size()); ++i) {
         const auto [x0, y0] = points[i - 1];
         const auto [x1, y1] = points[i];
         const auto [x2, y2] = points[i + 1];

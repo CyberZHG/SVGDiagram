@@ -164,7 +164,7 @@ bool XMLElement::operator==(const XMLElement& other) const {
     if (_children.size() != other._children.size()) {
         return false;
     }
-    for (int i = 0; i < _children.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(_children.size()); ++i) {
         if (*_children[i].get() != *other._children[i].get()) {
             return false;
         }
@@ -307,8 +307,8 @@ XMLElementComment::XMLElementComment(const string& content) {
 
 string XMLElementComment::toString(const int indent) const {
     string escapedComment;
-    for (int i = 0; i < _content.length(); ++i) {
-        if (i + 1 < _content.length() && _content[i] == '-' && _content[i + 1] == '-') {
+    for (int i = 0; i < static_cast<int>(_content.length()); ++i) {
+        if (i + 1 < static_cast<int>(_content.length()) && _content[i] == '-' && _content[i + 1] == '-') {
             escapedComment += "‑‑";
             ++i;
         } else {

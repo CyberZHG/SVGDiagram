@@ -70,8 +70,8 @@ void XMLElement::setContent(const string& content) {
 string XMLElement::toString(const int indent) const {
     const auto indentStr = string(indent, ' ');
     string s = indentStr + "<" + _tag;
-    for (const auto& [key, value] : _attributes) {
-        s += format(R"( {}="{}")", key, escapeAttributeValue(value));
+    for (const auto& key : _attributeKeys) {
+        s += format(R"( {}="{}")", key, escapeAttributeValue(_attributes.at(key)));
     }
     if (_content.empty() && _children.empty()) {
         s += "/>\n";
@@ -92,6 +92,123 @@ string XMLElement::toString(const int indent) const {
 
 std::string XMLElement::toString() const {
     return toString(0);
+}
+
+XMLElement::ChildrenType XMLElement::parse(const string& source) {
+    const auto [children, stop] = parse(source, 0);
+    return children;
+}
+
+std::pair<XMLElement::ChildrenType, int> XMLElement::parse(const std::string &source, const int start) {
+    constexpr int STATE_START = 0;
+    int state = STATE_START;
+    ChildrenType children;
+    const int n = static_cast<int>(source.size());
+    int i = start;
+    while (i < n) {
+        constexpr int STATE_TAG = 1;
+        constexpr int STATE_FIND_CLOSE = 2;
+        constexpr int STATE_ATTRIBUTE = 3;
+        constexpr int STATE_CONTENT = 4;
+        constexpr int STATE_CLOSE = 5;
+        switch (state) {
+            case STATE_START: {
+                while (i < n && source[i] != '<') {
+                    ++i;
+                }
+                state = STATE_TAG;
+                i += 1;
+                break;
+            }
+            case STATE_TAG: {
+                if (source[i] == '/') {
+                    return {children, i - 1};
+                }
+                if (source[i] == '!') {
+                    i += 4;
+                    const int commentStart = i;
+                    for (; i + 2 < n; ++i) {
+                        if (source[i] == '-' && source[i + 1] == '-' && source[i + 2] == '>') {
+                            const auto comment = source.substr(commentStart, i - 1 - commentStart);
+                            children.emplace_back(make_shared<XMLElementComment>(comment));
+                            i += 3;
+                            break;
+                        }
+                    }
+                    state = STATE_START;
+                } else {
+                    const int tagStart = i;
+                    while (i < n && isalpha(source[i])) {
+                        ++i;
+                    }
+                    children.emplace_back(make_shared<XMLElement>(source.substr(tagStart, i - tagStart)));
+                    state = STATE_FIND_CLOSE;
+                }
+                break;
+            }
+            case STATE_FIND_CLOSE: {
+                while (i < n && isspace(source[i])) {
+                    ++i;
+                }
+                if (i < n) {
+                    if (source[i] == '>') {
+                        state = STATE_CONTENT;
+                        i += 1;
+                    } else if (source[i] == '/') {
+                        state = STATE_START;
+                        i += 2;
+                    } else {
+                        state = STATE_ATTRIBUTE;
+                    }
+                }
+                break;
+            }
+            case STATE_ATTRIBUTE: {
+                const int keyStart = i;
+                while (i < n && source[i] != '=') {
+                    ++i;
+                }
+                const auto key = source.substr(keyStart, i - keyStart);
+                i += 2;
+                if (i < n) {
+                    const int valueStart = i;
+                    while (i < n && source[i] != '"') {
+                        ++i;
+                    }
+                    const auto value = source.substr(valueStart, i - valueStart);
+                    children[children.size() - 1]->addAttribute(key, value);
+                    i += 1;
+                }
+                state = STATE_FIND_CLOSE;
+                break;
+            }
+            case STATE_CONTENT: {
+                const int contentStart = i;
+                while (i < n && source[i] != '<') {
+                    ++i;
+                }
+                if (i + 1 < n && source[i + 1] != '/') {
+                    const auto [subChildren, nextIndex] = parse(source, i);
+                    children[children.size() - 1]->addChildren(subChildren);
+                    i = nextIndex;
+                } else {
+                    const auto content = source.substr(contentStart, i - contentStart);
+                    children[children.size() - 1]->setContent(content);
+                }
+                state = STATE_CLOSE;
+                break;
+            }
+            case STATE_CLOSE: {
+                while (i < n && source[i] != '>') {
+                    ++i;
+                }
+                i += 1;
+                state = STATE_START;
+                break;
+            }
+        }
+    }
+    return {children, n};
 }
 
 string XMLElement::escapeAttributeValue(const string& value) {

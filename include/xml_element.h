@@ -6,6 +6,10 @@
 
 namespace svg_diagram {
 
+    /** A helper class for generating XML strings.
+     *
+     * This class is not fault-tolerant and only processes a limited subset of the standard XML format.
+     */
     class XMLElement {
     public:
         XMLElement() = default;
@@ -32,6 +36,15 @@ namespace svg_diagram {
         [[nodiscard]] virtual std::string toString(int indent) const;
         [[nodiscard]] virtual std::string toString() const;
 
+        /** Parse XML from string.
+         *
+         * Note that this is only used for unit testing. It can only parse the output of this class.
+         *
+         * @param source XML string.
+         * @return XML element.
+         */
+        static ChildrenType parse(const std::string& source);
+
     protected:
         std::string _tag;
         AttributesType _attributes;
@@ -39,7 +52,9 @@ namespace svg_diagram {
         ChildrenType _children;
         std::string _content;
 
-        static std::string escapeAttributeValue(const std::string& value) ;
+        static std::string escapeAttributeValue(const std::string& value);
+
+        static std::pair<ChildrenType, int> parse(const std::string& source, int start);
     };
 
     class XMLElementComment final : public XMLElement {

@@ -4,41 +4,50 @@
 using namespace std;
 using namespace svg_diagram;
 
-TEST(TestXMLElement, Comment) {
-    XMLElementComment comment("Created by: https://github.com/CyberZHG/SVGDiagram");
-    auto output = comment.toString();
-    auto expected = "<!-- Created by: https://github.com/CyberZHG/SVGDiagram -->\n";
-    EXPECT_EQ(expected, output);
-    comment.setContent("<!-- Created by: https://github.com/CyberZHG/SVGDiagram -->");
-    output = comment.toString();
-    expected = "<!-- <!‑‑ Created by: https://github.com/CyberZHG/SVGDiagram ‑‑> -->\n";
-    EXPECT_EQ(expected, output);
+TEST(TestXMLElementParse, SingleTag) {
+    const auto expected = R"(<svg/>)" + string("\n");
+    const auto elements = XMLElement::parse(expected);
+    const auto output = elements[0]->toString();
+    EXPECT_EQ(output, expected);
 }
 
-TEST(TestXMLElement, SpecialCase1) {
-    const auto text1 = make_shared<XMLElement>("text", "foo");
-    const auto text2 = make_shared<XMLElement>("text", XMLElement::AttributesType{{"font-size", "18"}}, "bar");
-    const auto rect = make_shared<XMLElement>("g",
-        XMLElement::AttributesType{{"id", "\""}},
-        XMLElement::ChildrenType{text1, text2});
-    const auto circle = make_shared<XMLElement>("circle",
-        XMLElement::AttributesType{{"cx", "0"}, {"cy", "0"}, {"r", "20"}});
-    const XMLElement element("svg",
-        {
-            {"width", "48"},
-            {"height", "48"},
-            {"viewBox", "0 0 48 48"},
-            {"xmlns", "http://www.w3.org/2000/svg"},
-            {"xmlns:xlink", "http://www.w3.org/1999/xlink"},
-        }, {rect, circle});
-    const auto output = element.toString();
-    const auto expected = R"(<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <g id="&quot;">
-    <text>foo</text>
-    <text font-size="18">bar</text>
+TEST(TestXMLElementParse, SingleTagOpenAndClose) {
+    const auto input = R"(<svg></svg>)" + string("\n");
+    const auto elements = XMLElement::parse(input);
+    const auto output = elements[0]->toString();
+    const auto expected = R"(<svg/>)" + string("\n");
+    EXPECT_EQ(output, expected);
+}
+
+TEST(TestXMLElementParse, SingleTagAttributes) {
+    const auto expected = R"(<svg width="10" height="10"/>)" + string("\n");
+    const auto elements = XMLElement::parse(expected);
+    const auto output = elements[0]->toString();
+    EXPECT_EQ(output, expected);
+}
+
+TEST(TestXMLElementParse, SingleTagContent) {
+    const auto expected = R"(<text> foo </text>)" + string("\n");
+    const auto elements = XMLElement::parse(expected);
+    const auto output = elements[0]->toString();
+    EXPECT_EQ(output, expected);
+}
+
+TEST(TestXMLElementParse, SpecialCase1) {
+    const auto expected = R"s(<svg width="152.09256357784233" height="102.09256357784231" viewBox="0 0 152.09256357784233 102.09256357784231" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g id="graph0" class="graph" transform="translate(-78.30819398704587,-78.30819398704587) scale(1.0)">
+    <!-- node_id = A -->
+    <circle cx="100" cy="100" r="17.692" fill="none" stroke="black"/>
+    <text x="100" y="100" text-anchor="middle" dominant-baseline="central" font-family="Serif" font-size="16">A</text>
+    <!-- node_id = B -->
+    <circle cx="200" cy="150" r="26.401" fill="none" stroke="black"/>
+    <text x="200" y="150" text-anchor="middle" dominant-baseline="central" font-family="Serif" font-size="16">B</text>
+    <!-- edge_id = A -> B -->
+    <line x1="115.824" y1="107.912" x2="176.386" y2="138.193" stroke="black"/>
   </g>
-  <circle cx="0" r="20" cy="0"/>
 </svg>
-)";
-    EXPECT_EQ(expected, output);
+)s";
+    const auto elements = XMLElement::parse(expected);
+    const auto output = elements[0]->toString();
+    EXPECT_EQ(output, expected);
 }

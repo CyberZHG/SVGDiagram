@@ -23,6 +23,8 @@ namespace svg_diagram {
         SVGDraw() = default;
         virtual ~SVGDraw() = default;
 
+        static constexpr int DEFAULT_NUM_DECIMALS = 3;
+
         /** Generate a SVG string.
          *
          * @return SVG string.
@@ -48,6 +50,12 @@ namespace svg_diagram {
          * @return An unique ID.
          */
         [[nodiscard]] virtual std::string singletonName() const;
+
+        void setNumDecimals(int numDecimals);
+        [[nodiscard]] std::string formatDouble(double value) const;
+
+    private:
+        int _numDecimals = DEFAULT_NUM_DECIMALS;
     };
 
     class SVGDrawComment final : public SVGDraw {
@@ -69,6 +77,8 @@ namespace svg_diagram {
 
         [[nodiscard]] bool hasEntity() const override;
         void setAttribute(const std::string_view& key, const std::string& value);
+        void setFill(const std::string& value);
+        void setStroke(const std::string& value);
 
     protected:
         std::map<std::string_view, std::string> _attributes;
@@ -79,6 +89,7 @@ namespace svg_diagram {
     class SVGDrawNode : public SVGDrawEntity {
     public:
         using SVGDrawEntity::SVGDrawEntity;
+        SVGDrawNode(double cx, double cy, double width, double height);
 
         double cx, cy, width, height;
 
@@ -112,6 +123,13 @@ namespace svg_diagram {
          * @return Bounding box.
          */
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
+    };
+
+    class SVGDrawRect final : public SVGDrawNode {
+    public:
+        using SVGDrawNode::SVGDrawNode;
+
+        [[nodiscard]] std::string render() const override;
     };
 
     class SVGDrawLine final : public SVGDrawEntity {

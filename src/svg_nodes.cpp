@@ -32,8 +32,37 @@ const string& SVGNode::getAttribute(const string_view& key) const {
     return EMPTY_STRING;
 }
 
+void SVGNode::setPrecomputedTextSize(const double width, const double height) {
+    _precomputedTextWidth = width;
+    _precomputedTextHeight = height;
+}
+
 void SVGNode::setLabel(const string& label) {
     setAttribute(DOT_ATTR_KEY_LABEL, label);
+}
+
+void SVGNode::setMargin(const string& value) {
+    setAttribute(DOT_ATTR_KEY_MARGIN, value);
+}
+
+void SVGNode::setMargin(const double margin) {
+    setMargin(format("{}", margin));
+}
+
+void SVGNode::setMargin(const double marginX, const double marginY) {
+    setMargin(format("{},{}", marginX, marginY));
+}
+
+void SVGNode::setMarginInPixels(const double margin) {
+    setMargin(margin / SVG_DEFAULT_DPI);
+}
+
+void SVGNode::setMarginInPixels(const double marginX, const double marginY) {
+    setMargin(marginX / SVG_DEFAULT_DPI, marginY / SVG_DEFAULT_DPI);
+}
+
+void SVGNode::enableDebug() {
+    _showTextBoxes = true;
 }
 
 void SVGNode::adjustNodeSize() {
@@ -60,6 +89,9 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
 }
 
 pair<double, double> SVGNode::computeTextSize() {
+    if (_precomputedTextWidth > 0 && _precomputedTextHeight > 0) {
+        return {_precomputedTextWidth, _precomputedTextHeight};
+    }
     const SVGTextSize textSize;
     const auto label = getAttribute(DOT_ATTR_KEY_LABEL);
     setAttributeIfNotExist(DOT_ATTR_KEY_FONT_NAME, "Serif");
@@ -88,9 +120,8 @@ bool SVGNode::isFixedSize() const {
 
 void SVGNode::adjustNodeSizeCircle() {
     const auto [textWidth, textHeight] = computeTextSize();
-    const auto textDiagonalLength = GeometryUtils::distance(0.0, 0.0, textHeight, textHeight) / 2.0;
     const auto [marginX, marginY] = computeMarginInPixels();
-    const double diameter = textDiagonalLength + max(marginX, marginY) * 2;
+    const auto diameter = GeometryUtils::distance(textWidth + marginX * 2, textHeight + marginY * 2);
     const auto diameterStr = format("{}", diameter);
     if (isFixedSize()) {
         setAttributeIfNotExist(DOT_ATTR_KEY_WIDTH, diameterStr);
@@ -101,16 +132,32 @@ void SVGNode::adjustNodeSizeCircle() {
     }
 }
 
+void SVGNode::appendSVGDrawsLabel(vector<unique_ptr<SVGDraw>>& svgDraws) {
+    if (_showTextBoxes) {
+        const auto [textWidth, textHeight] = computeTextSize();
+        const auto [marginX, marginY] = computeMarginInPixels();
+        auto textRect = make_unique<SVGDrawRect>(_cx, _cy, textWidth, textHeight);
+        textRect->setFill("none");
+        textRect->setStroke("blue");
+        svgDraws.emplace_back(std::move(textRect));
+        auto marginRect = make_unique<SVGDrawRect>(_cx, _cy, textWidth + marginX * 2, textHeight + marginY * 2);
+        marginRect->setFill("none");
+        marginRect->setStroke("red");
+        svgDraws.emplace_back(std::move(marginRect));
+    }
+    if (const auto label = getAttribute(DOT_ATTR_KEY_LABEL); !label.empty()) {
+        svgDraws.emplace_back(make_unique<SVGDrawText>(_cx, _cy, label));
+    }
+}
+
 vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsCircle() {
     const double width = stod(getAttribute(DOT_ATTR_KEY_WIDTH));
     const double height = stod(getAttribute(DOT_ATTR_KEY_WIDTH));
     vector<unique_ptr<SVGDraw>> svgDraws;
+    appendSVGDrawsLabel(svgDraws);
     auto circle = make_unique<SVGDrawCircle>(_cx, _cy, max(width, height) / 2.0);
-    circle->setAttribute(SVG_ATTR_KEY_FILL, "none");
-    circle->setAttribute(SVG_ATTR_KEY_STROKE, "black");
+    circle->setFill("none");
+    circle->setStroke("black");
     svgDraws.emplace_back(std::move(circle));
-    if (const auto label = getAttribute(DOT_ATTR_KEY_LABEL); !label.empty()) {
-        svgDraws.emplace_back(make_unique<SVGDrawText>(_cx, _cy, label));
-    }
     return svgDraws;
 }

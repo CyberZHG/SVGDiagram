@@ -29,19 +29,34 @@ namespace svg_diagram {
         void setAttributeIfNotExist(const std::string_view& key, const std::string& value);
         [[nodiscard]] const std::string& getAttribute(const std::string_view& key) const;
 
+        void setPrecomputedTextSize(double width, double height);
         void setLabel(const std::string& label);
+        void setMargin(const std::string& value);
+        void setMargin(double margin);
+        void setMargin(double marginX, double marginY);
+        void setMarginInPixels(double margin);
+        void setMarginInPixels(double marginX, double marginY);
+
+        void enableDebug();
 
         void adjustNodeSize();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDraws();
+        // std::vector<double, double> getConnectionPoint(double angle);
 
     private:
         double _cx = 0.0;
         double _cy = 0.0;
+        double _precomputedTextWidth = 0.0;
+        double _precomputedTextHeight = 0.0;
         std::unordered_map<std::string_view, std::string> _attributes;
+
+        bool _showTextBoxes = false;
 
         [[nodiscard]] std::pair<double, double> computeTextSize();
         [[nodiscard]] std::pair<double, double> computeMarginInPixels();
         [[nodiscard]] bool isFixedSize() const;
+
+        void appendSVGDrawsLabel(std::vector<std::unique_ptr<SVGDraw>>& svgDraws);
 
         void adjustNodeSizeCircle();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsCircle();

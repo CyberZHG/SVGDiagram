@@ -36,6 +36,27 @@ string SVGDraw::singletonName() const {
     return "";
 }
 
+void SVGDraw::setNumDecimals(const int numDecimals) {
+    _numDecimals = numDecimals;
+}
+
+string SVGDraw::formatDouble(const double value) const {
+    string str = format("{}", value);
+    int numDecimals = 0;
+    bool start = false;
+    for (const auto& ch : str) {
+        if (ch == '.') {
+            start = true;
+        } else if (start) {
+            ++numDecimals;
+        }
+    }
+    if (numDecimals <= _numDecimals) {
+        return str;
+    }
+    return format("{:.{}f}", value, _numDecimals);
+}
+
 SVGDrawComment::SVGDrawComment(const string& comment) {
     this->comment = comment;
 }
@@ -69,6 +90,14 @@ void SVGDrawEntity::setAttribute(const string_view& key, const string& value) {
     _attributes[key] = value;
 }
 
+void SVGDrawEntity::setFill(const string& value) {
+    setAttribute(SVG_ATTR_KEY_FILL, value);
+}
+
+void SVGDrawEntity::setStroke(const string& value) {
+    setAttribute(SVG_ATTR_KEY_STROKE, value);
+}
+
 string SVGDrawEntity::renderAttributes() const {
     string svg;
     for (const auto& [key, value] : _attributes) {
@@ -77,6 +106,13 @@ string SVGDrawEntity::renderAttributes() const {
         }
     }
     return svg;
+}
+
+SVGDrawNode::SVGDrawNode(const double cx, const double cy, const double width, const double height) {
+    this->cx = cx;
+    this->cy = cy;
+    this->width = width;
+    this->height = height;
 }
 
 SVGDrawBoundingBox SVGDrawNode::boundingBox() const {
@@ -108,7 +144,7 @@ string SVGDrawText::render() const {
         sregex_token_iterator end;
         return {it, end};
     };
-    string svg = format(R"(<text x="{}" y="{}" text-anchor="middle" dominant-baseline="central")", cx, cy);
+    string svg = format(R"(<text x="{}" y="{}" text-anchor="middle" dominant-baseline="central")", formatDouble(cx), formatDouble(cy));
     svg += renderAttributes();
     svg += " >";
     if (const auto lines = splitLines(text); lines.size() == 1) {
@@ -120,7 +156,7 @@ string SVGDrawText::render() const {
             if (i == 0) {
                 dy = -(static_cast<double>(lines.size()) - 1) / 2 * dy;
             }
-            svg += format(R"(  <tspan x="{}" dy="{}em">{}</tspan>)", cx, dy, lines[i]);
+            svg += format(R"(  <tspan x="{}" dy="{}em">{}</tspan>)", formatDouble(cx), dy, lines[i]);
             svg += "\n";
         }
     }
@@ -144,7 +180,7 @@ SVGDrawCircle::SVGDrawCircle(const double x, const double y, const double radius
 
 string SVGDrawCircle::render() const {
     const double radius = min(width, height) / 2;
-    string svg = format(R"(<circle cx="{}" cy="{}" r="{}")", cx, cy, radius);
+    string svg = format(R"(<circle cx="{}" cy="{}" r="{}")", formatDouble(cx), formatDouble(cy), formatDouble(radius));
     svg += renderAttributes();
     svg += " />\n";
     return svg;
@@ -155,6 +191,15 @@ SVGDrawBoundingBox SVGDrawCircle::boundingBox() const {
     return {cx - radius, cy - radius, cx + radius, cy + radius};
 }
 
+std::string SVGDrawRect::render() const {
+    const double x = cx - width / 2;
+    const double y = cy - height / 2;
+    string svg = format(R"(<rect x="{}" y="{}" width="{}" height="{}")", formatDouble(x), formatDouble(y), formatDouble(width), formatDouble(height));
+    svg += renderAttributes();
+    svg += " />\n";
+    return svg;
+}
+
 SVGDrawLine::SVGDrawLine(const double x1, const double y1, const double x2, const double y2) {
     this->x1 = x1;
     this->y1 = y1;
@@ -163,7 +208,7 @@ SVGDrawLine::SVGDrawLine(const double x1, const double y1, const double x2, cons
 }
 
 string SVGDrawLine::render() const {
-    string svg = format(R"(<line x1="{}" y1="{}" x2="{}" y2="{}")", x1, y1, x2, y2);
+    string svg = format(R"(<line x1="{}" y1="{}" x2="{}" y2="{}")", formatDouble(x1), formatDouble(y1), formatDouble(x2), formatDouble(y2));
     svg += renderAttributes();
     svg += " />\n";
     return svg;

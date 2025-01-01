@@ -1,0 +1,30 @@
+# IDE
+.idea/
+*.iml
+*.iws
+
+# CMake
+build/
+cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+Testing/
+CTestTestfile.cmake
+
+# Temporary
+*.swp
+*.swo
+*~
+*.DS_Store
+
+# Compile
+*.o
+*.obj
+*.a
+*.so
+*.dll
+*.exe
+*.out
+*.log

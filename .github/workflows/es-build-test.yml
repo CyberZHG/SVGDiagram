@@ -29,13 +29,17 @@ jobs:
 
       - name: Build
         run: |
-          (cd emsdk && source ./emsdk_env.sh)
-          (cd es && npm run build)
+          cd emsdk
+          source ./emsdk_env.sh
+          cd ../es
+          npm run build
 
       - name: Lint
         run: |
-          (cd es && npm run lint)
+          cd es
+          npm run lint
 
       - name: Test
         run: |
-          (cd es && npm test)
+          cd es
+          npm test

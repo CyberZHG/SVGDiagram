@@ -26,7 +26,7 @@ namespace svg_diagram {
     constexpr std::string_view DOT_ATTR_KEY_PEN_WIDTH = "penwidth";
 
     class SVGNode;
-    class SVGSubgraph;
+    class SVGGraph;
     using NodesMapping = std::unordered_map<std::string, std::unique_ptr<SVGNode>>;
 
     class SVGItem {
@@ -35,14 +35,14 @@ namespace svg_diagram {
         virtual ~SVGItem() = default;
 
         enum class Type {
-            NODE, EDGE, SUBGRAPH,
+            NODE, EDGE, GRAPH,
         };
 
         void enableDebug();
         [[nodiscard]] bool enabledDebug() const;
 
-        void setParent(SVGSubgraph* parent);
-        [[nodiscard]] SVGSubgraph* parent() const;
+        void setParent(SVGGraph* parent);
+        [[nodiscard]] SVGGraph* parent() const;
 
         [[nodiscard]] virtual Type type() const = 0;
 
@@ -71,7 +71,7 @@ namespace svg_diagram {
         [[nodiscard]] std::pair<double, double> computeTextSizeWithMargin();
 
     private:
-        SVGSubgraph* _parent = nullptr;
+        SVGGraph* _parent = nullptr;
         bool _enabledDebug = false;
         double _precomputedTextWidth = 0.0;
         double _precomputedTextHeight = 0.0;
@@ -192,7 +192,7 @@ namespace svg_diagram {
         std::pair<double, double> addArrowNormal(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, const std::pair<double, double>& connectionPoint, double angle) const;
     };
 
-    class SVGSubgraph final : SVGItem {
+    class SVGGraph final : SVGItem {
     public:
         using SVGItem::SVGItem;
 

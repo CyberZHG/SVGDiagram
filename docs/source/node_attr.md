@@ -20,7 +20,7 @@ node2.set_label("Pybind11\nEmscripten")
 node3 = diagram.add_node("C")
 node3.set_center(300, 0)
 node3.set_label("物华天宝\n人杰地灵")
-diagram.to_svg("label.svg")
+svg = diagram.render()
 ```
 ````
 ````{tab-item} JavaScript
@@ -30,7 +30,7 @@ import { SVGDiagram } from 'sp-svg-diagram';
 const diagram = new SVGDiagram();
 const node1 = diagram.addNode("A");
 node1.setCenter(0.0, 0.0);
-ndoe1.setLabel("foobar");
+node1.setLabel("foobar");
 const node2 = diagram.addNode("B");
 node2.setCenter(150.0, 0.0);
 node2.setLabel("Pybind11\nEmscripten");

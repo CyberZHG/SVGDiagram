@@ -85,6 +85,11 @@ void SVGItem::setSize(const double width, const double height) {
     setHeight(height);
 }
 
+void SVGItem::setFixedSize(const double width, const double height) {
+    setSize(width, height);
+    setAttribute(ATTRIBUTE_KEY_FIXED_SIZE, "ON");
+}
+
 pair<double, double> SVGItem::margin() const {
     return AttributeUtils::parseMargin(getAttribute(ATTRIBUTE_KEY_MARGIN));
 }
@@ -158,8 +163,8 @@ void SVGItem::appendSVGDrawsLabelWithCenter(vector<unique_ptr<SVGDraw>>& svgDraw
     }
     if (const auto label = getAttribute(ATTRIBUTE_KEY_LABEL); !label.empty()) {
         auto draw = make_unique<SVGDrawText>(cx, cy, label);
-        if (const auto& fontColor = getAttribute(ATTRIBUTE_KEY_FONT_COLOR); fontColor != "black") {
-            draw->setFill(fontColor);
+        if (const auto& color = fontColor(); color != "black") {
+            draw->setFill(color);
         }
         svgDraws.emplace_back(std::move(draw));
     }
@@ -269,6 +274,8 @@ void SVGNode::adjustNodeSize() {
     const auto shape = getAttribute(ATTRIBUTE_KEY_SHAPE);
     if (shape == NODE_SHAPE_CIRCLE) {
         adjustNodeSizeCircle();
+    } else if (shape == NODE_SHAPE_DOUBLE_CIRCLE) {
+        adjustNodeSizeDoubleCircle();
     } else if (shape == NODE_SHAPE_NONE || shape == NODE_SHAPE_RECT) {
         adjustNodeSizeRect();
     } else if (shape == NODE_SHAPE_ELLIPSE) {
@@ -282,11 +289,11 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
     setAttributeIfNotExist(ATTRIBUTE_KEY_FILL_COLOR, "none");
     setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_COLOR, "black");
     const auto shape = getAttribute(ATTRIBUTE_KEY_SHAPE);
-    if (shape == NODE_SHAPE_NONE) {
-        return produceSVGDrawsNone();
-    }
     if (shape == NODE_SHAPE_CIRCLE) {
         return produceSVGDrawsCircle();
+    }
+    if (shape == NODE_SHAPE_DOUBLE_CIRCLE) {
+        return produceSVGDrawsDoubleCircle();
     }
     if (shape == NODE_SHAPE_RECT) {
         return produceSVGDrawsRect();
@@ -294,7 +301,7 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
     if (shape == NODE_SHAPE_ELLIPSE) {
         return produceSVGDrawsEllipse();
     }
-    return {};
+    return produceSVGDrawsNone();
 }
 
 pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
@@ -303,7 +310,10 @@ pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
     if (shape == NODE_SHAPE_CIRCLE) {
         return computeConnectionPointCircle(angle);
     }
-    if (shape == NODE_SHAPE_RECT) {
+    if (shape == NODE_SHAPE_DOUBLE_CIRCLE) {
+        return computeConnectionPointDoubleCircle(angle);
+    }
+    if (shape == NODE_SHAPE_RECT || shape == NODE_SHAPE_NONE) {
         return computeConnectionPointRect(angle);
     }
     if (shape == NODE_SHAPE_ELLIPSE) {
@@ -311,20 +321,6 @@ pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
     }
     return {0.0, 0.0};
 }
-
-/*
-pair<double, double> SVGNode::computeConnectionPoint(const double x1, const double y1, const double x2, const double y2) {
-    return computeConnectionPoint(atan2(y2 - y1, x2 - x1));
-}
-
-pair<double, double> SVGNode::computeConnectionPoint(const double x, const double y) {
-    return computeConnectionPoint(_cx, _cy, x, y);
-}
-
-pair<double, double> SVGNode::computeConnectionPoint(const pair<double, double>& p) {
-    return computeConnectionPoint(p.first, p.second);
-}
-*/
 
 double SVGNode::computeAngle(const double x, const double y) const {
     return atan2(y - _cy, x - _cx);
@@ -382,6 +378,37 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsCircle() {
 
 pair<double, double> SVGNode::computeConnectionPointCircle(const double angle) const {
     const double radius = (width() + penWidth()) / 2.0;
+    return {_cx + radius * cos(angle), _cy + radius * sin(angle)};
+}
+
+void SVGNode::adjustNodeSizeDoubleCircle() {
+    adjustNodeSizeCircle();
+}
+
+vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsDoubleCircle() {
+    vector<unique_ptr<SVGDraw>> svgDraws;
+    const double radius = max(width(), height()) / 2.0;
+    const auto strokeWidth = penWidth();
+    auto circleInner = make_unique<SVGDrawCircle>(_cx, _cy, radius);
+    circleInner->setStroke(color());
+    circleInner->setFill(fillColor());
+    if (strokeWidth != 1.0) {
+        circleInner->setStrokeWidth(strokeWidth);
+    }
+    svgDraws.emplace_back(std::move(circleInner));
+    auto circleOuter = make_unique<SVGDrawCircle>(_cx, _cy, radius + DOUBLE_BORDER_MARGIN);
+    circleOuter->setStroke(color());
+    circleOuter->setFill("none");
+    if (strokeWidth != 1.0) {
+        circleOuter->setStrokeWidth(strokeWidth);
+    }
+    svgDraws.emplace_back(std::move(circleOuter));
+    appendSVGDrawsLabel(svgDraws);
+    return svgDraws;
+}
+
+std::pair<double, double> SVGNode::computeConnectionPointDoubleCircle(const double angle) const {
+    const double radius = (width() + penWidth()) / 2.0 + DOUBLE_BORDER_MARGIN;
     return {_cx + radius * cos(angle), _cy + radius * sin(angle)};
 }
 
@@ -910,16 +937,6 @@ vector<shared_ptr<SVGNode>> SVGGraph::findNodes() const {
         }
     }
     return nodes;
-}
-
-vector<shared_ptr<SVGEdge>> SVGGraph::findEdges() const {
-    vector<shared_ptr<SVGEdge>> edges = _edges;
-    for (auto& graph : _graphs) {
-        for (auto& edge : graph->findEdges()) {
-            edges.emplace_back(std::move(edge));
-        }
-    }
-    return edges;
 }
 
 vector<unique_ptr<SVGDraw>> SVGGraph::produceNodeSVGDraws() const {

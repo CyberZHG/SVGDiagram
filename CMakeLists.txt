@@ -44,19 +44,24 @@ add_library(SVGDiagram STATIC
         include/svg_text_size.h
         src/svg_text_size.cpp
         include/svg_nodes.h
-        src/svg_node.cpp
-        src/svg_edge.cpp
-        src/svg_graph.cpp
-        src/svg_item.cpp
+        src/diagram/svg_node.cpp
+        src/diagram/svg_edge.cpp
+        src/diagram/svg_graph.cpp
+        src/diagram/svg_item.cpp
         include/attribute_utils.h
         src/attribute_utils.cpp
         include/svg_draw.h
-        src/svg_draw.cpp
         include/geometry_utils.h
         src/geometry_utils.cpp
         include/xml_element.h
         src/xml_element.cpp
         include/constants.h
+        src/svg/svg_draw_base.cpp
+        src/svg/svg_draw_shapes.cpp
+        src/svg/svg_draw_comments.cpp
+        src/svg/svg_draw_lines.cpp
+        src/svg/svg_draw_group.cpp
+        src/svg/svg_draw_defs.cpp
 )
 
 target_include_directories(SVGDiagram

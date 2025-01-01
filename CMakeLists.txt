@@ -86,6 +86,7 @@ if(SVG_DIAGRAM_BUILD_TESTS)
             tests/svg_draw/test_draw.cpp
             tests/svg_edge/test_line.cpp
             tests/svg_edge/test_spline.cpp
+            tests/example/test_example_pentagon.cpp
     )
 
     target_link_libraries(runTests

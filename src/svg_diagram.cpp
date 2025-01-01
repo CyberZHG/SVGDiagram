@@ -36,11 +36,34 @@ void SVGDiagram::setBackgroundColor(const std::string& backgroundColor) {
     _backgroundColor = backgroundColor;
 }
 
+const unique_ptr<SVGNode>& SVGDiagram::addNode(const string& id) {
+    if (_nodes.contains(id)) {
+        return _nodes.at(id);
+    }
+    _nodeIds.emplace_back(id);
+    return _nodes[id] = make_unique<SVGNode>();
+}
+
 void SVGDiagram::addNode(const string& id, unique_ptr<SVGNode> node) {
     if (!_nodes.contains(id)) {
         _nodeIds.emplace_back(id);
     }
     _nodes[id] = std::move(node);
+}
+
+const unique_ptr<SVGEdge>& SVGDiagram::addEdge(const string& id) {
+    if (_edges.contains(id)) {
+        return _edges.at(id);
+    }
+    _edgeIds.emplace_back(id);
+    return _edges[id] = make_unique<SVGEdge>();
+}
+
+const unique_ptr<SVGEdge>& SVGDiagram::addEdge(const string& from, const string& to) {
+    const auto id = format("{} -> {}", from, to);
+    const auto& edge = addEdge(id);
+    edge->setConnection(from, to);
+    return edge;
 }
 
 void SVGDiagram::addEdge(const string& id, unique_ptr<SVGEdge> edge) {

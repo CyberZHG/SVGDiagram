@@ -21,10 +21,10 @@ void TestSVGEdgeLineAddTwoNodesCase1(SVGDiagram& diagram) {
 }
 
 string TestSVGEdgeLineExpectedNodesSVGCase1() {
-    return R"(  <text x="100" y="100" text-anchor="middle" dominant-baseline="central" font-family="Serif" font-size="16" >A</text>
-  <circle cx="100" cy="100" r="17.692" fill="none" stroke="black" />
-  <text x="200" y="150" text-anchor="middle" dominant-baseline="central" font-family="Serif" font-size="16" >B</text>
+    return R"(  <circle cx="100" cy="100" r="17.692" fill="none" stroke="black" />
+  <text x="100" y="100" text-anchor="middle" dominant-baseline="central" font-family="Serif" font-size="16" >A</text>
   <circle cx="200" cy="150" r="26.401" fill="none" stroke="black" />
+  <text x="200" y="150" text-anchor="middle" dominant-baseline="central" font-family="Serif" font-size="16" >B</text>
 )";
 }
 
@@ -90,8 +90,8 @@ TEST(TestSVGEdgeLine, TwoCircleTwoLineSelfCycle) {
 
 string TestSVGEdgeLineExpectedArrowNormalSVG() {
     return R"(  <defs>
-    <marker id="arrow_type_normal" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto-start-reverse">
-      <polygon points="0 0 10 3.5 0 7" />
+    <marker id="arrow_type_normal__fill_black__stroke_black" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto-start-reverse">
+      <polygon points="0 0 10 3.5 0 7" fill="black" stroke="black" />
     </marker>
   </defs>
 )";
@@ -106,7 +106,7 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineArrowHead) {
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedArrowNormalSVG() + TestSVGEdgeLineExpectedNodesSVGCase1() +
-        R"s(  <line x1="115.824" y1="107.912" x2="176.386" y2="138.193" marker-end="url(#arrow_type_normal)" stroke="black" />)s";
+        R"s(  <line x1="115.824" y1="107.912" x2="176.386" y2="138.193" marker-end="url(#arrow_type_normal__fill_black__stroke_black)" stroke="black" />)s";
     compareSVGContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
@@ -121,7 +121,7 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineArrowTail) {
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedArrowNormalSVG() + TestSVGEdgeLineExpectedNodesSVGCase1() +
-        R"s(  <line x1="115.824" y1="107.912" x2="176.386" y2="138.193" marker-start="url(#arrow_type_normal)" stroke="black" />)s";
+        R"s(  <line x1="115.824" y1="107.912" x2="176.386" y2="138.193" marker-start="url(#arrow_type_normal__fill_black__stroke_black)" stroke="black" />)s";
     compareSVGContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
@@ -137,7 +137,7 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineArrowBoth) {
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedArrowNormalSVG() + TestSVGEdgeLineExpectedNodesSVGCase1() +
-        R"s(  <line x1="115.824" y1="107.912" x2="176.386" y2="138.193" marker-end="url(#arrow_type_normal)" marker-start="url(#arrow_type_normal)" stroke="black" />)s";
+        R"s(  <line x1="115.824" y1="107.912" x2="176.386" y2="138.193" marker-end="url(#arrow_type_normal__fill_black__stroke_black)" marker-start="url(#arrow_type_normal__fill_black__stroke_black)" stroke="black" />)s";
     compareSVGContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
@@ -154,7 +154,7 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowHead) {
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedArrowNormalSVG() + TestSVGEdgeLineExpectedNodesSVGCase1() +
         R"s(  <line x1="82.463" y1="102.338" x2="-50" y2="120" stroke="black" />
-  <line x1="-50" y1="120" x2="173.787" y2="146.854" marker-end="url(#arrow_type_normal)" stroke="black" />)s";
+  <line x1="-50" y1="120" x2="173.787" y2="146.854" marker-end="url(#arrow_type_normal__fill_black__stroke_black)" stroke="black" />)s";
     compareSVGContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
@@ -170,7 +170,7 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowTail) {
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedArrowNormalSVG() + TestSVGEdgeLineExpectedNodesSVGCase1() +
-        R"s(  <line x1="82.463" y1="102.338" x2="-50" y2="120" marker-start="url(#arrow_type_normal)" stroke="black" />
+        R"s(  <line x1="82.463" y1="102.338" x2="-50" y2="120" marker-start="url(#arrow_type_normal__fill_black__stroke_black)" stroke="black" />
   <line x1="-50" y1="120" x2="173.787" y2="146.854" stroke="black" />)s";
     compareSVGContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
@@ -188,8 +188,8 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowBoth) {
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedArrowNormalSVG() + TestSVGEdgeLineExpectedNodesSVGCase1() +
-        R"s(  <line x1="82.463" y1="102.338" x2="-50" y2="120" marker-start="url(#arrow_type_normal)" stroke="black" />
-  <line x1="-50" y1="120" x2="173.787" y2="146.854" marker-end="url(#arrow_type_normal)" stroke="black" />)s";
+        R"s(  <line x1="82.463" y1="102.338" x2="-50" y2="120" marker-start="url(#arrow_type_normal__fill_black__stroke_black)" stroke="black" />
+  <line x1="-50" y1="120" x2="173.787" y2="146.854" marker-end="url(#arrow_type_normal__fill_black__stroke_black)" stroke="black" />)s";
     compareSVGContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));

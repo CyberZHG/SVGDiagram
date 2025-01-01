@@ -287,8 +287,24 @@ void SVGDrawMarker::setShape(const string& shape) {
     _shape = shape;
 }
 
-std::string SVGDrawMarker::singletonName() const {
-    return format("arrow_type_{}", _shape);
+void SVGDrawMarker::setFill(const string& value) {
+    _attributes[SVG_ATTR_KEY_FILL] = value;
+}
+
+void SVGDrawMarker::setStroke(const string& value) {
+    _attributes[SVG_ATTR_KEY_STROKE] = value;
+}
+
+string SVGDrawMarker::singletonName() const {
+    string fill = "black";
+    if (const auto it = _attributes.find(SVG_ATTR_KEY_FILL); it != _attributes.end()) {
+        fill = it->second;
+    }
+    string stroke = "black";
+    if (const auto it = _attributes.find(SVG_ATTR_KEY_STROKE); it != _attributes.end()) {
+        stroke = it->second;
+    }
+    return format("arrow_type_{}__fill_{}__stroke_{}", _shape, fill, stroke);
 }
 
 string SVGDrawMarker::render() const {
@@ -303,12 +319,12 @@ string SVGDrawMarker::renderNormal() const {
     string svg = format(R"(<marker id="{}")", singletonName());
     svg += format(R"( markerWidth="{}" markerHeight="{}")", formatDouble(10.0), formatDouble(7.0));
     svg += format(R"( refX="{}" refY="{}" orient="auto-start-reverse")", formatDouble(10.0), formatDouble(3.5));
-    svg += renderAttributes();
     svg += ">\n";
     svg += R"(  <polygon points="0 0)";
     svg += format(" {} {}", formatDouble(10.0), formatDouble(3.5));
-    svg += format(" 0 {}", formatDouble(7.0));
-    svg += R"(" />)" + string("\n");
+    svg += format(R"( 0 {}")", formatDouble(7.0));
+    svg += renderAttributes();
+    svg += R"( />)" + string("\n");
     svg += "</marker>\n";
     return svg;
 }

@@ -177,6 +177,8 @@ namespace svg_diagram {
         static constexpr std::string_view SHAPE_NORMAL = "normal";
 
         void setShape(const std::string& shape);
+        void setFill(const std::string& value);
+        void setStroke(const std::string& value);
 
         [[nodiscard]] std::string singletonName() const override;
 

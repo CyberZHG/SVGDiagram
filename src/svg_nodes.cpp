@@ -59,6 +59,18 @@ void SVGItem::setMarginInPixels(const double marginX, const double marginY) {
     setMargin(marginX / SVG_DEFAULT_DPI, marginY / SVG_DEFAULT_DPI);
 }
 
+void SVGItem::setColor(const string& color) {
+    setAttribute(DOT_ATTR_KEY_COLOR, color);
+}
+
+void SVGItem::setFillColor(const string& color) {
+    setAttribute(DOT_ATTR_KEY_FILL_COLOR, color);
+}
+
+void SVGItem::setFontColor(const string& color) {
+    setAttribute(DOT_ATTR_KEY_FONT_COLOR, color);
+}
+
 void SVGItem::enableDebug() {
     _enabledDebug = true;
 }
@@ -81,6 +93,11 @@ void SVGNode::setShape(const string_view& shape) {
     setShape(string(shape));
 }
 
+void SVGNode::setCenter(const double cx, const double cy) {
+    _cx = cx;
+    _cy = cy;
+}
+
 pair<double, double> SVGNode::center() const {
     return {_cx, _cy};
 }
@@ -95,7 +112,13 @@ void SVGNode::adjustNodeSize() {
 
 vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
     setAttributeIfNotExist(DOT_ATTR_KEY_SHAPE, string(NODE_SHAPE_DEFAULT));
+    setAttributeIfNotExist(DOT_ATTR_KEY_COLOR, "black");
+    setAttributeIfNotExist(DOT_ATTR_KEY_FILL_COLOR, "none");
+    setAttributeIfNotExist(DOT_ATTR_KEY_FONT_COLOR, "black");
     const auto shape = getAttribute(DOT_ATTR_KEY_SHAPE);
+    if (shape == NODE_SHAPE_NONE) {
+        return produceSVGDrawsNone();
+    }
     if (shape == NODE_SHAPE_CIRCLE) {
         return produceSVGDrawsCircle();
     }
@@ -182,19 +205,29 @@ void SVGNode::appendSVGDrawsLabel(vector<unique_ptr<SVGDraw>>& svgDraws) {
         svgDraws.emplace_back(std::move(marginRect));
     }
     if (const auto label = getAttribute(DOT_ATTR_KEY_LABEL); !label.empty()) {
-        svgDraws.emplace_back(make_unique<SVGDrawText>(_cx, _cy, label));
+        auto draw = make_unique<SVGDrawText>(_cx, _cy, label);
+        if (const auto& fontColor = getAttribute(DOT_ATTR_KEY_FONT_COLOR); fontColor != "black") {
+            draw->setFill(fontColor);
+        }
+        svgDraws.emplace_back(std::move(draw));
     }
+}
+
+vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsNone() {
+    vector<unique_ptr<SVGDraw>> svgDraws;
+    appendSVGDrawsLabel(svgDraws);
+    return svgDraws;
 }
 
 vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsCircle() {
     const double width = stod(getAttribute(DOT_ATTR_KEY_WIDTH));
     const double height = stod(getAttribute(DOT_ATTR_KEY_WIDTH));
     vector<unique_ptr<SVGDraw>> svgDraws;
-    appendSVGDrawsLabel(svgDraws);
     auto circle = make_unique<SVGDrawCircle>(_cx, _cy, max(width, height) / 2.0);
-    circle->setFill("none");
-    circle->setStroke("black");
+    circle->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
+    circle->setFill(getAttribute(DOT_ATTR_KEY_FILL_COLOR));
     svgDraws.emplace_back(std::move(circle));
+    appendSVGDrawsLabel(svgDraws);
     return svgDraws;
 }
 
@@ -208,12 +241,25 @@ SVGEdge::SVGEdge(const string& idFrom, const string& idTo) {
     _nodeTo = idTo;
 }
 
+void SVGEdge::setNodeFrom(const string& id) {
+    _nodeFrom = id;
+}
+
 const string& SVGEdge::nodeFrom() const {
     return _nodeFrom;
 }
 
+void SVGEdge::setNodeTo(const string& id) {
+    _nodeTo = id;
+}
+
 const string& SVGEdge::nodeTo() const {
     return _nodeTo;
+}
+
+void SVGEdge::setConnection(const string& idFrom, const string& idTo) {
+    _nodeFrom = idFrom;
+    _nodeTo = idTo;
 }
 
 void SVGEdge::setSplines(const string& value) {
@@ -234,6 +280,7 @@ void SVGEdge::addConnectionPoint(const double x, const double y) {
 
 vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDraws(const NodesMapping& nodes) {
     setAttributeIfNotExist(DOT_ATTR_KEY_SPLINES, string(EDGE_SPLINES_DEFAULT));
+    setAttributeIfNotExist(DOT_ATTR_KEY_COLOR, "black");
     setAttributeIfNotExist(DOT_ATTR_KEY_ARROW_HEAD, "none");
     setAttributeIfNotExist(DOT_ATTR_KEY_ARROW_TAIL, "none");
     const auto splines = getAttribute(DOT_ATTR_KEY_SPLINES);
@@ -262,13 +309,13 @@ void SVGEdge::setArrowTail(const string_view& shape) {
     setAttribute(DOT_ATTR_KEY_ARROW_TAIL, string(shape));
 }
 
-unique_ptr<SVGDraw> SVGEdge::produceSVGMarker(const string_view& shape) {
+unique_ptr<SVGDrawMarker> SVGEdge::produceSVGMarker(const string_view& shape) {
     auto marker = make_unique<SVGDrawMarker>();
     marker->setShape(string(shape));
     return std::move(marker);
 }
 
-string SVGEdge::markerAttributeValue(const unique_ptr<SVGDraw>& svgDraw) {
+string SVGEdge::markerAttributeValue(const unique_ptr<SVGDrawMarker>& svgDraw) {
     return "url(#" + svgDraw->singletonName() + ")";
 }
 
@@ -291,17 +338,21 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
         svgDraws.emplace_back(make_unique<SVGDrawLine>(xLast, yLast, x, y));
     }
     for (const auto& line : svgDraws) {
-        dynamic_cast<SVGDrawLine*>(line.get())->setStroke("black");
+        dynamic_cast<SVGDrawLine*>(line.get())->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
     }
     const auto arrowHeadShape = getAttribute(DOT_ATTR_KEY_ARROW_HEAD);
     const auto arrowTailShape = getAttribute(DOT_ATTR_KEY_ARROW_TAIL);
     if (arrowHeadShape != ARROW_SHAPE_NONE) {
         auto marker = produceSVGMarker(arrowHeadShape);
+        marker->setFill(getAttribute(DOT_ATTR_KEY_COLOR));
+        marker->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
         dynamic_cast<SVGDrawEntity*>(svgDraws[svgDraws.size() - 1].get())->setAttribute(SVG_ATTR_KEY_MARKER_END, markerAttributeValue(marker));
         svgDraws.emplace_back(std::move(marker));
     }
     if (arrowTailShape != ARROW_SHAPE_NONE) {
         auto marker = produceSVGMarker(arrowTailShape);
+        marker->setFill(getAttribute(DOT_ATTR_KEY_COLOR));
+        marker->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
         dynamic_cast<SVGDrawEntity*>(svgDraws[0].get())->setAttribute(SVG_ATTR_KEY_MARKER_START, markerAttributeValue(marker));
         svgDraws.emplace_back(std::move(marker));
     }
@@ -316,7 +367,7 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
         const auto [x1, y1] = nodeFrom->computeConnectionPoint(nodeTo->center());
         const auto [x2, y2] = nodeTo->computeConnectionPoint(nodeFrom->center());
         auto line = make_unique<SVGDrawLine>(x1, y1, x2, y2);
-        line->setStroke("black");
+        line->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
         svgDraws.emplace_back(std::move(line));
     } else {
         vector<pair<double, double>> points;
@@ -342,7 +393,7 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
             d += format(" C {} {} {} {} {} {}", c1x, c1y, c2x, c2y, x2, y2);
         }
         auto path = make_unique<SVGDrawPath>(d);
-        path->setStroke("black");
+        path->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
         path->setFill("none");
         svgDraws.emplace_back(std::move(path));
     }
@@ -350,11 +401,15 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
     const auto arrowTailShape = getAttribute(DOT_ATTR_KEY_ARROW_TAIL);
     if (arrowHeadShape != ARROW_SHAPE_NONE) {
         auto marker = produceSVGMarker(arrowHeadShape);
+        marker->setFill(getAttribute(DOT_ATTR_KEY_COLOR));
+        marker->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
         dynamic_cast<SVGDrawEntity*>(svgDraws[0].get())->setAttribute(SVG_ATTR_KEY_MARKER_END, markerAttributeValue(marker));
         svgDraws.emplace_back(std::move(marker));
     }
     if (arrowTailShape != ARROW_SHAPE_NONE) {
         auto marker = produceSVGMarker(arrowTailShape);
+        marker->setFill(getAttribute(DOT_ATTR_KEY_COLOR));
+        marker->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
         dynamic_cast<SVGDrawEntity*>(svgDraws[0].get())->setAttribute(SVG_ATTR_KEY_MARKER_START, markerAttributeValue(marker));
         svgDraws.emplace_back(std::move(marker));
     }

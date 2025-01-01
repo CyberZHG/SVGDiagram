@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="428.308986134605" height="397.65999291356" viewBox="-214.1544930673025 -211.5378744441727 428.308986134605 397.65999291356">
+  <rect x="-214.1544930673025" y="-211.5378744441727" width="428.308986134605" height="397.65999291356" fill="white" />
+  <defs>
+    <marker id="arrow_type_normal__fill_peru__stroke_peru" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto-start-reverse">
+      <polygon points="0 0 10 3.5 0 7" fill="peru" stroke="peru" />
+    </marker>
+    <marker id="arrow_type_normal__fill_darkgoldenrod__stroke_darkgoldenrod" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto-start-reverse">
+      <polygon points="0 0 10 3.5 0 7" fill="darkgoldenrod" stroke="darkgoldenrod" />
+    </marker>
+    <marker id="arrow_type_normal__fill_limegreen__stroke_limegreen" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto-start-reverse">
+      <polygon points="0 0 10 3.5 0 7" fill="limegreen" stroke="limegreen" />
+    </marker>
+    <marker id="arrow_type_normal__fill_dodgerblue__stroke_dodgerblue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto-start-reverse">
+      <polygon points="0 0 10 3.5 0 7" fill="dodgerblue" stroke="dodgerblue" />
+    </marker>
+    <marker id="arrow_type_normal__fill_lightcoral__stroke_lightcoral" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto-start-reverse">
+      <polygon points="0 0 10 3.5 0 7" fill="lightcoral" stroke="lightcoral" />
+    </marker>
+  </defs>
+  <!-- Created by: https://github.com/CyberZHG/SVGDiagram -->
+  <!-- node_id = node_0 -->
+  <circle cx="0.000" cy="-150" r="53.538" fill="lightsalmon" stroke="peru" />
+  <text x="0.000" y="-150" text-anchor="middle" dominant-baseline="central" fill="saddlebrown" font-family="Serif" font-size="16" >
+    <tspan x="0.000" dy="-1.2em">Planning</tspan>
+    <tspan x="0.000" dy="1.2em">Breeds</tspan>
+    <tspan x="0.000" dy="1.2em">Success</tspan>
+  </text>
+  <!-- node_id = node_1 -->
+  <circle cx="142.658" cy="-46.353" r="63.496" fill="papayawhip" stroke="darkgoldenrod" />
+  <text x="142.658" y="-46.353" text-anchor="middle" dominant-baseline="central" fill="goldenrod" font-family="Serif" font-size="16" >
+    <tspan x="142.658" dy="-1.2em">Observation</tspan>
+    <tspan x="142.658" dy="1.2em">Feeds</tspan>
+    <tspan x="142.658" dy="1.2em">Strategy</tspan>
+  </text>
+  <!-- node_id = node_2 -->
+  <circle cx="88.168" cy="121.353" r="56.770" fill="lightgreen" stroke="limegreen" />
+  <text x="88.168" y="121.353" text-anchor="middle" dominant-baseline="central" fill="olivedrab" font-family="Serif" font-size="16" >
+    <tspan x="88.168" dy="-1.2em">Deceit</tspan>
+    <tspan x="88.168" dy="1.2em">Cloaks</tspan>
+    <tspan x="88.168" dy="1.2em">the Truth</tspan>
+  </text>
+  <!-- node_id = node_3 -->
+  <circle cx="-88.168" cy="121.353" r="53.538" fill="deepskyblue" stroke="dodgerblue" />
+  <text x="-88.168" y="121.353" text-anchor="middle" dominant-baseline="central" fill="royalblue" font-family="Serif" font-size="16" >
+    <tspan x="-88.168" dy="-1.2em">Delusion</tspan>
+    <tspan x="-88.168" dy="1.2em">Ensnares</tspan>
+    <tspan x="-88.168" dy="1.2em">Reason</tspan>
+  </text>
+  <!-- node_id = node_4 -->
+  <circle cx="-142.658" cy="-46.353" r="63.496" fill="lightpink" stroke="lightcoral" />
+  <text x="-142.658" y="-46.353" text-anchor="middle" dominant-baseline="central" fill="indianred" font-family="Serif" font-size="16" >
+    <tspan x="-142.658" dy="-1.2em">Opportunity</tspan>
+    <tspan x="-142.658" dy="1.2em">Hides in</tspan>
+    <tspan x="-142.658" dy="1.2em">the Margins</tspan>
+  </text>
+  <!-- node_id = node_c -->
+  <text x="0" y="0" text-anchor="middle" dominant-baseline="central" fill="indigo" font-family="Serif" font-size="16" >
+    <tspan x="0" dy="-1.2em">Victory</tspan>
+    <tspan x="0" dy="1.2em">Flows from</tspan>
+    <tspan x="0" dy="1.2em">the Turning of Tides</tspan>
+  </text>
+  <!-- edge_id = node_0 -> node_1 -->
+  <line x1="43.313" y1="-118.531" x2="91.289" y2="-83.675" marker-end="url(#arrow_type_normal__fill_peru__stroke_peru)" stroke="peru" />
+  <!-- edge_id = node_1 -> node_2 -->
+  <line x1="123.037" y1="14.036" x2="105.711" y2="67.361" marker-end="url(#arrow_type_normal__fill_darkgoldenrod__stroke_darkgoldenrod)" stroke="darkgoldenrod" />
+  <!-- edge_id = node_2 -> node_3 -->
+  <line x1="31.398" y1="121.353" x2="-34.630" y2="121.353" marker-end="url(#arrow_type_normal__fill_limegreen__stroke_limegreen)" stroke="limegreen" />
+  <!-- edge_id = node_3 -> node_4 -->
+  <line x1="-104.712" y1="70.435" x2="-123.037" y2="14.036" marker-end="url(#arrow_type_normal__fill_dodgerblue__stroke_dodgerblue)" stroke="dodgerblue" />
+  <!-- edge_id = node_4 -> node_0 -->
+  <line x1="-91.289" y1="-83.675" x2="-43.313" y2="-118.531" marker-end="url(#arrow_type_normal__fill_lightcoral__stroke_lightcoral)" stroke="lightcoral" />
+</svg>

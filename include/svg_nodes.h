@@ -19,6 +19,9 @@ namespace svg_diagram {
     constexpr std::string_view DOT_ATTR_KEY_FIXED_SIZE = "fixedsize";
     constexpr std::string_view DOT_ATTR_KEY_ARROW_HEAD = "arrowhead";
     constexpr std::string_view DOT_ATTR_KEY_ARROW_TAIL = "arrowtail";
+    constexpr std::string_view DOT_ATTR_KEY_COLOR = "color";
+    constexpr std::string_view DOT_ATTR_KEY_FILL_COLOR = "fillcolor";
+    constexpr std::string_view DOT_ATTR_KEY_FONT_COLOR = "fontcolor";
 
     class SVGItem {
     public:
@@ -40,6 +43,9 @@ namespace svg_diagram {
         void setMargin(double marginX, double marginY);
         void setMarginInPixels(double margin);
         void setMarginInPixels(double marginX, double marginY);
+        void setColor(const std::string& color);
+        void setFillColor(const std::string& color);
+        void setFontColor(const std::string& color);
 
     private:
         bool _enabledDebug = false;
@@ -53,11 +59,14 @@ namespace svg_diagram {
         using SVGItem::SVGItem;
         SVGNode(double cx, double cy);
 
+        static constexpr std::string_view NODE_SHAPE_NONE = "none";
         static constexpr std::string_view NODE_SHAPE_CIRCLE = "circle";
         static constexpr std::string_view NODE_SHAPE_DEFAULT = NODE_SHAPE_CIRCLE;
 
         void setShape(const std::string& shape);
         void setShape(const std::string_view& shape);
+
+        void setCenter(double cx, double cy);
         [[nodiscard]] std::pair<double, double> center() const;
 
         void adjustNodeSize();
@@ -77,6 +86,8 @@ namespace svg_diagram {
         [[nodiscard]] bool isFixedSize() const;
 
         void appendSVGDrawsLabel(std::vector<std::unique_ptr<SVGDraw>>& svgDraws);
+
+        std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsNone();
 
         void adjustNodeSizeCircle();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsCircle();
@@ -98,8 +109,11 @@ namespace svg_diagram {
 
         using NodesMapping = std::unordered_map<std::string, std::unique_ptr<SVGNode>>;
 
+        void setNodeFrom(const std::string& id);
         [[nodiscard]] const std::string& nodeFrom() const;
+        void setNodeTo(const std::string &id);
         [[nodiscard]] const std::string& nodeTo() const;
+        void setConnection(const std::string& idFrom, const std::string& idTo);
 
         void setSplines(const std::string& value);
         void setSplines(const std::string_view& value);
@@ -118,8 +132,8 @@ namespace svg_diagram {
         std::string _nodeFrom, _nodeTo;
         std::vector<std::pair<double, double>> _connectionPoints;
 
-        static std::unique_ptr<SVGDraw> produceSVGMarker(const std::string_view& shape);
-        static std::string markerAttributeValue(const std::unique_ptr<SVGDraw> &svgDraw);
+        static std::unique_ptr<SVGDrawMarker> produceSVGMarker(const std::string_view& shape);
+        static std::string markerAttributeValue(const std::unique_ptr<SVGDrawMarker> &svgDraw);
 
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsLine(const NodesMapping& nodes);
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsSpline(const NodesMapping& nodes);

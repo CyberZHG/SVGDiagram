@@ -3,6 +3,12 @@ SVG Diagram
 
 A library for rendering diagrams to SVG.
 
+## Examples
+
+| [![](./doc/images/example_pentagon.svg)](./tests/example/test_example_pentagon.cpp) |    |
+|:-----------------------------------------------------------------------------------:|:--:|
+|                                                                                     |    |
+
 ## Development
 
 To enable tests, add the following to your CMake options:

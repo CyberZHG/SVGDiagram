@@ -53,6 +53,7 @@ TEST(TestExample, Pentagon) {
     node->setLabel(labels[5]);
     node->setShape(SVGNode::SHAPE_NONE);
     node->setFontColor(textColors[5]);
+    node->setFont("Times,serif", 16);
 
     diagram.render("example_pentagon.svg");
 }

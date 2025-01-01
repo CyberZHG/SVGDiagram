@@ -179,3 +179,17 @@ TEST(TestDocsNodeAttributes, PenWidth) {
     }
     diagram.render(OUTPUT_DIR + "pen_width.svg");
 }
+
+TEST(TestDocsNodeAttributes, Font) {
+    SVGDiagram diagram;
+    for (int i = 0; i < 3; ++i) {
+        const auto fontSize = 14 + i;
+        const auto node = diagram.addNode(std::format("node{}", i));
+        node->setCenter(i * 150, 0);
+        node->setLabel(std::format("fontSize={}", fontSize));
+        node->setFontName("Consolas");
+        node->setFontSize(fontSize);
+        node->setFont("Consolas,'Courier New',monospace", fontSize);
+    }
+    diagram.render(OUTPUT_DIR + "font.svg");
+}

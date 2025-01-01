@@ -148,6 +148,19 @@ double SVGItem::penWidth() const {
     return 1.0;
 }
 
+void SVGItem::setFontName(const string& fontName) {
+    setAttribute(ATTRIBUTE_KEY_FONT_NAME, fontName);
+}
+
+void SVGItem::setFontSize(const double fontSize) {
+    setAttribute(ATTRIBUTE_KEY_FONT_SIZE, fontSize);
+}
+
+void SVGItem::setFont(const string& fontName, const double fontSize) {
+    setFontName(fontName);
+    setFontSize(fontSize);
+}
+
 void SVGItem::appendSVGDrawsLabelWithCenter(vector<unique_ptr<SVGDraw>>& svgDraws, const double cx, const double cy) {
     if (enabledDebug()) {
         const auto [textWidth, textHeight] = computeTextSize();
@@ -166,6 +179,9 @@ void SVGItem::appendSVGDrawsLabelWithCenter(vector<unique_ptr<SVGDraw>>& svgDraw
         if (const auto& color = fontColor(); color != "black") {
             draw->setFill(color);
         }
+        const string fontFamily = getAttribute(ATTRIBUTE_KEY_FONT_NAME);
+        const double fontSize = stod(getAttribute(ATTRIBUTE_KEY_FONT_SIZE));
+        draw->setFont(fontFamily, fontSize);
         svgDraws.emplace_back(std::move(draw));
     }
 }
@@ -177,8 +193,6 @@ pair<double, double> SVGItem::computeTextSize() {
     }
     const SVGTextSize textSize;
     const auto label = getAttribute(ATTRIBUTE_KEY_LABEL);
-    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_NAME, "Times,serif");
-    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_SIZE, "14");
     const double fontSize = stod(getAttribute(ATTRIBUTE_KEY_FONT_SIZE));
     const string fontFamily = getAttribute(ATTRIBUTE_KEY_FONT_NAME);
     auto [width, height] = textSize.computeTextSize(label, fontSize, fontFamily);
@@ -271,6 +285,8 @@ pair<double, double> SVGNode::center() const {
 
 void SVGNode::adjustNodeSize() {
     setAttributeIfNotExist(ATTRIBUTE_KEY_SHAPE, string(SHAPE_DEFAULT));
+    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_NAME, "Times,serif");
+    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_SIZE, "14");
     const auto shape = getAttribute(ATTRIBUTE_KEY_SHAPE);
     if (shape == SHAPE_CIRCLE) {
         adjustNodeSizeCircle();
@@ -288,6 +304,8 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
     setAttributeIfNotExist(ATTRIBUTE_KEY_COLOR, "black");
     setAttributeIfNotExist(ATTRIBUTE_KEY_FILL_COLOR, "none");
     setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_COLOR, "black");
+    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_NAME, "Times,serif");
+    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_SIZE, "14");
     const auto shape = getAttribute(ATTRIBUTE_KEY_SHAPE);
     if (shape == SHAPE_CIRCLE) {
         return produceSVGDrawsCircle();
@@ -556,6 +574,8 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDraws(const NodesMapping& nodes) 
     setAttributeIfNotExist(ATTRIBUTE_KEY_ARROW_HEAD, "none");
     setAttributeIfNotExist(ATTRIBUTE_KEY_ARROW_TAIL, "none");
     setAttributeIfNotExist(ATTRIBUTE_KEY_MARGIN, "0,0");
+    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_NAME, "Times,serif");
+    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_SIZE, "14");
     const auto splines = getAttribute(ATTRIBUTE_KEY_SPLINES);
     if (splines == SPLINES_LINE) {
         return produceSVGDrawsLine(nodes);
@@ -864,6 +884,8 @@ pair<double, double> SVGGraph::center() const {
 
 void SVGGraph::adjustNodeSizes() {
     setAttributeIfNotExist(ATTRIBUTE_KEY_MARGIN, format("{}", 8.0 / 72.0));
+    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_NAME, "Times,serif");
+    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_SIZE, "14");
     double minX = 0.0, minY = 0.0, maxX = 0.0, maxY = 0.0;
     bool first = true;
     const auto updateGraphSize = [&](const double cx, const double cy, const double width, const double height) {
@@ -1000,6 +1022,8 @@ std::vector<std::unique_ptr<SVGDraw>> SVGGraph::produceClusterSVGDraws() {
     setAttributeIfNotExist(ATTRIBUTE_KEY_FILL_COLOR, "none");
     setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_COLOR, "black");
     setAttributeIfNotExist(ATTRIBUTE_KEY_PEN_WIDTH, "1.0");
+    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_NAME, "Times,serif");
+    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_SIZE, "14");
     if (const auto _width = width(), _height = height(); _width > 0 && _height > 0) {
         const auto& _color = color();
         const auto& _fillColor = fillColor();

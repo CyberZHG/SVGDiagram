@@ -73,6 +73,9 @@ namespace svg_diagram {
         void setFontColor(const std::string& color);
         void setPenWidth(double width);
         [[nodiscard]] double penWidth() const;
+        void setFontName(const std::string& fontName);
+        void setFontSize(double fontSize);
+        void setFont(const std::string& fontName, double fontSize);
 
     protected:
         void appendSVGDrawsLabelWithCenter(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, double cx, double cy);

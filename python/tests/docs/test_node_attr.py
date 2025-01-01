@@ -98,3 +98,17 @@ def test_pen_width():
         node.set_pen_width(pen_width)
     svg = diagram.render()
     compare_svg("node_attr", "pen_width", svg)
+
+
+def test_font():
+    diagram = SVGDiagram()
+    for i in range(3):
+        font_size = 14 + i
+        node = diagram.add_node(f"node{i}")
+        node.set_center(i * 150, 0)
+        node.set_label(f"fontSize={font_size}")
+        node.set_font_name("Consolas")
+        node.set_font_size(font_size)
+        node.set_font("Consolas,'Courier New',monospace", font_size)
+    svg = diagram.render()
+    compare_svg("node_attr", "font", svg)

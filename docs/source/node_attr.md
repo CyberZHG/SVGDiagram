@@ -445,3 +445,64 @@ int main() {
 `````
 
 ![](_static/node_attr/pen_width.svg)
+
+## Font
+
+`````{tab-set}
+````{tab-item} Python
+```python
+from sp_svg_diagram import SVGDiagram
+
+diagram = SVGDiagram()
+for i in range(3):
+    font_size = 14 + i
+    node = diagram.add_node(f"node{i}")
+    node.set_center(i * 150, 0)
+    node.set_label(f"fontSize={font_size}")
+    node.set_font_name("Consolas")
+    node.set_font_size(font_size)
+    node.set_font("Consolas,'Courier New',monospace", font_size)
+svg = diagram.render()
+```
+````
+````{tab-item} JavaScript
+```javascript
+import { SVGDiagram } from 'sp-svg-diagram';
+
+const diagram = new SVGDiagram();
+for (let i = 0; i < 3; i++) {
+    const fontSize = 14 + i;
+    const node = diagram.addNode(`node${i}`);
+    node.setCenter(i * 150, 0);
+    node.setLabel(`fontSize=${fontSize}`);
+    node.setFontName("Consolas")
+    node.setFontSize(fontSize)
+    node.setFont("Consolas,'Courier New',monospace", fontSize)
+}
+const svg = diagram.render();
+````
+
+````{tab-item} C++
+```c++
+#include "svg_diagram.h"
+#include <format>
+using namespace svg_diagram;
+
+int main() {
+    SVGDiagram diagram;
+    for (int i = 0; i < 3; ++i) {
+        const auto fontSize = 14 + i;
+        const auto node = diagram.addNode(std::format("node{}", i));
+        node->setCenter(i * 150, 0);
+        node->setLabel(std::format("fontSize={}", fontSize));
+        node->setFontName("Consolas");
+        node->setFontSize(fontSize);
+        node->setFont("Consolas,'Courier New',monospace", fontSize);
+    }
+    diagram.render("font.svg");
+    return 0;
+}
+````
+`````
+
+![](_static/node_attr/font.svg)

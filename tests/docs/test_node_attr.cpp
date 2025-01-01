@@ -19,7 +19,7 @@ TEST(TestDocsNodeAttributes, Label) {
     node2->setLabel("Pybind11\nEmscripten");
     const auto node3 = diagram.addNode("C");
     node3->setCenter(300, 0);
-    node3->setLabel("物华天宝\n人杰地灵");
+    node3->setLabel("星分翼轸\n地接衡庐");
     diagram.render(OUTPUT_DIR + "label.svg");
 }
 
@@ -34,7 +34,7 @@ TEST(TestDocsNodeAttributes, LabelDebug) {
     node2->setLabel("Pybind11\nEmscripten");
     const auto node3 = diagram.addNode("C");
     node3->setCenter(300, 0);
-    node3->setLabel("物华天宝\n人杰地灵");
+    node3->setLabel("星分翼轸\n地接衡庐");
     diagram.render(OUTPUT_DIR + "label_debug.svg");
 }
 
@@ -75,4 +75,39 @@ TEST(TestDocsNodeAttributes, ShapeDebug) {
         node->setLabel(shape);
     }
     diagram.render(OUTPUT_DIR + "shape_debug.svg");
+}
+
+TEST(TestDocsNodeAttributes, Margin) {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setLabel("Larger\nMargin");
+    node1->setMargin(32, 8);
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setLabel("No\nMargin");
+    node2->setMargin(0);
+    const auto node3 = diagram.addNode("C");
+    node3->setCenter(300, 0);
+    node3->setLabel("Negative\nMargin");
+    node3->setMargin(-10);
+    diagram.render(OUTPUT_DIR + "margin.svg");
+}
+
+TEST(TestDocsNodeAttributes, MarginDebug) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setLabel("Larger\nMargin");
+    node1->setMargin(32, 8);
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setLabel("No\nMargin");
+    node2->setMargin(0);
+    const auto node3 = diagram.addNode("C");
+    node3->setCenter(300, 0);
+    node3->setLabel("Negative\nMargin");
+    node3->setMargin(-10);
+    diagram.render(OUTPUT_DIR + "margin_debug.svg");
 }

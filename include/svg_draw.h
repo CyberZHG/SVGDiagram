@@ -40,13 +40,16 @@ namespace svg_diagram {
         [[nodiscard]] virtual bool hasEntity() const = 0;
 
         void setAttribute(const std::string_view& key, const std::string& value);
+        void setAttribute(const std::string_view& key, double value);
         void copyAttributes(const SVGDraw* other);
 
         void setFill(const std::string& value);
+        void setFillOpacity(double opacity);
         void setStroke(const std::string& value);
         void setStrokeWidth(const std::string& value);
         void setStrokeWidth(double value);
         void setStrokeDashArray(const std::string& value);
+        void setStrokeOpacity(double opacity);
 
     protected:
         std::map<std::string_view, std::string> _attributes;

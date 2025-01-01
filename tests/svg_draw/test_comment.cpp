@@ -36,3 +36,12 @@ TEST(TestSVGDrawComment, EscapeComment) {
 </svg>)s";
     compareSVGContent(svg, expected);
 }
+
+TEST(TestSVGDrawComment, EmptyBoundingBox) {
+    auto boundingBox = SVGDrawComment().boundingBox();
+    ASSERT_EQ(boundingBox.x2, 0.0);
+    boundingBox = SVGDrawTitle().boundingBox();
+    ASSERT_EQ(boundingBox.x2, 0.0);
+    boundingBox = SVGDrawPolygon().boundingBox();
+    ASSERT_EQ(boundingBox.x2, 0.0);
+}

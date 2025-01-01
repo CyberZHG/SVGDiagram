@@ -301,6 +301,31 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowBothDotted) {
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
+TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowBothOpacity) {
+    SVGDiagram diagram;
+    TestSVGEdgeLineAddTwoNodesCase1(diagram);
+    auto edge = std::make_shared<SVGEdge>("A", "B");
+    edge->setSplines(SVGEdge::SPLINES_LINE);
+    edge->addConnectionPoint(-50, 120);
+    edge->setArrowHead(SVGEdge::ARROW_NORMAL);
+    edge->setArrowTail(SVGEdge::ARROW_EMPTY);
+    edge->setColor("#00000088");
+    diagram.addEdge(edge);
+    const auto svg = diagram.render();
+    const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
+        R"s(<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <line x1="70.5552279772989" y1="103.92596960302681" x2="-50" y2="120" stroke="#000000" stroke-opacity="0.5333333333333333"/>
+  <line x1="-50" y1="120" x2="161.85932941877" y2="145.42311953025242" stroke="#000000" stroke-opacity="0.5333333333333333"/>
+  <polygon points="80.46750698412525,102.60433240211664 71.01780099761747,107.39526725541604 70.09265495698034,100.4566719506376 80.46750698412525,102.60433240211664" fill="none" stroke="#000000" stroke-opacity="0.5333333333333333"/>
+  <polygon points="171.7880978036392,146.61457173643672 161.44232114660548,148.89818846495663 162.2763376909345,141.94805059554818 171.7880978036392,146.61457173643672" fill="#000000" fill-opacity="0.5333333333333333" stroke="#000000" stroke-opacity="0.5333333333333333"/>
+</g>)s";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
 string TestSVGEdgeLineExpectedNodesSVGCase1WithDebug() {
     return R"(<!-- Node: A -->
 <g class="node" id="A">

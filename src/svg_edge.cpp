@@ -88,10 +88,7 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDraws(const NodesMapping& nodes) 
     if (splines == SPLINES_LINE) {
         return produceSVGDrawsLine(nodes);
     }
-    if (splines == SPLINES_SPLINE) {
-        return produceSVGDrawsSpline(nodes);
-    }
-    return {};
+    return produceSVGDrawsSpline(nodes);
 }
 
 void SVGEdge::setArrowHead() {
@@ -308,6 +305,29 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
     return svgDraws;
 }
 
+
+
+void SVGEdge::setArrowStyles(SVGDraw *draw, const bool fill) const {
+    if (const auto colorList = AttributeUtils::parseColorList(color()); !colorList.empty()) {
+        const auto& color = colorList[0];
+        draw->setStroke(color.color);
+        if (color.opacity < 1.0) {
+            draw->setStrokeOpacity(color.opacity);
+        }
+        if (fill) {
+            draw->setFill(color.color);
+            if (color.opacity < 1.0) {
+                draw->setFillOpacity(color.opacity);
+            }
+        } else {
+            draw->setFill("none");
+        }
+    }
+    if (const auto strokeWidth = penWidth(); strokeWidth != 1.0) {
+        draw->setStrokeWidth(strokeWidth);
+    }
+}
+
 double SVGEdge::computeArrowTipMargin(const string_view& shape) const {
     if (shape == ARROW_NORMAL || shape == ARROW_EMPTY) {
         return computeArrowTipMarginNormal();
@@ -334,7 +354,7 @@ pair<double, double> SVGEdge::addArrow(const string_view& shape, vector<unique_p
     return {connectionPoint.first - 0.2 * cos(angle), connectionPoint.second - 0.2 * sin(angle)};
 }
 
-pair<double, double> SVGEdge::addArrowNormal(vector<unique_ptr<SVGDraw>>& svgDraws, const pair<double, double>& connectionPoint, const double angle, const bool solid) const {
+pair<double, double> SVGEdge::addArrowNormal(vector<unique_ptr<SVGDraw>>& svgDraws, const pair<double, double>& connectionPoint, const double angle, const bool fill) const {
     const double x0 = connectionPoint.first;
     const double y0 = connectionPoint.second;
     const double sideLen = GeometryUtils::distance(ARROW_WIDTH, ARROW_HALF_HEIGHT);
@@ -344,15 +364,7 @@ pair<double, double> SVGEdge::addArrowNormal(vector<unique_ptr<SVGDraw>>& svgDra
     const double x2 = x0 + sideLen * cos(angle + halfAngle);
     const double y2 = y0 + sideLen * sin(angle + halfAngle);
     auto polygon = make_unique<SVGDrawPolygon>(vector<pair<double, double>>{{x0, y0}, {x1, y1}, {x2, y2}, {x0, y0}});
-    polygon->setStroke(color());
-    if (solid) {
-        polygon->setFill(color());
-    } else {
-        polygon->setFill("none");
-    }
-    if (const double strokeWidth = penWidth(); strokeWidth != 1.0) {
-        polygon->setStrokeWidth(strokeWidth);
-    }
+    setArrowStyles(polygon.get(), fill);
     svgDraws.emplace_back(std::move(polygon));
     return {x0 + ARROW_WIDTH * cos(angle), y0 + ARROW_WIDTH * sin(angle)};
 }

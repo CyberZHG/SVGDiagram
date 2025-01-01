@@ -108,10 +108,7 @@ pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
     if (shape == SHAPE_RECT || shape == SHAPE_NONE) {
         return computeConnectionPointRect(angle);
     }
-    if (shape == SHAPE_ELLIPSE) {
-        return computeConnectionPointEllipse(angle);
-    }
-    return {0.0, 0.0};
+    return computeConnectionPointEllipse(angle);
 }
 
 double SVGNode::computeAngle(const double x, const double y) const {
@@ -220,16 +217,18 @@ pair<double, double> SVGNode::computeConnectionPointRect(const double angle) con
             return {_cx + x, _cy + y};
         }
     }
+    double x = 0.0, y = 0.0;
     for (int i = 0; i < static_cast<int>(vertices.size()); ++i) {
         x1 = vertices[i].first;
         y1 = vertices[i].second;
         x2 = vertices[(i + 1) % vertices.size()].first;
         y2 = vertices[(i + 1) % vertices.size()].second;
         if (const auto intersect = GeometryUtils::intersect(angle, x1, y1, x2, y2); intersect != nullopt) {
-            return {_cx + intersect.value().first, _cy + intersect.value().second};
+            x = _cx + intersect.value().first;
+            y = _cy + intersect.value().second;
         }
     }
-    return {_cx, _cy};
+    return {x, y};
 }
 
 void SVGNode::adjustNodeSizeEllipse() {

@@ -337,3 +337,54 @@ int main() {
 `````
 
 ![](_static/node_attr/node_size.svg)
+
+## Color
+
+There are three color-related properties: `color` sets the node's border color, `fillColor` sets the node's fill color, and `fontColor` sets the text color. Any color format supported by SVG can be used.
+
+`````{tab-set}
+````{tab-item} Python
+```python
+from sp_svg_diagram import SVGDiagram
+
+diagram = SVGDiagram()
+node = diagram.add_node("A")
+node.set_label("color")
+node.set_color("limegreen")
+node.set_fill_color("#EEEEEE")
+node.set_font_color("rgb(66,92,214)")
+svg = diagram.render()
+```
+````
+````{tab-item} JavaScript
+```javascript
+import { SVGDiagram } from 'sp-svg-diagram';
+
+const diagram = new SVGDiagram();
+const node = diagram.addNode("A");
+node.setLabel("color");
+node.setColor("limegreen");
+node.setFillColor("#EEEEEE");
+node.setFontColor("rgb(66,92,214)");
+const svg = diagram.render();
+````
+
+````{tab-item} C++
+```c++
+#include "svg_diagram.h"
+using namespace svg_diagram;
+
+int main() {
+    SVGDiagram diagram;
+    const auto node = diagram.addNode("A");
+    node->setLabel("color");
+    node->setColor("limegreen");
+    node->setFillColor("#EEEEEE");
+    node->setFontColor("rgb(66,92,214)");
+    diagram.render("color.svg");
+    return 0;
+}
+````
+`````
+
+![](_static/node_attr/color.svg)

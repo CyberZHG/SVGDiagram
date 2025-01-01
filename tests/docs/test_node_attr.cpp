@@ -158,3 +158,12 @@ TEST(TestDocsNodeAttributes, NodeSizeDebug) {
     diagram.render(OUTPUT_DIR + "node_size_debug.svg");
 }
 
+TEST(TestDocsNodeAttributes, Color) {
+    SVGDiagram diagram;
+    const auto node = diagram.addNode("A");
+    node->setLabel("color");
+    node->setColor("limegreen");
+    node->setFillColor("#EEEEEE");
+    node->setFontColor("rgb(66,92,214)");
+    diagram.render(OUTPUT_DIR + "color.svg");
+}

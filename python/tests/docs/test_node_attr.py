@@ -76,3 +76,15 @@ def test_node_size():
     node2.set_fixed_size(80, 30)
     svg = diagram.render()
     compare_svg("node_attr", "node_size", svg)
+
+
+def test_color():
+    diagram = SVGDiagram()
+    node = diagram.add_node("A")
+    node.set_label("color")
+    node.set_color("limegreen")
+    node.set_fill_color("#EEEEEE")
+    node.set_font_color("rgb(66,92,214)")
+    svg = diagram.render()
+    compare_svg("node_attr", "color", svg)
+

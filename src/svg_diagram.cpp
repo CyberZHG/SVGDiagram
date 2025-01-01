@@ -209,9 +209,3 @@ pair<XMLElement::ChildType, XMLElement::ChildType> SVGDiagram::generateSVGElemen
     svgElement->addChild(gElement);
     return {svgElement, gElement};
 }
-
-string SVGDiagram::generateSVGClose() {
-    string svg = "  </g>\n";
-    svg += "</svg>\n";
-    return svg;
-}

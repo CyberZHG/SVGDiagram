@@ -33,7 +33,7 @@ namespace svg_diagram {
         void addAttributes(const AttributesType& attributes);
         void addChild(const ChildType& child);
         void addChildren(const ChildrenType& children);
-        const ChildrenType& children() const;
+        [[nodiscard]] const ChildrenType& children() const;
         void setContent(const std::string& content);
 
         [[nodiscard]] virtual std::string toString(int indent) const;

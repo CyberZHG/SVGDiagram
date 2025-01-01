@@ -46,7 +46,7 @@ void XMLElement::addAttribute(const string& name, const string& value) {
     if (!_attributes.contains(name)) {
         _attributeKeys.push_back(name);
     }
-    _attributes.emplace(name, value);
+    _attributes.emplace(name, escapeAttributeValue(value));
 }
 
 void XMLElement::addAttribute(const string& name, const double value) {
@@ -91,7 +91,7 @@ string XMLElement::toString(const int indent) const {
     const auto indentStr = string(indent, ' ');
     string s = indentStr + "<" + _tag;
     for (const auto& key : _attributeKeys) {
-        s += format(R"( {}="{}")", key, escapeAttributeValue(_attributes.at(key)));
+        s += format(R"( {}="{}")", key, _attributes.at(key));
     }
     if (_content.empty() && _children.empty()) {
         s += "/>\n";
@@ -140,17 +140,8 @@ bool XMLElement::operator==(const XMLElement& other) const {
                 if (fabs(doubleValue1 - doubleValue2) > EPSILON) {
                     return false;
                 }
-                if ((i == pos1) ^ (j == pos2)) {
-                    return false;
-                }
-                if (i == pos1) {
-                    if (value1[i++] != value2[j++]) {
-                        return false;
-                    }
-                } else {
-                    i += pos1;
-                    j += pos2;
-                }
+                i += pos1;
+                j += pos2;
             } catch (...) {
                 if (value1[i++] != value2[j++]) {
                     return false;
@@ -190,14 +181,13 @@ std::pair<XMLElement::ChildrenType, int> XMLElement::parse(const std::string &so
         constexpr int STATE_CONTENT = 4;
         constexpr int STATE_CLOSE = 5;
         switch (state) {
-            case STATE_START: {
+            case STATE_START:
                 while (i < n && source[i] != '<') {
                     ++i;
                 }
                 state = STATE_TAG;
                 i += 1;
                 break;
-            }
             case STATE_TAG: {
                 if (source[i] == '/') {
                     return {children, i - 1};

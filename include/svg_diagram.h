@@ -59,7 +59,6 @@ namespace svg_diagram {
         void produceSVGDrawsDynamic();
 
         [[nodiscard]] std::pair<XMLElement::ChildType, XMLElement::ChildType> generateSVGElement() const;
-        static std::string generateSVGClose();
     };
 
 }

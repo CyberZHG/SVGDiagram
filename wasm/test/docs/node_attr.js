@@ -27,7 +27,6 @@ describe("Docs/NodeAttributes", () => {
             SVGNode.SHAPE_RECT,
         ];
         for (const [i, shape] of shapes.entries()) {
-            console.log(shape);
             const node = diagram.addNode(shape);
             node.setShape(shape);
             node.setCenter((i % 3) * 150.0, Math.floor(i / 3) * 100.0);
@@ -52,5 +51,16 @@ describe("Docs/NodeAttributes", () => {
         node3.setMargin(-10, -10);
         const svg = diagram.render();
         await compareSVG("node_attr", "margin", svg);
+    });
+    it("textSize", async () => {
+        const diagram = new SVGDiagram();
+        const node1 = diagram.addNode("A");
+        node1.setLabel("🐱🐶🙈🙉🙊");
+        const node2 = diagram.addNode("B");
+        node2.setCenter(0, 50);
+        node2.setLabel("🐱🐶🙈🙉🙊");
+        node2.setTextSize(80, 16);
+        const svg = diagram.render();
+        await compareSVG("node_attr", "text_size", svg);
     });
 });

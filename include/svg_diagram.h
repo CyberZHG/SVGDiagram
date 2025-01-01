@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "svg_draw.h"
+#include "svg_nodes.h"
 
 namespace svg_diagram {
 
@@ -16,6 +17,7 @@ namespace svg_diagram {
 
         void clearSVGDraw();
         void addSVGDraw(std::unique_ptr<SVGDraw> svgDraw);
+        void addSVGDraw(std::vector<std::unique_ptr<SVGDraw>> svgDraws);
 
         [[nodiscard]] std::string render() const;
         void render(const std::string& filePath) const;

@@ -9,7 +9,7 @@ TEST(TestSVGDrawLine, SingleLineAutoSize) {
     diagram.clearSVGDraw();
     diagram.setBackgroundColor("white");
     auto line = make_unique<SVGDrawLine>(0.0, 0.0, 20.0, 30.0);
-    line->setAttribute(SVG_ATTRIBUTE_STROKE, "red");
+    line->setAttribute(SVG_ATTR_KEY_STROKE, "red");
     auto svg = line->render();
     EXPECT_EQ(svg, R"(<line x1="0" y1="0" x2="20" y2="30" stroke="red" />)" + string("\n"));
     diagram.addSVGDraw(std::move(line));
@@ -30,12 +30,12 @@ TEST(TestSVGDrawLine, TwoLinesAutoSize) {
     diagram.clearSVGDraw();
     diagram.setBackgroundColor("white");
     auto line1 = make_unique<SVGDrawLine>(0.0, 0.0, 20.0, 30.0);
-    line1->setAttribute(SVG_ATTRIBUTE_STROKE, "red");
+    line1->setAttribute(SVG_ATTR_KEY_STROKE, "red");
     auto svg = line1->render();
     EXPECT_EQ(svg, R"(<line x1="0" y1="0" x2="20" y2="30" stroke="red" />)" + string("\n"));
     diagram.addSVGDraw(std::move(line1));
     auto line2 = make_unique<SVGDrawLine>(10.0, 20.0, 5.0, 40.0);
-    line2->setAttribute(SVG_ATTRIBUTE_STROKE, "blue");
+    line2->setAttribute(SVG_ATTR_KEY_STROKE, "blue");
     svg = line2->render();
     EXPECT_EQ(svg, R"(<line x1="10" y1="20" x2="5" y2="40" stroke="blue" />)" + string("\n"));
     diagram.addSVGDraw(std::move(line2));

@@ -34,9 +34,9 @@ void SVGTextSize::setLineSpacingScale(const double scale) {
     _lineSpacingScale = scale;
 }
 
-pair<double, double> SVGTextSize::computeTextSize(const string& text, const double fontSize, const string& fontFamily) const {
+pair<double, double> SVGTextSize::computeTextSize(const string& text, const double fontSize, const string& fontName) const {
 #ifdef SVG_DIAGRAM_ENABLE_PANGO_CAIRO
-    return computePangoCairoTextSize(text, fontSize, fontFamily);
+    return computePangoCairoTextSize(text, fontSize, fontName);
 #else
     return computeApproximateTextSize(text, fontSize);
 #endif
@@ -71,12 +71,12 @@ cairo_status_t dummy_cairo_write_func(void*, const unsigned char*, unsigned int)
     return CAIRO_STATUS_SUCCESS;
 }
 
-pair<double, double> SVGTextSize::computePangoCairoTextSize(const string& text, const double fontSize, const string& fontFamily) {
+pair<double, double> SVGTextSize::computePangoCairoTextSize(const string& text, const double fontSize, const string& fontName) {
     constexpr double PANGO_SCALE_DOUBLE = PANGO_SCALE;
     if (text.empty()) {
         return {0.0, 0.0};
     }
-    const string font = format("{} {}", fontFamily, fontSize);
+    const string font = format("{} {}", fontName, fontSize);
     const auto surface = cairo_svg_surface_create_for_stream(&dummy_cairo_write_func, nullptr, 400, 300);
     const auto cr = cairo_create(surface);
     PangoLayout* layout = pango_cairo_create_layout(cr);

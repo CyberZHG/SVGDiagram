@@ -97,8 +97,8 @@ SVGDrawText::SVGDrawText(const double x, const double y, const string& text) {
 }
 
 void SVGDrawText::setFont(const string& fontFamily, double fontSize) {
-    setAttribute(SVG_ATTRIBUTE_FONT_FAMILY, fontFamily);
-    setAttribute(SVG_ATTRIBUTE_FONT_SIZE, format("{}", fontSize));
+    setAttribute(SVG_ATTR_KEY_FONT_FAMILY, fontFamily);
+    setAttribute(SVG_ATTR_KEY_FONT_SIZE, format("{}", fontSize));
 }
 
 string SVGDrawText::render() const {
@@ -130,8 +130,8 @@ string SVGDrawText::render() const {
 
 SVGDrawBoundingBox SVGDrawText::boundingBox() const {
     const SVGTextSize textSize;
-    const auto fontSize = stod(_attributes.at(SVG_ATTRIBUTE_FONT_SIZE));
-    const auto fontFamily = _attributes.at(SVG_ATTRIBUTE_FONT_FAMILY);
+    const auto fontSize = stod(_attributes.at(SVG_ATTR_KEY_FONT_SIZE));
+    const auto fontFamily = _attributes.at(SVG_ATTR_KEY_FONT_FAMILY);
     const auto [width, height] = textSize.computeTextSize(text, fontSize, fontFamily);
     return {cx - width / 2.0, cy - height / 2.0, cx + width / 2.0, cy + height / 2.0};
 }

@@ -26,10 +26,10 @@ namespace svg_diagram {
          *
          * @param text Text.
          * @param fontSize Font size.
-         * @param fontFamily Font family.
+         * @param fontName Font family.
          * @return Width and height.
          */
-        [[nodiscard]] std::pair<double, double> computeTextSize(const std::string& text, double fontSize, const std::string& fontFamily = "Serif") const;
+        [[nodiscard]] std::pair<double, double> computeTextSize(const std::string& text, double fontSize, const std::string& fontName = "Serif") const;
 
         /** Compute the approximate text size
          * based on the number of lines and the maximum number of characters per line.

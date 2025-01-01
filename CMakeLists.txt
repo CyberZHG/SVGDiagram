@@ -20,6 +20,8 @@ add_library(SVGDiagram STATIC
         src/attribute_utils.cpp
         include/svg_draw.h
         src/svg_draw.cpp
+        include/geometry_utils.h
+        src/geometry_utils.cpp
 )
 
 target_include_directories(SVGDiagram
@@ -78,6 +80,7 @@ if(SVG_DIAGRAM_BUILD_TESTS)
             tests/svg_draw/test_circle.cpp
             tests/svg_draw/test_text.cpp
             tests/svg_draw/test_line.cpp
+            tests/svg_node/test_circle.cpp
     )
 
     target_link_libraries(runTests

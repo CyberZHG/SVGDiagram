@@ -7,9 +7,9 @@ using namespace svg_diagram;
 
 TEST(TestSVGNodeCircle, OneCircleAutoSizeNoText) {
     SVGDiagram diagram;
-    diagram.clearSVGDraw();
+    diagram.enableDebug();
     auto node = std::make_unique<SVGNode>();
-    node->enableDebug();
+    node->setShape(SVGNode::NODE_SHAPE_CIRCLE);
     node->setMarginInPixels(8, 4);
     diagram.addNode("circle", std::move(node));
     const auto svg = diagram.render();
@@ -23,11 +23,11 @@ TEST(TestSVGNodeCircle, OneCircleAutoSizeNoText) {
 
 TEST(TestSVGNodeCircle, OneCircleAutoSizeText2) {
     SVGDiagram diagram;
-    diagram.clearSVGDraw();
+    diagram.enableDebug();
     auto node = std::make_unique<SVGNode>();
-    node->enableDebug();
+    node->setShape(SVGNode::NODE_SHAPE_CIRCLE);
     node->setMarginInPixels(8, 4);
-    node->setAttribute(DOT_ATTR_KEY_LABEL, "2");
+    node->setLabel("2");
     node->setPrecomputedTextSize(10, 16);
     diagram.addNode("circle", std::move(node));
     const auto svg = diagram.render();
@@ -42,11 +42,11 @@ TEST(TestSVGNodeCircle, OneCircleAutoSizeText2) {
 
 TEST(TestSVGNodeCircle, OneCircleAutoSizeText42) {
     SVGDiagram diagram;
-    diagram.clearSVGDraw();
+    diagram.enableDebug();
     auto node = std::make_unique<SVGNode>();
-    node->enableDebug();
+    node->setShape(SVGNode::NODE_SHAPE_CIRCLE);
     node->setMarginInPixels(8, 4);
-    node->setAttribute(DOT_ATTR_KEY_LABEL, "42");
+    node->setLabel("42");
     node->setPrecomputedTextSize(20, 16);
     diagram.addNode("circle", std::move(node));
     const auto svg = diagram.render();
@@ -61,11 +61,11 @@ TEST(TestSVGNodeCircle, OneCircleAutoSizeText42) {
 
 TEST(TestSVGNodeCircle, OneCircleAutoSizeTextA) {
     SVGDiagram diagram;
-    diagram.clearSVGDraw();
+    diagram.enableDebug();
     auto node = std::make_unique<SVGNode>();
-    node->enableDebug();
+    node->setShape(SVGNode::NODE_SHAPE_CIRCLE);
     node->setMarginInPixels(8, 4);
-    node->setAttribute(DOT_ATTR_KEY_LABEL, "A");
+    node->setLabel("A");
     node->setPrecomputedTextSize(15, 16);
     diagram.addNode("circle", std::move(node));
     const auto svg = diagram.render();
@@ -80,11 +80,11 @@ TEST(TestSVGNodeCircle, OneCircleAutoSizeTextA) {
 
 TEST(TestSVGNodeCircle, OneCircleAutoSizeTextTwoLines) {
     SVGDiagram diagram;
-    diagram.clearSVGDraw();
+    diagram.enableDebug();
     auto node = std::make_unique<SVGNode>();
-    node->enableDebug();
+    node->setShape(SVGNode::NODE_SHAPE_CIRCLE);
     node->setMarginInPixels(8, 4);
-    node->setAttribute(DOT_ATTR_KEY_LABEL, "天朗气清\n惠风和畅");
+    node->setLabel("天朗气清\n惠风和畅");
     node->setPrecomputedTextSize(80, 35);
     diagram.addNode("circle", std::move(node));
     const auto svg = diagram.render();

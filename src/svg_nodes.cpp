@@ -8,110 +8,125 @@
 using namespace std;
 using namespace svg_diagram;
 
-SVGNode::SVGNode(const double cx, const double cy) {
-    _cx = cx;
-    _cy = cy;
-}
-
-void SVGNode::setAttribute(const string_view& key, const string& value) {
+void SVGItem::setAttribute(const string_view& key, const string& value) {
     _attributes[key] = value;
 }
 
-void SVGNode::setAttributeIfNotExist(const string_view& key, const string& value) {
+void SVGItem::setAttributeIfNotExist(const string_view& key, const string& value) {
     if (!_attributes.contains(key)) {
         _attributes[key] = value;
     }
 }
 
-static const string EMPTY_STRING;
-
-const string& SVGNode::getAttribute(const string_view& key) const {
+const string& SVGItem::getAttribute(const string_view& key) const {
+    static const string EMPTY_STRING;
     if (const auto it = _attributes.find(key); it != _attributes.end()) {
         return it->second;
     }
     return EMPTY_STRING;
 }
 
-void SVGNode::setPrecomputedTextSize(const double width, const double height) {
+void SVGItem::setPrecomputedTextSize(const double width, const double height) {
     _precomputedTextWidth = width;
     _precomputedTextHeight = height;
 }
 
-void SVGNode::setLabel(const string& label) {
+std::pair<double, double> SVGItem::precomputedTextSize() const {
+    return {_precomputedTextWidth, _precomputedTextHeight};
+}
+
+void SVGItem::setLabel(const string& label) {
     setAttribute(DOT_ATTR_KEY_LABEL, label);
 }
 
-void SVGNode::setMargin(const string& value) {
+void SVGItem::setMargin(const string& value) {
     setAttribute(DOT_ATTR_KEY_MARGIN, value);
 }
 
-void SVGNode::setMargin(const double margin) {
+void SVGItem::setMargin(const double margin) {
     setMargin(format("{}", margin));
 }
 
-void SVGNode::setMargin(const double marginX, const double marginY) {
+void SVGItem::setMargin(const double marginX, const double marginY) {
     setMargin(format("{},{}", marginX, marginY));
 }
 
-void SVGNode::setMarginInPixels(const double margin) {
+void SVGItem::setMarginInPixels(const double margin) {
     setMargin(margin / SVG_DEFAULT_DPI);
 }
 
-void SVGNode::setMarginInPixels(const double marginX, const double marginY) {
+void SVGItem::setMarginInPixels(const double marginX, const double marginY) {
     setMargin(marginX / SVG_DEFAULT_DPI, marginY / SVG_DEFAULT_DPI);
 }
 
-void SVGNode::enableDebug() {
-    _showTextBoxes = true;
+void SVGItem::enableDebug() {
+    _enabledDebug = true;
+}
+
+bool SVGItem::enabledDebug() const {
+    return _enabledDebug;
+}
+
+
+SVGNode::SVGNode(const double cx, const double cy) {
+    _cx = cx;
+    _cy = cy;
+}
+
+void SVGNode::setShape(const string& shape) {
+    setAttribute(DOT_ATTR_KEY_SHAPE, shape);
+}
+
+void SVGNode::setShape(const string_view& shape) {
+    setShape(string(shape));
+}
+
+pair<double, double> SVGNode::center() const {
+    return {_cx, _cy};
 }
 
 void SVGNode::adjustNodeSize() {
-    auto shape = NODE_SHAPE_CIRCLE;
-    const auto it = _attributes.find(DOT_ATTR_KEY_SHAPE);
-    if (it != _attributes.end()) {
-        shape = string_view(it->second);
-    }
+    setAttributeIfNotExist(DOT_ATTR_KEY_SHAPE, string(NODE_SHAPE_DEFAULT));
+    const auto shape = getAttribute(DOT_ATTR_KEY_SHAPE);
     if (shape == NODE_SHAPE_CIRCLE) {
         adjustNodeSizeCircle();
     }
 }
 
 vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
-    auto shape = NODE_SHAPE_CIRCLE;
-    const auto it = _attributes.find(DOT_ATTR_KEY_SHAPE);
-    if (it != _attributes.end()) {
-        shape = string_view(it->second);
-    }
+    setAttributeIfNotExist(DOT_ATTR_KEY_SHAPE, string(NODE_SHAPE_DEFAULT));
+    const auto shape = getAttribute(DOT_ATTR_KEY_SHAPE);
     if (shape == NODE_SHAPE_CIRCLE) {
         return produceSVGDrawsCircle();
     }
     return {};
 }
 
-std::pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
-    auto shape = NODE_SHAPE_CIRCLE;
-    const auto it = _attributes.find(DOT_ATTR_KEY_SHAPE);
-    if (it != _attributes.end()) {
-        shape = string_view(it->second);
-    }
+pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
+    setAttributeIfNotExist(DOT_ATTR_KEY_SHAPE, string(NODE_SHAPE_DEFAULT));
+    const auto shape = getAttribute(DOT_ATTR_KEY_SHAPE);
     if (shape == NODE_SHAPE_CIRCLE) {
         return computeConnectionPointCircle(angle);
     }
     return {0.0, 0.0};
-
 }
 
-std::pair<double, double> SVGNode::computeConnectionPoint(const double x1, const double y1, const double x2, const double y2) {
+pair<double, double> SVGNode::computeConnectionPoint(const double x1, const double y1, const double x2, const double y2) {
     return computeConnectionPoint(atan2(y2 - y1, x2 - x1));
 }
 
-std::pair<double, double> SVGNode::computeConnectionPoint(const double x, const double y) {
+pair<double, double> SVGNode::computeConnectionPoint(const double x, const double y) {
     return computeConnectionPoint(_cx, _cy, x, y);
 }
 
+pair<double, double> SVGNode::computeConnectionPoint(const pair<double, double>& p) {
+    return computeConnectionPoint(p.first, p.second);
+}
+
 pair<double, double> SVGNode::computeTextSize() {
-    if (_precomputedTextWidth > 0 && _precomputedTextHeight > 0) {
-        return {_precomputedTextWidth, _precomputedTextHeight};
+    if (const auto [precomputedTextWidth, precomputedTextHeight] = precomputedTextSize();
+        precomputedTextWidth > 0 && precomputedTextHeight > 0) {
+        return {precomputedTextWidth, precomputedTextHeight};
     }
     const SVGTextSize textSize;
     const auto label = getAttribute(DOT_ATTR_KEY_LABEL);
@@ -154,7 +169,7 @@ void SVGNode::adjustNodeSizeCircle() {
 }
 
 void SVGNode::appendSVGDrawsLabel(vector<unique_ptr<SVGDraw>>& svgDraws) {
-    if (_showTextBoxes) {
+    if (enabledDebug()) {
         const auto [textWidth, textHeight] = computeTextSize();
         const auto [marginX, marginY] = computeMarginInPixels();
         auto textRect = make_unique<SVGDrawRect>(_cx, _cy, textWidth, textHeight);
@@ -183,7 +198,69 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsCircle() {
     return svgDraws;
 }
 
-std::pair<double, double> SVGNode::computeConnectionPointCircle(const double angle) const {
+pair<double, double> SVGNode::computeConnectionPointCircle(const double angle) const {
     const double radius = stod(getAttribute(DOT_ATTR_KEY_WIDTH)) / 2.0;
-    return {radius * cos(angle), radius * sin(angle)};
+    return {_cx + radius * cos(angle), _cy + radius * sin(angle)};
+}
+
+SVGEdge::SVGEdge(const string& idFrom, const string& idTo) {
+    _nodeFrom = idFrom;
+    _nodeTo = idTo;
+}
+
+const string& SVGEdge::nodeFrom() const {
+    return _nodeFrom;
+}
+
+const string& SVGEdge::nodeTo() const {
+    return _nodeFrom;
+}
+
+void SVGEdge::setSplines(const string& value) {
+    setAttribute(DOT_ATTR_KEY_SPLINES, value);
+}
+
+void SVGEdge::setSplines(const string_view& value) {
+    setSplines(string(value));
+}
+
+void SVGEdge::addConnectionPoint(const pair<double, double>& point) {
+    _connectionPoints.emplace_back(point);
+}
+
+void SVGEdge::addConnectionPoint(const double x, const double y) {
+    addConnectionPoint({x, y});
+}
+
+vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDraws(const NodesMapping& nodes) {
+    setAttributeIfNotExist(DOT_ATTR_KEY_SPLINES, string(EDGE_SPLINES_DEFAULT));
+    const auto splines = getAttribute(DOT_ATTR_KEY_SPLINES);
+    if (splines == EDGE_SPLINES_LINE) {
+        return produceSVGDrawsLine(nodes);
+    }
+    return {};
+}
+
+vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nodes) {
+    const auto& nodeFrom = nodes.at(_nodeFrom);
+    const auto& nodeTo = nodes.at(_nodeTo);
+    vector<unique_ptr<SVGDraw>> svgDraws;
+    if (_connectionPoints.empty()) {
+        const auto [x1, y1] = nodeFrom->computeConnectionPoint(nodeTo->center());
+        const auto [x2, y2] = nodeTo->computeConnectionPoint(nodeFrom->center());
+        svgDraws.emplace_back(make_unique<SVGDrawLine>(x1, y1, x2, y2));
+    } else {
+        auto [xLast, yLast] = nodeFrom->computeConnectionPoint(_connectionPoints[0]);
+        for (const auto& [x, y] : _connectionPoints) {
+            svgDraws.emplace_back(make_unique<SVGDrawLine>(xLast, yLast, x, y));
+            xLast = x;
+            yLast = y;
+        }
+        const auto [x, y] = nodeTo->computeConnectionPoint(xLast, yLast);
+        svgDraws.emplace_back(make_unique<SVGDrawLine>(xLast, yLast, x, y));
+    }
+    for (const auto& line : svgDraws) {
+        dynamic_cast<SVGDrawLine*>(line.get())->setStroke("black");
+    }
+    return svgDraws;
 }

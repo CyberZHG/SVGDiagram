@@ -9,6 +9,10 @@ SVGDiagram::SVGDiagram() {
     _svgDraws.emplace_back(make_unique<SVGDrawComment>("Created by: https://github.com/CyberZHG/SVGDiagram"));
 }
 
+void SVGDiagram::enableDebug() {
+    _enabledDebug = true;
+}
+
 void SVGDiagram::clearSVGDraw() {
     _svgDraws.clear();
 }
@@ -33,7 +37,22 @@ void SVGDiagram::setBackgroundColor(const std::string& backgroundColor) {
 }
 
 void SVGDiagram::addNode(const string& id, unique_ptr<SVGNode> node) {
+    if (!_nodes.contains(id)) {
+        _nodeIds.emplace_back(id);
+    }
     _nodes[id] = std::move(node);
+}
+
+void SVGDiagram::addEdge(const string& id, unique_ptr<SVGEdge> edge) {
+    if (!_edges.contains(id)) {
+        _edgeIds.emplace_back(id);
+    }
+    _edges[id] = std::move(edge);
+}
+
+void SVGDiagram::addEdge(unique_ptr<SVGEdge> edge) {
+    const auto id = format("{} -> {}", edge->nodeFrom(), edge->nodeTo());
+    addEdge(id, std::move(edge));
 }
 
 std::string SVGDiagram::render() {
@@ -57,10 +76,24 @@ void SVGDiagram::render(const std::string &filePath) {
 
 void SVGDiagram::produceSVGDrawsDynamic() {
     _svgDrawsDynamic.clear();
-    for (const auto& [id, node] : _nodes) {
+    for (const auto& id : _nodeIds) {
+        const auto& node = _nodes.at(id);
+        if (_enabledDebug) {
+            node->enableDebug();
+        }
         node->adjustNodeSize();
         _svgDrawsDynamic.emplace_back(make_unique<SVGDrawComment>(format("node_id = {}", id)));
         for (auto& draw : node->produceSVGDraws()) {
+            _svgDrawsDynamic.emplace_back(std::move(draw));
+        }
+    }
+    for (const auto& id : _edgeIds) {
+        const auto& edge = _edges.at(id);
+        if (_enabledDebug) {
+            edge->enableDebug();
+        }
+        _svgDrawsDynamic.emplace_back(make_unique<SVGDrawComment>(format("edge_id = {}", id)));
+        for (auto& draw : edge->produceSVGDraws(_nodes)) {
             _svgDrawsDynamic.emplace_back(std::move(draw));
         }
     }
@@ -115,6 +148,6 @@ string SVGDiagram::generateSVGOpen() const {
     return svg;
 }
 
-string SVGDiagram::generateSVGClose() const {
+string SVGDiagram::generateSVGClose() {
     return "</svg>\n";
 }

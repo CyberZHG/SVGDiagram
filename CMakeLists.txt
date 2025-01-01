@@ -84,6 +84,7 @@ if(SVG_DIAGRAM_BUILD_TESTS)
             tests/test_utils.cpp
             tests/test_utils.h
             tests/svg_draw/test_draw.cpp
+            tests/svg_edge/test_line.cpp
     )
 
     target_link_libraries(runTests

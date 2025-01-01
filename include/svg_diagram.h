@@ -15,6 +15,8 @@ namespace svg_diagram {
 
         static constexpr double DEFAULT_MARGIN = 8;
 
+        void enableDebug();
+
         void clearSVGDraw();
         void addSVGDraw(std::unique_ptr<SVGDraw> svgDraw);
         void addSVGDraw(std::vector<std::unique_ptr<SVGDraw>> svgDraws);
@@ -23,11 +25,15 @@ namespace svg_diagram {
         void setBackgroundColor(const std::string& backgroundColor);
 
         void addNode(const std::string& id, std::unique_ptr<SVGNode> node);
+        void addEdge(const std::string& id, std::unique_ptr<SVGEdge> edge);
+        void addEdge(std::unique_ptr<SVGEdge> edge);
 
         [[nodiscard]] std::string render();
         void render(const std::string& filePath);
 
     private:
+        bool _enabledDebug = false;
+
         std::vector<std::unique_ptr<SVGDraw>> _svgDraws;
         std::vector<std::unique_ptr<SVGDraw>> _svgDrawsDynamic;
         double _width = 0.0;
@@ -36,11 +42,14 @@ namespace svg_diagram {
         std::string _backgroundColor;
 
         std::unordered_map<std::string, std::unique_ptr<SVGNode>> _nodes;
+        std::unordered_map<std::string, std::unique_ptr<SVGEdge>> _edges;
+        std::vector<std::string> _nodeIds;
+        std::vector<std::string> _edgeIds;
 
         void produceSVGDrawsDynamic();
 
         [[nodiscard]] std::string generateSVGOpen() const;
-        [[nodiscard]] std::string generateSVGClose() const;
+        static std::string generateSVGClose() ;
     };
 
 }

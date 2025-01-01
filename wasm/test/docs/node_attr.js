@@ -116,7 +116,7 @@ describe("Docs/NodeAttributes", () => {
         for (const [i, label] of labels.entries()) {
             const node = diagram.addNode(`node${i}`);
             node.setCenter(i * 150, 0);
-            node.setLabel(labels[i]);
+            node.setLabel(label);
             if (i === 1) {
                 node.appendStyleDashed();
             } else if (i === 2) {

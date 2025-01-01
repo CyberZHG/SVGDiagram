@@ -167,6 +167,10 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
         const auto& [x2, y2] = points[i + 1];
         svgDraws.emplace_back(make_unique<SVGDrawLine>(x1, y1, x2, y2));
     }
+    setStrokeStyles(svgDraws[0].get());
+    for (size_t i = 1; i < svgDraws.size(); ++i) {
+        svgDraws[i]->copyAttributes(svgDraws[0].get());
+    }
     for (const auto& line : svgDraws) {
         const auto& draw = dynamic_cast<SVGDrawLine*>(line.get());
         setStrokeStyles(draw);

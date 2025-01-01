@@ -27,6 +27,10 @@ void SVGDraw::setAttribute(const string_view& key, const string& value) {
     _attributes[key] = value;
 }
 
+void SVGDraw::copyAttributes(const SVGDraw* other) {
+    _attributes = other->_attributes;
+}
+
 void SVGDraw::setFill(const string& value) {
     setAttribute(SVG_ATTR_KEY_FILL, value);
 }

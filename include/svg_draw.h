@@ -40,6 +40,7 @@ namespace svg_diagram {
         [[nodiscard]] virtual bool hasEntity() const = 0;
 
         void setAttribute(const std::string_view& key, const std::string& value);
+        void copyAttributes(const SVGDraw* other);
 
         void setFill(const std::string& value);
         void setStroke(const std::string& value);

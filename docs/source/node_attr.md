@@ -539,7 +539,7 @@ const labels = ["solid", "dashed", "dotted"]
 for (const [i, label] of labels.entries()) {
     const node = diagram.addNode(`node${i}`);
     node.setCenter(i * 150, 0);
-    node.setLabel(labels[i]);
+    node.setLabel(label);
     node.setFillColor("lightgray");
     if (i === 1) {
         node.appendStyleDashed();

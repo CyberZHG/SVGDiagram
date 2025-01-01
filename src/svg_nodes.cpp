@@ -270,53 +270,53 @@ pair<double, double> SVGNode::center() const {
 }
 
 void SVGNode::adjustNodeSize() {
-    setAttributeIfNotExist(ATTRIBUTE_KEY_SHAPE, string(NODE_SHAPE_DEFAULT));
+    setAttributeIfNotExist(ATTRIBUTE_KEY_SHAPE, string(SHAPE_DEFAULT));
     const auto shape = getAttribute(ATTRIBUTE_KEY_SHAPE);
-    if (shape == NODE_SHAPE_CIRCLE) {
+    if (shape == SHAPE_CIRCLE) {
         adjustNodeSizeCircle();
-    } else if (shape == NODE_SHAPE_DOUBLE_CIRCLE) {
+    } else if (shape == SHAPE_DOUBLE_CIRCLE) {
         adjustNodeSizeDoubleCircle();
-    } else if (shape == NODE_SHAPE_NONE || shape == NODE_SHAPE_RECT) {
+    } else if (shape == SHAPE_NONE || shape == SHAPE_RECT) {
         adjustNodeSizeRect();
-    } else if (shape == NODE_SHAPE_ELLIPSE) {
+    } else if (shape == SHAPE_ELLIPSE) {
         adjustNodeSizeEllipse();
     }
 }
 
 vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
-    setAttributeIfNotExist(ATTRIBUTE_KEY_SHAPE, string(NODE_SHAPE_DEFAULT));
+    setAttributeIfNotExist(ATTRIBUTE_KEY_SHAPE, string(SHAPE_DEFAULT));
     setAttributeIfNotExist(ATTRIBUTE_KEY_COLOR, "black");
     setAttributeIfNotExist(ATTRIBUTE_KEY_FILL_COLOR, "none");
     setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_COLOR, "black");
     const auto shape = getAttribute(ATTRIBUTE_KEY_SHAPE);
-    if (shape == NODE_SHAPE_CIRCLE) {
+    if (shape == SHAPE_CIRCLE) {
         return produceSVGDrawsCircle();
     }
-    if (shape == NODE_SHAPE_DOUBLE_CIRCLE) {
+    if (shape == SHAPE_DOUBLE_CIRCLE) {
         return produceSVGDrawsDoubleCircle();
     }
-    if (shape == NODE_SHAPE_RECT) {
+    if (shape == SHAPE_RECT) {
         return produceSVGDrawsRect();
     }
-    if (shape == NODE_SHAPE_ELLIPSE) {
+    if (shape == SHAPE_ELLIPSE) {
         return produceSVGDrawsEllipse();
     }
     return produceSVGDrawsNone();
 }
 
 pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
-    setAttributeIfNotExist(ATTRIBUTE_KEY_SHAPE, string(NODE_SHAPE_DEFAULT));
+    setAttributeIfNotExist(ATTRIBUTE_KEY_SHAPE, string(SHAPE_DEFAULT));
     const auto shape = getAttribute(ATTRIBUTE_KEY_SHAPE);
-    if (shape == NODE_SHAPE_CIRCLE) {
+    if (shape == SHAPE_CIRCLE) {
         return computeConnectionPointCircle(angle);
     }
-    if (shape == NODE_SHAPE_DOUBLE_CIRCLE) {
+    if (shape == SHAPE_DOUBLE_CIRCLE) {
         return computeConnectionPointDoubleCircle(angle);
     }
-    if (shape == NODE_SHAPE_RECT || shape == NODE_SHAPE_NONE) {
+    if (shape == SHAPE_RECT || shape == SHAPE_NONE) {
         return computeConnectionPointRect(angle);
     }
-    if (shape == NODE_SHAPE_ELLIPSE) {
+    if (shape == SHAPE_ELLIPSE) {
         return computeConnectionPointEllipse(angle);
     }
     return {0.0, 0.0};
@@ -551,23 +551,23 @@ void SVGEdge::addConnectionPoint(const double x, const double y) {
 }
 
 vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDraws(const NodesMapping& nodes) {
-    setAttributeIfNotExist(ATTRIBUTE_KEY_SPLINES, string(EDGE_SPLINES_DEFAULT));
+    setAttributeIfNotExist(ATTRIBUTE_KEY_SPLINES, string(SPLINES_DEFAULT));
     setAttributeIfNotExist(ATTRIBUTE_KEY_COLOR, "black");
     setAttributeIfNotExist(ATTRIBUTE_KEY_ARROW_HEAD, "none");
     setAttributeIfNotExist(ATTRIBUTE_KEY_ARROW_TAIL, "none");
     setAttributeIfNotExist(ATTRIBUTE_KEY_MARGIN, "0,0");
     const auto splines = getAttribute(ATTRIBUTE_KEY_SPLINES);
-    if (splines == EDGE_SPLINES_LINE) {
+    if (splines == SPLINES_LINE) {
         return produceSVGDrawsLine(nodes);
     }
-    if (splines == EDGE_SPLINES_SPLINE) {
+    if (splines == SPLINES_SPLINE) {
         return produceSVGDrawsSpline(nodes);
     }
     return {};
 }
 
 void SVGEdge::setArrowHead() {
-    setArrowHead(ARROW_SHAPE_DEFAULT);
+    setArrowHead(ARROW_DEFAULT);
 }
 
 void SVGEdge::setArrowHead(const string_view& shape) {
@@ -575,7 +575,7 @@ void SVGEdge::setArrowHead(const string_view& shape) {
 }
 
 void SVGEdge::setArrowTail() {
-    setArrowTail(ARROW_SHAPE_DEFAULT);
+    setArrowTail(ARROW_DEFAULT);
 }
 
 void SVGEdge::setArrowTail(const string_view& shape) {
@@ -767,7 +767,7 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
 }
 
 double SVGEdge::computeArrowTipMargin(const string_view& shape) const {
-    if (shape == ARROW_SHAPE_NORMAL || shape == ARROW_SHAPE_EMPTY) {
+    if (shape == ARROW_NORMAL || shape == ARROW_EMPTY) {
         return computeArrowTipMarginNormal();
     }
     return 0.0;
@@ -783,10 +783,10 @@ double SVGEdge::computeArrowTipMarginNormal() const {
 pair<double, double> SVGEdge::addArrow(const string_view& shape, vector<unique_ptr<SVGDraw>>& svgDraws, const pair<double, double>& connectionPoint, const double angle) const {
     const double arrowTipMargin = computeArrowTipMargin(shape);
     const pair arrowTip = {connectionPoint.first + arrowTipMargin * cos(angle), connectionPoint.second + arrowTipMargin * sin(angle)};
-    if (shape == ARROW_SHAPE_NORMAL) {
+    if (shape == ARROW_NORMAL) {
         return addArrowNormal(svgDraws, arrowTip, angle, true);
     }
-    if (shape == ARROW_SHAPE_EMPTY) {
+    if (shape == ARROW_EMPTY) {
         return addArrowNormal(svgDraws, arrowTip, angle, false);
     }
     return {connectionPoint.first - 0.2 * cos(angle), connectionPoint.second - 0.2 * sin(angle)};

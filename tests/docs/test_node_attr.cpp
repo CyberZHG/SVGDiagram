@@ -3,11 +3,11 @@
 #include <cmath>
 #include <numbers>
 #include <format>
+#include <vector>
 #include <gtest/gtest.h>
-using namespace std;
 using namespace svg_diagram;
 
-static const auto OUTPUT_DIR = string("../docs/source/_static/node_attr/");
+static const auto OUTPUT_DIR = std::string("../docs/source/_static/node_attr/");
 
 TEST(TestDocsNodeAttributes, Label) {
     SVGDiagram diagram;
@@ -36,4 +36,43 @@ TEST(TestDocsNodeAttributes, LabelDebug) {
     node3->setCenter(300, 0);
     node3->setLabel("物华天宝\n人杰地灵");
     diagram.render(OUTPUT_DIR + "label_debug.svg");
+}
+
+TEST(TestDocsNodeAttributes, Shape) {
+    SVGDiagram diagram;
+    const auto shapes = std::vector{
+        SVGNode::SHAPE_ELLIPSE,
+        SVGNode::SHAPE_NONE,
+        SVGNode::SHAPE_CIRCLE,
+        SVGNode::SHAPE_DOUBLE_CIRCLE,
+        SVGNode::SHAPE_RECT,
+    };
+    for (int i = 0; i < static_cast<int>(shapes.size()); ++i) {
+        const auto shape = std::string(shapes[i]);
+        const auto node = diagram.addNode(std::string(shapes[i]));
+        node->setShape(shapes[i]);
+        node->setCenter((i % 3) * 150.0, (i / 3) * 100.0);
+        node->setLabel(shape);
+    }
+    diagram.render(OUTPUT_DIR + "shape.svg");
+}
+
+TEST(TestDocsNodeAttributes, ShapeDebug) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto shapes = std::vector{
+        SVGNode::SHAPE_ELLIPSE,
+        SVGNode::SHAPE_NONE,
+        SVGNode::SHAPE_CIRCLE,
+        SVGNode::SHAPE_DOUBLE_CIRCLE,
+        SVGNode::SHAPE_RECT,
+    };
+    for (int i = 0; i < static_cast<int>(shapes.size()); ++i) {
+        const auto shape = std::string(shapes[i]);
+        const auto node = diagram.addNode(std::string(shapes[i]));
+        node->setShape(shapes[i]);
+        node->setCenter((i % 3) * 150.0, (i / 3) * 100.0);
+        node->setLabel(shape);
+    }
+    diagram.render(OUTPUT_DIR + "shape_debug.svg");
 }

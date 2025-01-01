@@ -10,7 +10,7 @@ using namespace svg_diagram;
 TEST(TestExample, Pentagon) {
     SVGDiagram diagram;
     diagram.setBackgroundColor("white");
-    diagram.defaultNodeAttributes().setShape(SVGNode::NODE_SHAPE_CIRCLE);
+    diagram.defaultNodeAttributes().setShape(SVGNode::SHAPE_CIRCLE);
     diagram.defaultEdgeAttributes().setMargin(4.0);
     diagram.defaultEdgeAttributes().setArrowHead();
 
@@ -37,7 +37,7 @@ TEST(TestExample, Pentagon) {
         node->setFillColor(fillColors[i]);
         node->setFontColor(textColors[i]);
         if (i == 3) {
-            node->setShape(SVGNode::NODE_SHAPE_DOUBLE_CIRCLE);
+            node->setShape(SVGNode::SHAPE_DOUBLE_CIRCLE);
         }
 
         const auto from = format("node_{}", i);
@@ -51,7 +51,7 @@ TEST(TestExample, Pentagon) {
     const auto& node = diagram.addNode("node_c");
     node->setCenter(0.0, 0.0);
     node->setLabel(labels[5]);
-    node->setShape(SVGNode::NODE_SHAPE_NONE);
+    node->setShape(SVGNode::SHAPE_NONE);
     node->setFontColor(textColors[5]);
 
     diagram.render("example_pentagon.svg");

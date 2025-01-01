@@ -10,7 +10,7 @@ using namespace svg_diagram;
 TEST(TestExample, Pentagram) {
     SVGDiagram diagram;
     diagram.setBackgroundColor("white");
-    diagram.defaultNodeAttributes().setShape(SVGNode::NODE_SHAPE_RECT);
+    diagram.defaultNodeAttributes().setShape(SVGNode::SHAPE_RECT);
     diagram.defaultEdgeAttributes().setMargin(4.0);
     diagram.defaultEdgeAttributes().setArrowHead();
 
@@ -28,7 +28,7 @@ TEST(TestExample, Pentagram) {
     const auto& centralNode = diagram.addNode("node_c");
     centralNode->setCenter(0.0, 0.0);
     centralNode->setLabel(labels[5]);
-    centralNode->setShape(SVGNode::NODE_SHAPE_RECT);
+    centralNode->setShape(SVGNode::SHAPE_RECT);
 
     for (int i = 0; i < 5; ++i) {
         constexpr double RADIUS = 150.0;

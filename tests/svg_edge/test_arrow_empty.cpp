@@ -11,15 +11,15 @@ TEST(TestSVGEdgeArrowEmpty, TwoRectsEmptyArrow) {
     SVGDiagram diagram;
     const auto node1 = diagram.addNode("A");
     node1->setCenter(0, 0);
-    node1->setShape(SVGNode::NODE_SHAPE_RECT);
+    node1->setShape(SVGNode::SHAPE_RECT);
     node1->setFixedSize(10, 10);
     const auto node2 = diagram.addNode("B");
     node2->setCenter(50, 100);
-    node2->setShape(SVGNode::NODE_SHAPE_RECT);
+    node2->setShape(SVGNode::SHAPE_RECT);
     node2->setFixedSize(10, 10);
     const auto edge = diagram.addEdge("A", "B");
-    edge->setArrowHead(SVGEdge::ARROW_SHAPE_EMPTY);
-    edge->setArrowTail(SVGEdge::ARROW_SHAPE_EMPTY);
+    edge->setArrowHead(SVGEdge::ARROW_EMPTY);
+    edge->setArrowTail(SVGEdge::ARROW_EMPTY);
     const auto svg = diagram.render();
     const auto expected = R"(<!-- Node: A -->
 <g class="node" id="A">
@@ -47,17 +47,17 @@ TEST(TestSVGEdgeArrowEmpty, TwoRectsEmptyArrowPenWidth) {
     SVGDiagram diagram;
     const auto node1 = diagram.addNode("A");
     node1->setCenter(0, 0);
-    node1->setShape(SVGNode::NODE_SHAPE_RECT);
+    node1->setShape(SVGNode::SHAPE_RECT);
     node1->setFixedSize(10, 10);
     node1->setPenWidth(2.0);
     const auto node2 = diagram.addNode("B");
     node2->setCenter(50, 100);
-    node2->setShape(SVGNode::NODE_SHAPE_RECT);
+    node2->setShape(SVGNode::SHAPE_RECT);
     node2->setFixedSize(10, 10);
     node2->setPenWidth(2.0);
     const auto edge = diagram.addEdge("A", "B");
-    edge->setArrowHead(SVGEdge::ARROW_SHAPE_EMPTY);
-    edge->setArrowTail(SVGEdge::ARROW_SHAPE_EMPTY);
+    edge->setArrowHead(SVGEdge::ARROW_EMPTY);
+    edge->setArrowTail(SVGEdge::ARROW_EMPTY);
     edge->setPenWidth(2.0);
     const auto svg = diagram.render();
   const auto expected = R"(<!-- Node: A -->

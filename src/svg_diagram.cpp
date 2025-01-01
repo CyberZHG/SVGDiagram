@@ -111,6 +111,7 @@ void SVGDiagram::addSubgraph(const string& id, shared_ptr<SVGGraph>& subgraph) {
 }
 
 string SVGDiagram::render() {
+    _graph.setAttributeIfNotExist(ATTR_KEY_ID, "graph0");
     produceSVGDrawsDynamic();
     const auto [svgElement, gElement] = generateSVGElement();
     unordered_set<string> singletonNames;

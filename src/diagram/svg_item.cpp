@@ -268,7 +268,7 @@ void SVGItem::setStrokeStyles(SVGDraw* draw) const {
     }
 }
 
-void SVGItem::setFillStyles(SVGDraw* draw) const {
+void SVGItem::setFillStyles(SVGDraw* draw, vector<unique_ptr<SVGDraw>>& svgDraws) const {
     if (const auto colorList = AttributeUtils::parseColorList(fillColor()); !colorList.empty()) {
         if (colorList.size() == 1) {
             const auto& color = colorList[0];
@@ -277,6 +277,24 @@ void SVGItem::setFillStyles(SVGDraw* draw) const {
                 if (0.0 <= color.opacity && color.opacity < 1.0) {
                     draw->setFillOpacity(color.opacity);
                 }
+            }
+        } else if (colorList.size() > 1) {
+            if (const auto& firstColor = colorList[0]; firstColor.weight < 0.0) {
+                // Linear gradient
+                vector<unique_ptr<SVGDraw>> stops;
+                const double offset = 1.0 / static_cast<double>(colorList.size() - 1);
+                for (int i = 0; i < static_cast<int>(colorList.size()); ++i) {
+                    const auto& color = colorList[i];
+                    stops.emplace_back(make_unique<SVGDrawStop>(i * offset, color.color, color.opacity));
+                }
+                const auto gradientID = id() + "__fill_color";
+                auto linearGradient = make_unique<SVGDrawLinearGradient>(stops);
+                linearGradient->setID(gradientID);
+                auto defs = make_unique<SVGDrawDefs>(std::move(linearGradient));
+                svgDraws.emplace_back(std::move(defs));
+                draw->setFill(format("url('#{}')", gradientID));
+            } else {
+                // Color segments
             }
         }
     }

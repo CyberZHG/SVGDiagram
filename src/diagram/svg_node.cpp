@@ -156,7 +156,7 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsCircle() {
     vector<unique_ptr<SVGDraw>> svgDraws;
     auto circle = make_unique<SVGDrawCircle>(_cx, _cy, max(width(), height()) / 2.0);
     setStrokeStyles(circle.get());
-    setFillStyles(circle.get());
+    setFillStyles(circle.get(), svgDraws);
     svgDraws.emplace_back(std::move(circle));
     appendSVGDrawsLabel(svgDraws);
     return svgDraws;
@@ -176,7 +176,7 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsDoubleCircle() {
     const double radius = max(width(), height()) / 2.0;
     auto circleInner = make_unique<SVGDrawCircle>(_cx, _cy, radius);
     setStrokeStyles(circleInner.get());
-    setFillStyles(circleInner.get());
+    setFillStyles(circleInner.get(), svgDraws);
     svgDraws.emplace_back(std::move(circleInner));
     auto circleOuter = make_unique<SVGDrawCircle>(_cx, _cy, radius + DOUBLE_BORDER_MARGIN);
     setStrokeStyles(circleOuter.get());
@@ -199,7 +199,7 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsRect() {
     vector<unique_ptr<SVGDraw>> svgDraws;
     auto rect = make_unique<SVGDrawRect>(_cx, _cy, width(), height());
     setStrokeStyles(rect.get());
-    setFillStyles(rect.get());
+    setFillStyles(rect.get(), svgDraws);
     svgDraws.emplace_back(std::move(rect));
     appendSVGDrawsLabel(svgDraws);
     return svgDraws;
@@ -241,7 +241,7 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsEllipse() {
     vector<unique_ptr<SVGDraw>> svgDraws;
     auto ellipse = make_unique<SVGDrawEllipse>(_cx, _cy, width(), height());
     setStrokeStyles(ellipse.get());
-    setFillStyles(ellipse.get());
+    setFillStyles(ellipse.get(), svgDraws);
     svgDraws.emplace_back(std::move(ellipse));
     appendSVGDrawsLabel(svgDraws);
     return svgDraws;

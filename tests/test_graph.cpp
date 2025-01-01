@@ -119,3 +119,39 @@ TEST(TestSVGGraph, OneCircleWithLongLabel) {
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
+
+TEST(TestSVGGraph, GraphGradientColor) {
+    SVGDiagram diagram;
+    const auto graph = diagram.addSubgraph("G");
+    graph->setFillColor("gold:red");
+    auto node = diagram.addNode("A");
+    node->setShape(SVGNode::SHAPE_ELLIPSE);
+    node->setMargin(8, 4);
+    node->setColor("none");
+    node->setFillColor("red:gold");
+    graph->addNode(node);
+    const auto svg = diagram.render();
+    const auto expected = R"s(<defs>
+  <linearGradient id="G__fill_color">
+    <stop offset="0%" stop-color="gold"/>
+    <stop offset="100%" stop-color="red"/>
+  </linearGradient>
+</defs>
+<g class="cluster" id="G">
+  <rect x="-24.263455967290593" y="-23.556349186104047" width="48.526911934581186" height="47.112698372208094" fill="url('#G__fill_color')" stroke="none"/>
+</g>
+<!-- Node: A -->
+<g class="node" id="A">
+  <title>A</title>
+  <defs>
+    <linearGradient id="A__fill_color">
+      <stop offset="0%" stop-color="red"/>
+      <stop offset="100%" stop-color="gold"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="0" cy="0" rx="16.263455967290593" ry="15.556349186104047" fill="url('#A__fill_color')" stroke="none"/>
+</g>)s";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}

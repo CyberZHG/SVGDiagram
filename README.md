@@ -1,6 +1,8 @@
 SVG Diagram
 ===========
 
+[![C++ Unit Tests](https://github.com/CyberZHG/SVGDiagram/actions/workflows/cpp-unit-test.yml/badge.svg)](https://github.com/CyberZHG/SVGDiagram/actions/workflows/cpp-unit-test.yml)
+
 A library for rendering diagrams to SVG.
 
 ## Examples

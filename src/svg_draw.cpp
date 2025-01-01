@@ -1,6 +1,7 @@
 #include "svg_draw.h"
 #include "svg_text_size.h"
 #include "attribute_utils.h"
+#include "constants.h"
 
 #include <format>
 #include <ranges>
@@ -27,19 +28,23 @@ void SVGDraw::setAttribute(const string_view& key, const string& value) {
 }
 
 void SVGDraw::setFill(const string& value) {
-    setAttribute(SVG_ATTRIBUTE_KEY_FILL, value);
+    setAttribute(SVG_ATTR_KEY_FILL, value);
 }
 
 void SVGDraw::setStroke(const string& value) {
-    setAttribute(SVG_ATTRIBUTE_KEY_STROKE, value);
+    setAttribute(SVG_ATTR_KEY_STROKE, value);
 }
 
 void SVGDraw::setStrokeWidth(const string& value) {
-    setAttribute(SVG_ATTRIBUTE_KEY_STROKE_WIDTH, value);
+    setAttribute(SVG_ATTR_KEY_STROKE_WIDTH, value);
 }
 
 void SVGDraw::setStrokeWidth(const double value) {
     setStrokeWidth(format("{}", value));
+}
+
+void SVGDraw::setStrokeDashArray(const string& value) {
+    setAttribute(SVG_ATTR_KEY_STROKE_DASHARRAY, value);
 }
 
 void SVGDraw::addAttributesToXMLElement(const XMLElement::ChildType& element) const {
@@ -170,8 +175,8 @@ SVGDrawText::SVGDrawText(const double x, const double y, const string& text) {
 }
 
 void SVGDrawText::setFont(const string& fontFamily, double fontSize) {
-    setAttribute(SVG_ATTRIBUTE_KEY_FONT_FAMILY, fontFamily);
-    setAttribute(SVG_ATTRIBUTE_KEY_FONT_SIZE, format("{}", fontSize));
+    setAttribute(SVG_ATTR_KEY_FONT_FAMILY, fontFamily);
+    setAttribute(SVG_ATTR_KEY_FONT_SIZE, format("{}", fontSize));
 }
 
 XMLElement::ChildrenType SVGDrawText::generateXMLElements() const {
@@ -209,8 +214,8 @@ XMLElement::ChildrenType SVGDrawText::generateXMLElements() const {
 
 SVGDrawBoundingBox SVGDrawText::boundingBox() const {
     const SVGTextSize textSize;
-    const auto fontSize = stod(_attributes.at(SVG_ATTRIBUTE_KEY_FONT_SIZE));
-    const auto fontFamily = _attributes.at(SVG_ATTRIBUTE_KEY_FONT_FAMILY);
+    const auto fontSize = stod(_attributes.at(SVG_ATTR_KEY_FONT_SIZE));
+    const auto fontFamily = _attributes.at(SVG_ATTR_KEY_FONT_FAMILY);
     const auto [width, height] = textSize.computeTextSize(text, fontSize, fontFamily);
     return {cx - width / 2.0, cy - height / 2.0, cx + width / 2.0, cy + height / 2.0};
 }

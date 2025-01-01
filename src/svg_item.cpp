@@ -253,6 +253,11 @@ void SVGItem::setStrokeStyles(SVGDraw* draw) const {
     if (const auto strokeWidth = penWidth(); strokeWidth != 1.0) {
         draw->setStrokeWidth(strokeWidth);
     }
+    if (const auto parsedStyle = style(); parsedStyle.dashed) {
+        draw->setStrokeDashArray("5,2");
+    } else if (parsedStyle.dotted) {
+        draw->setStrokeDashArray("1,5");
+    }
 }
 
 SVGItem::SVGItem(const string& id) {

@@ -114,8 +114,10 @@ AttributeParsedStyle AttributeUtils::parseStyle(const string& value) {
             parsed.filled = true;
         } else if (style == ATTR_STYLE_DASHED) {
             parsed.dashed = true;
+            parsed.dotted = false;
         } else if (style == ATTR_STYLE_DOTTED) {
             parsed.dotted = true;
+            parsed.dashed = false;
         }
     }
     return parsed;

@@ -123,3 +123,21 @@ TEST(TestDocsEdgeAttributes, LabelDebug) {
     edge2->addConnectionPoint(75, -20);
     diagram.render(OUTPUT_DIR + "label_debug.svg");
 }
+
+
+TEST(TestDocsEdgeAttributes, Color) {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setLabel("A");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setLabel("B");
+    const auto edge = diagram.addEdge("A", "B");
+    edge->setArrowHead(SVGEdge::ARROW_NORMAL);
+    edge->setArrowTail(SVGEdge::ARROW_EMPTY);
+    edge->setLabel("color");
+    edge->setColor("red");
+    edge->setFontColor("blue");
+    diagram.render(OUTPUT_DIR + "color.svg");
+}

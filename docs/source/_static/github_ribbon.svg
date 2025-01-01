@@ -10,8 +10,8 @@
     <g transform="rotate(45, 75, 75) scale(1.0)">
         <rect id="ribbon-shadow" class="ShadowGradient" fill="url(#ShadowGradient)" x="-200" y="26" width="400" height="38"/>
         <rect id="ribbon" fill="black" x="-200" y="30" width="400" height="30"/>
-        <line id="ribbon-decoration-upper" stroke="grey" x1="-200" y1="32" x2="200" y2="32"/>
-        <line id="ribbon-decoration-lower" stroke="grey" x1="-200" y1="58" x2="200" y2="58"/>
-        <text x="75" y="45" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Lato, proxima-nova, Helvetica Neue, Arial, sans-serif" font-size="14">Fork me on GitHub</text>
+        <line id="ribbon-decoration-upper" stroke="grey" stroke-dasharray="1" x1="-200" y1="32" x2="200" y2="32"/>
+        <line id="ribbon-decoration-lower" stroke="grey" stroke-dasharray="1" x1="-200" y1="58" x2="200" y2="58"/>
+        <text x="75" y="45" filter="url(#inset-shadow)" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Lato, proxima-nova, Helvetica Neue, Arial, sans-serif" font-size="14">Fork me on GitHub</text>
     </g>
 </svg>

@@ -21,12 +21,18 @@ void TestSVGEdgeSplineAddTwoNodesCase1(SVGDiagram& diagram) {
 }
 
 string TestSVGEdgeSplineExpectedNodesSVGCase2() {
-    return R"(<!-- node_id = A -->
-    <circle cx="100" cy="100" r="17.69180601295413" fill="none" stroke="black"/>
-    <text x="100" y="100" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">A</text>
-    <!-- node_id = B -->
-    <circle cx="200" cy="150" r="26.40075756488817" fill="none" stroke="black"/>
-    <text x="200" y="150" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">B</text>)";
+    return R"(<!-- Node: A -->
+<g class="node" id="A">
+  <title>A</title>
+  <circle cx="100" cy="100" r="17.69180601295413" fill="none" stroke="black"/>
+  <text x="100" y="100" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">A</text>
+</g>
+<!-- Node: B -->
+<g class="node" id="B">
+  <title>B</title>
+  <circle cx="200" cy="150" r="26.40075756488817" fill="none" stroke="black"/>
+  <text x="200" y="150" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">B</text>
+</g>)";
 }
 
 TEST(TestSVGEdgeSpline, TwoCircleOneLine) {
@@ -37,8 +43,11 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLine) {
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeSplineExpectedNodesSVGCase2() +
-        R"(<!-- edge_id = A -> B -->
-<line x1="116.15944255250696" y1="108.07972127625348" x2="176.05103437434232" y2="138.02551718717115" stroke="black"/>)";
+        R"(<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <line x1="115.98055711430698" y1="107.99027855715349" x2="176.2299198125423" y2="138.11495990627114" stroke="black" stroke-width="1"/>
+</g>)";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
@@ -53,8 +62,11 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLineOneConnection) {
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeSplineExpectedNodesSVGCase2() +
-        R"(<!-- edge_id = A -> B -->
-<path d="M 82.09167780373907 102.38777629283479 C 60.076398169782564 105.32314691069566 -65.22054877952374 112.5963299725215 -50 120 C -34.779451220476254 127.4036700274785 136.1791420674013 142.34149704808814 173.41497048088155 146.80979645770577" fill="none" stroke="black"/>)";
+        R"(<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <path d="M 82.2899233838756 102.36134354881658 C 60.24160281989634 105.30111962401381 -65.22060374411723 112.58795300783119 -50 120 C -34.77939625588278 127.41204699216881 136.34462154048242 142.36135458485788 173.61354584857892 146.83362550182946" fill="none" stroke="black" stroke-width="1"/>
+</g>)";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
@@ -77,10 +89,16 @@ TEST(TestSVGEdgeSpline, TwoCircleTwoLineSelfCycle) {
     diagram.addEdge("B -> B", std::move(edge2));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeSplineExpectedNodesSVGCase2() +
-        R"(<!-- edge_id = A -> A -->
-<path d="M 110.84008360777248 114.45344481036331 C 114.03340300647707 118.71120400863609 131.80668060129543 132.4089074683939 130 140 C 128.19331939870457 147.5910925316061 110 160 100 160 C 90 160 71.80668060129541 147.5910925316061 70 140 C 68.19331939870459 132.4089074683939 85.96659699352294 118.71120400863609 89.15991639222753 114.45344481036331" fill="none" stroke="black"/>
-<!-- edge_id = B -> B -->
-<path d="M 224.86066677979332 140.05573328808268 C 229.05055564982777 138.3797777400689 242.47677779663223 128.34262221468043 250 130 C 257.52322220336777 131.65737778531957 270 143.33333333333334 270 150 C 270 156.66666666666666 257.52322220336777 168.34262221468043 250 170 C 242.47677779663223 171.65737778531957 229.05055564982777 161.6202222599311 224.86066677979332 159.94426671191732" fill="none" stroke="black"/>)";
+        R"(<!-- Edge: edge1 (A -> A) -->
+<g class="edge" id="edge1">
+  <title>A->A</title>
+  <path d="M 110.72008360777248 114.29344481036331 C 113.93340300647706 118.57787067530276 131.78668060129542 132.38224080172722 130 140 C 128.21331939870458 147.61775919827278 110 160 100 160 C 90 160 71.78668060129542 147.61775919827278 70 140 C 68.21331939870458 132.38224080172722 86.06659699352295 118.57787067530276 89.27991639222753 114.29344481036331" fill="none" stroke="black" stroke-width="1"/>
+</g>
+<!-- Edge: B -> B (B -> B) -->
+<g class="edge" id="B -> B">
+  <title>B->B</title>
+  <path d="M 224.67497144161626 140.1300114233535 C 228.8958095346802 138.44167618612792 242.4458285736027 128.35500190389226 250 130 C 257.55417142639726 131.64499809610774 270 143.33333333333334 270 150 C 270 156.66666666666666 257.55417142639726 168.35500190389226 250 170 C 242.4458285736027 171.64499809610774 228.8958095346802 161.55832381387208 224.67497144161626 159.8699885766465" fill="none" stroke="black" stroke-width="1"/>
+</g>)";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
@@ -104,8 +122,12 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLineArrowHead) {
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeSplineExpectedNodesSVGCase2() +
-        R"s(<!-- edge_id = A -> B -->
-<line x1="116.15944255250696" y1="108.07972127625348" x2="176.05103437434232" y2="138.02551718717115" marker-end="url(#arrow_type_normal__fill_black__stroke_none)" stroke="black"/>)s";
+        R"s(<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <line x1="115.98055711430698" y1="107.99027855715349" x2="165.30175557055543" y2="132.6508777852777" stroke="black" stroke-width="1"/>
+  <polygon points="174.24602748055457,137.12301374027726 163.73650798630555,135.78137295377738 166.86700315480527,129.52038261677797 174.24602748055457,137.12301374027726" fill="black" stroke="black" stroke-width="1"/>
+</g>)s";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
@@ -120,8 +142,12 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLineArrowTail) {
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeSplineExpectedNodesSVGCase2() +
-        R"s(<!-- edge_id = A -> B -->
-<line x1="116.15944255250696" y1="108.07972127625348" x2="176.05103437434232" y2="138.02551718717115" marker-start="url(#arrow_type_normal__fill_black__stroke_none)" stroke="black"/>)s";
+        R"s(<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <line x1="126.90872135629387" y1="113.45436067814693" x2="176.2299198125423" y2="138.11495990627114" stroke="black" stroke-width="1"/>
+  <polygon points="117.96444944629471,108.98222472314735 128.47396894054373,110.32386550964723 125.34347377204402,116.58485584664663 117.96444944629471,108.98222472314735" fill="black" stroke="black" stroke-width="1"/>
+</g>)s";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
@@ -137,8 +163,13 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLineArrowBoth) {
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeSplineExpectedNodesSVGCase2() +
-        R"s(<!-- edge_id = A -> B -->
-<line x1="116.15944255250696" y1="108.07972127625348" x2="176.05103437434232" y2="138.02551718717115" marker-end="url(#arrow_type_normal__fill_black__stroke_none)" marker-start="url(#arrow_type_normal__fill_black__stroke_none)" stroke="black"/>)s";
+        R"s(<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <line x1="126.90872135629387" y1="113.45436067814693" x2="165.30175557055543" y2="132.6508777852777" stroke="black" stroke-width="1"/>
+  <polygon points="117.96444944629471,108.98222472314735 128.47396894054373,110.32386550964723 125.34347377204402,116.58485584664663 117.96444944629471,108.98222472314735" fill="black" stroke="black" stroke-width="1"/>
+  <polygon points="174.24602748055457,137.12301374027726 163.73650798630555,135.78137295377738 166.86700315480527,129.52038261677797 174.24602748055457,137.12301374027726" fill="black" stroke="black" stroke-width="1"/>
+</g>)s";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
@@ -154,8 +185,12 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLineOneConnectionArrowHead) {
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeSplineExpectedNodesSVGCase2() +
-        R"s(<!-- edge_id = A -> B -->
-<path d="M 82.09167780373907 102.38777629283479 C 60.076398169782564 105.32314691069566 -65.22054877952374 112.5963299725215 -50 120 C -34.779451220476254 127.4036700274785 136.1791420674013 142.34149704808814 173.41497048088155 146.80979645770577" fill="none" marker-end="url(#arrow_type_normal__fill_black__stroke_none)" stroke="black"/>)s";
+        R"s(<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <path d="M 82.2899233838756 102.36134354881658 C 60.24160281989634 105.30111962401381 -63.198765769260234 112.83057356481402 -50 120 C -36.801234230739766 127.16942643518598 126.23543166619748 141.1482517999437 161.482517999437 145.37790215993243" fill="none" stroke="black" stroke-width="1"/>
+  <polygon points="171.4112863843062,146.56935436611673 161.06550972727248,148.85297109463664 161.8995262716015,141.9028332252282 171.4112863843062,146.56935436611673" fill="black" stroke="black" stroke-width="1"/>
+</g>)s";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
@@ -171,8 +206,12 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLineOneConnectionArrowTail) {
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeSplineExpectedNodesSVGCase2() +
-        R"s(<!-- edge_id = A -> B -->
-<path d="M 82.09167780373907 102.38777629283479 C 60.076398169782564 105.32314691069566 -65.22054877952374 112.5963299725215 -50 120 C -34.779451220476254 127.4036700274785 136.1791420674013 142.34149704808814 173.41497048088155 146.80979645770577" fill="none" marker-start="url(#arrow_type_normal__fill_black__stroke_none)" stroke="black"/>)s";
+        R"s(<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <path d="M 70.17904235420805 103.97612768610558 C 50.14920196184004 106.64677307175465 -67.23908391572849 112.85708369737935 -50 120 C -32.76091608427152 127.14291630262065 136.34462154048242 142.36135458485788 173.61354584857892 146.83362550182946" fill="none" stroke="black" stroke-width="1"/>
+  <polygon points="80.0913213610344,102.65449048519541 70.64161537452662,107.44542533849481 69.71646933388949,100.50683003371637 80.0913213610344,102.65449048519541" fill="black" stroke="black" stroke-width="1"/>
+</g>)s";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
@@ -189,8 +228,13 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLineOneConnectionArrowBoth) {
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeSplineExpectedNodesSVGCase2() +
-        R"s(<!-- edge_id = A -> B -->
-<path d="M 82.09167780373907 102.38777629283479 C 60.076398169782564 105.32314691069566 -65.22054877952374 112.5963299725215 -50 120 C -34.779451220476254 127.4036700274785 136.1791420674013 142.34149704808814 173.41497048088155 146.80979645770577" fill="none" marker-end="url(#arrow_type_normal__fill_black__stroke_none)" marker-start="url(#arrow_type_normal__fill_black__stroke_none)" stroke="black"/>)s";
+        R"s(<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <path d="M 70.17904235420805 103.97612768610558 C 50.14920196184004 106.64677307175465 -65.21724594087149 113.0997042543622 -50 120 C -34.78275405912851 126.9002957456378 126.23543166619748 141.1482517999437 161.482517999437 145.37790215993243" fill="none" stroke="black" stroke-width="1"/>
+  <polygon points="80.0913213610344,102.65449048519541 70.64161537452662,107.44542533849481 69.71646933388949,100.50683003371637 80.0913213610344,102.65449048519541" fill="black" stroke="black" stroke-width="1"/>
+  <polygon points="171.4112863843062,146.56935436611673 161.06550972727248,148.85297109463664 161.8995262716015,141.9028332252282 171.4112863843062,146.56935436611673" fill="black" stroke="black" stroke-width="1"/>
+</g>)s";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));

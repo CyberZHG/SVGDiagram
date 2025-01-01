@@ -26,7 +26,7 @@ TEST(TestExample, Sequential) {
         constexpr double Y_SHIFT = 80.0;
 
         const auto& node = diagram.addNode(format("node_{}", i));
-        node->setCenter(i * X_SHIFT, i * Y_SHIFT);
+        node->setCenterInPoints(i * X_SHIFT, i * Y_SHIFT);
         node->setLabel(labels[i]);
         node->setShape(SVGNode::NODE_SHAPE_ELLIPSE);
         node->setMarginInPixels(10, 20);
@@ -39,7 +39,7 @@ TEST(TestExample, Sequential) {
             const auto from = format("node_{}", i);
             const auto to = format("node_{}", i + 1);
             const auto& edge = diagram.addEdge(from, to);
-            edge->addConnectionPoint((i - 0.7) * X_SHIFT, (i + 0.75) * Y_SHIFT);
+            edge->addConnectionPoint((i - 1.5) * X_SHIFT, (i + 0.75) * Y_SHIFT);
             edge->setArrowHead();
             edge->setColor(strokeColors[i]);
             edge->setPenWidth(1 + i * 0.25);

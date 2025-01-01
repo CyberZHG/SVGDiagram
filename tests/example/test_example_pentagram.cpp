@@ -22,7 +22,7 @@ TEST(TestExample, Pentagram) {
     const auto textColors = vector{"saddlebrown", "goldenrod", "olivedrab", "royalblue", "indianred"};
 
     const auto& centralNode = diagram.addNode("node_c");
-    centralNode->setCenter(0.0, 0.0);
+    centralNode->setCenterInPoints(0.0, 0.0);
     centralNode->setLabel(labels[5]);
     centralNode->setShape(SVGNode::NODE_SHAPE_RECT);
 
@@ -31,7 +31,7 @@ TEST(TestExample, Pentagram) {
 
         const auto& node = diagram.addNode(format("node_{}", i));
         const double nodeAngle = -numbers::pi / 2.3 + numbers::pi * 2 * i / 5.0;
-        node->setCenter(RADIUS * cos(nodeAngle), RADIUS * sin(nodeAngle));
+        node->setCenterInPoints(RADIUS * cos(nodeAngle), RADIUS * sin(nodeAngle));
         node->setLabel(labels[i]);
         node->setShape(SVGNode::NODE_SHAPE_RECT);
         node->setColor(strokeColors[i]);

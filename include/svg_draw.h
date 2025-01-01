@@ -28,8 +28,6 @@ namespace svg_diagram {
         SVGDraw() = default;
         virtual ~SVGDraw() = default;
 
-        static constexpr int DEFAULT_NUM_DECIMALS = 3;
-
         /** Generate a vector of XML elements.
          *
          * @return XML elements.
@@ -48,26 +46,12 @@ namespace svg_diagram {
          */
         [[nodiscard]] virtual bool hasEntity() const = 0;
 
-        /** If the return value is not empty,
-         * this class will be rendered only once when generating the SVG.
-         *
-         * @return An unique ID.
-         */
-        [[nodiscard]] virtual std::string singletonName() const;
-        void setSingletonName(const std::string& singletonName);
-
-        [[nodiscard]] virtual bool isDefs() const;
-
-        void setNumDecimals(int numDecimals);
+        void setAttribute(const std::string_view& key, const std::string& value);
 
     protected:
         std::map<std::string_view, std::string> _attributes;
 
         void addAttributesToXMLElement(const XMLElement::ChildType& element) const;
-
-    private:
-        int _numDecimals = DEFAULT_NUM_DECIMALS;
-        std::string _singletonName;
     };
 
     class SVGDrawComment final : public SVGDraw {
@@ -83,11 +67,24 @@ namespace svg_diagram {
         [[nodiscard]] bool hasEntity() const override;
     };
 
+    class SVGDrawTitle final : public SVGDraw {
+    public:
+        using SVGDraw::SVGDraw;
+        explicit SVGDrawTitle(const std::string& title);
+
+        std::string title;
+
+
+        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
+        [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
+
+        [[nodiscard]] bool hasEntity() const override;
+    };
+
     class SVGDrawAttribute : public SVGDraw {
     public:
         using SVGDraw::SVGDraw;
 
-        void setAttribute(const std::string_view& key, const std::string& value);
         void setFill(const std::string& value);
         void setStroke(const std::string& value);
         void setStrokeWidth(const std::string& value);
@@ -153,6 +150,17 @@ namespace svg_diagram {
         [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
     };
 
+    class SVGDrawPolygon final : public SVGDrawNode {
+    public:
+        using SVGDrawNode::SVGDrawNode;
+        explicit SVGDrawPolygon(const std::vector<std::pair<double, double>>& points);
+
+        std::vector<std::pair<double, double>> points;
+
+        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
+        [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
+    };
+
     class SVGDrawLine final : public SVGDrawEntity {
     public:
         using SVGDrawEntity::SVGDrawEntity;
@@ -175,32 +183,20 @@ namespace svg_diagram {
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
     };
 
-    class SVGDrawDefs : public SVGDrawAttribute {
+    class SVGDrawGroup final : public SVGDraw {
     public:
-        using SVGDrawAttribute::SVGDrawAttribute;
+        using SVGDraw::SVGDraw;
+        explicit SVGDrawGroup(std::vector<std::unique_ptr<SVGDraw>>& draws);
 
-        [[nodiscard]] bool isDefs() const override;
-        [[nodiscard]] bool hasEntity() const override;
+        std::vector<std::unique_ptr<SVGDraw>> children;
 
-        [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
-    };
-
-    class SVGDrawMarker final : public SVGDrawDefs {
-    public:
-        using SVGDrawDefs::SVGDrawDefs;
-
-        static constexpr std::string_view SHAPE_NORMAL = "normal";
-
-        void setShape(const std::string& shape);
-
-        [[nodiscard]] std::string singletonName() const override;
+        void addChild(std::unique_ptr<SVGDraw> child);
+        void addChildren(std::vector<std::unique_ptr<SVGDraw>>& draws);
 
         [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
+        [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
 
-    private:
-        std::string _shape;
-
-        [[nodiscard]] XMLElement::ChildrenType renderNormal() const;
+        [[nodiscard]] bool hasEntity() const override;
     };
 
 }

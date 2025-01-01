@@ -11,7 +11,7 @@ TEST(TestSVGNodeRect, RectConnections) {
     SVGDiagram diagram;
     diagram.setBackgroundColor("white");
     const auto& central = diagram.addNode("c");
-    central->setCenter(0.0, 0.0);
+    central->setCenterInPoints(0.0, 0.0);
     central->setShape(SVGNode::NODE_SHAPE_RECT);
     central->setLabel("Central");
     constexpr double start = numbers::pi / 19.0;
@@ -20,7 +20,7 @@ TEST(TestSVGNodeRect, RectConnections) {
         const auto& node = diagram.addNode(nodeName);
         constexpr double shift = 2.0 * numbers::pi / 17.0;
         const double angle = start + i * shift;
-        node->setCenter(120.0 * cos(angle), 120.0 * sin(angle));
+        node->setCenterInPoints(120.0 * cos(angle), 120.0 * sin(angle));
         node->setShape(SVGNode::NODE_SHAPE_RECT);
         node->setLabel(format("{}", i));
         if (i % 2 == 0) {

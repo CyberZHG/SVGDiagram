@@ -56,7 +56,7 @@ const unique_ptr<SVGEdge>& SVGDiagram::addEdge(const string& id) {
 }
 
 const unique_ptr<SVGEdge>& SVGDiagram::addEdge(const string& from, const string& to) {
-    const auto id = format("{} -> {}", from, to);
+    const auto id = newEdgeId();
     const auto& edge = addEdge(id);
     edge->setConnection(from, to);
     return edge;
@@ -70,34 +70,49 @@ void SVGDiagram::addEdge(const string& id, unique_ptr<SVGEdge> edge) {
 }
 
 void SVGDiagram::addEdge(unique_ptr<SVGEdge> edge) {
-    const auto id = format("{} -> {}", edge->nodeFrom(), edge->nodeTo());
+    const auto id = newEdgeId();
     addEdge(id, std::move(edge));
 }
 
-std::string SVGDiagram::render() {
+string SVGDiagram::render() {
     produceSVGDrawsDynamic();
     const auto [svgElement, gElement] = generateSVGElement();
     unordered_set<string> singletonNames;
-    if (const auto defsElements = renderDefs(singletonNames); defsElements != nullptr) {
-        svgElement->addChild(defsElements);
-    }
     for (const auto& draw : _svgDraws) {
-        if (guardSingleton(singletonNames, draw)) {
-            gElement->addChildren(draw->generateXMLElements());
-        }
+        gElement->addChildren(draw->generateXMLElements());
     }
     for (const auto& draw : _svgDrawsDynamic) {
-        if (guardSingleton(singletonNames, draw)) {
-            gElement->addChildren(draw->generateXMLElements());
-        }
+        gElement->addChildren(draw->generateXMLElements());
     }
     return svgElement->toString();
 }
 
-void SVGDiagram::render(const std::string &filePath) {
+void SVGDiagram::render(const string &filePath) {
     ofstream file(filePath);
     file << render();
     file.close();
+}
+
+string SVGDiagram::newNodeId() {
+    string newNodeId;
+    while (true) {
+        newNodeId = format("node{}", _nodeIndex++);
+        if (!_nodes.contains(newNodeId)) {
+            break;
+        }
+    }
+    return newNodeId;
+}
+
+string SVGDiagram::newEdgeId() {
+    string newEdgeId;
+    while (true) {
+        newEdgeId = format("edge{}", _edgeIndex++);
+        if (!_edges.contains(newEdgeId)) {
+            break;
+        }
+    }
+    return newEdgeId;
 }
 
 void SVGDiagram::produceSVGDrawsDynamic() {
@@ -108,33 +123,29 @@ void SVGDiagram::produceSVGDrawsDynamic() {
             node->enableDebug();
         }
         node->adjustNodeSize();
-        _svgDrawsDynamic.emplace_back(make_unique<SVGDrawComment>(format("node_id = {}", id)));
-        for (auto& draw : node->produceSVGDraws()) {
-            _svgDrawsDynamic.emplace_back(std::move(draw));
-        }
+        _svgDrawsDynamic.emplace_back(make_unique<SVGDrawComment>(format("Node: {}", id)));
+        auto group = make_unique<SVGDrawGroup>();
+        group->setAttribute("id", id);
+        group->setAttribute("class", "node");
+        group->addChild(make_unique<SVGDrawTitle>(id));
+        auto svgDraws = node->produceSVGDraws();
+        group->addChildren(svgDraws);
+        _svgDrawsDynamic.emplace_back(std::move(group));
     }
     for (const auto& id : _edgeIds) {
         const auto& edge = _edges.at(id);
         if (_enabledDebug) {
             edge->enableDebug();
         }
-        _svgDrawsDynamic.emplace_back(make_unique<SVGDrawComment>(format("edge_id = {}", id)));
-        for (auto& draw : edge->produceSVGDraws(_nodes)) {
-            _svgDrawsDynamic.emplace_back(std::move(draw));
-        }
+        _svgDrawsDynamic.emplace_back(make_unique<SVGDrawComment>(format("Edge: {} ({} -> {})", id, edge->nodeFrom(), edge->nodeTo())));
+        auto group = make_unique<SVGDrawGroup>();
+        group->setAttribute("id", id);
+        group->setAttribute("class", "edge");
+        group->addChild(make_unique<SVGDrawTitle>(format("{}->{}", edge->nodeFrom(), edge->nodeTo())));
+        auto svgDraws = edge->produceSVGDraws(_nodes);
+        group->addChildren(svgDraws);
+        _svgDrawsDynamic.emplace_back(std::move(group));
     }
-}
-
-bool SVGDiagram::guardSingleton(unordered_set<string>& singletonNames, const unique_ptr<SVGDraw>& svgDraw) {
-    const auto name = svgDraw->singletonName();
-    if (name.empty()) {
-        return true;
-    }
-    if (singletonNames.contains(name)) {
-        return false;
-    }
-    singletonNames.emplace(name);
-    return true;
 }
 
 pair<XMLElement::ChildType, XMLElement::ChildType> SVGDiagram::generateSVGElement() const {
@@ -196,35 +207,6 @@ pair<XMLElement::ChildType, XMLElement::ChildType> SVGDiagram::generateSVGElemen
     }
     svgElement->addChild(gElement);
     return {svgElement, gElement};
-}
-
-XMLElement::ChildType SVGDiagram::renderDefs(unordered_set<string>& singletonNames) const {
-    vector<int> defsIndices, dynamicDefsIndices;
-    for (int i = 0; i < _svgDraws.size(); ++i) {
-        if (_svgDraws[i]->isDefs()) {
-            defsIndices.emplace_back(i);
-        }
-    }
-    for (int i = 0; i < _svgDrawsDynamic.size(); ++i) {
-        if (_svgDrawsDynamic[i]->isDefs()) {
-            dynamicDefsIndices.emplace_back(i);
-        }
-    }
-    if (defsIndices.empty() && dynamicDefsIndices.empty()) {
-        return nullptr;
-    }
-    const auto defsElement = make_shared<XMLElement>("defs");
-    for (const auto& index : defsIndices) {
-        if (guardSingleton(singletonNames, _svgDraws[index])) {
-            defsElement->addChildren(_svgDraws[index]->generateXMLElements());
-        }
-    }
-    for (const auto& index : dynamicDefsIndices) {
-        if (guardSingleton(singletonNames, _svgDrawsDynamic[index])) {
-            defsElement->addChildren(_svgDrawsDynamic[index]->generateXMLElements());
-        }
-    }
-    return defsElement;
 }
 
 string SVGDiagram::generateSVGClose() {

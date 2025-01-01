@@ -48,7 +48,7 @@ namespace svg_diagram {
         void setFillColor(const std::string& color);
         void setFontColor(const std::string& color);
         void setPenWidth(double width);
-        [[nodiscard]] double penWidthInPixels() const;
+        [[nodiscard]] double penWidth() const;
 
     private:
         bool _enabledDebug = false;
@@ -71,8 +71,8 @@ namespace svg_diagram {
         void setShape(const std::string& shape);
         void setShape(const std::string_view& shape);
 
-        void setCenter(double cx, double cy);
-        [[nodiscard]] std::pair<double, double> center() const;
+        void setCenterInPoints(double cx, double cy);
+        [[nodiscard]] std::pair<double, double> centerInPoints() const;
 
         void adjustNodeSize();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDraws();
@@ -81,6 +81,9 @@ namespace svg_diagram {
         std::pair<double, double> computeConnectionPoint(double x1, double y1, double x2, double y2);
         std::pair<double, double> computeConnectionPoint(double x, double y);
         std::pair<double, double> computeConnectionPoint(const std::pair<double, double>& p);
+
+        [[nodiscard]] double computeAngle(double x, double y) const;
+        [[nodiscard]] double computeAngle(const std::pair<double, double>& p) const;
 
     private:
         double _cx = 0.0;
@@ -118,7 +121,7 @@ namespace svg_diagram {
         static constexpr std::string_view EDGE_SPLINES_DEFAULT = EDGE_SPLINES_SPLINE;
 
         static constexpr std::string_view ARROW_SHAPE_NONE = "none";
-        static constexpr std::string_view ARROW_SHAPE_NORMAL = SVGDrawMarker::SHAPE_NORMAL;
+        static constexpr std::string_view ARROW_SHAPE_NORMAL = "normal";
         static constexpr std::string_view ARROW_SHAPE_DEFAULT = ARROW_SHAPE_NORMAL;
 
         using NodesMapping = std::unordered_map<std::string, std::unique_ptr<SVGNode>>;
@@ -146,11 +149,17 @@ namespace svg_diagram {
         std::string _nodeFrom, _nodeTo;
         std::vector<std::pair<double, double>> _connectionPoints;
 
-        static std::unique_ptr<SVGDrawMarker> produceSVGMarker(const std::string_view& shape);
-        static std::string markerAttributeValue(const std::unique_ptr<SVGDrawMarker> &svgDraw);
+        static constexpr double ARROW_WIDTH = 10.0;
+        static constexpr double ARROW_HEIGHT = 7.0;
+        static constexpr double ARROW_HALF_HEIGHT = ARROW_HEIGHT / 2.0;
 
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsLine(const NodesMapping& nodes);
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsSpline(const NodesMapping& nodes);
+
+        [[nodiscard]] double computeArrowTipMargin(const std::string_view& shape) const;
+        [[nodiscard]] double computeArrowTipMarginNormal() const;
+        std::pair<double, double> addArrow(const std::string_view& shape, std::vector<std::unique_ptr<SVGDraw>>& svgDraws, const std::pair<double, double>& connectionPoint, double angle) const;
+        std::pair<double, double> addArrowNormal(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, const std::pair<double, double>& connectionPoint, double angle) const;
     };
 
 }

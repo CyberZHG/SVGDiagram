@@ -23,20 +23,8 @@ SVGDrawBoundingBox::SVGDrawBoundingBox(double x1, double y1, double x2, double y
     this->y2 = y2;
 }
 
-string SVGDraw::singletonName() const {
-    return "";
-}
-
-void SVGDraw::setSingletonName(const string& singletonName) {
-    _singletonName = singletonName;
-}
-
-bool SVGDraw::isDefs() const {
-    return false;
-}
-
-void SVGDraw::setNumDecimals(const int numDecimals) {
-    _numDecimals = numDecimals;
+void SVGDraw::setAttribute(const string_view& key, const string& value) {
+    _attributes[key] = value;
 }
 
 void SVGDraw::addAttributesToXMLElement(const XMLElement::ChildType& element) const {
@@ -66,8 +54,76 @@ bool SVGDrawComment::hasEntity() const {
     return false;
 }
 
-void SVGDrawAttribute::setAttribute(const string_view& key, const string& value) {
-    _attributes[key] = value;
+SVGDrawGroup::SVGDrawGroup(vector<unique_ptr<SVGDraw>>& draws) {
+    this->addChildren(draws);
+}
+
+void SVGDrawGroup::addChild(unique_ptr<SVGDraw> child) {
+    children.emplace_back(std::move(child));
+}
+
+void SVGDrawGroup::addChildren(vector<unique_ptr<SVGDraw>>& draws) {
+    for (auto& child : draws) {
+        children.emplace_back(std::move(child));
+    }
+}
+
+XMLElement::ChildrenType SVGDrawGroup::generateXMLElements() const {
+    const auto groupElement = make_shared<XMLElement>("g");
+    addAttributesToXMLElement(groupElement);
+    for (const auto& child : children) {
+        groupElement->addChildren(child->generateXMLElements());
+    }
+    return {groupElement};
+}
+
+SVGDrawBoundingBox SVGDrawGroup::boundingBox() const {
+    double xMin = 0.0, yMin = 0.0, xMax = 1.0, yMax = 1.0;
+    bool first = true;
+    for (const auto& child : children) {
+        if (child->hasEntity()) {
+            const auto [x1, y1, x2, y2] = child->boundingBox();
+            if (first) {
+                first = false;
+                xMin = x1, yMin = y1;
+                xMax = x2, yMax = y2;
+            } else {
+                xMin = min(xMin, x1);
+                xMax = max(xMax, x2);
+                yMin = min(yMin, y1);
+                yMax = max(yMax, y2);
+            }
+        }
+    }
+    return {xMin, yMin, xMax, yMax};
+}
+
+bool SVGDrawGroup::hasEntity() const {
+    for (const auto& child : children) {
+        if (child->hasEntity()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+SVGDrawTitle::SVGDrawTitle(const string& title) {
+    this->title = title;
+}
+
+XMLElement::ChildrenType SVGDrawTitle::generateXMLElements() const {
+    const auto titleElement = make_shared<XMLElement>("title");
+    addAttributesToXMLElement(titleElement);
+    titleElement->setContent(title);
+    return {titleElement};
+}
+
+SVGDrawBoundingBox SVGDrawTitle::boundingBox() const {
+    return {};
+}
+
+bool SVGDrawTitle::hasEntity() const {
+    return false;
 }
 
 void SVGDrawAttribute::setFill(const string& value) {
@@ -201,6 +257,39 @@ XMLElement::ChildrenType SVGDrawEllipse::generateXMLElements() const {
     return {ellipseElement};
 }
 
+SVGDrawPolygon::SVGDrawPolygon(const vector<pair<double, double>>& points) {
+    this->points = points;
+}
+
+XMLElement::ChildrenType SVGDrawPolygon::generateXMLElements() const {
+    const auto polygonElement = make_shared<XMLElement>("polygon");
+    string path;
+    if (!points.empty()) {
+        path += format("{},{}", points[0].first, points[0].second);
+        for (size_t i = 1; i < points.size(); ++i) {
+            path += format(" {},{}", points[i].first, points[i].second);
+        }
+    }
+    polygonElement->addAttribute("points", path);
+    addAttributesToXMLElement(polygonElement);
+    return {polygonElement};
+}
+
+SVGDrawBoundingBox SVGDrawPolygon::boundingBox() const {
+    if (points.empty()) {
+        return {};
+    }
+    double xMin = points[0].first, yMin = points[0].second;
+    double xMax = points[0].first, yMax = points[0].second;
+    for (size_t i = 1; i < points.size(); ++i) {
+        xMin = min(xMin, points[i].first);
+        xMax = max(xMax, points[i].first);
+        yMin = min(yMin, points[i].second);
+        yMax = max(yMax, points[i].second);
+    }
+    return {xMin, yMin, xMax, yMax};
+}
+
 SVGDrawLine::SVGDrawLine(const double x1, const double y1, const double x2, const double y2) {
     this->x1 = x1;
     this->y1 = y1;
@@ -259,55 +348,4 @@ SVGDrawBoundingBox SVGDrawPath::boundingBox() const {
         }
     }
     return {xMin, yMin, xMax, yMax};
-}
-
-bool SVGDrawDefs::isDefs() const {
-    return true;
-}
-
-bool SVGDrawDefs::hasEntity() const {
-    return false;
-}
-
-SVGDrawBoundingBox SVGDrawDefs::boundingBox() const {
-    return {};
-}
-
-void SVGDrawMarker::setShape(const string& shape) {
-    _shape = shape;
-}
-
-string SVGDrawMarker::singletonName() const {
-    string fill = "black";
-    if (const auto it = _attributes.find(SVG_ATTR_KEY_FILL); it != _attributes.end()) {
-        fill = it->second;
-    }
-    string stroke = "none";
-    if (const auto it = _attributes.find(SVG_ATTR_KEY_STROKE); it != _attributes.end()) {
-        stroke = it->second;
-    }
-    return format("arrow_type_{}__fill_{}__stroke_{}", _shape, fill, stroke);
-}
-
-XMLElement::ChildrenType SVGDrawMarker::generateXMLElements() const {
-    if (_shape == SHAPE_NORMAL) {
-        return renderNormal();
-    }
-    cerr << "Unknown marker shape: " << _shape << endl;
-    return {};
-}
-
-XMLElement::ChildrenType SVGDrawMarker::renderNormal() const {
-    const auto markerElement = make_shared<XMLElement>("marker");
-    markerElement->addAttribute("id", singletonName());
-    markerElement->addAttribute("markerWidth", 10.0);
-    markerElement->addAttribute("markerHeight", 7.0);
-    markerElement->addAttribute("refX", 10.0);
-    markerElement->addAttribute("refY", 3.5);
-    markerElement->addAttribute("orient", "auto-start-reverse");
-    const auto polygonElement = make_shared<XMLElement>("polygon");
-    polygonElement->addAttribute("points", format("0 0 10 3.5 0 7"));
-    addAttributesToXMLElement(polygonElement);
-    markerElement->addChild(polygonElement);
-    return {markerElement};
 }

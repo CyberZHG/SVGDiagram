@@ -38,6 +38,9 @@ namespace svg_diagram {
     private:
         bool _enabledDebug = false;
 
+        int _nodeIndex = 1;
+        int _edgeIndex = 1;
+
         std::vector<std::unique_ptr<SVGDraw>> _svgDraws;
         std::vector<std::unique_ptr<SVGDraw>> _svgDrawsDynamic;
         double _width = 0.0;
@@ -50,12 +53,12 @@ namespace svg_diagram {
         std::vector<std::string> _nodeIds;
         std::vector<std::string> _edgeIds;
 
+        std::string newNodeId();
+        std::string newEdgeId();
+
         void produceSVGDrawsDynamic();
 
-        static bool guardSingleton(std::unordered_set<std::string>& singletonNames, const std::unique_ptr<SVGDraw>& svgDraw);
-
         [[nodiscard]] std::pair<XMLElement::ChildType, XMLElement::ChildType> generateSVGElement() const;
-        [[nodiscard]] XMLElement::ChildType renderDefs(std::unordered_set<std::string>& singletonNames) const;
         static std::string generateSVGClose();
     };
 

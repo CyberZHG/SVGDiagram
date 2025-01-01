@@ -34,6 +34,7 @@ PYBIND11_MODULE(_core, m, py::mod_gil_not_used()) {
         .def("append_style_solid", &SVGItem::appendStyleSolid)
         .def("append_style_dashed", &SVGItem::appendStyleDashed)
         .def("append_style_dotted", &SVGItem::appendStyleDotted)
+        .def("set_gradient_angle", &SVGItem::setGradientAngle)
     ;
     py::class_<SVGNode, shared_ptr<SVGNode>, SVGItem>(m, "SVGNode")
         .def(py::init<const string&>(), py::arg("node_id") = string())

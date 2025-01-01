@@ -64,6 +64,7 @@ EMSCRIPTEN_BINDINGS(SVGDiagramWASM) {
         .function("appendStyleSolid", &SVGItem::appendStyleSolid)
         .function("appendStyleDashed", &SVGItem::appendStyleDashed)
         .function("appendStyleDotted", &SVGItem::appendStyleDotted)
+        .function("setGradientAngle", &SVGItem::setGradientAngle)
     ;
     class_<SVGNode, base<SVGItem>>("SVGNode")
         .constructor<>()

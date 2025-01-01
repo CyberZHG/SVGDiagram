@@ -27,7 +27,7 @@ TEST(TestSVGDrawDefs, LinearGradient) {
     diagram.addSVGDraw(std::move(circle));
     const auto svg = diagram.render();
     const auto expected = R"s(<defs>
-  <linearGradient gradientTransform="rotate(90)" id="gradient-test">
+  <linearGradient gradientTransform="rotate(90,0.5,0.5)" id="gradient-test">
     <stop offset="5%" stop-color="gold"/>
     <stop offset="95%" stop-color="red" stop-opacity="0.8"/>
   </linearGradient>

@@ -91,12 +91,13 @@ TEST(TestSVGNodeEllipse, FillGradientColor2) {
     node->setMargin(8, 4);
     node->setColor("none");
     node->setFillColor("red:gold");
+    node->setGradientAngle(-45);
     const auto svg = diagram.render();
     const auto expected = R"s(<!-- Node: A -->
 <g class="node" id="A">
   <title>A</title>
   <defs>
-    <linearGradient id="A__fill_color">
+    <linearGradient gradientTransform="rotate(45,0.5,0.5)" id="A__fill_color">
       <stop offset="0%" stop-color="red"/>
       <stop offset="100%" stop-color="gold"/>
     </linearGradient>
@@ -140,12 +141,13 @@ TEST(TestSVGNodeEllipse, FillColorSegment2) {
     node->setMargin(8, 4);
     node->setColor("none");
     node->setFillColor("red;0.4:gold");
+    node->setGradientAngle(45);
     const auto svg = diagram.render();
     const auto expected = R"s(<!-- Node: A -->
 <g class="node" id="A">
   <title>A</title>
   <defs>
-    <linearGradient id="A__fill_color">
+    <linearGradient gradientTransform="rotate(-45,0.5,0.5)" id="A__fill_color">
       <stop offset="39.9999%" stop-color="red"/>
       <stop offset="40%" stop-color="gold"/>
     </linearGradient>

@@ -24,6 +24,7 @@ namespace svg_diagram {
     constexpr std::string_view ATTR_KEY_FONT_COLOR = "fontcolor";
     constexpr std::string_view ATTR_KEY_PEN_WIDTH = "penwidth";
     constexpr std::string_view ATTR_KEY_STYLE = "style";
+    constexpr std::string_view ATTR_KEY_GRADIENT_ANGLE = "gradientangle";
 
     constexpr std::string_view ATTR_DEF_COLOR = "black";
     constexpr std::string_view ATTR_DEF_COLOR_GRAPH = "none";

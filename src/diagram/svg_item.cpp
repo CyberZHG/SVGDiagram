@@ -193,6 +193,17 @@ AttributeParsedStyle SVGItem::style() const {
     return AttributeUtils::parseStyle(getAttribute(ATTR_KEY_STYLE));
 }
 
+void SVGItem::setGradientAngle(const double angle) {
+    setAttribute(ATTR_KEY_GRADIENT_ANGLE, angle);
+}
+
+double SVGItem::gradientAngle() const {
+    if (const auto it = _attributes.find(ATTR_KEY_GRADIENT_ANGLE); it != _attributes.end()) {
+        return stod(it->second);
+    }
+    return 0.0;
+}
+
 void SVGItem::appendSVGDrawsLabelWithCenter(vector<unique_ptr<SVGDraw>>& svgDraws, const double cx, const double cy) {
     if (enabledDebug()) {
         const auto [textWidth, textHeight] = computeTextSize();
@@ -304,6 +315,9 @@ void SVGItem::setFillStyles(SVGDraw* draw, vector<unique_ptr<SVGDraw>>& svgDraws
             const auto gradientID = id() + "__fill_color";
             auto linearGradient = make_unique<SVGDrawLinearGradient>(stops);
             linearGradient->setID(gradientID);
+            if (const auto angle = gradientAngle(); angle != 0.0) {
+                linearGradient->setRotation(-angle);
+            }
             auto defs = make_unique<SVGDrawDefs>(std::move(linearGradient));
             svgDraws.emplace_back(std::move(defs));
             draw->setFill(format("url('#{}')", gradientID));

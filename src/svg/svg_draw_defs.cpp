@@ -8,7 +8,7 @@ using namespace std;
 using namespace svg_diagram;
 
 void SVGDrawLinearGradient::setRotation(const double angle) {
-    setAttribute(SVG_ATTR_KEY_GRADIENT_TRANSFORM, format("rotate({})", angle));
+    setAttribute(SVG_ATTR_KEY_GRADIENT_TRANSFORM, format("rotate({},0.5,0.5)", angle));
 }
 
 string SVGDrawLinearGradient::tag() const {

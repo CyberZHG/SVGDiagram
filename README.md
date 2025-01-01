@@ -2,6 +2,7 @@ SVG Diagram
 ===========
 
 [![C++ Unit Tests](https://github.com/CyberZHG/SVGDiagram/actions/workflows/cpp-unit-test.yml/badge.svg)](https://github.com/CyberZHG/SVGDiagram/actions/workflows/cpp-unit-test.yml)
+[![Coverage Status](https://coveralls.io/repos/github/CyberZHG/SVGDiagram/badge.svg?branch=main)](https://coveralls.io/github/CyberZHG/SVGDiagram?branch=main)
 
 A library for rendering diagrams to SVG.
 

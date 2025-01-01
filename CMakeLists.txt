@@ -5,22 +5,34 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
-    add_compile_options(
-            -Wall
-            -Wextra
-            -Werror
-            -Wpedantic
-            -Wmissing-include-dirs
-            -Wundef
-            -Wredundant-decls
-    )
-endif()
-
 option(SVG_DIAGRAM_ENABLE_PANGO_CAIRO "Enable PangoCairo for computing SVG text sizes" OFF)
+option(SVG_DIAGRAM_ENABLE_TESTS "Build tests" OFF)
+option(SVG_DIAGRAM_ENABLE_STRICT "Use strict compile options" OFF)
+option(SVG_DIAGRAM_ENABLE_COVERAGE "Enable coverage reporting" OFF)
 
 if(APPLE)
     set(ENV{PKG_CONFIG_PATH} "/opt/homebrew/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+endif()
+
+if(SVG_DIAGRAM_ENABLE_STRICT)
+    if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+        add_compile_options(
+                -Wall
+                -Wextra
+                -Werror
+                -Wpedantic
+                -Wmissing-include-dirs
+                -Wundef
+                -Wredundant-decls
+        )
+    endif()
+endif()
+
+if(SVG_DIAGRAM_ENABLE_COVERAGE)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        add_compile_options(--coverage -O0 -g)
+        add_link_options(--coverage)
+    endif()
 endif()
 
 add_library(SVGDiagram STATIC
@@ -43,6 +55,7 @@ add_library(SVGDiagram STATIC
 target_include_directories(SVGDiagram
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
+
 
 if (SVG_DIAGRAM_ENABLE_PANGO_CAIRO)
     find_package(PkgConfig REQUIRED)
@@ -73,9 +86,7 @@ if (SVG_DIAGRAM_ENABLE_PANGO_CAIRO)
     )
 endif()
 
-option(SVG_DIAGRAM_BUILD_TESTS "Build tests" OFF)
-
-if(SVG_DIAGRAM_BUILD_TESTS)
+if(SVG_DIAGRAM_ENABLE_TESTS)
     enable_testing()
 
     include(FetchContent)
@@ -116,4 +127,4 @@ if(SVG_DIAGRAM_BUILD_TESTS)
     )
 
     add_test(NAME SVGDiagramTests COMMAND runTests)
-endif ()
+endif()

@@ -591,7 +591,11 @@ void SVGEdge::setArrowHead() {
 }
 
 void SVGEdge::setArrowHead(const string_view& shape) {
-    setAttribute(ATTRIBUTE_KEY_ARROW_HEAD, string(shape));
+    setArrowHead(string(shape));
+}
+
+void SVGEdge::setArrowHead(const string& shape) {
+    setAttribute(ATTRIBUTE_KEY_ARROW_HEAD, shape);
 }
 
 void SVGEdge::setArrowTail() {
@@ -599,7 +603,11 @@ void SVGEdge::setArrowTail() {
 }
 
 void SVGEdge::setArrowTail(const string_view& shape) {
-    setAttribute(ATTRIBUTE_KEY_ARROW_TAIL, string(shape));
+    setArrowTail(string(shape));
+}
+
+void SVGEdge::setArrowTail(const string& shape) {
+    setAttribute(ATTRIBUTE_KEY_ARROW_TAIL, shape);
 }
 
 std::pair<double, double> SVGEdge::computeTextCenter(const double cx, const double cy, double dx, double dy) {

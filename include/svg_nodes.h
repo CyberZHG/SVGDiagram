@@ -186,8 +186,10 @@ namespace svg_diagram {
 
         void setArrowHead();
         void setArrowHead(const std::string_view& shape);
+        void setArrowHead(const std::string& shape);
         void setArrowTail();
         void setArrowTail(const std::string_view& shape);
+        void setArrowTail(const std::string& shape);
 
     private:
         std::string _nodeFrom, _nodeTo;

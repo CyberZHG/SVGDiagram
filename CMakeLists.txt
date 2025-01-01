@@ -143,6 +143,7 @@ if(SVG_DIAGRAM_ENABLE_TESTS)
             tests/docs/test_subgraph_attr.cpp
             tests/docs/test_diagram_attr.cpp
             tests/svg_draw/test_defs.cpp
+            tests/example/test_example_random.cpp
     )
 
     target_link_libraries(runTests

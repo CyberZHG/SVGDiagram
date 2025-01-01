@@ -24,6 +24,9 @@ namespace svg_diagram {
 
         void setCanvasSize(int width, int height);
         void setBackgroundColor(const std::string& backgroundColor);
+        void setFixedViewBox(double x0, double y0, double width, double height);
+        void setRotation(double angle);
+        void setRotation(double angle, double cx, double cy);
 
         SVGNode& defaultNodeAttributes();
         SVGEdge& defaultEdgeAttributes();
@@ -48,8 +51,15 @@ namespace svg_diagram {
 
         std::vector<std::unique_ptr<SVGDraw>> _svgDraws;
         std::vector<std::unique_ptr<SVGDraw>> _svgDrawsDynamic;
+        double _viewBoxX = 0.0;
+        double _viewBoxY = 0.0;
         double _width = 0.0;
         double _height = 0.0;
+        bool _isFixedViewBox = false;
+        double _rotation = 0.0;
+        double _rotationCX = 0.0;
+        double _rotationCY = 0.0;
+        bool _hasRotationCenter = false;
         std::pair<double, double> _margin = {DEFAULT_MARGIN, DEFAULT_MARGIN};
         std::string _backgroundColor;
 

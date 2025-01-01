@@ -70,6 +70,8 @@ PYBIND11_MODULE(_core, m, py::mod_gil_not_used()) {
     py::class_<SVGDiagram>(m, "SVGDiagram")
         .def(py::init<>())
         .def("set_background_color", &SVGDiagram::setBackgroundColor, py::arg("color"))
+        .def("set_fixed_view_box", &SVGDiagram::setFixedViewBox, py::arg("x0"), py::arg("y0"), py::arg("width"), py::arg("height"))
+        .def("set_rotation", py::overload_cast<double>(&SVGDiagram::setRotation), py::arg("angle"))
         .def("add_node", py::overload_cast<const string&>(&SVGDiagram::addNode), py::arg("node"))
         .def("add_edge", py::overload_cast<const string&, const string&>(&SVGDiagram::addEdge), py::arg("tail_node_id"), py::arg("head_node_id"))
         .def("add_subgraph", py::overload_cast<const string&>(&SVGDiagram::addSubgraph), py::arg("subgraph"))

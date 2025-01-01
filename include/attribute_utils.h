@@ -6,8 +6,11 @@
 
 namespace svg_diagram {
 
-    constexpr int POINTS_PER_INCH = 72;
-    constexpr double CENTIMETERS_PER_INCH = 2.54;
+    struct AttributeParsedStyle {
+        bool filled = false;
+        bool dashed = false;
+        bool dotted = false;
+    };
 
     class AttributeUtils {
     public:
@@ -32,6 +35,7 @@ namespace svg_diagram {
         static std::pair<double, double> parseMargin(const std::string& margin);
 
         static bool parseBool(const std::string& value);
+        static AttributeParsedStyle parseStyle(const std::string& value);
 
         using DCommands = std::vector<std::pair<char, std::vector<double>>>;
         static DCommands parseDCommands(const std::string& d);

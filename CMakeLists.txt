@@ -56,6 +56,7 @@ add_library(SVGDiagram STATIC
         src/geometry_utils.cpp
         include/xml_element.h
         src/xml_element.cpp
+        include/constants.h
 )
 
 target_include_directories(SVGDiagram

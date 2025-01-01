@@ -49,7 +49,7 @@ pair<double, double> SVGItem::precomputedTextSize() const {
 }
 
 const string& SVGItem::id() const {
-    const auto it = _attributes.find(ATTRIBUTE_KEY_ID);
+    const auto it = _attributes.find(ATTR_KEY_ID);
     if (it == _attributes.end()) {
         throw runtime_error("Attribute 'ID' not found");
     }
@@ -57,27 +57,27 @@ const string& SVGItem::id() const {
 }
 
 void SVGItem::setID(const string& id) {
-    setAttribute(ATTRIBUTE_KEY_ID, id);
+    setAttribute(ATTR_KEY_ID, id);
 }
 
 void SVGItem::setLabel(const string& label) {
-    setAttribute(ATTRIBUTE_KEY_LABEL, label);
+    setAttribute(ATTR_KEY_LABEL, label);
 }
 
 double SVGItem::width() const {
-    return AttributeUtils::inchToPoint(stod(getAttribute(ATTRIBUTE_KEY_WIDTH)));
+    return AttributeUtils::inchToPoint(stod(getAttribute(ATTR_KEY_WIDTH)));
 }
 
 void SVGItem::setWidth(const double width) {
-    setAttribute(ATTRIBUTE_KEY_WIDTH, AttributeUtils::pointToInch(width));
+    setAttribute(ATTR_KEY_WIDTH, AttributeUtils::pointToInch(width));
 }
 
 double SVGItem::height() const {
-    return AttributeUtils::inchToPoint(stod(getAttribute(ATTRIBUTE_KEY_HEIGHT)));
+    return AttributeUtils::inchToPoint(stod(getAttribute(ATTR_KEY_HEIGHT)));
 }
 
 void SVGItem::setHeight(const double height) {
-    setAttribute(ATTRIBUTE_KEY_HEIGHT, AttributeUtils::pointToInch(height));
+    setAttribute(ATTR_KEY_HEIGHT, AttributeUtils::pointToInch(height));
 }
 
 void SVGItem::setSize(const double width, const double height) {
@@ -87,15 +87,15 @@ void SVGItem::setSize(const double width, const double height) {
 
 void SVGItem::setFixedSize(const double width, const double height) {
     setSize(width, height);
-    setAttribute(ATTRIBUTE_KEY_FIXED_SIZE, "ON");
+    setAttribute(ATTR_KEY_FIXED_SIZE, "ON");
 }
 
 pair<double, double> SVGItem::margin() const {
-    return AttributeUtils::parseMargin(getAttribute(ATTRIBUTE_KEY_MARGIN));
+    return AttributeUtils::parseMargin(getAttribute(ATTR_KEY_MARGIN));
 }
 
 void SVGItem::setMargin(const string& value) {
-    setAttribute(ATTRIBUTE_KEY_MARGIN, value);
+    setAttribute(ATTR_KEY_MARGIN, value);
 }
 
 void SVGItem::setMargin(const double margin) {
@@ -107,38 +107,38 @@ void SVGItem::setMargin(const double marginX, const double marginY) {
 }
 
 string SVGItem::color() const {
-    return getAttribute(ATTRIBUTE_KEY_COLOR);
+    return getAttribute(ATTR_KEY_COLOR);
 }
 
 void SVGItem::setColor(const string& color) {
-    setAttribute(ATTRIBUTE_KEY_COLOR, color);
+    setAttribute(ATTR_KEY_COLOR, color);
 }
 
 string SVGItem::fillColor() const {
-    return getAttribute(ATTRIBUTE_KEY_FILL_COLOR);
+    return getAttribute(ATTR_KEY_FILL_COLOR);
 }
 
 void SVGItem::setFillColor(const string& color) {
-    setAttribute(ATTRIBUTE_KEY_FILL_COLOR, color);
+    setAttribute(ATTR_KEY_FILL_COLOR, color);
 }
 
 string SVGItem::fontColor() const {
-    return getAttribute(ATTRIBUTE_KEY_FONT_COLOR);
+    return getAttribute(ATTR_KEY_FONT_COLOR);
 }
 
 void SVGItem::setFontColor(const string& color) {
-    setAttribute(ATTRIBUTE_KEY_FONT_COLOR, color);
+    setAttribute(ATTR_KEY_FONT_COLOR, color);
 }
 
 void SVGItem::setPenWidth(const double width) {
-    setAttribute(ATTRIBUTE_KEY_PEN_WIDTH, width);
+    setAttribute(ATTR_KEY_PEN_WIDTH, width);
 }
 
 double SVGItem::penWidth() const {
     if (color() == "none") {
         return 0.0;
     }
-    if (const auto value = getAttribute(ATTRIBUTE_KEY_PEN_WIDTH); !value.empty()) {
+    if (const auto value = getAttribute(ATTR_KEY_PEN_WIDTH); !value.empty()) {
         const auto width = stod(value);
         if (fabs(width - 1.0) < GeometryUtils::EPSILON) {
             return 1.0;
@@ -149,11 +149,11 @@ double SVGItem::penWidth() const {
 }
 
 void SVGItem::setFontName(const string& fontName) {
-    setAttribute(ATTRIBUTE_KEY_FONT_NAME, fontName);
+    setAttribute(ATTR_KEY_FONT_NAME, fontName);
 }
 
 void SVGItem::setFontSize(const double fontSize) {
-    setAttribute(ATTRIBUTE_KEY_FONT_SIZE, fontSize);
+    setAttribute(ATTR_KEY_FONT_SIZE, fontSize);
 }
 
 void SVGItem::setFont(const string& fontName, const double fontSize) {
@@ -162,7 +162,7 @@ void SVGItem::setFont(const string& fontName, const double fontSize) {
 }
 
 void SVGItem::setStyle(const string& style) {
-    setAttribute(ATTRIBUTE_KEY_STYLE, style);
+    setAttribute(ATTR_KEY_STYLE, style);
 }
 
 void SVGItem::appendSVGDrawsLabelWithCenter(vector<unique_ptr<SVGDraw>>& svgDraws, const double cx, const double cy) {
@@ -178,13 +178,13 @@ void SVGItem::appendSVGDrawsLabelWithCenter(vector<unique_ptr<SVGDraw>>& svgDraw
         marginRect->setStroke("red");
         svgDraws.emplace_back(std::move(marginRect));
     }
-    if (const auto label = getAttribute(ATTRIBUTE_KEY_LABEL); !label.empty()) {
+    if (const auto label = getAttribute(ATTR_KEY_LABEL); !label.empty()) {
         auto draw = make_unique<SVGDrawText>(cx, cy, label);
         if (const auto& color = fontColor(); color != "black") {
             draw->setFill(color);
         }
-        const string fontFamily = getAttribute(ATTRIBUTE_KEY_FONT_NAME);
-        const double fontSize = stod(getAttribute(ATTRIBUTE_KEY_FONT_SIZE));
+        const string fontFamily = getAttribute(ATTR_KEY_FONT_NAME);
+        const double fontSize = stod(getAttribute(ATTR_KEY_FONT_SIZE));
         draw->setFont(fontFamily, fontSize);
         svgDraws.emplace_back(std::move(draw));
     }
@@ -196,9 +196,9 @@ pair<double, double> SVGItem::computeTextSize() {
         return {precomputedTextWidth, precomputedTextHeight};
     }
     const SVGTextSize textSize;
-    const auto label = getAttribute(ATTRIBUTE_KEY_LABEL);
-    const double fontSize = stod(getAttribute(ATTRIBUTE_KEY_FONT_SIZE));
-    const string fontFamily = getAttribute(ATTRIBUTE_KEY_FONT_NAME);
+    const auto label = getAttribute(ATTR_KEY_LABEL);
+    const double fontSize = stod(getAttribute(ATTR_KEY_FONT_SIZE));
+    const string fontFamily = getAttribute(ATTR_KEY_FONT_NAME);
     auto [width, height] = textSize.computeTextSize(label, fontSize, fontFamily);
     if (width == 0.0) {
         width = fontSize * SVGTextSize::DEFAULT_APPROXIMATION_WIDTH_SCALE;
@@ -210,7 +210,7 @@ pair<double, double> SVGItem::computeTextSize() {
 }
 
 pair<double, double> SVGItem::computeMargin() {
-    setAttributeIfNotExist(ATTRIBUTE_KEY_MARGIN, "0.1111111111111111,0.05555555555555555");
+    setAttributeIfNotExist(ATTR_KEY_MARGIN, string(ATTR_DEF_MARGIN_NODE));
     return margin();
 }
 

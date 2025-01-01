@@ -61,7 +61,7 @@ void SVGEdge::setConnection(const string& idFrom, const string& idTo) {
 }
 
 void SVGEdge::setSplines(const string& value) {
-    setAttribute(ATTRIBUTE_KEY_SPLINES, value);
+    setAttribute(ATTR_KEY_SPLINES, value);
 }
 
 void SVGEdge::setSplines(const string_view& value) {
@@ -77,14 +77,14 @@ void SVGEdge::addConnectionPoint(const double x, const double y) {
 }
 
 vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDraws(const NodesMapping& nodes) {
-    setAttributeIfNotExist(ATTRIBUTE_KEY_SPLINES, string(SPLINES_DEFAULT));
-    setAttributeIfNotExist(ATTRIBUTE_KEY_COLOR, "black");
-    setAttributeIfNotExist(ATTRIBUTE_KEY_ARROW_HEAD, "none");
-    setAttributeIfNotExist(ATTRIBUTE_KEY_ARROW_TAIL, "none");
-    setAttributeIfNotExist(ATTRIBUTE_KEY_MARGIN, "0,0");
-    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_NAME, "Times,serif");
-    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_SIZE, "14");
-    const auto splines = getAttribute(ATTRIBUTE_KEY_SPLINES);
+    setAttributeIfNotExist(ATTR_KEY_SPLINES, string(SPLINES_DEFAULT));
+    setAttributeIfNotExist(ATTR_KEY_COLOR, string(ATTR_DEF_COLOR));
+    setAttributeIfNotExist(ATTR_KEY_ARROW_HEAD, string(ARROW_NONE));
+    setAttributeIfNotExist(ATTR_KEY_ARROW_TAIL, string(ARROW_NONE));
+    setAttributeIfNotExist(ATTR_KEY_MARGIN, string(ATTR_DEF_MARGIN_EDGE));
+    setAttributeIfNotExist(ATTR_KEY_FONT_NAME, string(ATTR_DEF_FONT_NAME));
+    setAttributeIfNotExist(ATTR_KEY_FONT_SIZE, string(ATTR_DEF_FONT_SIZE));
+    const auto splines = getAttribute(ATTR_KEY_SPLINES);
     if (splines == SPLINES_LINE) {
         return produceSVGDrawsLine(nodes);
     }
@@ -103,7 +103,7 @@ void SVGEdge::setArrowHead(const string_view& shape) {
 }
 
 void SVGEdge::setArrowHead(const string& shape) {
-    setAttribute(ATTRIBUTE_KEY_ARROW_HEAD, shape);
+    setAttribute(ATTR_KEY_ARROW_HEAD, shape);
 }
 
 void SVGEdge::setArrowTail() {
@@ -115,7 +115,7 @@ void SVGEdge::setArrowTail(const string_view& shape) {
 }
 
 void SVGEdge::setArrowTail(const string& shape) {
-    setAttribute(ATTRIBUTE_KEY_ARROW_TAIL, shape);
+    setAttribute(ATTR_KEY_ARROW_TAIL, shape);
 }
 
 std::pair<double, double> SVGEdge::computeTextCenter(const double cx, const double cy, double dx, double dy) {
@@ -142,8 +142,8 @@ std::pair<double, double> SVGEdge::computeTextCenter(const double cx, const doub
 vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nodes) {
     const auto& nodeFrom = nodes.at(_nodeFrom);
     const auto& nodeTo = nodes.at(_nodeTo);
-    const auto arrowHeadShape = getAttribute(ATTRIBUTE_KEY_ARROW_HEAD);
-    const auto arrowTailShape = getAttribute(ATTRIBUTE_KEY_ARROW_TAIL);
+    const auto arrowHeadShape = getAttribute(ATTR_KEY_ARROW_HEAD);
+    const auto arrowTailShape = getAttribute(ATTR_KEY_ARROW_TAIL);
     vector<unique_ptr<SVGDraw>> svgDraws;
     vector<unique_ptr<SVGDraw>> svgDrawArrows;
     vector<pair<double, double>> points;
@@ -178,7 +178,7 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
     for (auto& arrow : svgDrawArrows) {
         svgDraws.emplace_back(std::move(arrow));
     }
-    if (const auto label = getAttribute(ATTRIBUTE_KEY_LABEL); !label.empty()) {
+    if (const auto label = getAttribute(ATTR_KEY_LABEL); !label.empty()) {
         double totalLength = 0.0;
         for (size_t i = 0; i + 1 < points.size(); ++i) {
             const auto& [x1, y1] = points[i];
@@ -219,8 +219,8 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
     }
     const auto& nodeFrom = nodes.at(_nodeFrom);
     const auto& nodeTo = nodes.at(_nodeTo);
-    const auto arrowHeadShape = getAttribute(ATTRIBUTE_KEY_ARROW_HEAD);
-    const auto arrowTailShape = getAttribute(ATTRIBUTE_KEY_ARROW_TAIL);
+    const auto arrowHeadShape = getAttribute(ATTR_KEY_ARROW_HEAD);
+    const auto arrowTailShape = getAttribute(ATTR_KEY_ARROW_TAIL);
     vector<unique_ptr<SVGDraw>> svgDraws;
     vector<unique_ptr<SVGDraw>> svgDrawArrows;
     const auto strokeWidth = penWidth();
@@ -270,7 +270,7 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
     for (auto& arrow : svgDrawArrows) {
         svgDraws.emplace_back(std::move(arrow));
     }
-    if (const auto label = getAttribute(ATTRIBUTE_KEY_LABEL); !label.empty()) {
+    if (const auto label = getAttribute(ATTR_KEY_LABEL); !label.empty()) {
         double totalLength = 0.0;
         vector<double> lengths(splines.size());
         for (size_t i = 0; i < splines.size(); ++i) {

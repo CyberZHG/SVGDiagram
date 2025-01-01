@@ -1,4 +1,5 @@
 #include "attribute_utils.h"
+#include "constants.h"
 
 #include <format>
 #include <iostream>
@@ -104,6 +105,20 @@ bool AttributeUtils::parseBool(const string& value) {
         return tolower(c);
     });
     return lower == "true" || lower == "1" || lower == "on" || lower == "yes";
+}
+
+AttributeParsedStyle AttributeUtils::parseStyle(const string& value) {
+    AttributeParsedStyle parsed;
+    for (const auto styles = splitString(value, ','); const auto& style : styles) {
+        if (style == ATTR_STYLE_FILLED) {
+            parsed.filled = true;
+        } else if (style == ATTR_STYLE_DASHED) {
+            parsed.dashed = true;
+        } else if (style == ATTR_STYLE_DOTTED) {
+            parsed.dotted = true;
+        }
+    }
+    return parsed;
 }
 
 AttributeUtils::DCommands AttributeUtils::parseDCommands(const string& d) {

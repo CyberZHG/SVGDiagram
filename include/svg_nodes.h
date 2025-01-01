@@ -7,26 +7,9 @@
 #include <optional>
 
 #include "svg_draw.h"
+#include "constants.h"
 
 namespace svg_diagram {
-
-    constexpr std::string_view ATTRIBUTE_KEY_ID = "id";
-    constexpr std::string_view ATTRIBUTE_KEY_LABEL = "label";
-    constexpr std::string_view ATTRIBUTE_KEY_SHAPE = "shape";
-    constexpr std::string_view ATTRIBUTE_KEY_SPLINES = "splines";
-    constexpr std::string_view ATTRIBUTE_KEY_MARGIN = "margin";
-    constexpr std::string_view ATTRIBUTE_KEY_WIDTH = "width";
-    constexpr std::string_view ATTRIBUTE_KEY_HEIGHT = "height";
-    constexpr std::string_view ATTRIBUTE_KEY_FONT_NAME = "fontname";
-    constexpr std::string_view ATTRIBUTE_KEY_FONT_SIZE = "fontsize";
-    constexpr std::string_view ATTRIBUTE_KEY_FIXED_SIZE = "fixedsize";
-    constexpr std::string_view ATTRIBUTE_KEY_ARROW_HEAD = "arrowhead";
-    constexpr std::string_view ATTRIBUTE_KEY_ARROW_TAIL = "arrowtail";
-    constexpr std::string_view ATTRIBUTE_KEY_COLOR = "color";
-    constexpr std::string_view ATTRIBUTE_KEY_FILL_COLOR = "fillcolor";
-    constexpr std::string_view ATTRIBUTE_KEY_FONT_COLOR = "fontcolor";
-    constexpr std::string_view ATTRIBUTE_KEY_PEN_WIDTH = "penwidth";
-    constexpr std::string_view ATTRIBUTE_KEY_STYLE = "style";
 
     class SVGNode;
     class SVGGraph;

@@ -40,7 +40,7 @@ const string& SVGNode::getAttribute(const std::string_view& key) const {
 }
 
 void SVGNode::setShape(const string& shape) {
-    setAttribute(ATTRIBUTE_KEY_SHAPE, shape);
+    setAttribute(ATTR_KEY_SHAPE, shape);
 }
 
 void SVGNode::setShape(const string_view& shape) {
@@ -57,10 +57,10 @@ pair<double, double> SVGNode::center() const {
 }
 
 void SVGNode::adjustNodeSize() {
-    setAttributeIfNotExist(ATTRIBUTE_KEY_SHAPE, string(SHAPE_DEFAULT));
-    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_NAME, "Times,serif");
-    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_SIZE, "14");
-    const auto shape = getAttribute(ATTRIBUTE_KEY_SHAPE);
+    setAttributeIfNotExist(ATTR_KEY_SHAPE, string(SHAPE_DEFAULT));
+    setAttributeIfNotExist(ATTR_KEY_FONT_NAME, string(ATTR_DEF_FONT_NAME));
+    setAttributeIfNotExist(ATTR_KEY_FONT_SIZE, string(ATTR_DEF_FONT_SIZE));
+    const auto shape = getAttribute(ATTR_KEY_SHAPE);
     if (shape == SHAPE_CIRCLE) {
         adjustNodeSizeCircle();
     } else if (shape == SHAPE_DOUBLE_CIRCLE) {
@@ -73,13 +73,13 @@ void SVGNode::adjustNodeSize() {
 }
 
 vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
-    setAttributeIfNotExist(ATTRIBUTE_KEY_SHAPE, string(SHAPE_DEFAULT));
-    setAttributeIfNotExist(ATTRIBUTE_KEY_COLOR, "black");
-    setAttributeIfNotExist(ATTRIBUTE_KEY_FILL_COLOR, "none");
-    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_COLOR, "black");
-    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_NAME, "Times,serif");
-    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_SIZE, "14");
-    const auto shape = getAttribute(ATTRIBUTE_KEY_SHAPE);
+    setAttributeIfNotExist(ATTR_KEY_SHAPE, string(SHAPE_DEFAULT));
+    setAttributeIfNotExist(ATTR_KEY_COLOR, string(ATTR_DEF_COLOR));
+    setAttributeIfNotExist(ATTR_KEY_FILL_COLOR, string(ATTR_DEF_FILL_COLOR));
+    setAttributeIfNotExist(ATTR_KEY_FONT_COLOR, string(ATTR_DEF_FONT_COLOR));
+    setAttributeIfNotExist(ATTR_KEY_FONT_NAME, string(ATTR_DEF_FONT_NAME));
+    setAttributeIfNotExist(ATTR_KEY_FONT_SIZE, string(ATTR_DEF_FONT_SIZE));
+    const auto shape = getAttribute(ATTR_KEY_SHAPE);
     if (shape == SHAPE_CIRCLE) {
         return produceSVGDrawsCircle();
     }
@@ -96,8 +96,8 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
 }
 
 pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
-    setAttributeIfNotExist(ATTRIBUTE_KEY_SHAPE, string(SHAPE_DEFAULT));
-    const auto shape = getAttribute(ATTRIBUTE_KEY_SHAPE);
+    setAttributeIfNotExist(ATTR_KEY_SHAPE, string(SHAPE_DEFAULT));
+    const auto shape = getAttribute(ATTR_KEY_SHAPE);
     if (shape == SHAPE_CIRCLE) {
         return computeConnectionPointCircle(angle);
     }
@@ -122,13 +122,13 @@ double SVGNode::computeAngle(const pair<double, double>& p) const {
 }
 
 bool SVGNode::isFixedSize() const {
-    return AttributeUtils::parseBool(getAttribute(ATTRIBUTE_KEY_FIXED_SIZE));
+    return AttributeUtils::parseBool(getAttribute(ATTR_KEY_FIXED_SIZE));
 }
 
 void SVGNode::updateNodeSize(const double width, const double height) {
     if (isFixedSize()) {
-        setDoubleAttributeIfNotExist(ATTRIBUTE_KEY_WIDTH, AttributeUtils::pointToInch(width));
-        setDoubleAttributeIfNotExist(ATTRIBUTE_KEY_HEIGHT, AttributeUtils::pointToInch(height));
+        setDoubleAttributeIfNotExist(ATTR_KEY_WIDTH, AttributeUtils::pointToInch(width));
+        setDoubleAttributeIfNotExist(ATTR_KEY_HEIGHT, AttributeUtils::pointToInch(height));
     } else {
         setWidth(width);
         setHeight(height);

@@ -91,9 +91,9 @@ pair<double, double> SVGGraph::center() const {
 }
 
 void SVGGraph::adjustNodeSizes() {
-    setAttributeIfNotExist(ATTRIBUTE_KEY_MARGIN, format("{}", 8.0 / 72.0));
-    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_NAME, "Times,serif");
-    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_SIZE, "14");
+    setAttributeIfNotExist(ATTR_KEY_MARGIN, string(ATTR_DEF_MARGIN_GRAPH));
+    setAttributeIfNotExist(ATTR_KEY_FONT_NAME, string(ATTR_DEF_FONT_NAME));
+    setAttributeIfNotExist(ATTR_KEY_FONT_SIZE, string(ATTR_DEF_FONT_SIZE));
     double minX = 0.0, minY = 0.0, maxX = 0.0, maxY = 0.0;
     bool first = true;
     const auto updateGraphSize = [&](const double cx, const double cy, const double width, const double height) {
@@ -130,7 +130,7 @@ void SVGGraph::adjustNodeSizes() {
         setSize(-1, -1);
     } else {
         const auto [marginWidth, marginHeight] = margin();
-        if (const auto label = getAttribute(ATTRIBUTE_KEY_LABEL); !label.empty()) {
+        if (const auto label = getAttribute(ATTR_KEY_LABEL); !label.empty()) {
             auto [textWidth, textHeight] = computeTextSize();
             textWidth += marginWidth * 2;
             if (textWidth > maxX - minX) {
@@ -226,12 +226,12 @@ vector<unique_ptr<SVGDraw>> SVGGraph::produceEdgeSVGDraws(const NodesMapping& no
 
 std::vector<std::unique_ptr<SVGDraw>> SVGGraph::produceClusterSVGDraws() {
     vector<unique_ptr<SVGDraw>> svgDraws;
-    setAttributeIfNotExist(ATTRIBUTE_KEY_COLOR, "none");
-    setAttributeIfNotExist(ATTRIBUTE_KEY_FILL_COLOR, "none");
-    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_COLOR, "black");
-    setAttributeIfNotExist(ATTRIBUTE_KEY_PEN_WIDTH, "1.0");
-    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_NAME, "Times,serif");
-    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_SIZE, "14");
+    setAttributeIfNotExist(ATTR_KEY_COLOR, string(ATTR_DEF_COLOR_GRAPH));
+    setAttributeIfNotExist(ATTR_KEY_FILL_COLOR, string(ATTR_DEF_FILL_COLOR));
+    setAttributeIfNotExist(ATTR_KEY_FONT_COLOR, string(ATTR_DEF_FONT_COLOR));
+    setAttributeIfNotExist(ATTR_KEY_PEN_WIDTH, string(ATTR_DEF_PEN_WIDTH));
+    setAttributeIfNotExist(ATTR_KEY_FONT_NAME, string(ATTR_DEF_FONT_NAME));
+    setAttributeIfNotExist(ATTR_KEY_FONT_SIZE, string(ATTR_DEF_FONT_SIZE));
     if (const auto _width = width(), _height = height(); _width > 0 && _height > 0) {
         const auto& _color = color();
         const auto& _fillColor = fillColor();
@@ -255,7 +255,7 @@ std::vector<std::unique_ptr<SVGDraw>> SVGGraph::produceClusterSVGDraws() {
             }
             svgDraws.emplace_back(std::move(group));
         }
-        if (const auto& _label = getAttribute(ATTRIBUTE_KEY_LABEL); !_label.empty()) {
+        if (const auto& _label = getAttribute(ATTR_KEY_LABEL); !_label.empty()) {
             appendSVGDrawsLabelWithCenter(svgDraws, _cx, _textY);
         }
     }

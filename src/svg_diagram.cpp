@@ -33,6 +33,14 @@ void SVGDiagram::setBackgroundColor(const std::string& backgroundColor) {
     _backgroundColor = backgroundColor;
 }
 
+SVGNode& SVGDiagram::defaultNodeAttributes() {
+    return _graph.defaultNodeAttributes();
+}
+
+SVGEdge& SVGDiagram::defaultEdgeAttributes() {
+    return _graph.defaultEdgeAttributes();
+}
+
 const shared_ptr<SVGNode>& SVGDiagram::addNode(const string& id) {
     if (_nodes.contains(id)) {
         throw runtime_error("SVGDiagram::addNode: Node id already exists");

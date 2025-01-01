@@ -48,7 +48,7 @@ namespace svg_diagram {
 
         [[nodiscard]] const std::unordered_map<std::string_view, std::string>& attributes() const;
         void setAttribute(const std::string_view& key, const std::string& value);
-        void setAttributeIfNotExist(const std::string_view& key, const std::string& value);
+        virtual void setAttributeIfNotExist(const std::string_view& key, const std::string& value);
         [[nodiscard]] virtual const std::string& getAttribute(const std::string_view& key) const;
 
         void setPrecomputedTextSize(double width, double height);
@@ -91,6 +91,7 @@ namespace svg_diagram {
 
         [[nodiscard]] Type type() const override;
 
+        void setAttributeIfNotExist(const std::string_view& key, const std::string& value) override;
         [[nodiscard]] const std::string& getAttribute(const std::string_view& key) const override;
 
         void setShape(const std::string& shape);
@@ -152,6 +153,7 @@ namespace svg_diagram {
 
         [[nodiscard]] Type type() const override;
 
+        void setAttributeIfNotExist(const std::string_view& key, const std::string& value) override;
         [[nodiscard]] const std::string& getAttribute(const std::string_view& key) const override;
 
         void setNodeFrom(const std::string& id);

@@ -163,6 +163,18 @@ SVGItem::Type SVGNode::type() const {
     return Type::NODE;
 }
 
+void SVGNode::setAttributeIfNotExist(const std::string_view &key, const std::string &value) {
+    if (attributes().contains(key)) {
+        return;
+    }
+    if (parent() != nullptr) {
+        if (const auto ret = parent()->defaultNodeAttribute(key); ret.has_value()) {
+            return;
+        }
+    }
+    setAttribute(key, value);
+}
+
 const string& SVGNode::getAttribute(const std::string_view& key) const {
     static const string EMPTY_STRING;
     if (const auto it = attributes().find(key); it != attributes().end()) {
@@ -401,6 +413,18 @@ SVGEdge::SVGEdge(const string& idFrom, const string& idTo) {
 
 SVGItem::Type SVGEdge::type() const {
     return Type::EDGE;
+}
+
+void SVGEdge::setAttributeIfNotExist(const std::string_view &key, const std::string &value) {
+    if (attributes().contains(key)) {
+        return;
+    }
+    if (parent() != nullptr) {
+        if (const auto ret = parent()->defaultEdgeAttribute(key); ret.has_value()) {
+            return;
+        }
+    }
+    setAttribute(key, value);
 }
 
 const string& SVGEdge::getAttribute(const string_view& key) const {

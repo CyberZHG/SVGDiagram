@@ -9,6 +9,10 @@ using namespace svg_diagram;
 
 TEST(TestExample, Sequential) {
     SVGDiagram diagram;
+    diagram.defaultNodeAttributes().setShape(SVGNode::NODE_SHAPE_ELLIPSE);
+    diagram.defaultNodeAttributes().setMargin(10, 20);
+    diagram.defaultEdgeAttributes().setMargin(4.0);
+    diagram.defaultEdgeAttributes().setArrowHead();
 
     const auto labels = vector{
         "Part the Veil of Snow",
@@ -29,8 +33,6 @@ TEST(TestExample, Sequential) {
         const auto& node = diagram.addNode(format("node_{}", i));
         node->setCenter(i * X_SHIFT, i * Y_SHIFT);
         node->setLabel(labels[i]);
-        node->setShape(SVGNode::NODE_SHAPE_ELLIPSE);
-        node->setMargin(10, 20);
         node->setColor(strokeColors[i]);
         node->setFillColor(fillColors[i]);
         node->setFontColor(textColors[i]);
@@ -41,12 +43,10 @@ TEST(TestExample, Sequential) {
             const auto to = format("node_{}", i + 1);
             const auto& edge = diagram.addEdge(from, to);
             edge->addConnectionPoint((i - 1.5) * X_SHIFT, (i + 0.75) * Y_SHIFT);
-            edge->setArrowHead();
             edge->setColor(strokeColors[i]);
             edge->setPenWidth(1 + i * 0.25);
             edge->setLabel(format("C{}->C{}", i + 1, i + 2));
             edge->setFontColor(strokeColors[i]);
-            edge->setMargin(4.0);
         }
     }
 

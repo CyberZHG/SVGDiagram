@@ -25,6 +25,9 @@ namespace svg_diagram {
         void setCanvasSize(int width, int height);
         void setBackgroundColor(const std::string& backgroundColor);
 
+        SVGNode& defaultNodeAttributes();
+        SVGEdge& defaultEdgeAttributes();
+
         const std::shared_ptr<SVGNode>& addNode(const std::string& id);
         void addNode(const std::string& id, std::shared_ptr<SVGNode>& node);
         const std::shared_ptr<SVGEdge>& addEdge(const std::string& id);

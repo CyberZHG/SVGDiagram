@@ -79,6 +79,7 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
     setAttributeIfNotExist(ATTR_KEY_FONT_COLOR, string(ATTR_DEF_FONT_COLOR));
     setAttributeIfNotExist(ATTR_KEY_FONT_NAME, string(ATTR_DEF_FONT_NAME));
     setAttributeIfNotExist(ATTR_KEY_FONT_SIZE, string(ATTR_DEF_FONT_SIZE));
+    setAttributeIfNotExist(ATTR_KEY_STYLE, string(ATTR_DEF_STYLE));
     const auto shape = getAttribute(ATTR_KEY_SHAPE);
     if (shape == SHAPE_CIRCLE) {
         return produceSVGDrawsCircle();
@@ -157,11 +158,8 @@ void SVGNode::adjustNodeSizeCircle() {
 vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsCircle() {
     vector<unique_ptr<SVGDraw>> svgDraws;
     auto circle = make_unique<SVGDrawCircle>(_cx, _cy, max(width(), height()) / 2.0);
-    circle->setStroke(color());
+    setStrokeStyles(circle.get());
     circle->setFill(fillColor());
-    if (const auto strokeWidth = penWidth(); strokeWidth != 1.0) {
-        circle->setStrokeWidth(strokeWidth);
-    }
     svgDraws.emplace_back(std::move(circle));
     appendSVGDrawsLabel(svgDraws);
     return svgDraws;
@@ -179,20 +177,13 @@ void SVGNode::adjustNodeSizeDoubleCircle() {
 vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsDoubleCircle() {
     vector<unique_ptr<SVGDraw>> svgDraws;
     const double radius = max(width(), height()) / 2.0;
-    const auto strokeWidth = penWidth();
     auto circleInner = make_unique<SVGDrawCircle>(_cx, _cy, radius);
-    circleInner->setStroke(color());
+    setStrokeStyles(circleInner.get());
     circleInner->setFill(fillColor());
-    if (strokeWidth != 1.0) {
-        circleInner->setStrokeWidth(strokeWidth);
-    }
     svgDraws.emplace_back(std::move(circleInner));
     auto circleOuter = make_unique<SVGDrawCircle>(_cx, _cy, radius + DOUBLE_BORDER_MARGIN);
-    circleOuter->setStroke(color());
+    setStrokeStyles(circleOuter.get());
     circleOuter->setFill("none");
-    if (strokeWidth != 1.0) {
-        circleOuter->setStrokeWidth(strokeWidth);
-    }
     svgDraws.emplace_back(std::move(circleOuter));
     appendSVGDrawsLabel(svgDraws);
     return svgDraws;
@@ -210,11 +201,8 @@ void SVGNode::adjustNodeSizeRect() {
 vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsRect() {
     vector<unique_ptr<SVGDraw>> svgDraws;
     auto rect = make_unique<SVGDrawRect>(_cx, _cy, width(), height());
-    rect->setStroke(color());
+    setStrokeStyles(rect.get());
     rect->setFill(fillColor());
-    if (const auto strokeWidth = penWidth(); strokeWidth != 1.0) {
-        rect->setStrokeWidth(strokeWidth);
-    }
     svgDraws.emplace_back(std::move(rect));
     appendSVGDrawsLabel(svgDraws);
     return svgDraws;
@@ -253,11 +241,8 @@ void SVGNode::adjustNodeSizeEllipse() {
 vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsEllipse() {
     vector<unique_ptr<SVGDraw>> svgDraws;
     auto ellipse = make_unique<SVGDrawEllipse>(_cx, _cy, width(), height());
-    ellipse->setStroke(color());
+    setStrokeStyles(ellipse.get());
     ellipse->setFill(fillColor());
-    if (const auto strokeWidth = penWidth(); strokeWidth != 1.0) {
-        ellipse->setStrokeWidth(strokeWidth);
-    }
     svgDraws.emplace_back(std::move(ellipse));
     appendSVGDrawsLabel(svgDraws);
     return svgDraws;

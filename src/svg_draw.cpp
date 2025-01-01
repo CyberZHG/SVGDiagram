@@ -26,6 +26,22 @@ void SVGDraw::setAttribute(const string_view& key, const string& value) {
     _attributes[key] = value;
 }
 
+void SVGDraw::setFill(const string& value) {
+    setAttribute(SVG_ATTRIBUTE_KEY_FILL, value);
+}
+
+void SVGDraw::setStroke(const string& value) {
+    setAttribute(SVG_ATTRIBUTE_KEY_STROKE, value);
+}
+
+void SVGDraw::setStrokeWidth(const string& value) {
+    setAttribute(SVG_ATTRIBUTE_KEY_STROKE_WIDTH, value);
+}
+
+void SVGDraw::setStrokeWidth(const double value) {
+    setStrokeWidth(format("{}", value));
+}
+
 void SVGDraw::addAttributesToXMLElement(const XMLElement::ChildType& element) const {
     auto keys_view = _attributes | std::views::keys;
     std::vector<string> keys(keys_view.begin(), keys_view.end());
@@ -123,22 +139,6 @@ SVGDrawBoundingBox SVGDrawTitle::boundingBox() const {
 
 bool SVGDrawTitle::hasEntity() const {
     return false;
-}
-
-void SVGDrawAttribute::setFill(const string& value) {
-    setAttribute(SVG_ATTRIBUTE_KEY_FILL, value);
-}
-
-void SVGDrawAttribute::setStroke(const string& value) {
-    setAttribute(SVG_ATTRIBUTE_KEY_STROKE, value);
-}
-
-void SVGDrawAttribute::setStrokeWidth(const string& value) {
-    setAttribute(SVG_ATTRIBUTE_KEY_STROKE_WIDTH, value);
-}
-
-void SVGDrawAttribute::setStrokeWidth(const double value) {
-    setStrokeWidth(format("{}", value));
 }
 
 bool SVGDrawEntity::hasEntity() const {

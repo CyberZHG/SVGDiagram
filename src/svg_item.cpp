@@ -165,6 +165,34 @@ void SVGItem::setStyle(const string& style) {
     setAttribute(ATTR_KEY_STYLE, style);
 }
 
+void SVGItem::setStyleDashed() {
+    auto style = getAttribute(ATTR_KEY_STYLE);
+    if (style.empty()) {
+        style = string(ATTR_KEY_STYLE);
+    }
+    if (!style.empty()) {
+        style += ',';
+    }
+    style += ATTR_STYLE_DASHED;
+    setStyle(style);
+}
+
+void SVGItem::setStyleDotted() {
+    auto style = getAttribute(ATTR_KEY_STYLE);
+    if (style.empty()) {
+        style = string(ATTR_KEY_STYLE);
+    }
+    if (!style.empty()) {
+        style += ',';
+    }
+    style += ATTR_STYLE_DOTTED;
+    setStyle(style);
+}
+
+AttributeParsedStyle SVGItem::style() const {
+    return AttributeUtils::parseStyle(getAttribute(ATTR_KEY_STYLE));
+}
+
 void SVGItem::appendSVGDrawsLabelWithCenter(vector<unique_ptr<SVGDraw>>& svgDraws, const double cx, const double cy) {
     if (enabledDebug()) {
         const auto [textWidth, textHeight] = computeTextSize();
@@ -218,6 +246,13 @@ std::pair<double, double> SVGItem::computeTextSizeWithMargin() {
     const auto [width, height] = computeTextSize();
     const auto [marginX, marginY] = computeMargin();
     return {width + marginX * 2, height + marginY * 2};
+}
+
+void SVGItem::setStrokeStyles(SVGDraw* draw) const {
+    draw->setStroke(color());
+    if (const auto strokeWidth = penWidth(); strokeWidth != 1.0) {
+        draw->setStrokeWidth(strokeWidth);
+    }
 }
 
 SVGItem::SVGItem(const string& id) {

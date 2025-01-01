@@ -8,6 +8,7 @@
 
 #include "svg_draw.h"
 #include "constants.h"
+#include "attribute_utils.h"
 
 namespace svg_diagram {
 
@@ -61,6 +62,9 @@ namespace svg_diagram {
         void setFontSize(double fontSize);
         void setFont(const std::string& fontName, double fontSize);
         void setStyle(const std::string& style);
+        void setStyleDashed();
+        void setStyleDotted();
+        [[nodiscard]] AttributeParsedStyle style() const;
 
     protected:
         void appendSVGDrawsLabelWithCenter(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, double cx, double cy);
@@ -68,6 +72,8 @@ namespace svg_diagram {
         [[nodiscard]] std::pair<double, double> computeTextSize();
         [[nodiscard]] std::pair<double, double> computeMargin();
         [[nodiscard]] std::pair<double, double> computeTextSizeWithMargin();
+
+        void setStrokeStyles(SVGDraw* draw) const;
 
     private:
         SVGGraph* _parent = nullptr;

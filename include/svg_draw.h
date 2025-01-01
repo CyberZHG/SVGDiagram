@@ -49,6 +49,11 @@ namespace svg_diagram {
 
         void setAttribute(const std::string_view& key, const std::string& value);
 
+        void setFill(const std::string& value);
+        void setStroke(const std::string& value);
+        void setStrokeWidth(const std::string& value);
+        void setStrokeWidth(double value);
+
     protected:
         std::map<std::string_view, std::string> _attributes;
 
@@ -75,26 +80,15 @@ namespace svg_diagram {
 
         std::string title;
 
-
         [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
 
         [[nodiscard]] bool hasEntity() const override;
     };
 
-    class SVGDrawAttribute : public SVGDraw {
+    class SVGDrawEntity : public SVGDraw {
     public:
         using SVGDraw::SVGDraw;
-
-        void setFill(const std::string& value);
-        void setStroke(const std::string& value);
-        void setStrokeWidth(const std::string& value);
-        void setStrokeWidth(double value);
-    };
-
-    class SVGDrawEntity : public SVGDrawAttribute {
-    public:
-        using SVGDrawAttribute::SVGDrawAttribute;
 
         [[nodiscard]] bool hasEntity() const override;
     };

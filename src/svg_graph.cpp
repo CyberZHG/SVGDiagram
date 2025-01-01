@@ -240,11 +240,8 @@ std::vector<std::unique_ptr<SVGDraw>> SVGGraph::produceClusterSVGDraws() {
             group->setAttribute("id", id());
             group->setAttribute("class", "cluster");
             auto rect = make_unique<SVGDrawRect>(_cx, _cy, _width, _height);
-            rect->setStroke(color());
+            setStrokeStyles(rect.get());
             rect->setFill(fillColor());
-            if (const auto strokeWidth = penWidth(); strokeWidth != 1.0) {
-                rect->setStrokeWidth(strokeWidth);
-            }
             group->addChild(std::move(rect));
             if (enabledDebug()) {
                 const auto [marginX, marginY] = margin();

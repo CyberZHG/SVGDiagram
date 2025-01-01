@@ -167,13 +167,9 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
         const auto& [x2, y2] = points[i + 1];
         svgDraws.emplace_back(make_unique<SVGDrawLine>(x1, y1, x2, y2));
     }
-    const auto strokeWidth = penWidth();
     for (const auto& line : svgDraws) {
         const auto& draw = dynamic_cast<SVGDrawLine*>(line.get());
-        draw->setStroke(color());
-        if (strokeWidth != 1.0) {
-            draw->setStrokeWidth(strokeWidth);
-        }
+        setStrokeStyles(draw);
     }
     for (auto& arrow : svgDrawArrows) {
         svgDraws.emplace_back(std::move(arrow));
@@ -223,7 +219,6 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
     const auto arrowTailShape = getAttribute(ATTR_KEY_ARROW_TAIL);
     vector<unique_ptr<SVGDraw>> svgDraws;
     vector<unique_ptr<SVGDraw>> svgDrawArrows;
-    const auto strokeWidth = penWidth();
     vector<pair<double, double>> points;
     const double angleFrom = nodeFrom->computeAngle(_connectionPoints[0]);
     auto [sx, sy] = addArrow(arrowTailShape, svgDrawArrows, nodeFrom->computeConnectionPoint(angleFrom), angleFrom);
@@ -261,11 +256,8 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
         }
     }
     auto path = make_unique<SVGDrawPath>(d);
-    path->setStroke(color());
+    setStrokeStyles(path.get());
     path->setFill("none");
-    if (strokeWidth != 1.0) {
-        path->setStrokeWidth(strokeWidth);
-    }
     svgDraws.emplace_back(std::move(path));
     for (auto& arrow : svgDrawArrows) {
         svgDraws.emplace_back(std::move(arrow));

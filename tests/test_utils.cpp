@@ -13,11 +13,17 @@ void compareSVGContent(const string& a, const string& b) {
     };
     auto getContent = [splitLines](const string& s) -> vector<string> {
         vector<string> content;
-        const auto lines = splitLines(s);
-        for (const auto& line : lines) {
-            if (!line.empty() && line[0] == ' ') {
-                content.push_back(line);
+        for (const auto lines = splitLines(s); const auto& line : lines) {
+            if (line.empty()) {
+                continue;
             }
+            if (line[0] != ' ') {
+                continue;
+            }
+            if (line.find("<!--") != std::string::npos) {
+                continue;
+            }
+            content.push_back(line);
         }
         return content;
     };

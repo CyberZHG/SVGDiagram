@@ -23,21 +23,6 @@ void SVGDiagram::addSVGDraw(std::vector<std::unique_ptr<SVGDraw>> svgDraws) {
     }
 }
 
-std::string SVGDiagram::render() const {
-    string svg = generateSVGOpen();
-    for (const auto& draw : _svgDraws) {
-        svg += draw->renderWithIndent(2);
-    }
-    svg += generateSVGClose();
-    return svg;
-}
-
-void SVGDiagram::render(const std::string &filePath) const {
-    ofstream file(filePath);
-    file << render();
-    file.close();
-}
-
 void SVGDiagram::setCanvasSize(const int width, const int height) {
     _width = width;
     _height = height;
@@ -47,29 +32,67 @@ void SVGDiagram::setBackgroundColor(const std::string& backgroundColor) {
     _backgroundColor = backgroundColor;
 }
 
+void SVGDiagram::addNode(const string& id, unique_ptr<SVGNode> node) {
+    _nodes[id] = std::move(node);
+}
+
+std::string SVGDiagram::render() {
+    produceSVGDrawsDynamic();
+    string svg = generateSVGOpen();
+    for (const auto& draw : _svgDraws) {
+        svg += draw->renderWithIndent(2);
+    }
+    for (const auto& draw : _svgDrawsDynamic) {
+        svg += draw->renderWithIndent(2);
+    }
+    svg += generateSVGClose();
+    return svg;
+}
+
+void SVGDiagram::render(const std::string &filePath) {
+    ofstream file(filePath);
+    file << render();
+    file.close();
+}
+
+void SVGDiagram::produceSVGDrawsDynamic() {
+    _svgDrawsDynamic.clear();
+    for (const auto& [id, node] : _nodes) {
+        node->adjustNodeSize();
+        _svgDrawsDynamic.emplace_back(make_unique<SVGDrawComment>(format("node_id = {}", id)));
+        for (auto& draw : node->produceSVGDraws()) {
+            _svgDrawsDynamic.emplace_back(std::move(draw));
+        }
+    }
+}
+
 string SVGDiagram::generateSVGOpen() const {
     string svg = R"(<?xml version="1.0" encoding="UTF-8"?>)" + string("\n");
     double width = _width, height = _height;
     double viewBoxX = 0.0, viewBoxY = 0.0;
     double minX = 0.0, maxX = 0.0, minY = 0.0, maxY = 0.0;
     bool firstEntity = true;
-    for (const auto& draw : _svgDraws) {
-        if (draw->hasEntity()) {
-            const auto boundingBox = draw->boundingBox();
-            if (firstEntity) {
-                firstEntity = false;
-                minX = boundingBox.x1;
-                minY = boundingBox.y1;
-                maxX = boundingBox.x2;
-                maxY = boundingBox.y2;
-            } else {
-                minX = min(minX, boundingBox.x1);
-                minY = min(minY, boundingBox.y1);
-                maxX = max(maxX, boundingBox.x2);
-                maxY = max(maxY, boundingBox.y2);
+    const auto updateMinMax = [&](const std::vector<std::unique_ptr<SVGDraw>>& svgDraws) {
+        for (const auto& draw : svgDraws) {
+            if (draw->hasEntity()) {
+                const auto boundingBox = draw->boundingBox();
+                if (firstEntity) {
+                    firstEntity = false;
+                    minX = boundingBox.x1;
+                    minY = boundingBox.y1;
+                    maxX = boundingBox.x2;
+                    maxY = boundingBox.y2;
+                } else {
+                    minX = min(minX, boundingBox.x1);
+                    minY = min(minY, boundingBox.y1);
+                    maxX = max(maxX, boundingBox.x2);
+                    maxY = max(maxY, boundingBox.y2);
+                }
             }
         }
-    }
+    };
+    updateMinMax(_svgDraws);
+    updateMinMax(_svgDrawsDynamic);
     if (width == 0.0) {
         width = maxX - minX + _margin.first * 2.0;
         viewBoxX = minX - _margin.first;

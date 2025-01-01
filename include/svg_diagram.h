@@ -19,18 +19,25 @@ namespace svg_diagram {
         void addSVGDraw(std::unique_ptr<SVGDraw> svgDraw);
         void addSVGDraw(std::vector<std::unique_ptr<SVGDraw>> svgDraws);
 
-        [[nodiscard]] std::string render() const;
-        void render(const std::string& filePath) const;
-
         void setCanvasSize(int width, int height);
         void setBackgroundColor(const std::string& backgroundColor);
 
+        void addNode(const std::string& id, std::unique_ptr<SVGNode> node);
+
+        [[nodiscard]] std::string render();
+        void render(const std::string& filePath);
+
     private:
         std::vector<std::unique_ptr<SVGDraw>> _svgDraws;
+        std::vector<std::unique_ptr<SVGDraw>> _svgDrawsDynamic;
         double _width = 0.0;
         double _height = 0.0;
         std::pair<double, double> _margin = {DEFAULT_MARGIN, DEFAULT_MARGIN};
         std::string _backgroundColor;
+
+        std::unordered_map<std::string, std::unique_ptr<SVGNode>> _nodes;
+
+        void produceSVGDrawsDynamic();
 
         [[nodiscard]] std::string generateSVGOpen() const;
         [[nodiscard]] std::string generateSVGClose() const;

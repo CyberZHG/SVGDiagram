@@ -41,7 +41,10 @@ namespace svg_diagram {
 
         void adjustNodeSize();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDraws();
-        // std::vector<double, double> getConnectionPoint(double angle);
+
+        std::pair<double, double> computeConnectionPoint(double angle);
+        std::pair<double, double> computeConnectionPoint(double x1, double y1, double x2, double y2);
+        std::pair<double, double> computeConnectionPoint(double x, double y);
 
     private:
         double _cx = 0.0;
@@ -60,6 +63,7 @@ namespace svg_diagram {
 
         void adjustNodeSizeCircle();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsCircle();
+        std::pair<double, double> computeConnectionPointCircle(double angle) const;
     };
 
 }

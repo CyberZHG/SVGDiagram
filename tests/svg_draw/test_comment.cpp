@@ -5,7 +5,7 @@ using namespace std;
 using namespace svg_diagram;
 
 TEST(TestSVGDrawComment, DefaultComment) {
-    const SVGDiagram diagram;
+    SVGDiagram diagram;
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
     const auto svg = diagram.render();

@@ -88,6 +88,27 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
     return {};
 }
 
+std::pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
+    auto shape = NODE_SHAPE_CIRCLE;
+    const auto it = _attributes.find(DOT_ATTR_KEY_SHAPE);
+    if (it != _attributes.end()) {
+        shape = string_view(it->second);
+    }
+    if (shape == NODE_SHAPE_CIRCLE) {
+        return computeConnectionPointCircle(angle);
+    }
+    return {0.0, 0.0};
+
+}
+
+std::pair<double, double> SVGNode::computeConnectionPoint(const double x1, const double y1, const double x2, const double y2) {
+    return computeConnectionPoint(atan2(y2 - y1, x2 - x1));
+}
+
+std::pair<double, double> SVGNode::computeConnectionPoint(const double x, const double y) {
+    return computeConnectionPoint(_cx, _cy, x, y);
+}
+
 pair<double, double> SVGNode::computeTextSize() {
     if (_precomputedTextWidth > 0 && _precomputedTextHeight > 0) {
         return {_precomputedTextWidth, _precomputedTextHeight};
@@ -160,4 +181,9 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsCircle() {
     circle->setStroke("black");
     svgDraws.emplace_back(std::move(circle));
     return svgDraws;
+}
+
+std::pair<double, double> SVGNode::computeConnectionPointCircle(const double angle) const {
+    const double radius = stod(getAttribute(DOT_ATTR_KEY_WIDTH)) / 2.0;
+    return {radius * cos(angle), radius * sin(angle)};
 }

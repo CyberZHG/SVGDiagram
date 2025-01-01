@@ -25,19 +25,16 @@ jobs:
 
       - name: Build
         run: |
-          cd python
           python -m pip install --upgrade pip
           pip install scikit-build-core pybind11
           pip install -e ".[test]"
 
       - name: Lint
         run: |
-          cd python
-          black --check sp_svg_diagram tests
-          isort --check-only sp_svg_diagram tests
-          flake8 sp_svg_diagram tests
+          black --check sp_svg_diagram python/tests
+          isort --check-only sp_svg_diagram python/tests
+          flake8 sp_svg_diagram python/tests
 
       - name: Test
         run: |
-          cd python
-          pytest tests
+          pytest python/tests

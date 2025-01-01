@@ -5,9 +5,9 @@ A library for rendering diagrams to SVG.
 
 ## Examples
 
-| [![](./doc/images/example_pentagon.svg)](./tests/example/test_example_pentagon.cpp) |    |
-|:-----------------------------------------------------------------------------------:|:--:|
-|                                                                                     |    |
+| [![](./doc/images/example_pentagon.svg)](./tests/example/test_example_pentagon.cpp) | [![](./doc/images/example_pentagram.svg)](./tests/example/test_example_pentagram.cpp) |
+|:-----------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------:|
+|                                                                                     |                                                                                       |
 
 ## Development
 

@@ -16,7 +16,7 @@ TEST(TestExample, Pentagon) {
         "Deceit\nCloaks\nthe Truth",
         "Delusion\nEnsnares\nReason",
         "Opportunity\nHides in\nthe Margins",
-        "Victory\nFlows from\nthe Turning of Tides"
+        "Victory\nFlows from\nthe Turning of Tides",
     };
     const auto strokeColors = vector{"peru", "darkgoldenrod", "limegreen", "dodgerblue", "lightcoral"};
     const auto fillColors = vector{"lightsalmon", "papayawhip", "lightgreen", "deepskyblue", "lightpink"};

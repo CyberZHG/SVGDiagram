@@ -107,6 +107,8 @@ void SVGNode::adjustNodeSize() {
     const auto shape = getAttribute(DOT_ATTR_KEY_SHAPE);
     if (shape == NODE_SHAPE_CIRCLE) {
         adjustNodeSizeCircle();
+    } else if (shape == NODE_SHAPE_NONE || shape == NODE_SHAPE_RECT) {
+        adjustNodeSizeRect();
     }
 }
 
@@ -122,6 +124,9 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
     if (shape == NODE_SHAPE_CIRCLE) {
         return produceSVGDrawsCircle();
     }
+    if (shape == NODE_SHAPE_RECT) {
+        return produceSVGDrawsRect();
+    }
     return {};
 }
 
@@ -130,6 +135,9 @@ pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
     const auto shape = getAttribute(DOT_ATTR_KEY_SHAPE);
     if (shape == NODE_SHAPE_CIRCLE) {
         return computeConnectionPointCircle(angle);
+    }
+    if (shape == NODE_SHAPE_RECT) {
+        return computeConnectionPointRect(angle);
     }
     return {0.0, 0.0};
 }
@@ -177,17 +185,15 @@ bool SVGNode::isFixedSize() const {
     return AttributeUtils::parseBool(getAttribute(DOT_ATTR_KEY_FIXED_SIZE));
 }
 
-void SVGNode::adjustNodeSizeCircle() {
-    const auto [textWidth, textHeight] = computeTextSize();
-    const auto [marginX, marginY] = computeMarginInPixels();
-    const auto diameter = GeometryUtils::distance(textWidth + marginX * 2, textHeight + marginY * 2);
-    const auto diameterStr = format("{}", diameter);
+void SVGNode::updateNodeSize(const double width, const double height) {
+    const auto widthString = format("{}", width);
+    const auto heightString = format("{}", height);
     if (isFixedSize()) {
-        setAttributeIfNotExist(DOT_ATTR_KEY_WIDTH, diameterStr);
-        setAttributeIfNotExist(DOT_ATTR_KEY_HEIGHT, diameterStr);
+        setAttributeIfNotExist(DOT_ATTR_KEY_WIDTH, widthString);
+        setAttributeIfNotExist(DOT_ATTR_KEY_HEIGHT, heightString);
     } else {
-        setAttribute(DOT_ATTR_KEY_WIDTH, diameterStr);
-        setAttribute(DOT_ATTR_KEY_HEIGHT, diameterStr);
+        setAttribute(DOT_ATTR_KEY_WIDTH, widthString);
+        setAttribute(DOT_ATTR_KEY_HEIGHT, heightString);
     }
 }
 
@@ -219,6 +225,13 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsNone() {
     return svgDraws;
 }
 
+void SVGNode::adjustNodeSizeCircle() {
+    const auto [textWidth, textHeight] = computeTextSize();
+    const auto [marginX, marginY] = computeMarginInPixels();
+    const auto diameter = GeometryUtils::distance(textWidth + marginX * 2, textHeight + marginY * 2);
+    updateNodeSize(diameter, diameter);
+}
+
 vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsCircle() {
     const double width = stod(getAttribute(DOT_ATTR_KEY_WIDTH));
     const double height = stod(getAttribute(DOT_ATTR_KEY_WIDTH));
@@ -234,6 +247,47 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsCircle() {
 pair<double, double> SVGNode::computeConnectionPointCircle(const double angle) const {
     const double radius = stod(getAttribute(DOT_ATTR_KEY_WIDTH)) / 2.0;
     return {_cx + radius * cos(angle), _cy + radius * sin(angle)};
+}
+
+void SVGNode::adjustNodeSizeRect() {
+    const auto [textWidth, textHeight] = computeTextSize();
+    const auto [marginX, marginY] = computeMarginInPixels();
+    updateNodeSize(textWidth + marginX * 2, textHeight + marginY * 2);
+}
+
+vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsRect() {
+    const double width = stod(getAttribute(DOT_ATTR_KEY_WIDTH));
+    const double height = stod(getAttribute(DOT_ATTR_KEY_HEIGHT));
+    vector<unique_ptr<SVGDraw>> svgDraws;
+    auto rect = make_unique<SVGDrawRect>(_cx, _cy, width, height);
+    rect->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
+    rect->setFill(getAttribute(DOT_ATTR_KEY_FILL_COLOR));
+    svgDraws.emplace_back(std::move(rect));
+    appendSVGDrawsLabel(svgDraws);
+    return svgDraws;
+}
+
+pair<double, double> SVGNode::computeConnectionPointRect(const double angle) const {
+    const double width = stod(getAttribute(DOT_ATTR_KEY_WIDTH));
+    const double height = stod(getAttribute(DOT_ATTR_KEY_HEIGHT));
+    double x1 = -width / 2, y1 = -height / 2;
+    double x2 = width / 2, y2 = height / 2;
+    const auto vertices = vector<pair<double, double>>{{x1, y1}, {x2, y1}, {x2, y2}, {x1, y2}};
+    for (const auto& [x, y] : vertices) {
+        if (GeometryUtils::isSameAngle(angle, x, y)) {
+            return {_cx + x, _cy + y};
+        }
+    }
+    for (int i = 0; i < vertices.size(); ++i) {
+        x1 = vertices[i].first;
+        y1 = vertices[i].second;
+        x2 = vertices[(i + 1) % vertices.size()].first;
+        y2 = vertices[(i + 1) % vertices.size()].second;
+        if (const auto intersect = GeometryUtils::intersect(angle, x1, y1, x2, y2); intersect != nullopt) {
+            return {_cx + intersect.value().first, _cy + intersect.value().second};
+        }
+    }
+    return {_cx, _cy};
 }
 
 SVGEdge::SVGEdge(const string& idFrom, const string& idTo) {

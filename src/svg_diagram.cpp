@@ -58,11 +58,17 @@ void SVGDiagram::addEdge(unique_ptr<SVGEdge> edge) {
 std::string SVGDiagram::render() {
     produceSVGDrawsDynamic();
     string svg = generateSVGOpen();
+    unordered_set<string> singletonNames;
+    svg += renderDefs(singletonNames);
     for (const auto& draw : _svgDraws) {
-        svg += draw->renderWithIndent(2);
+        if (guardSingleton(singletonNames, draw)) {
+            svg += draw->renderWithIndent(2);
+        }
     }
     for (const auto& draw : _svgDrawsDynamic) {
-        svg += draw->renderWithIndent(2);
+        if (guardSingleton(singletonNames, draw)) {
+            svg += draw->renderWithIndent(2);
+        }
     }
     svg += generateSVGClose();
     return svg;
@@ -97,6 +103,18 @@ void SVGDiagram::produceSVGDrawsDynamic() {
             _svgDrawsDynamic.emplace_back(std::move(draw));
         }
     }
+}
+
+bool SVGDiagram::guardSingleton(unordered_set<string>& singletonNames, const unique_ptr<SVGDraw>& svgDraw) {
+    const auto name = svgDraw->singletonName();
+    if (name.empty()) {
+        return true;
+    }
+    if (singletonNames.contains(name)) {
+        return false;
+    }
+    singletonNames.emplace(name);
+    return true;
 }
 
 string SVGDiagram::generateSVGOpen() const {
@@ -145,6 +163,36 @@ string SVGDiagram::generateSVGOpen() const {
         svg += format(R"(  <rect x="{}" y="{}" width="{}" height="{}" fill="{}" />)", viewBoxX, viewBoxY, width, height, _backgroundColor);
         svg += "\n";
     }
+    return svg;
+}
+
+std::string SVGDiagram::renderDefs(unordered_set<string>& singletonNames) const {
+    vector<int> defsIndices, dynamicDefsIndices;
+    for (int i = 0; i < _svgDraws.size(); ++i) {
+        if (_svgDraws[i]->isDefs()) {
+            defsIndices.emplace_back(i);
+        }
+    }
+    for (int i = 0; i < _svgDrawsDynamic.size(); ++i) {
+        if (_svgDrawsDynamic[i]->isDefs()) {
+            dynamicDefsIndices.emplace_back(i);
+        }
+    }
+    if (defsIndices.empty() && dynamicDefsIndices.empty()) {
+        return "";
+    }
+    string svg = "  <defs>\n";
+    for (const auto& index : defsIndices) {
+        if (guardSingleton(singletonNames, _svgDraws[index])) {
+            svg += _svgDraws[index]->renderWithIndent(4);
+        }
+    }
+    for (const auto& index : dynamicDefsIndices) {
+        if (guardSingleton(singletonNames, _svgDrawsDynamic[index])) {
+            svg += _svgDrawsDynamic[index]->renderWithIndent(4);
+        }
+    }
+    svg += "  </defs>\n";
     return svg;
 }
 

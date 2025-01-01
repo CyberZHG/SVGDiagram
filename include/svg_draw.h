@@ -10,6 +10,8 @@ namespace svg_diagram {
     constexpr std::string_view SVG_ATTR_KEY_STROKE = "stroke";
     constexpr std::string_view SVG_ATTR_KEY_FONT_FAMILY = "font-family";
     constexpr std::string_view SVG_ATTR_KEY_FONT_SIZE = "font-size";
+    constexpr std::string_view SVG_ATTR_KEY_MARKER_START = "marker-start";
+    constexpr std::string_view SVG_ATTR_KEY_MARKER_END = "marker-end";
 
     struct SVGDrawBoundingBox {
         double x1, y1, x2, y2;
@@ -50,12 +52,21 @@ namespace svg_diagram {
          * @return An unique ID.
          */
         [[nodiscard]] virtual std::string singletonName() const;
+        void setSingletonName(const std::string& singletonName);
+
+        [[nodiscard]] virtual bool isDefs() const;
 
         void setNumDecimals(int numDecimals);
         [[nodiscard]] std::string formatDouble(double value) const;
 
+    protected:
+        std::map<std::string_view, std::string> _attributes;
+
+        [[nodiscard]] std::string renderAttributes() const;
+
     private:
         int _numDecimals = DEFAULT_NUM_DECIMALS;
+        std::string _singletonName;
     };
 
     class SVGDrawComment final : public SVGDraw {
@@ -79,11 +90,6 @@ namespace svg_diagram {
         void setAttribute(const std::string_view& key, const std::string& value);
         void setFill(const std::string& value);
         void setStroke(const std::string& value);
-
-    protected:
-        std::map<std::string_view, std::string> _attributes;
-
-        [[nodiscard]] std::string renderAttributes() const;
     };
 
     class SVGDrawNode : public SVGDrawEntity {
@@ -152,6 +158,34 @@ namespace svg_diagram {
 
         [[nodiscard]] std::string render() const override;
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
+    };
+
+    class SVGDrawDefs : public SVGDraw {
+    public:
+        using SVGDraw::SVGDraw;
+
+        [[nodiscard]] bool isDefs() const override;
+        [[nodiscard]] bool hasEntity() const override;
+
+        [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
+    };
+
+    class SVGDrawMarker final : public SVGDrawDefs {
+    public:
+        using SVGDrawDefs::SVGDrawDefs;
+
+        static constexpr std::string_view SHAPE_NORMAL = "normal";
+
+        void setShape(const std::string& shape);
+
+        [[nodiscard]] std::string singletonName() const override;
+
+        [[nodiscard]] std::string render() const override;
+
+    private:
+        std::string _shape;
+
+        [[nodiscard]] std::string renderNormal() const;
     };
 
 }

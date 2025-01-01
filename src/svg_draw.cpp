@@ -3,6 +3,8 @@
 #include "attribute_utils.h"
 
 #include <format>
+#include <iostream>
+#include <ranges>
 #include <regex>
 #include <sstream>
 using namespace std;
@@ -37,6 +39,14 @@ string SVGDraw::singletonName() const {
     return "";
 }
 
+void SVGDraw::setSingletonName(const string& singletonName) {
+    _singletonName = singletonName;
+}
+
+bool SVGDraw::isDefs() const {
+    return false;
+}
+
 void SVGDraw::setNumDecimals(const int numDecimals) {
     _numDecimals = numDecimals;
 }
@@ -56,6 +66,19 @@ string SVGDraw::formatDouble(const double value) const {
         return str;
     }
     return format("{:.{}f}", value, _numDecimals);
+}
+
+std::string SVGDraw::renderAttributes() const {
+    string svg;
+    auto keys_view = _attributes | std::views::keys;
+    std::vector<string> keys(keys_view.begin(), keys_view.end());
+    ranges::sort(keys);
+    for (const auto& key : keys) {
+        if (const auto& value = _attributes.at(key); !value.empty()) {
+            svg += format(R"( {}="{}")", key, value);
+        }
+    }
+    return svg;
 }
 
 SVGDrawComment::SVGDrawComment(const string& comment) {
@@ -97,16 +120,6 @@ void SVGDrawEntity::setFill(const string& value) {
 
 void SVGDrawEntity::setStroke(const string& value) {
     setAttribute(SVG_ATTR_KEY_STROKE, value);
-}
-
-string SVGDrawEntity::renderAttributes() const {
-    string svg;
-    for (const auto& [key, value] : _attributes) {
-        if (!value.empty()) {
-            svg += format(R"( {}="{}")", key, value);
-        }
-    }
-    return svg;
 }
 
 SVGDrawNode::SVGDrawNode(const double cx, const double cy, const double width, const double height) {
@@ -256,4 +269,46 @@ SVGDrawBoundingBox SVGDrawPath::boundingBox() const {
         }
     }
     return {xMin, yMin, xMax, yMax};
+}
+
+bool SVGDrawDefs::isDefs() const {
+    return true;
+}
+
+bool SVGDrawDefs::hasEntity() const {
+    return false;
+}
+
+SVGDrawBoundingBox SVGDrawDefs::boundingBox() const {
+    return {};
+}
+
+void SVGDrawMarker::setShape(const string& shape) {
+    _shape = shape;
+}
+
+std::string SVGDrawMarker::singletonName() const {
+    return format("arrow_type_{}", _shape);
+}
+
+string SVGDrawMarker::render() const {
+    if (_shape == SHAPE_NORMAL) {
+        return renderNormal();
+    }
+    cerr << "Unknown marker shape: " << _shape << endl;
+    return "";
+}
+
+string SVGDrawMarker::renderNormal() const {
+    string svg = format(R"(<marker id="{}")", singletonName());
+    svg += format(R"( markerWidth="{}" markerHeight="{}")", formatDouble(10.0), formatDouble(7.0));
+    svg += format(R"( refX="{}" refY="{}" orient="auto-start-reverse")", formatDouble(10.0), formatDouble(3.5));
+    svg += renderAttributes();
+    svg += ">\n";
+    svg += R"(  <polygon points="0 0)";
+    svg += format(" {} {}", formatDouble(10.0), formatDouble(3.5));
+    svg += format(" 0 {}", formatDouble(7.0));
+    svg += R"(" />)" + string("\n");
+    svg += "</marker>\n";
+    return svg;
 }

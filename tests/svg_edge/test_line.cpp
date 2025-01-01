@@ -87,3 +87,110 @@ TEST(TestSVGEdgeLine, TwoCircleTwoLineSelfCycle) {
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
+
+string TestSVGEdgeLineExpectedArrowNormalSVG() {
+    return R"(  <defs>
+    <marker id="arrow_type_normal" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto-start-reverse">
+      <polygon points="0 0 10 3.5 0 7" />
+    </marker>
+  </defs>
+)";
+}
+
+TEST(TestSVGEdgeLine, TwoCircleOneLineArrowHead) {
+    SVGDiagram diagram;
+    TestSVGEdgeLineAddTwoNodesCase1(diagram);
+    auto edge = std::make_unique<SVGEdge>("A", "B");
+    edge->setSplines(SVGEdge::EDGE_SPLINES_LINE);
+    edge->setArrowHead(SVGEdge::ARROW_SHAPE_NORMAL);
+    diagram.addEdge(std::move(edge));
+    const auto svg = diagram.render();
+    const auto expected = TestSVGEdgeLineExpectedArrowNormalSVG() + TestSVGEdgeLineExpectedNodesSVGCase1() +
+        R"s(  <line x1="115.824" y1="107.912" x2="176.386" y2="138.193" marker-end="url(#arrow_type_normal)" stroke="black" />)s";
+    compareSVGContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGEdgeLine, TwoCircleOneLineArrowTail) {
+    SVGDiagram diagram;
+    TestSVGEdgeLineAddTwoNodesCase1(diagram);
+    auto edge = std::make_unique<SVGEdge>("A", "B");
+    edge->setSplines(SVGEdge::EDGE_SPLINES_LINE);
+    edge->setArrowTail(SVGEdge::ARROW_SHAPE_NORMAL);
+    diagram.addEdge(std::move(edge));
+    const auto svg = diagram.render();
+    const auto expected = TestSVGEdgeLineExpectedArrowNormalSVG() + TestSVGEdgeLineExpectedNodesSVGCase1() +
+        R"s(  <line x1="115.824" y1="107.912" x2="176.386" y2="138.193" marker-start="url(#arrow_type_normal)" stroke="black" />)s";
+    compareSVGContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGEdgeLine, TwoCircleOneLineArrowBoth) {
+    SVGDiagram diagram;
+    TestSVGEdgeLineAddTwoNodesCase1(diagram);
+    auto edge = std::make_unique<SVGEdge>("A", "B");
+    edge->setSplines(SVGEdge::EDGE_SPLINES_LINE);
+    edge->setArrowHead(SVGEdge::ARROW_SHAPE_NORMAL);
+    edge->setArrowTail(SVGEdge::ARROW_SHAPE_NORMAL);
+    diagram.addEdge(std::move(edge));
+    const auto svg = diagram.render();
+    const auto expected = TestSVGEdgeLineExpectedArrowNormalSVG() + TestSVGEdgeLineExpectedNodesSVGCase1() +
+        R"s(  <line x1="115.824" y1="107.912" x2="176.386" y2="138.193" marker-end="url(#arrow_type_normal)" marker-start="url(#arrow_type_normal)" stroke="black" />)s";
+    compareSVGContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowHead) {
+    SVGDiagram diagram;
+    TestSVGEdgeLineAddTwoNodesCase1(diagram);
+    auto edge = std::make_unique<SVGEdge>("A", "B");
+    edge->setSplines(SVGEdge::EDGE_SPLINES_LINE);
+    edge->addConnectionPoint(-50, 120);
+    edge->setArrowHead(SVGEdge::ARROW_SHAPE_NORMAL);
+    diagram.addEdge(std::move(edge));
+    const auto svg = diagram.render();
+    const auto expected = TestSVGEdgeLineExpectedArrowNormalSVG() + TestSVGEdgeLineExpectedNodesSVGCase1() +
+        R"s(  <line x1="82.463" y1="102.338" x2="-50" y2="120" stroke="black" />
+  <line x1="-50" y1="120" x2="173.787" y2="146.854" marker-end="url(#arrow_type_normal)" stroke="black" />)s";
+    compareSVGContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowTail) {
+    SVGDiagram diagram;
+    TestSVGEdgeLineAddTwoNodesCase1(diagram);
+    auto edge = std::make_unique<SVGEdge>("A", "B");
+    edge->setSplines(SVGEdge::EDGE_SPLINES_LINE);
+    edge->addConnectionPoint(-50, 120);
+    edge->setArrowTail(SVGEdge::ARROW_SHAPE_NORMAL);
+    diagram.addEdge(std::move(edge));
+    const auto svg = diagram.render();
+    const auto expected = TestSVGEdgeLineExpectedArrowNormalSVG() + TestSVGEdgeLineExpectedNodesSVGCase1() +
+        R"s(  <line x1="82.463" y1="102.338" x2="-50" y2="120" marker-start="url(#arrow_type_normal)" stroke="black" />
+  <line x1="-50" y1="120" x2="173.787" y2="146.854" stroke="black" />)s";
+    compareSVGContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowBoth) {
+    SVGDiagram diagram;
+    TestSVGEdgeLineAddTwoNodesCase1(diagram);
+    auto edge = std::make_unique<SVGEdge>("A", "B");
+    edge->setSplines(SVGEdge::EDGE_SPLINES_LINE);
+    edge->addConnectionPoint(-50, 120);
+    edge->setArrowHead(SVGEdge::ARROW_SHAPE_NORMAL);
+    edge->setArrowTail(SVGEdge::ARROW_SHAPE_NORMAL);
+    diagram.addEdge(std::move(edge));
+    const auto svg = diagram.render();
+    const auto expected = TestSVGEdgeLineExpectedArrowNormalSVG() + TestSVGEdgeLineExpectedNodesSVGCase1() +
+        R"s(  <line x1="82.463" y1="102.338" x2="-50" y2="120" marker-start="url(#arrow_type_normal)" stroke="black" />
+  <line x1="-50" y1="120" x2="173.787" y2="146.854" marker-end="url(#arrow_type_normal)" stroke="black" />)s";
+    compareSVGContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}

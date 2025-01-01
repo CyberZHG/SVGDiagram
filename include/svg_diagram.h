@@ -1,6 +1,7 @@
 #ifndef SVGDIAGRAM_SVG_DIAGRAM_H
 #define SVGDIAGRAM_SVG_DIAGRAM_H
 
+#include <unordered_set>
 #include <vector>
 
 #include "svg_draw.h"
@@ -48,8 +49,11 @@ namespace svg_diagram {
 
         void produceSVGDrawsDynamic();
 
+        static bool guardSingleton(std::unordered_set<std::string>& singletonNames, const std::unique_ptr<SVGDraw>& svgDraw);
+
         [[nodiscard]] std::string generateSVGOpen() const;
-        static std::string generateSVGClose() ;
+        [[nodiscard]] std::string renderDefs(std::unordered_set<std::string>& singletonNames) const;
+        static std::string generateSVGClose();
     };
 
 }

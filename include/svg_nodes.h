@@ -17,6 +17,8 @@ namespace svg_diagram {
     constexpr std::string_view DOT_ATTR_KEY_FONT_NAME = "fontname";
     constexpr std::string_view DOT_ATTR_KEY_FONT_SIZE = "fontsize";
     constexpr std::string_view DOT_ATTR_KEY_FIXED_SIZE = "fixedsize";
+    constexpr std::string_view DOT_ATTR_KEY_ARROW_HEAD = "arrowhead";
+    constexpr std::string_view DOT_ATTR_KEY_ARROW_TAIL = "arrowtail";
 
     class SVGItem {
     public:
@@ -90,6 +92,10 @@ namespace svg_diagram {
         static constexpr std::string_view EDGE_SPLINES_SPLINE = "spline";
         static constexpr std::string_view EDGE_SPLINES_DEFAULT = EDGE_SPLINES_SPLINE;
 
+        static constexpr std::string_view ARROW_SHAPE_NONE = "none";
+        static constexpr std::string_view ARROW_SHAPE_NORMAL = SVGDrawMarker::SHAPE_NORMAL;
+        static constexpr std::string_view ARROW_SHAPE_DEFAULT = ARROW_SHAPE_NORMAL;
+
         using NodesMapping = std::unordered_map<std::string, std::unique_ptr<SVGNode>>;
 
         [[nodiscard]] const std::string& nodeFrom() const;
@@ -103,9 +109,17 @@ namespace svg_diagram {
 
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDraws(const NodesMapping& nodes);
 
+        void setArrowHead();
+        void setArrowHead(const std::string_view& shape);
+        void setArrowTail();
+        void setArrowTail(const std::string_view& shape);
+
     private:
         std::string _nodeFrom, _nodeTo;
         std::vector<std::pair<double, double>> _connectionPoints;
+
+        static std::unique_ptr<SVGDraw> produceSVGMarker(const std::string_view& shape);
+        static std::string markerAttributeValue(const std::unique_ptr<SVGDraw> &svgDraw);
 
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsLine(const NodesMapping& nodes);
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsSpline(const NodesMapping& nodes);

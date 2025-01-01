@@ -31,16 +31,16 @@ jobs:
         run: |
           cd emsdk
           source ./emsdk_env.sh
-          cd ../es
+          cd ../wasm
           npm run build
 
       - name: Lint
         run: |
-          cd es
+          cd wasm
           npm install
           npm run lint
 
       - name: Test
         run: |
-          cd es
+          cd wasm
           npm test

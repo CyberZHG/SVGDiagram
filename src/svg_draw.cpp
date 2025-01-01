@@ -17,22 +17,18 @@ SVGDrawBoundingBox::SVGDrawBoundingBox(double x1, double y1, double x2, double y
     this->y2 = y2;
 }
 
-SVGDraw::SVGDraw(const std::string &label) : _label(label) {
+SVGDraw::SVGDraw(const string& label) : label(label) {
 }
 
-const string & SVGDraw::label() const {
-    return _label;
+string SVGDraw::singletonName() const {
+    return "";
 }
 
-void SVGDraw::setLabel(const string& label) {
-    _label = label;
-}
-
-std::string SVGDrawComment::render() const {
+string SVGDrawComment::render() const {
     string escapedLabel;
-    for (const auto ch : label()) {
+    for (const auto ch : label) {
         if (ch == '-') {
-            escapedLabel += "-";
+            escapedLabel += "‑";
         } else {
             escapedLabel += ch;
         }
@@ -48,6 +44,30 @@ bool SVGDrawComment::hasEntity() const {
     return false;
 }
 
-bool SVGDrawComment::singleton() const {
-    return false;
+bool SVGDrawEntity::hasEntity() const {
+    return true;
+}
+
+SVGDrawBoundingBox SVGDrawNode::boundingBox() const {
+    const double halfWidth = width / 2.0;
+    const double halfHeight = height / 2.0;
+    return {cx - halfWidth, cy - halfHeight, cx + halfWidth, cy + halfHeight};
+}
+
+SVGDrawCircle::SVGDrawCircle(const double x, const double y, const double radius) {
+    cx = x;
+    cy = y;
+    width = height = radius * 2;
+}
+
+string SVGDrawCircle::render() const {
+    const double radius = min(width, height) / 2;
+    string svg = format(R"(<circle cx="{}" cy="{}" r="{}" )", cx, cy, radius);
+    svg += "/>\n";
+    return svg;
+}
+
+SVGDrawBoundingBox SVGDrawCircle::boundingBox() const {
+    const double radius = min(width, height) / 2;
+    return {cx - radius, cy - radius, cx + radius, cy + radius};
 }

@@ -9,3 +9,10 @@ TEST(TestSVGDrawComment, DefaultComment) {
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
+
+TEST(TestSVGDrawComment, EscapeComment) {
+    SVGDiagram diagram;
+    diagram.addSVGDraw(make_unique<SVGDrawComment>("A <!-- B --> C"));
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}

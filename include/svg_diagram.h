@@ -12,10 +12,14 @@ namespace svg_diagram {
         SVGDiagram();
         ~SVGDiagram() = default;
 
-        static constexpr double DEFAULT_MARGIN = 10;
+        static constexpr double DEFAULT_MARGIN = 8;
+
+        void addSVGDraw(std::unique_ptr<SVGDraw> svgDraw);
 
         [[nodiscard]] std::string render() const;
         void render(const std::string& filePath) const;
+
+        void setCanvasSize(int width, int height);
 
     private:
         std::vector<std::unique_ptr<SVGDraw>> _svgDraws;

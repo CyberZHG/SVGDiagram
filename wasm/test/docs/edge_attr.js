@@ -106,4 +106,21 @@ describe("Docs/EdgeAttributes", () => {
         const svg = diagram.render();
         await compareSVG("edge_attr", "pen_width", svg);
     });
+    it("font", async () => {
+        const diagram = new SVGDiagram();
+        const node1 = diagram.addNode("A");
+        node1.setCenter(0, 0);
+        node1.setLabel("A");
+        const node2 = diagram.addNode("B");
+        node2.setCenter(150, 0);
+        node2.setLabel("B");
+        const edge = diagram.addEdge("A", "B");
+        edge.setLabel("font");
+        edge.setMargin(4, 4);
+        edge.setFontName("Consolas");
+        edge.setFontSize(16);
+        edge.setFont("Consolas,'Courier New',monospace", 16);
+        const svg = diagram.render();
+        await compareSVG("edge_attr", "font", svg);
+    });
 });

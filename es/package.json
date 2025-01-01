@@ -1,0 +1,22 @@
+{
+  "name": "sp-svg-diagram",
+  "version": "0.1",
+  "type": "module",
+  "main": "index.js",
+  "files": [
+    "wasm/SVGDigramWASM.js",
+    "wasm/SVGDigramWASM.wasm"
+  ],
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "chai": "^0.1.7",
+    "eslint": "^9.39.2",
+    "globals": "^16.5.0",
+    "mocha": "^11.7.5"
+  },
+  "scripts": {
+    "build": "bash build.sh",
+    "lint": "npx eslint index.js test/*.js",
+    "test": "mocha"
+  }
+}

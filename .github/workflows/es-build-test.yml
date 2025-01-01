@@ -1,0 +1,41 @@
+name: ES Build & Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install CMake
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: "latest"
+
+      - name: Install Emscripten SDK
+        run: |
+          git clone https://github.com/emscripten-core/emsdk.git
+          cd emsdk
+          ./emsdk install latest
+          ./emsdk activate latest
+          source ./emsdk_env.sh
+          emcc --version
+
+      - name: Build
+        run: |
+          source ./emsdk_env.sh
+          (cd es && npm run build)
+
+      - name: Lint
+        run: |
+          (cd es && npm run lint)
+
+      - name: Test
+        run: |
+          (cd es && npm test)

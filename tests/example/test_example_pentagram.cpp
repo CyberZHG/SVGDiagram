@@ -17,7 +17,7 @@ TEST(TestExample, Pentagram) {
         "Flame Mirror's\nRevelation",
         "Emanare's\nSource",
         "Scouring Flame's\nSundering",
-        "Dual Birth",
+        "C6:\nDual Birth",
     };
     const auto strokeColors = vector{"peru", "darkgoldenrod", "limegreen", "dodgerblue", "lightcoral"};
     const auto textColors = vector{"saddlebrown", "goldenrod", "olivedrab", "royalblue", "indianred"};
@@ -43,6 +43,9 @@ TEST(TestExample, Pentagram) {
         const auto& edge = diagram.addEdge(from, to);
         edge->setArrowHead();
         edge->setColor(strokeColors[i]);
+        edge->setLabel(format("C{}", i + 1));
+        edge->setFontColor(strokeColors[i]);
+        edge->setMarginInPoints(4.0);
     }
 
     diagram.render("example_pentagram.svg");

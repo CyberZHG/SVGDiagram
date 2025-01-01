@@ -9,8 +9,18 @@ double GeometryUtils::distance(const double x, const double y) {
     return sqrt(x * x + y * y);
 }
 
+double GeometryUtils::distance(const Point2D& p) {
+    const auto& [x, y] = p;
+    return sqrt(x * x + y * y);
+}
+
 double GeometryUtils::distance(const double x1, const double y1, const double x2, const double y2) {
     return distance(x2 - x1, y2 - y1);
+}
+
+GeometryUtils::Point2D GeometryUtils::normalize(const double x, const double y) {
+    const double length = distance(x, y);
+    return {x / length, y / length};
 }
 
 double GeometryUtils::cross(const double x1, const double y1, const double x2, const double y2) {

@@ -146,6 +146,13 @@ namespace svg_diagram {
         [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
     };
 
+    class SVGDrawEllipse final : public SVGDrawNode {
+    public:
+        using SVGDrawNode::SVGDrawNode;
+
+        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
+    };
+
     class SVGDrawLine final : public SVGDrawEntity {
     public:
         using SVGDrawEntity::SVGDrawEntity;

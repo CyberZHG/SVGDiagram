@@ -65,6 +65,7 @@ namespace svg_diagram {
         static constexpr std::string_view NODE_SHAPE_NONE = "none";
         static constexpr std::string_view NODE_SHAPE_CIRCLE = "circle";
         static constexpr std::string_view NODE_SHAPE_RECT = "rect";
+        static constexpr std::string_view NODE_SHAPE_ELLIPSE = "ellipse";
         static constexpr std::string_view NODE_SHAPE_DEFAULT = NODE_SHAPE_CIRCLE;
 
         void setShape(const std::string& shape);
@@ -101,6 +102,10 @@ namespace svg_diagram {
         void adjustNodeSizeRect();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsRect();
         [[nodiscard]] std::pair<double, double> computeConnectionPointRect(double angle) const;
+
+        void adjustNodeSizeEllipse();
+        std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsEllipse();
+        [[nodiscard]] std::pair<double, double> computeConnectionPointEllipse(double angle) const;
     };
 
     class SVGEdge final : public SVGItem {

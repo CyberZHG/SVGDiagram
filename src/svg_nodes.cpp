@@ -124,6 +124,8 @@ void SVGNode::adjustNodeSize() {
         adjustNodeSizeCircle();
     } else if (shape == NODE_SHAPE_NONE || shape == NODE_SHAPE_RECT) {
         adjustNodeSizeRect();
+    } else if (shape == NODE_SHAPE_ELLIPSE) {
+        adjustNodeSizeEllipse();
     }
 }
 
@@ -143,6 +145,9 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
     if (shape == NODE_SHAPE_RECT) {
         return produceSVGDrawsRect();
     }
+    if (shape == NODE_SHAPE_ELLIPSE) {
+        return produceSVGDrawsEllipse();
+    }
     return {};
 }
 
@@ -154,6 +159,9 @@ pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
     }
     if (shape == NODE_SHAPE_RECT) {
         return computeConnectionPointRect(angle);
+    }
+    if (shape == NODE_SHAPE_ELLIPSE) {
+        return computeConnectionPointEllipse(angle);
     }
     return {0.0, 0.0};
 }
@@ -313,6 +321,40 @@ pair<double, double> SVGNode::computeConnectionPointRect(const double angle) con
         }
     }
     return {_cx, _cy};
+}
+
+void SVGNode::adjustNodeSizeEllipse() {
+    const auto [textWidth, textHeight] = computeTextSize();
+    const auto [marginX, marginY] = computeMarginInPixels();
+    updateNodeSize((textWidth + marginX * 2) * sqrt(2.0), (textHeight + marginY * 2) * sqrt(2.0));
+}
+
+vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsEllipse() {
+    const double width = stod(getAttribute(DOT_ATTR_KEY_WIDTH));
+    const double height = stod(getAttribute(DOT_ATTR_KEY_HEIGHT));
+    vector<unique_ptr<SVGDraw>> svgDraws;
+    auto ellipse = make_unique<SVGDrawEllipse>(_cx, _cy, width, height);
+    ellipse->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
+    ellipse->setFill(getAttribute(DOT_ATTR_KEY_FILL_COLOR));
+    if (const auto strokeWidth = penWidthInPixels(); strokeWidth != 1.0) {
+        ellipse->setStrokeWidth(getAttribute(DOT_ATTR_KEY_PEN_WIDTH));
+    }
+    svgDraws.emplace_back(std::move(ellipse));
+    appendSVGDrawsLabel(svgDraws);
+    const auto [textWidth, textHeight] = computeTextSize();
+    const auto [marginX, marginY] = computeMarginInPixels();
+    return svgDraws;
+}
+
+pair<double, double> SVGNode::computeConnectionPointEllipse(const double angle) const {
+    const double strokeWidth = stod(getAttribute(DOT_ATTR_KEY_PEN_WIDTH));
+    const double width = stod(getAttribute(DOT_ATTR_KEY_WIDTH)) + strokeWidth;
+    const double height = stod(getAttribute(DOT_ATTR_KEY_HEIGHT)) + strokeWidth;
+    const double rx = width / 2, ry = height / 2;
+    const double base = sqrt(ry * ry * cos(angle) * cos(angle) + rx * rx * sin(angle) * sin(angle));
+    const double x = rx * ry * cos(angle) / base;
+    const double y = rx * ry * sin(angle) / base;
+    return {_cx + x, _cy + y};
 }
 
 SVGEdge::SVGEdge(const string& idFrom, const string& idTo) {

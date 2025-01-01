@@ -189,6 +189,18 @@ XMLElement::ChildrenType SVGDrawRect::generateXMLElements() const {
     return {rectElement};
 }
 
+XMLElement::ChildrenType SVGDrawEllipse::generateXMLElements() const {
+    const double rx = width / 2;
+    const double ry = height / 2;
+    const auto ellipseElement = make_shared<XMLElement>("ellipse");
+    ellipseElement->addAttribute("cx", cx);
+    ellipseElement->addAttribute("cy", cy);
+    ellipseElement->addAttribute("rx", rx);
+    ellipseElement->addAttribute("ry", ry);
+    addAttributesToXMLElement(ellipseElement);
+    return {ellipseElement};
+}
+
 SVGDrawLine::SVGDrawLine(const double x1, const double y1, const double x2, const double y2) {
     this->x1 = x1;
     this->y1 = y1;

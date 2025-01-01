@@ -93,6 +93,7 @@ if(SVG_DIAGRAM_BUILD_TESTS)
             tests/svg_node/test_rect.cpp
             tests/example/test_example_sequential.cpp
             tests/test_xml_element.cpp
+            tests/svg_node/test_ellipse.cpp
     )
 
     target_link_libraries(runTests

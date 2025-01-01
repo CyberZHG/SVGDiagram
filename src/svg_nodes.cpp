@@ -1,6 +1,7 @@
 #include "svg_nodes.h"
 
 #include <format>
+#include <cmath>
 
 #include "attribute_utils.h"
 #include "svg_text_size.h"

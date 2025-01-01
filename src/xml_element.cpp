@@ -2,6 +2,7 @@
 #include "attribute_utils.h"
 
 #include <format>
+#include <cmath>
 using namespace std;
 using namespace svg_diagram;
 

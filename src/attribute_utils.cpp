@@ -1,6 +1,7 @@
 #include "attribute_utils.h"
 
 #include <iostream>
+#include <algorithm>
 using namespace std;
 using namespace svg_diagram;
 

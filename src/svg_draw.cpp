@@ -3,10 +3,9 @@
 #include "attribute_utils.h"
 
 #include <format>
-#include <iostream>
 #include <ranges>
 #include <regex>
-#include <sstream>
+#include <algorithm>
 using namespace std;
 using namespace svg_diagram;
 

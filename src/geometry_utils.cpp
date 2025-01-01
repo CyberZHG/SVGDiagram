@@ -1,6 +1,7 @@
 #include "geometry_utils.h"
 
 #include <vector>
+#include <cmath>
 using namespace std;
 using namespace svg_diagram;
 
@@ -48,6 +49,22 @@ optional<GeometryUtils::Point2D> GeometryUtils::intersect(const double angle, co
         return {{rx, ry}};
     }
     return nullopt;
+}
+
+// B'(t) = 3(1-t)^2 (P_1 - P_0) + 6(1-t)t (P_2 - P_1) + 3t^2 (P_3 - P_2)
+GeometryUtils::Point2D GeometryUtils::computeBezierDerivative(const Point2D& p0, const Point2D& p1, const Point2D& p2, const Point2D& p3, const double t) {
+    const auto x0 = p0.first, y0 = p0.second;
+    const auto x1 = p1.first, y1 = p1.second;
+    const auto x2 = p2.first, y2 = p2.second;
+    const auto x3 = p3.first, y3 = p3.second;
+
+    const double a = 3.0 * (1.0 - t) * (1.0 - t);
+    const double b = 6.0 * (1.0 - t) * t;
+    const double c = 3.0 * t * t;
+
+    const double dx = a * (x1 - x0) + b * (x2 - x1) + c * (x3 - x2);
+    const double dy = a * (y1 - y0) + b * (y2 - y1) + c * (y3 - y2);
+    return {dx, dy};
 }
 
 /** Compute the length of a bezier spline using 16-point Gauss-Legendre.
@@ -98,25 +115,10 @@ double GeometryUtils::computeBezierLength(const Point2D& p0, const Point2D& p1, 
         0.0622535239386478928628438,
         0.0271524594117540948517806,
     };
-    // B'(t) = 3(1-t)^2 (P_1 - P_0) + 6(1-t)t (P_2 - P_1) + 3t^2 (P_3 - P_2)
-    const auto derivative = [&](const double t) -> pair<double, double> {
-        const auto x0 = p0.first, y0 = p0.second;
-        const auto x1 = p1.first, y1 = p1.second;
-        const auto x2 = p2.first, y2 = p2.second;
-        const auto x3 = p3.first, y3 = p3.second;
-
-        const double a = 3.0 * (1.0 - t) * (1.0 - t);
-        const double b = 6.0 * (1.0 - t) * t;
-        const double c = 3.0 * t * t;
-
-        const double dx = a * (x1 - x0) + b * (x2 - x1) + c * (x3 - x2);
-        const double dy = a * (y1 - y0) + b * (y2 - y1) + c * (y3 - y2);
-        return {dx, dy};
-    };
     double total = 0.0;
     for (size_t i = 0; i < x16.size(); ++i) {
         const double t = 0.5 * (x16[i] + 1.0);
-        const auto [dx, dy] = derivative(t);
+        const auto [dx, dy] = computeBezierDerivative(p0, p1, p2, p3, t);
         total += w16[i] * distance(dx, dy);
     }
     return total / 2.0;

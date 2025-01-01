@@ -1,8 +1,8 @@
 #ifndef SVGDIAGRAM_SVG_DIAGRAM_H
 #define SVGDIAGRAM_SVG_DIAGRAM_H
 
-#include <unordered_set>
 #include <vector>
+#include <memory>
 
 #include "svg_draw.h"
 #include "svg_nodes.h"

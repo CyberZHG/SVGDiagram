@@ -2,6 +2,7 @@
 
 #include <format>
 #include <fstream>
+#include <unordered_set>
 using namespace std;
 using namespace svg_diagram;
 

@@ -1,6 +1,8 @@
 #ifndef SVGDIAGRAM_GEOMETRY_UTILS_H
 #define SVGDIAGRAM_GEOMETRY_UTILS_H
+
 #include <optional>
+#include <utility>
 
 namespace svg_diagram {
 
@@ -17,6 +19,7 @@ namespace svg_diagram {
         static bool isSameAngle(double angle, double x1, double y1);
         static std::optional<Point2D> intersect(double angle, double x1, double y1, double x2, double y2);
 
+        static Point2D computeBezierDerivative(const Point2D& p0, const Point2D& p1, const Point2D& p2, const Point2D& p3, double t);
         static double computeBezierLength(const Point2D& p0, const Point2D& p1, const Point2D& p2, const Point2D& p3);
     };
 

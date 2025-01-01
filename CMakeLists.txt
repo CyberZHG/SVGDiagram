@@ -22,6 +22,8 @@ add_library(SVGDiagram STATIC
         src/svg_draw.cpp
         include/geometry_utils.h
         src/geometry_utils.cpp
+        include/xml_element.h
+        src/xml_element.cpp
 )
 
 target_include_directories(SVGDiagram
@@ -91,6 +93,7 @@ if(SVG_DIAGRAM_BUILD_TESTS)
             tests/test_geometry_utils.cpp
             tests/svg_node/test_rect.cpp
             tests/example/test_example_sequential.cpp
+            tests/test_xml_element.cpp
     )
 
     target_link_libraries(runTests

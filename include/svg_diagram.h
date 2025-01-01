@@ -14,7 +14,7 @@ namespace svg_diagram {
         SVGDiagram() = default;
         ~SVGDiagram() = default;
 
-        static constexpr double DEFAULT_MARGIN = 4;
+        static constexpr double DEFAULT_MARGIN = 8;
 
         void enableDebug();
 

@@ -25,6 +25,7 @@ namespace svg_diagram {
          * @return SVG string.
          */
         [[nodiscard]] virtual std::string render() const = 0;
+        [[nodiscard]] std::string renderWithIndent(int indent) const;
 
         /** Compute a bounding box for this object.
          *

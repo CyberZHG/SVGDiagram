@@ -1,6 +1,7 @@
 #include "svg_draw.h"
 
 #include <format>
+#include <sstream>
 using namespace std;
 using namespace svg_diagram;
 
@@ -18,6 +19,18 @@ SVGDrawBoundingBox::SVGDrawBoundingBox(double x1, double y1, double x2, double y
 }
 
 SVGDraw::SVGDraw(const string& label) : label(label) {
+}
+
+string SVGDraw::renderWithIndent(const int indent) const {
+    auto svg = render();
+    istringstream iss(svg);
+    ostringstream oss;
+    string line;
+    string prefix(indent, ' ');
+    while (getline(iss, line)) {
+        oss << prefix << line << "\n";
+    }
+    return oss.str();
 }
 
 string SVGDraw::singletonName() const {

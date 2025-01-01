@@ -9,6 +9,10 @@ SVGDiagram::SVGDiagram() {
     _svgDraws.emplace_back(make_unique<SVGDrawComment>("Created by: https://github.com/CyberZHG/SVGDiagram"));
 }
 
+void SVGDiagram::clearSVGDraw() {
+    _svgDraws.clear();
+}
+
 void SVGDiagram::addSVGDraw(std::unique_ptr<SVGDraw> svgDraw) {
     _svgDraws.emplace_back(std::move(svgDraw));
 }
@@ -16,7 +20,7 @@ void SVGDiagram::addSVGDraw(std::unique_ptr<SVGDraw> svgDraw) {
 std::string SVGDiagram::render() const {
     string svg = generateSVGOpen();
     for (const auto& draw : _svgDraws) {
-        svg += draw->render();
+        svg += draw->renderWithIndent(2);
     }
     svg += generateSVGClose();
     return svg;
@@ -76,7 +80,7 @@ string SVGDiagram::generateSVGOpen() const {
     svg += format(R"( viewBox="{} {} {} {}">)", viewBoxX, viewBoxY, width, height);
     svg += "\n";
     if (!_backgroundColor.empty()) {
-        svg += format(R"(<rect x="{}" y="{}" width="{}" height="{}" fill="{}" />)", viewBoxX, viewBoxY, width, height, _backgroundColor);
+        svg += format(R"(  <rect x="{}" y="{}" width="{}" height="{}" fill="{}" />)", viewBoxX, viewBoxY, width, height, _backgroundColor);
         svg += "\n";
     }
     return svg;

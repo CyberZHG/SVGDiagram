@@ -14,6 +14,7 @@ namespace svg_diagram {
 
         static constexpr double DEFAULT_MARGIN = 8;
 
+        void clearSVGDraw();
         void addSVGDraw(std::unique_ptr<SVGDraw> svgDraw);
 
         [[nodiscard]] std::string render() const;

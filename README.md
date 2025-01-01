@@ -5,8 +5,14 @@ SVG Diagram
 [![Python Build & Test](https://github.com/CyberZHG/SVGDiagram/actions/workflows/python-build-test.yml/badge.svg)](https://github.com/CyberZHG/SVGDiagram/actions/workflows/python-build-test.yml)
 [![ES Build & Test](https://github.com/CyberZHG/SVGDiagram/actions/workflows/es-build-test.yml/badge.svg)](https://github.com/CyberZHG/SVGDiagram/actions/workflows/es-build-test.yml)
 [![Coverage Status](https://coveralls.io/repos/github/CyberZHG/SVGDiagram/badge.svg?branch=main)](https://coveralls.io/github/CyberZHG/SVGDiagram?branch=main)
+[![PyPI version](https://img.shields.io/pypi/v/sp-svg-diagram.svg)](https://pypi.org/project/sp-svg-diagram/)
+[![npm version](https://img.shields.io/npm/v/sp-svg-diagram.svg)](https://www.npmjs.com/package/sp-svg-diagram)
+<!-- ![PyPI downloads](https://img.shields.io/pypi/dm/sp-svg-diagram.svg) -->
+<!-- ![npm downloads](https://img.shields.io/npm/dm/sp-svg-diagram.svg) -->
 
 A library for rendering diagrams to SVG. This library does not provide any automatic layout for nodes and edges.
+
+[Document](https://cyberzhg.github.io/SVGDiagram/)
 
 ## Examples
 

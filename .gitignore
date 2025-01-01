@@ -30,5 +30,6 @@ CTestTestfile.cmake
 *.log
 
 # Python
-python/.venv
+.venv
 *__pycache__*
+dist

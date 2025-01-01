@@ -28,7 +28,7 @@ TEST(TestExample, Pentagon) {
 
         const auto& node = diagram.addNode(format("node_{}", i));
         const double nodeAngle = -numbers::pi / 2.0 + numbers::pi * 2 * i / 5.0;
-        node->setCenterInPoints(RADIUS * cos(nodeAngle), RADIUS * sin(nodeAngle));
+        node->setCenter(RADIUS * cos(nodeAngle), RADIUS * sin(nodeAngle));
         node->setLabel(labels[i]);
         node->setShape(SVGNode::NODE_SHAPE_CIRCLE);
         node->setColor(strokeColors[i]);
@@ -42,11 +42,11 @@ TEST(TestExample, Pentagon) {
         edge->setColor(strokeColors[i]);
         edge->setLabel(format("C{}", i + 1));
         edge->setFontColor(strokeColors[i]);
-        edge->setMarginInPoints(4.0);
+        edge->setMargin(4.0);
     }
 
     const auto& node = diagram.addNode("node_c");
-    node->setCenterInPoints(0.0, 0.0);
+    node->setCenter(0.0, 0.0);
     node->setLabel(labels[5]);
     node->setShape(SVGNode::NODE_SHAPE_NONE);
     node->setFontColor(textColors[5]);

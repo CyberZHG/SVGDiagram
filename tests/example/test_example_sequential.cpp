@@ -27,10 +27,10 @@ TEST(TestExample, Sequential) {
         constexpr double Y_SHIFT = 80.0;
 
         const auto& node = diagram.addNode(format("node_{}", i));
-        node->setCenterInPoints(i * X_SHIFT, i * Y_SHIFT);
+        node->setCenter(i * X_SHIFT, i * Y_SHIFT);
         node->setLabel(labels[i]);
         node->setShape(SVGNode::NODE_SHAPE_ELLIPSE);
-        node->setMarginInPoints(10, 20);
+        node->setMargin(10, 20);
         node->setColor(strokeColors[i]);
         node->setFillColor(fillColors[i]);
         node->setFontColor(textColors[i]);
@@ -46,7 +46,7 @@ TEST(TestExample, Sequential) {
             edge->setPenWidth(1 + i * 0.25);
             edge->setLabel(format("C{}->C{}", i + 1, i + 2));
             edge->setFontColor(strokeColors[i]);
-            edge->setMarginInPoints(4.0);
+            edge->setMargin(4.0);
         }
     }
 

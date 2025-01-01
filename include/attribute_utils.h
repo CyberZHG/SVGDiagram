@@ -12,10 +12,8 @@ namespace svg_diagram {
 
     class AttributeUtils {
     public:
-        static double pointToSVGPixel(double points);
-        static double inchToSVGPixel(double inch);
         static double pointToInch(double points);
-        static double svgPixelToPoint(double pixels);
+        static double inchToPoint(double inches);
         static double centimeterToInch(double centimeters);
 
         static bool isPartOfDouble(char ch);
@@ -30,7 +28,7 @@ namespace svg_diagram {
         static double parseLengthToInch(const std::string& s);
 
         static std::pair<double, double> parseMarginToInches(const std::string& margin);
-        static std::pair<double, double> parseMarginToPixels(const std::string& margin);
+        static std::pair<double, double> parseMargin(const std::string& margin);
 
         static bool parseBool(const std::string& value);
 

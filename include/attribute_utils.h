@@ -7,7 +7,6 @@
 namespace svg_diagram {
 
     constexpr int POINTS_PER_INCH = 72;
-    constexpr int SVG_DEFAULT_DPI = 96;
     constexpr double CENTIMETERS_PER_INCH = 2.54;
 
     class AttributeUtils {

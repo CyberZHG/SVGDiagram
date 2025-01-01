@@ -64,12 +64,24 @@ namespace svg_diagram {
         [[nodiscard]] bool hasEntity() const override;
     };
 
-    class SVGDrawNoEntity : public SVGDraw {
+    class SVGDrawNoEntity : virtual public SVGDraw {
     public:
         using SVGDraw::SVGDraw;
 
         [[nodiscard]] bool hasEntity() const override;
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
+    };
+
+    class SVGDrawContainer : virtual public SVGDraw {
+    public:
+        using SVGDraw::SVGDraw;
+        explicit SVGDrawContainer(std::unique_ptr<SVGDraw> draw);
+        explicit SVGDrawContainer(std::vector<std::unique_ptr<SVGDraw>>& draws);
+
+        std::vector<std::unique_ptr<SVGDraw>> children;
+
+        void addChild(std::unique_ptr<SVGDraw> child);
+        void addChildren(std::vector<std::unique_ptr<SVGDraw>>& draws);
     };
 
     class SVGDrawComment final : public SVGDrawNoEntity {
@@ -178,31 +190,25 @@ namespace svg_diagram {
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
     };
 
-    class SVGDrawGroup : public SVGDraw {
+    class SVGDrawGroup final : public SVGDrawContainer {
     public:
-        using SVGDraw::SVGDraw;
-        explicit SVGDrawGroup(std::vector<std::unique_ptr<SVGDraw>>& draws);
-
-        std::vector<std::unique_ptr<SVGDraw>> children;
-
-        void addChild(std::unique_ptr<SVGDraw> child);
-        void addChildren(std::vector<std::unique_ptr<SVGDraw>>& draws);
+        using SVGDrawContainer::SVGDrawContainer;
 
         [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
         [[nodiscard]] bool hasEntity() const override;
     };
 
-    class SVGDrawDefs final : public SVGDrawGroup {
+    class SVGDrawDefs final : public SVGDrawContainer, public SVGDrawNoEntity {
     public:
-        using SVGDrawGroup::SVGDrawGroup;
+        using SVGDrawContainer::SVGDrawContainer;
 
         [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
     };
 
-    class SVGDrawLinearGradient final : public SVGDrawGroup {
+    class SVGDrawLinearGradient final : public SVGDrawContainer, public SVGDrawNoEntity {
     public:
-        using SVGDrawGroup::SVGDrawGroup;
+        using SVGDrawContainer::SVGDrawContainer;
 
         void setID(const std::string& id);
         void setRotation(double angle);
@@ -213,7 +219,9 @@ namespace svg_diagram {
     class SVGDrawStop final : public SVGDrawNoEntity {
     public:
         using SVGDrawNoEntity::SVGDrawNoEntity;
+        SVGDrawStop(double offset, const std::string& color, double opacity = 1.0);
 
+        void setOffset(double offset);
         void setColor(const std::string& color);
         void setOpacity(double opacity);
 

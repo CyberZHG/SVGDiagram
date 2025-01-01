@@ -137,6 +137,7 @@ if(SVG_DIAGRAM_ENABLE_TESTS)
             tests/docs/test_edge_attr.cpp
             tests/docs/test_subgraph_attr.cpp
             tests/docs/test_diagram_attr.cpp
+            tests/svg_draw/test_defs.cpp
     )
 
     target_link_libraries(runTests

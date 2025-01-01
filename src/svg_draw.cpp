@@ -82,15 +82,19 @@ XMLElement::ChildrenType SVGDrawComment::generateXMLElements() const {
     return {make_shared<XMLElementComment>(comment)};
 }
 
-SVGDrawGroup::SVGDrawGroup(vector<unique_ptr<SVGDraw>>& draws) {
+SVGDrawContainer::SVGDrawContainer(unique_ptr<SVGDraw> draw) {
+    this->addChild(std::move(draw));
+}
+
+SVGDrawContainer::SVGDrawContainer(vector<unique_ptr<SVGDraw>>& draws) {
     this->addChildren(draws);
 }
 
-void SVGDrawGroup::addChild(unique_ptr<SVGDraw> child) {
+void SVGDrawContainer::addChild(unique_ptr<SVGDraw> child) {
     children.emplace_back(std::move(child));
 }
 
-void SVGDrawGroup::addChildren(vector<unique_ptr<SVGDraw>>& draws) {
+void SVGDrawContainer::addChildren(vector<unique_ptr<SVGDraw>>& draws) {
     for (auto& child : draws) {
         children.emplace_back(std::move(child));
     }
@@ -161,12 +165,24 @@ XMLElement::ChildrenType SVGDrawLinearGradient::generateXMLElements() const {
     return {groupElement};
 }
 
+SVGDrawStop::SVGDrawStop(const double offset, const string& color, const double opacity) {
+    setOffset(offset);
+    setColor(color);
+    setOpacity(opacity);
+}
+
+void SVGDrawStop::setOffset(const double offset) {
+    setAttribute(SVG_ATTR_KEY_OFFSET, format("{}%", 100.0 * offset));
+}
+
 void SVGDrawStop::setColor(const string& color) {
     setAttribute(SVG_ATTR_KEY_STOP_COLOR, color);
 }
 
 void SVGDrawStop::setOpacity(const double opacity) {
-    setAttribute(SVG_ATTR_KEY_STOP_OPACITY, opacity);
+    if (0.0 <= opacity && opacity < 1.0) {
+        setAttribute(SVG_ATTR_KEY_STOP_OPACITY, opacity);
+    }
 }
 
 XMLElement::ChildrenType SVGDrawStop::generateXMLElements() const {

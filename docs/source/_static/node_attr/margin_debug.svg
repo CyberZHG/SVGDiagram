@@ -8,8 +8,7 @@
       <rect x="-21" y="-15.400000000000002" width="42" height="30.800000000000004" fill="none" stroke="blue"/>
       <rect x="-53" y="-23.400000000000002" width="106" height="46.800000000000004" fill="none" stroke="red"/>
       <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">
-        <tspan x="0" dy="-0.6em">Larger</tspan>
-        <tspan x="0" dy="1.2em">Margin</tspan>
+        <tspan x="0" dy="-0.6em">Larger</tspan><tspan x="0" dy="1.2em">Margin</tspan>
       </text>
     </g>
     <!-- Node: B -->
@@ -19,8 +18,7 @@
       <rect x="129" y="-15.400000000000002" width="42" height="30.800000000000004" fill="none" stroke="blue"/>
       <rect x="129" y="-15.400000000000002" width="42" height="30.800000000000004" fill="none" stroke="red"/>
       <text x="150" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">
-        <tspan x="150" dy="-0.6em">No</tspan>
-        <tspan x="150" dy="1.2em">Margin</tspan>
+        <tspan x="150" dy="-0.6em">No</tspan><tspan x="150" dy="1.2em">Margin</tspan>
       </text>
     </g>
     <!-- Node: C -->
@@ -30,8 +28,7 @@
       <rect x="272" y="-15.400000000000002" width="56" height="30.800000000000004" fill="none" stroke="blue"/>
       <rect x="282" y="-5.400000000000002" width="36" height="10.800000000000004" fill="none" stroke="red"/>
       <text x="300" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">
-        <tspan x="300" dy="-0.6em">Negative</tspan>
-        <tspan x="300" dy="1.2em">Margin</tspan>
+        <tspan x="300" dy="-0.6em">Negative</tspan><tspan x="300" dy="1.2em">Margin</tspan>
       </text>
     </g>
   </g>

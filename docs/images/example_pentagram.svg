@@ -7,8 +7,7 @@
       <title>node_c</title>
       <rect x="-43" y="-19.400000000000002" width="86" height="38.800000000000004" fill="none" stroke="black"/>
       <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">
-        <tspan x="0" dy="-0.6em">C6:</tspan>
-        <tspan x="0" dy="1.2em">Dual Birth</tspan>
+        <tspan x="0" dy="-0.6em">C6:</tspan><tspan x="0" dy="1.2em">Dual Birth</tspan>
       </text>
     </g>
     <!-- Node: node_0 -->
@@ -16,8 +15,7 @@
       <title>node_0</title>
       <rect x="-12.481598042104938" y="-166.26261315234845" width="86" height="38.800000000000004" fill="none" stroke="peru"/>
       <text x="30.518401957895062" y="-146.86261315234844" text-anchor="middle" dominant-baseline="central" fill="saddlebrown" font-family="Times,serif" font-size="14">
-        <tspan x="30.518401957895062" dy="-0.6em">Adamah's</tspan>
-        <tspan x="30.518401957895062" dy="1.2em">Redemption</tspan>
+        <tspan x="30.518401957895062" dy="-0.6em">Adamah's</tspan><tspan x="30.518401957895062" dy="1.2em">Redemption</tspan>
       </text>
     </g>
     <!-- Node: node_1 -->
@@ -31,8 +29,7 @@
       <title>node_2</title>
       <rect x="4.633772298982244" y="117.352616472948" width="114" height="38.800000000000004" fill="none" stroke="limegreen"/>
       <text x="61.633772298982244" y="136.752616472948" text-anchor="middle" dominant-baseline="central" fill="olivedrab" font-family="Times,serif" font-size="14">
-        <tspan x="61.633772298982244" dy="-0.6em">Flame Mirror's</tspan>
-        <tspan x="61.633772298982244" dy="1.2em">Revelation</tspan>
+        <tspan x="61.633772298982244" dy="-0.6em">Flame Mirror's</tspan><tspan x="61.633772298982244" dy="1.2em">Revelation</tspan>
       </text>
     </g>
     <!-- Node: node_3 -->
@@ -40,8 +37,7 @@
       <title>node_3</title>
       <rect x="-150.51358394918776" y="81.47608328417914" width="79" height="38.800000000000004" fill="none" stroke="dodgerblue"/>
       <text x="-111.01358394918776" y="100.87608328417915" text-anchor="middle" dominant-baseline="central" fill="royalblue" font-family="Times,serif" font-size="14">
-        <tspan x="-111.01358394918776" dy="-0.6em">Emanare's</tspan>
-        <tspan x="-111.01358394918776" dy="1.2em">Source</tspan>
+        <tspan x="-111.01358394918776" dy="-0.6em">Emanare's</tspan><tspan x="-111.01358394918776" dy="1.2em">Source</tspan>
       </text>
     </g>
     <!-- Node: node_4 -->
@@ -49,8 +45,7 @@
       <title>node_4</title>
       <rect x="-194.24394039252007" y="-93.80776835136017" width="128" height="38.800000000000004" fill="none" stroke="lightcoral"/>
       <text x="-130.24394039252007" y="-74.40776835136016" text-anchor="middle" dominant-baseline="central" fill="indianred" font-family="Times,serif" font-size="14">
-        <tspan x="-130.24394039252007" dy="-0.6em">Scouring Flame's</tspan>
-        <tspan x="-130.24394039252007" dy="1.2em">Sundering</tspan>
+        <tspan x="-130.24394039252007" dy="-0.6em">Scouring Flame's</tspan><tspan x="-130.24394039252007" dy="1.2em">Sundering</tspan>
       </text>
     </g>
     <!-- Edge: edge1 (node_c -> node_0) -->

@@ -12,8 +12,7 @@
       <title>B</title>
       <ellipse cx="150" cy="0" rx="60.81118318204309" ry="27.435743110038054" fill="none" stroke="black"/>
       <text x="150" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">
-        <tspan x="150" dy="-0.6em">Pybind11</tspan>
-        <tspan x="150" dy="1.2em">Emscripten</tspan>
+        <tspan x="150" dy="-0.6em">Pybind11</tspan><tspan x="150" dy="1.2em">Emscripten</tspan>
       </text>
     </g>
     <!-- Node: C -->
@@ -21,8 +20,7 @@
       <title>C</title>
       <ellipse cx="300" cy="0" rx="70.71067811865476" ry="27.435743110038054" fill="none" stroke="black"/>
       <text x="300" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">
-        <tspan x="300" dy="-0.6em">星分翼轸</tspan>
-        <tspan x="300" dy="1.2em">地接衡庐</tspan>
+        <tspan x="300" dy="-0.6em">星分翼轸</tspan><tspan x="300" dy="1.2em">地接衡庐</tspan>
       </text>
     </g>
   </g>

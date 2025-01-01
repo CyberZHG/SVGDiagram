@@ -16,8 +16,7 @@
       <rect x="115" y="-15.400000000000002" width="70" height="30.800000000000004" fill="none" stroke="blue"/>
       <rect x="107" y="-19.400000000000002" width="86" height="38.800000000000004" fill="none" stroke="red"/>
       <text x="150" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">
-        <tspan x="150" dy="-0.6em">Pybind11</tspan>
-        <tspan x="150" dy="1.2em">Emscripten</tspan>
+        <tspan x="150" dy="-0.6em">Pybind11</tspan><tspan x="150" dy="1.2em">Emscripten</tspan>
       </text>
     </g>
     <!-- Node: C -->
@@ -27,8 +26,7 @@
       <rect x="258" y="-15.400000000000002" width="84" height="30.800000000000004" fill="none" stroke="blue"/>
       <rect x="250" y="-19.400000000000002" width="100" height="38.800000000000004" fill="none" stroke="red"/>
       <text x="300" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">
-        <tspan x="300" dy="-0.6em">星分翼轸</tspan>
-        <tspan x="300" dy="1.2em">地接衡庐</tspan>
+        <tspan x="300" dy="-0.6em">星分翼轸</tspan><tspan x="300" dy="1.2em">地接衡庐</tspan>
       </text>
     </g>
   </g>

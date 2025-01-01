@@ -299,7 +299,7 @@ void SVGItem::setFillStyles(SVGDraw* draw, vector<unique_ptr<SVGDraw>>& svgDraws
                     stops.emplace_back(make_unique<SVGDrawStop>(i * offset, color.color, color.opacity));
                 }
             } else {
-                // Color segments
+                // Segmented color
                 double last = 0.0;
                 for (int i = 0; i < static_cast<int>(colorList.size()); ++i) {
                     const auto&[color, opacity, weight] = colorList[i];

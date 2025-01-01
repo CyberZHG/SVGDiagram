@@ -1,3 +1,5 @@
+import math
+
 from sp_svg_diagram import SVGDiagram, SVGNode
 
 from .utils import compare_svg
@@ -87,6 +89,43 @@ def test_color():
     node.set_font_color("rgb(66,92,214)")
     svg = diagram.render()
     compare_svg("node_attr", "color", svg)
+
+
+def test_opacity():
+    diagram = SVGDiagram()
+    ids = ["A", "B", "C"]
+    colors = ["#00FFFFCC", "#FF00FFCC", "#FFFF00CC"]
+    for i, (node_id, color) in enumerate(zip(ids, colors)):
+        node = diagram.add_node(node_id)
+        angle = -math.pi / 2.0 + math.pi * 2 * i / 3.0
+        node.set_center(50.0 * math.cos(angle), 50.0 * math.sin(angle))
+        node.set_fixed_size(150, 150)
+        node.set_color("none")
+        node.set_fill_color(colors[i])
+    svg = diagram.render()
+    compare_svg("node_attr", "opacity", svg)
+
+
+def test_gradient_color():
+    diagram = SVGDiagram()
+    node1 = diagram.add_node("A")
+    node1.set_fill_color("gold:#FF0000EE")
+    node1.set_label("A")
+    node1.set_fixed_size(120, 80)
+    node2 = diagram.add_node("B")
+    node2.set_center(150, 0)
+    node2.set_fill_color("gold:#FF0000EE")
+    node2.set_label("B")
+    node2.set_gradient_angle(45)
+    node2.set_fixed_size(120, 80)
+    node3 = diagram.add_node("C")
+    node3.set_center(300, 0)
+    node3.set_fill_color("white;1e-6:red:orange:yellow:green:blue:purple")
+    node3.set_label("C")
+    node3.set_gradient_angle(-90)
+    node3.set_fixed_size(120, 80)
+    svg = diagram.render()
+    compare_svg("node_attr", "gradient_color", svg)
 
 
 def test_pen_width():

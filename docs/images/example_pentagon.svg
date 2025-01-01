@@ -21,7 +21,13 @@
     <!-- Node: node_2 -->
     <g class="node" id="node_2">
       <title>node_2</title>
-      <circle cx="88.16778784387097" cy="121.35254915624212" r="48.30207034900264" fill="lightgreen" stroke="limegreen"/>
+      <defs>
+        <linearGradient gradientTransform="rotate(45,0.5,0.5)" id="node_2__fill_color">
+          <stop offset="0%" stop-color="lightgreen"/>
+          <stop offset="100%" stop-color="limegreen"/>
+        </linearGradient>
+      </defs>
+      <circle cx="88.16778784387097" cy="121.35254915624212" r="48.30207034900264" fill="url('#node_2__fill_color')" stroke="limegreen"/>
       <text x="88.16778784387097" y="121.35254915624212" text-anchor="middle" dominant-baseline="central" fill="olivedrab" font-family="Times,serif" font-size="14">
         <tspan x="88.16778784387097" dy="-1.2em">Deceit</tspan><tspan x="88.16778784387097" dy="1.2em">Cloaks</tspan><tspan x="88.16778784387097" dy="1.2em">the Truth</tspan>
       </text>
@@ -82,7 +88,7 @@
     <g class="edge" id="edge5">
       <title>node_4->node_0</title>
       <line x1="-98.58608668646738" y1="-78.37301535265833" x2="-46.5168972863104" y2="-116.20349585063832" stroke="lightcoral"/>
-      <polygon points="-38.42672734256093,-122.08134837356305 -44.45964890328675,-113.371936370326 -48.57414566933406,-119.03505533095063 -38.42672734256093,-122.08134837356305" fill="lightcoral" stroke="lightcoral"/>
+      <polygon points="-38.42672734256093,-122.08134837356305 -44.45964890328675,-113.371936370326 -48.57414566933406,-119.03505533095063 -38.42672734256093,-122.08134837356305" fill="none" stroke="lightcoral"/>
       <text x="-63.52027461582776" y="-84.85785129296278" text-anchor="middle" dominant-baseline="central" fill="lightcoral" font-family="Times,serif" font-size="14">C5</text>
     </g>
   </g>

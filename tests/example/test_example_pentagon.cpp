@@ -38,6 +38,8 @@ TEST(TestExample, Pentagon) {
         node->setFontColor(textColors[i]);
         if (i == 1) {
             node->appendStyleDashed();
+        } else if (i == 2) {
+            node->setGradientAngle(-45);
         } else if (i == 3) {
             node->setShape(SVGNode::SHAPE_DOUBLE_CIRCLE);
         }

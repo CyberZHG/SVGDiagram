@@ -168,6 +168,42 @@ TEST(TestDocsNodeAttributes, Color) {
     diagram.render(OUTPUT_DIR + "color.svg");
 }
 
+TEST(TestDocsNodeAttributes, Opacity) {
+    SVGDiagram diagram;
+    const std::vector<std::string> ids = {"A", "B", "C"};
+    const std::vector<std::string> colors = {"#00FFFFCC", "#FF00FFCC", "#FFFF00CC"};
+    for (int i = 0; i < static_cast<int>(ids.size()); ++i) {
+        const auto node = diagram.addNode(ids[i]);
+        const double angle = -std::numbers::pi / 2.0 + std::numbers::pi * 2 * i / 3.0;
+        node->setCenter(50.0 * cos(angle), 50.0 * sin(angle));
+        node->setFixedSize(150, 150);
+        node->setColor("none");
+        node->setFillColor(colors[i]);
+    }
+    diagram.render(OUTPUT_DIR + "opacity.svg");
+}
+
+TEST(TestDocsNodeAttributes, GradientColor) {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setFillColor("gold:#FF0000EE");
+    node1->setLabel("A");
+    node1->setFixedSize(120, 80);
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setFillColor("gold:#FF0000EE");
+    node2->setLabel("B");
+    node2->setGradientAngle(45);
+    node2->setFixedSize(120, 80);
+    const auto node3 = diagram.addNode("C");
+    node3->setCenter(300, 0);
+    node3->setFillColor("white;1e-6:red:orange:yellow:green:blue:purple");
+    node3->setLabel("C");
+    node3->setGradientAngle(-90);
+    node3->setFixedSize(120, 80);
+    diagram.render(OUTPUT_DIR + "gradient_color.svg");
+}
+
 TEST(TestDocsNodeAttributes, PenWidth) {
     SVGDiagram diagram;
     for (int i = 0; i < 3; ++i) {

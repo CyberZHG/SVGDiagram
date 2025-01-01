@@ -123,4 +123,29 @@ describe("Docs/EdgeAttributes", () => {
         const svg = diagram.render();
         await compareSVG("edge_attr", "font", svg);
     });
+    it("strokeStyle", async () => {
+        const diagram = new SVGDiagram();
+        const labels = ["solid", "dashed", "dotted"];
+        for (const [i, label] of labels.entries()) {
+            const y = i * 60.0;
+            const tailID = `A${i}`;
+            const headID = `B${i}`;
+            const node1 = diagram.addNode(tailID);
+            node1.setCenter(0, y);
+            node1.setLabel("A");
+            const node2 = diagram.addNode(headID);
+            node2.setCenter(150, y);
+            node2.setLabel("B");
+            const edge = diagram.addEdge(tailID, headID);
+            edge.setArrowHead();
+            edge.setLabel(label);
+            if (i === 1) {
+                edge.appendStyleDashed();
+            } else if (i === 2) {
+                edge.appendStyleDotted();
+            }
+        }
+        const svg = diagram.render();
+        await compareSVG("edge_attr", "stroke_style", svg);
+    });
 });

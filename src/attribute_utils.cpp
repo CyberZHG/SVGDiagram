@@ -110,14 +110,18 @@ bool AttributeUtils::parseBool(const string& value) {
 AttributeParsedStyle AttributeUtils::parseStyle(const string& value) {
     AttributeParsedStyle parsed;
     for (const auto styles = splitString(value, ','); const auto& style : styles) {
-        if (style == ATTR_STYLE_FILLED) {
-            parsed.filled = true;
+        if (style == ATTR_STYLE_SOLID) {
+            parsed.solid = true;
+            parsed.dashed = false;
+            parsed.dotted = false;
         } else if (style == ATTR_STYLE_DASHED) {
+            parsed.solid = false;
             parsed.dashed = true;
             parsed.dotted = false;
         } else if (style == ATTR_STYLE_DOTTED) {
-            parsed.dotted = true;
+            parsed.solid = false;
             parsed.dashed = false;
+            parsed.dotted = true;
         }
     }
     return parsed;

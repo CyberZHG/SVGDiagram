@@ -490,3 +490,100 @@ int main() {
 `````
 
 ![](_static/edge_attr/font.svg)
+
+
+## Stroke Style
+
+The default edge style is `solid`, rendered as solid lines. Two dashed styles are also available: `dashed` and `dotted`. These three styles are mutually exclusive, and the one specified last takes precedence.
+
+`````{tab-set}
+````{tab-item} Python
+```python
+from sp_svg_diagram import SVGDiagram
+
+diagram = SVGDiagram()
+labels = ["solid", "dashed", "dotted"]
+for i, label in enumerate(labels):
+    y = i * 60.0
+    tail_id, head_id = f"A{i}", f"B{i}"
+    node1 = diagram.add_node(tail_id)
+    node1.set_center(0, y)
+    node1.set_label("A")
+    node2 = diagram.add_node(head_id)
+    node2.set_center(150, y)
+    node2.set_label("B")
+    edge = diagram.add_edge(tail_id, head_id)
+    edge.set_arrow_head()
+    edge.set_label(label)
+    if i == 1:
+        edge.append_style_dashed()
+    elif i == 2:
+        edge.append_style_dotted()
+svg = diagram.render()
+```
+````
+````{tab-item} JavaScript
+```javascript
+import { SVGDiagram } from 'sp-svg-diagram';
+
+const diagram = new SVGDiagram();
+const labels = ["solid", "dashed", "dotted"];
+for (const [i, label] of labels.entries()) {
+    const y = i * 60.0;
+    const tailID = `A${i}`;
+    const headID = `B${i}`;
+    const node1 = diagram.addNode(tailID);
+    node1.setCenter(0, y);
+    node1.setLabel("A");
+    const node2 = diagram.addNode(headID);
+    node2.setCenter(150, y);
+    node2.setLabel("B");
+    const edge = diagram.addEdge(tailID, headID);
+    edge.setArrowHead();
+    edge.setLabel(label);
+    if (i === 1) {
+        edge.appendStyleDashed();
+    } else if (i === 2) {
+        edge.appendStyleDotted();
+    }
+}
+const svg = diagram.render();
+````
+
+````{tab-item} C++
+```c++
+#include "svg_diagram.h"
+#include <format>
+#include <vector>
+#include <string>
+using namespace svg_diagram;
+
+int main() {
+    SVGDiagram diagram;
+    const auto labels = std::vector<std::string>({"solid", "dashed", "dotted"});
+    for (int i = 0; i < static_cast<int>(labels.size()); i++) {
+        const double y = i * 60.0;
+        const auto tailNodeID = std::format("A{}", i);
+        const auto headNodeID = std::format("B{}", i);
+        const auto node1 = diagram.addNode(tailNodeID);
+        node1->setCenter(0, y);
+        node1->setLabel("A");
+        const auto node2 = diagram.addNode(headNodeID);
+        node2->setCenter(150, y);
+        node2->setLabel("B");
+        const auto edge = diagram.addEdge(tailNodeID, headNodeID);
+        edge->setArrowHead();
+        edge->setLabel(labels[i]);
+        if (i == 1) {
+            edge->appendStyleDashed();
+        } else if (i == 2) {
+            edge->appendStyleDotted();
+        }
+    }
+    diagram.render("stroke_style.svg");
+    return 0;
+}
+````
+`````
+
+![](_static/edge_attr/stroke_style.svg)

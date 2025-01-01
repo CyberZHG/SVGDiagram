@@ -35,11 +35,12 @@ namespace svg_diagram {
     constexpr std::string_view ATTR_DEF_MARGIN_NODE = "0.1111111111111111,0.05555555555555555";
     constexpr std::string_view ATTR_DEF_MARGIN_EDGE = "0,0";
     constexpr std::string_view ATTR_DEF_MARGIN_GRAPH = "0.1111111111111111,0.1111111111111111";
-    constexpr std::string_view ATTR_DEF_STYLE = "filled";
+    constexpr std::string_view ATTR_DEF_STYLE = "solid,filled";
 
-    constexpr std::string_view ATTR_STYLE_FILLED = "filled";
+    constexpr std::string_view ATTR_STYLE_SOLID = "solid";
     constexpr std::string_view ATTR_STYLE_DASHED = "dashed";
     constexpr std::string_view ATTR_STYLE_DOTTED = "dotted";
+    constexpr std::string_view ATTR_STYLE_FILLED = "filled";
 
     constexpr std::string_view SVG_ATTR_KEY_FILL = "fill";
     constexpr std::string_view SVG_ATTR_KEY_STROKE = "stroke";

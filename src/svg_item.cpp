@@ -165,7 +165,7 @@ void SVGItem::setStyle(const string& style) {
     setAttribute(ATTR_KEY_STYLE, style);
 }
 
-void SVGItem::appendStyleDashed() {
+void SVGItem::appendStyle(const string& newStyle) {
     auto style = getAttribute(ATTR_KEY_STYLE);
     if (style.empty()) {
         style = string(ATTR_KEY_STYLE);
@@ -173,20 +173,20 @@ void SVGItem::appendStyleDashed() {
     if (!style.empty()) {
         style += ',';
     }
-    style += ATTR_STYLE_DASHED;
+    style += newStyle;
     setStyle(style);
 }
 
+void SVGItem::appendStyleSolid() {
+    appendStyle(string(ATTR_STYLE_SOLID));
+}
+
+void SVGItem::appendStyleDashed() {
+    appendStyle(string(ATTR_STYLE_DASHED));
+}
+
 void SVGItem::appendStyleDotted() {
-    auto style = getAttribute(ATTR_KEY_STYLE);
-    if (style.empty()) {
-        style = string(ATTR_KEY_STYLE);
-    }
-    if (!style.empty()) {
-        style += ',';
-    }
-    style += ATTR_STYLE_DOTTED;
-    setStyle(style);
+    appendStyle(string(ATTR_STYLE_DOTTED));
 }
 
 AttributeParsedStyle SVGItem::style() const {

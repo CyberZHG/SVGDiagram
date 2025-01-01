@@ -103,11 +103,11 @@ TEST(TestAttributeUtils, SplitString) {
 
 TEST(TestAttributeUtils, ParseStyle) {
     auto style = AttributeUtils::parseStyle("filled,dashed");
-    EXPECT_TRUE(style.filled);
+    EXPECT_FALSE(style.solid);
     EXPECT_TRUE(style.dashed);
     EXPECT_FALSE(style.dotted);
     style = AttributeUtils::parseStyle("filled,dotted");
-    EXPECT_TRUE(style.filled);
+    EXPECT_FALSE(style.solid);
     EXPECT_FALSE(style.dashed);
     EXPECT_TRUE(style.dotted);
 }

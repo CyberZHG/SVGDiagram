@@ -117,15 +117,14 @@ def test_font():
 
 def test_stroke_style():
     diagram = SVGDiagram()
-    labels = ["filled", "dashed", "dotted"]
+    labels = ["solid", "dashed", "dotted"]
     for i, label in enumerate(labels):
         node = diagram.add_node(f"node{i}")
         node.set_center(i * 150, 0)
         node.set_label(label)
-        node.set_fill_color("lightgray")
         if i == 1:
-            node.append_style_dashed()  # The style is "filled,dashed"
+            node.append_style_dashed()
         elif i == 2:
-            node.append_style_dotted()  # The style is "filled,dotted"
+            node.append_style_dotted()
     svg = diagram.render()
     compare_svg("node_attr", "stroke_style", svg)

@@ -7,9 +7,10 @@
 namespace svg_diagram {
 
     struct AttributeParsedStyle {
-        bool filled = false;
+        bool solid = false;
         bool dashed = false;
         bool dotted = false;
+        bool filled = false;
     };
 
     class AttributeUtils {

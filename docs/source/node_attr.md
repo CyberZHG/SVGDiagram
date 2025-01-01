@@ -509,7 +509,7 @@ int main() {
 
 ## Stroke Style
 
-The default node style is `filled`. As long as either `color` or `fillColor` is set, both the border and the fill will be rendered. The node border also supports two dashed styles, `dashed` and `dotted`; if both are specified, the style that appears last takes precedence.
+The default node border style is `solid`, rendered as solid lines. Two dashed styles are also available: `dashed` and `dotted`. These three styles are mutually exclusive, and the one specified last takes precedence.
 
 `````{tab-set}
 ````{tab-item} Python
@@ -517,16 +517,16 @@ The default node style is `filled`. As long as either `color` or `fillColor` is 
 from sp_svg_diagram import SVGDiagram
 
 diagram = SVGDiagram()
-labels = ["filled", "dashed", "dotted"]
+labels = ["solid", "dashed", "dotted"]
 for i, label in enumerate(labels):
     node = diagram.add_node(f"node{i}")
     node.set_center(i * 150, 0)
     node.set_label(label)
     node.set_fill_color("lightgray")
     if i == 1:
-        node.append_style_dashed()  # The style is "filled,dashed"
+        node.append_style_dashed()
     elif i == 2:
-        node.append_style_dotted()  # The style is "filled,dotted"
+        node.append_style_dotted()
 svg = diagram.render()
 ```
 ````
@@ -535,16 +535,16 @@ svg = diagram.render()
 import { SVGDiagram } from 'sp-svg-diagram';
 
 const diagram = new SVGDiagram();
-const labels = ["filled", "dashed", "dotted"]
+const labels = ["solid", "dashed", "dotted"]
 for (const [i, label] of labels.entries()) {
     const node = diagram.addNode(`node${i}`);
     node.setCenter(i * 150, 0);
     node.setLabel(labels[i]);
     node.setFillColor("lightgray");
     if (i === 1) {
-        node.appendStyleDashed();  // The style is "filled,dashed"
+        node.appendStyleDashed();
     } else if (i === 2) {
-        node.appendStyleDotted();  // The style is "filled,dotted"
+        node.appendStyleDotted();
     }
 }
 const svg = diagram.render();
@@ -560,16 +560,16 @@ using namespace svg_diagram;
 
 int main() {
     SVGDiagram diagram;
-    const auto labels = std::vector<std::string>({"filled", "dashed", "dotted"});
+    const auto labels = std::vector<std::string>({"solid", "dashed", "dotted"});
     for (int i = 0; i < static_cast<int>(labels.size()); ++i) {
         const auto node = diagram.addNode(std::format("node{}", i));
         node->setCenter(i * 150, 0);
         node->setLabel(labels[i]);
         node->setFillColor("lightgray");
         if (i == 1) {
-            node->appendStyleDashed();  // The style is "filled,dashed"
+            node->appendStyleDashed();
         } else if (i == 2) {
-            node->appendStyleDotted();  // The style is "filled,dotted"
+            node->appendStyleDotted();
         }
     }
     diagram.render("stroke_style.svg");

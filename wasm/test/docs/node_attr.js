@@ -112,16 +112,15 @@ describe("Docs/NodeAttributes", () => {
     });
     it("strokeStyle", async () => {
         const diagram = new SVGDiagram();
-        const labels = ["filled", "dashed", "dotted"]
+        const labels = ["solid", "dashed", "dotted"]
         for (const [i, label] of labels.entries()) {
             const node = diagram.addNode(`node${i}`);
             node.setCenter(i * 150, 0);
             node.setLabel(labels[i]);
-            node.setFillColor("lightgray");
             if (i === 1) {
-                node.appendStyleDashed();  // The style is "filled,dashed"
+                node.appendStyleDashed();
             } else if (i === 2) {
-                node.appendStyleDotted();  // The style is "filled,dotted"
+                node.appendStyleDotted();
             }
         }
         const svg = diagram.render();

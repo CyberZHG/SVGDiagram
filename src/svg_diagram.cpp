@@ -33,46 +33,54 @@ void SVGDiagram::setBackgroundColor(const std::string& backgroundColor) {
     _backgroundColor = backgroundColor;
 }
 
-const unique_ptr<SVGNode>& SVGDiagram::addNode(const string& id) {
+const shared_ptr<SVGNode>& SVGDiagram::addNode(const string& id) {
     if (_nodes.contains(id)) {
-        return _nodes.at(id);
+        throw runtime_error("SVGDiagram::addNode: Node id already exists");
     }
     _nodeIds.emplace_back(id);
-    return _nodes[id] = make_unique<SVGNode>();
+    auto node = make_shared<SVGNode>();
+    _graph.addNode(node);
+    return _nodes[id] = node;
 }
 
-void SVGDiagram::addNode(const string& id, unique_ptr<SVGNode> node) {
-    if (!_nodes.contains(id)) {
-        _nodeIds.emplace_back(id);
+void SVGDiagram::addNode(const string& id, shared_ptr<SVGNode>& node) {
+    if (_nodes.contains(id)) {
+        throw runtime_error("SVGDiagram::addNode: Node id already exists");
     }
-    _nodes[id] = std::move(node);
+    _nodeIds.emplace_back(id);
+    _nodes[id] = node;
+    _graph.addNode(node);
 }
 
-const unique_ptr<SVGEdge>& SVGDiagram::addEdge(const string& id) {
+const shared_ptr<SVGEdge>& SVGDiagram::addEdge(const string& id) {
     if (_edges.contains(id)) {
-        return _edges.at(id);
+        throw runtime_error("SVGDiagram::addEdge: Edge id already exists");
     }
     _edgeIds.emplace_back(id);
-    return _edges[id] = make_unique<SVGEdge>();
+    auto edge = make_shared<SVGEdge>();
+    _graph.addEdge(edge);
+    return _edges[id] = edge;
 }
 
-const unique_ptr<SVGEdge>& SVGDiagram::addEdge(const string& from, const string& to) {
+const shared_ptr<SVGEdge>& SVGDiagram::addEdge(const string& from, const string& to) {
     const auto id = newEdgeId();
     const auto& edge = addEdge(id);
     edge->setConnection(from, to);
     return edge;
 }
 
-void SVGDiagram::addEdge(const string& id, unique_ptr<SVGEdge> edge) {
-    if (!_edges.contains(id)) {
-        _edgeIds.emplace_back(id);
+void SVGDiagram::addEdge(const string& id, shared_ptr<SVGEdge>& edge) {
+    if (_edges.contains(id)) {
+        throw runtime_error("SVGDiagram::addEdge: Edge id already exists");
     }
-    _edges[id] = std::move(edge);
+    _edgeIds.emplace_back(id);
+    _edges[id] = edge;
+    _graph.addEdge(edge);
 }
 
-void SVGDiagram::addEdge(unique_ptr<SVGEdge> edge) {
+void SVGDiagram::addEdge(shared_ptr<SVGEdge>& edge) {
     const auto id = newEdgeId();
-    addEdge(id, std::move(edge));
+    addEdge(id, edge);
 }
 
 string SVGDiagram::render() {

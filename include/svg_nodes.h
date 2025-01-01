@@ -27,7 +27,7 @@ namespace svg_diagram {
 
     class SVGNode;
     class SVGGraph;
-    using NodesMapping = std::unordered_map<std::string, std::unique_ptr<SVGNode>>;
+    using NodesMapping = std::unordered_map<std::string, std::shared_ptr<SVGNode>>;
 
     class SVGItem {
     public:
@@ -198,8 +198,9 @@ namespace svg_diagram {
 
         [[nodiscard]] Type type() const override;
 
-        void addChild(std::unique_ptr<SVGNode>& child);
-        void addChildren(std::vector<std::unique_ptr<SVGNode>>& children);
+        void addNode(std::shared_ptr<SVGNode>& node);
+        void addEdge(std::shared_ptr<SVGEdge>& edge);
+        void addSubgraph(std::shared_ptr<SVGGraph>& subgraph);
 
         SVGNode& defaultNodeAttributes();
         SVGEdge& defaultEdgeAttributes();
@@ -212,7 +213,9 @@ namespace svg_diagram {
         [[nodiscard]] std::vector<std::unique_ptr<SVGDraw>> produceEdgeSVGDraws(const NodesMapping& nodes) const;
 
     private:
-        std::vector<std::unique_ptr<SVGItem>> _children;
+        std::vector<std::shared_ptr<SVGNode>> _nodes;
+        std::vector<std::shared_ptr<SVGEdge>> _edges;
+        std::vector<std::shared_ptr<SVGGraph>> _graphs;
         SVGNode _defaultNode;
         SVGEdge _defaultEdge;
     };

@@ -715,15 +715,19 @@ SVGItem::Type SVGGraph::type() const {
     return Type::GRAPH;
 }
 
-void SVGGraph::addChild(unique_ptr<SVGNode>& child) {
-    child->setParent(this);
-    _children.emplace_back(std::move(child));
+void SVGGraph::addNode(shared_ptr<SVGNode>& node) {
+    node->setParent(this);
+    _nodes.emplace_back(node);
 }
 
-void SVGGraph::addChildren(vector<unique_ptr<SVGNode>>& children) {
-    for (auto& child : children) {
-        addChild(child);
-    }
+void SVGGraph::addEdge(shared_ptr<SVGEdge>& edge) {
+    edge->setParent(this);
+    _edges.emplace_back(edge);
+}
+
+void SVGGraph::addSubgraph(shared_ptr<SVGGraph>& subgraph) {
+    subgraph->setParent(this);
+    _graphs.emplace_back(subgraph);
 }
 
 SVGNode& SVGGraph::defaultNodeAttributes() {
@@ -755,26 +759,24 @@ optional<reference_wrapper<const string>> SVGGraph::defaultEdgeAttribute(const s
 }
 
 void SVGGraph::adjustNodeSizes() const {
-    for (auto& child : _children) {
-        if (child->type() == Type::NODE) {
-            dynamic_cast<SVGNode*>(child.get())->adjustNodeSize();
-        } else if (child->type() == Type::GRAPH) {
-            dynamic_cast<SVGGraph*>(child.get())->adjustNodeSizes();
-        }
+    for (auto& node : _nodes) {
+        node->adjustNodeSize();
+    }
+    for (auto& graph : _graphs) {
+        graph->adjustNodeSizes();
     }
 }
 
 vector<unique_ptr<SVGDraw>> SVGGraph::produceNodeSVGDraws() const {
     vector<unique_ptr<SVGDraw>> svgDraws;
-    for (auto& child : _children) {
-        if (child->type() == Type::NODE) {
-            for (auto subDraws = dynamic_cast<SVGNode*>(child.get())->produceSVGDraws(); auto& subDraw : subDraws) {
-                svgDraws.emplace_back(std::move(subDraw));
-            }
-        } else if (child->type() == Type::GRAPH) {
-            for (auto subDraws = dynamic_cast<SVGGraph*>(child.get())->produceNodeSVGDraws(); auto& subDraw : subDraws) {
-                svgDraws.emplace_back(std::move(subDraw));
-            }
+    for (auto& node : _nodes) {
+        for (auto subDraws = node->produceSVGDraws(); auto& subDraw : subDraws) {
+            svgDraws.emplace_back(std::move(subDraw));
+        }
+    }
+    for (auto& graph : _graphs) {
+        for (auto subDraws = graph->produceNodeSVGDraws(); auto& subDraw : subDraws) {
+            svgDraws.emplace_back(std::move(subDraw));
         }
     }
     return svgDraws;
@@ -782,15 +784,14 @@ vector<unique_ptr<SVGDraw>> SVGGraph::produceNodeSVGDraws() const {
 
 vector<unique_ptr<SVGDraw>> SVGGraph::produceEdgeSVGDraws(const NodesMapping& nodes) const {
     vector<unique_ptr<SVGDraw>> svgDraws;
-    for (auto& child : _children) {
-        if (child->type() == Type::EDGE) {
-            for (auto subDraws = dynamic_cast<SVGEdge*>(child.get())->produceSVGDraws(nodes); auto& subDraw : subDraws) {
-                svgDraws.emplace_back(std::move(subDraw));
-            }
-        } else if (child->type() == Type::GRAPH) {
-            for (auto subDraws = dynamic_cast<SVGGraph*>(child.get())->produceEdgeSVGDraws(nodes); auto& subDraw : subDraws) {
-                svgDraws.emplace_back(std::move(subDraw));
-            }
+    for (auto& edge : _edges) {
+        for (auto subDraws = edge->produceSVGDraws(nodes); auto& subDraw : subDraws) {
+            svgDraws.emplace_back(std::move(subDraw));
+        }
+    }
+    for (auto& graph : _graphs) {
+        for (auto subDraws = graph->produceEdgeSVGDraws(nodes); auto& subDraw : subDraws) {
+            svgDraws.emplace_back(std::move(subDraw));
         }
     }
     return svgDraws;

@@ -215,12 +215,19 @@ namespace svg_diagram {
         [[nodiscard]] std::optional<std::reference_wrapper<const std::string>> defaultNodeAttribute(const std::string_view& key) const;
         [[nodiscard]] std::optional<std::reference_wrapper<const std::string>> defaultEdgeAttribute(const std::string_view& key) const;
 
-        void adjustNodeSizes() const;
-        [[nodiscard]] std::vector<std::unique_ptr<SVGDraw>> produceSVGDraws(const NodesMapping& nodes) const;
+        [[nodiscard]] std::pair<double, double> center() const;
+
+        void adjustNodeSizes();
+        [[nodiscard]] std::vector<std::unique_ptr<SVGDraw>> produceSVGDraws(const NodesMapping& nodes);
 
         [[nodiscard]] std::vector<std::shared_ptr<SVGNode>> findNodes() const;
         [[nodiscard]] std::vector<std::shared_ptr<SVGEdge>> findEdges() const;
+
     private:
+        double _cx = 0.0;
+        double _cy = 0.0;
+        double _textY = 0.0;
+
         std::vector<std::shared_ptr<SVGNode>> _nodes;
         std::vector<std::shared_ptr<SVGEdge>> _edges;
         std::vector<std::shared_ptr<SVGGraph>> _graphs;
@@ -228,9 +235,9 @@ namespace svg_diagram {
         SVGNode _defaultNode;
         SVGEdge _defaultEdge;
 
-        void adjustNodeSize();
         [[nodiscard]] std::vector<std::unique_ptr<SVGDraw>> produceNodeSVGDraws() const;
         [[nodiscard]] std::vector<std::unique_ptr<SVGDraw>> produceEdgeSVGDraws(const NodesMapping& nodes) const;
+        [[nodiscard]] std::vector<std::unique_ptr<SVGDraw>> produceClusterSVGDraws();
     };
 
 }

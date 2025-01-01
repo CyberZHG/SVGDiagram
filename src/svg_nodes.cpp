@@ -28,7 +28,7 @@ void SVGItem::setAttributeIfNotExist(const string_view& key, const string& value
 }
 
 void SVGItem::setDoubleAttributeIfNotExist(const string_view& key, const double value) {
-    setAttributeIfNotExist(key, to_string(value));
+    setAttributeIfNotExist(key, format("{}", value));
 }
 
 const string& SVGItem::getAttribute(const string_view& key) const {
@@ -130,6 +130,9 @@ void SVGItem::setPenWidth(const double width) {
 }
 
 double SVGItem::penWidth() const {
+    if (color() == "none") {
+        return 0.0;
+    }
     if (const auto value = getAttribute(ATTRIBUTE_KEY_PEN_WIDTH); !value.empty()) {
         const auto width = stod(value);
         if (fabs(width - 1.0) < GeometryUtils::EPSILON) {
@@ -166,7 +169,7 @@ pair<double, double> SVGItem::computeTextSize() {
     if (const auto [precomputedTextWidth, precomputedTextHeight] = precomputedTextSize();
         precomputedTextWidth > 0 && precomputedTextHeight > 0) {
         return {precomputedTextWidth, precomputedTextHeight};
-        }
+    }
     const SVGTextSize textSize;
     const auto label = getAttribute(ATTRIBUTE_KEY_LABEL);
     setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_NAME, "Times,serif");
@@ -821,17 +824,75 @@ optional<reference_wrapper<const string>> SVGGraph::defaultEdgeAttribute(const s
     return {};
 }
 
-void SVGGraph::adjustNodeSizes() const {
-    for (auto& node : _nodes) {
+pair<double, double> SVGGraph::center() const {
+    return {_cx, _cy};
+}
+
+void SVGGraph::adjustNodeSizes() {
+    setAttributeIfNotExist(ATTRIBUTE_KEY_MARGIN, format("{}", 8.0 / 72.0));
+    double minX = 0.0, minY = 0.0, maxX = 0.0, maxY = 0.0;
+    bool first = true;
+    const auto updateGraphSize = [&](const double cx, const double cy, const double width, const double height) {
+        const double x1 = cx - width / 2.0;
+        const double y1 = cy - height / 2.0;
+        const double x2 = cx + width / 2.0;
+        const double y2 = cy + height / 2.0;
+        if (first) {
+            first = false;
+            minX = x1; minY = y1;
+            maxX = x2; maxY = y2;
+        } else {
+            minX = min(minX, x1); minY = min(minY, y1);
+            maxX = max(maxX, x2); maxY = max(maxY, y2);
+        }
+    };
+    for (const auto& node : _nodes) {
         node->adjustNodeSize();
+        const auto [cx, cy] = node->center();
+        const auto strokeWidth = node->penWidth();
+        const auto width = node->width() + strokeWidth;
+        const auto height = node->height() + strokeWidth;
+        updateGraphSize(cx, cy, width, height);
     }
-    for (auto& graph : _graphs) {
+    for (const auto& graph : _graphs) {
         graph->adjustNodeSizes();
+        const auto [cx, cy] = graph->center();
+        const auto strokeWidth = graph->penWidth();
+        const auto width = graph->width() + strokeWidth;
+        const auto height = graph->height() + strokeWidth;
+        updateGraphSize(cx, cy, width, height);
+    }
+    if (first) {
+        setSize(-1, -1);
+    } else {
+        const auto [marginWidth, marginHeight] = margin();
+        if (const auto label = getAttribute(ATTRIBUTE_KEY_LABEL); !label.empty()) {
+            auto [textWidth, textHeight] = computeTextSize();
+            textWidth += marginWidth * 2;
+            if (textWidth > maxX - minX) {
+                const double cx = (minX + maxX) / 2.0;
+                minX = cx - textWidth / 2.0;
+                maxX = cx + textWidth / 2.0;
+            }
+            minY -= textHeight + marginHeight;
+            _textY = minY + textHeight / 2.0;
+        }
+        minX -= marginWidth; minY -= marginHeight;
+        maxX += marginWidth; maxY += marginHeight;
+        const auto width = maxX - minX;
+        const auto height = maxY - minY;
+        _cx = (minX + maxX) / 2.0;
+        _cy = (minY + maxY) / 2.0;
+        setSize(width, height);
     }
 }
 
-vector<unique_ptr<SVGDraw>> SVGGraph::produceSVGDraws(const NodesMapping &nodes) const {
+vector<unique_ptr<SVGDraw>> SVGGraph::produceSVGDraws(const NodesMapping &nodes) {
+    adjustNodeSizes();
     vector<unique_ptr<SVGDraw>> svgDraws;
+    for (auto& draw : produceClusterSVGDraws()) {
+        svgDraws.emplace_back(std::move(draw));
+    }
     for (auto& draw : produceNodeSVGDraws()) {
         svgDraws.emplace_back(std::move(draw));
     }
@@ -861,13 +922,9 @@ vector<shared_ptr<SVGEdge>> SVGGraph::findEdges() const {
     return edges;
 }
 
-void SVGGraph::adjustNodeSize() {
-}
-
 vector<unique_ptr<SVGDraw>> SVGGraph::produceNodeSVGDraws() const {
-    adjustNodeSizes();
     vector<unique_ptr<SVGDraw>> svgDraws;
-    for (auto& node : _nodes) {
+    for (const auto& node : _nodes) {
         if (enabledDebug()) {
             node->enableDebug();
         }
@@ -881,7 +938,7 @@ vector<unique_ptr<SVGDraw>> SVGGraph::produceNodeSVGDraws() const {
         group->addChildren(subDraws);
         svgDraws.emplace_back(std::move(group));
     }
-    for (auto& graph : _graphs) {
+    for (const auto& graph : _graphs) {
         for (auto subDraws = graph->produceNodeSVGDraws(); auto& subDraw : subDraws) {
             svgDraws.emplace_back(std::move(subDraw));
         }
@@ -907,6 +964,50 @@ vector<unique_ptr<SVGDraw>> SVGGraph::produceEdgeSVGDraws(const NodesMapping& no
     }
     for (auto& graph : _graphs) {
         for (auto subDraws = graph->produceEdgeSVGDraws(nodes); auto& subDraw : subDraws) {
+            svgDraws.emplace_back(std::move(subDraw));
+        }
+    }
+    return svgDraws;
+}
+
+std::vector<std::unique_ptr<SVGDraw>> SVGGraph::produceClusterSVGDraws() {
+    vector<unique_ptr<SVGDraw>> svgDraws;
+    setAttributeIfNotExist(ATTRIBUTE_KEY_COLOR, "none");
+    setAttributeIfNotExist(ATTRIBUTE_KEY_FILL_COLOR, "none");
+    setAttributeIfNotExist(ATTRIBUTE_KEY_FONT_COLOR, "black");
+    setAttributeIfNotExist(ATTRIBUTE_KEY_PEN_WIDTH, "1.0");
+    if (const auto _width = width(), _height = height(); _width > 0 && _height > 0) {
+        const auto& _color = color();
+        const auto& _fillColor = fillColor();
+        if (_color != "none" || _fillColor != "none") {
+            auto group = make_unique<SVGDrawGroup>();
+            group->setAttribute("id", id());
+            group->setAttribute("class", "cluster");
+            auto rect = make_unique<SVGDrawRect>(_cx, _cy, _width, _height);
+            rect->setStroke(color());
+            rect->setFill(fillColor());
+            if (const auto strokeWidth = penWidth(); strokeWidth != 1.0) {
+                rect->setStrokeWidth(strokeWidth);
+            }
+            group->addChild(std::move(rect));
+            if (enabledDebug()) {
+                const auto [marginX, marginY] = margin();
+                auto childrenRect = make_unique<SVGDrawRect>(_cx, _cy, _width - marginX * 2.0, _height - marginY * 2.0);
+                childrenRect->setFill("none");
+                childrenRect->setStroke("green");
+                group->addChild(std::move(childrenRect));
+            }
+            svgDraws.emplace_back(std::move(group));
+        }
+        if (const auto& _label = getAttribute(ATTRIBUTE_KEY_LABEL); !_label.empty()) {
+            appendSVGDrawsLabelWithCenter(svgDraws, _cx, _textY);
+        }
+    }
+    for (const auto& graph : _graphs) {
+        if (enabledDebug()) {
+            graph->enableDebug();
+        }
+        for (auto subDraws = graph->produceClusterSVGDraws(); auto& subDraw : subDraws) {
             svgDraws.emplace_back(std::move(subDraw));
         }
     }

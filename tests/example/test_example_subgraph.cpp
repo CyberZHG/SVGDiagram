@@ -26,14 +26,15 @@ TEST(TestExample, Subgraph) {
     const auto textColors = vector{"black", "saddlebrown", "goldenrod", "olivedrab", "royalblue", "indianred", "indigo"};
     const auto centers = vector<pair<double, double>>{
         {-100, 50}, {100, 50},
-        {-150, 100}, {-50, 100}, {50, 100}, {150, 100},
+        {-150, 120}, {-50, 120}, {50, 120}, {150, 120},
     };
 
     const auto startNode = diagram.addNode("start");
     startNode->setShape(SVGNode::NODE_SHAPE_CIRCLE);
     startNode->setLabel("START");
     startNode->setFontColor("white");
-    startNode->setFillColor("gray");
+    startNode->setFillColor("darkgrey");
+    startNode->setColor("none");
     vector<shared_ptr<SVGNode>> nodes(6);
     vector<shared_ptr<SVGEdge>> edges(6);
     for (int i = 0; i < 6; ++i) {
@@ -64,23 +65,35 @@ TEST(TestExample, Subgraph) {
     leftBottomSubgraph->addNode(nodes[3]);
     leftBottomSubgraph->addEdge(edges[2]);
     leftBottomSubgraph->addEdge(edges[3]);
+    leftBottomSubgraph->setColor("white");
+    leftBottomSubgraph->setFontColor("white");
+    leftBottomSubgraph->setLabel("Left Bottom");
+    leftBottomSubgraph->setPenWidth(5.0);
     auto rightBottomSubgraph = make_shared<SVGGraph>("RBG");
     rightBottomSubgraph->defaultNodeAttributes().setShape(SVGNode::NODE_SHAPE_RECT);
     rightBottomSubgraph->addNode(nodes[4]);
     rightBottomSubgraph->addNode(nodes[5]);
     rightBottomSubgraph->addEdge(edges[4]);
     rightBottomSubgraph->addEdge(edges[5]);
+    rightBottomSubgraph->setColor("black");
+    rightBottomSubgraph->setLabel("Right Bottom");
+    rightBottomSubgraph->setPenWidth(5.0);
 
     const auto leftSubgraph = diagram.addSubgraph("LG");
     leftSubgraph->defaultEdgeAttributes().setPenWidth(5.0);
     leftSubgraph->addNode(nodes[0]);
     leftSubgraph->addEdge(edges[0]);
     leftSubgraph->addSubgraph(leftBottomSubgraph);
+    leftSubgraph->setFillColor("black");
+    leftSubgraph->setFontColor("white");
+    leftSubgraph->setLabel("Left Subgraph");
     const auto rightSubgraph = diagram.addSubgraph("RG");
     rightSubgraph->defaultNodeAttributes().setPenWidth(5.0);
     rightSubgraph->addNode(nodes[1]);
     rightSubgraph->addEdge(edges[1]);
     rightSubgraph->addSubgraph(rightBottomSubgraph);
+    rightSubgraph->setFillColor("white");
+    rightSubgraph->setLabel("Right Subgraph");
 
 
     diagram.render("example_subgraph.svg");

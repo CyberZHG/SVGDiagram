@@ -32,7 +32,7 @@ PYBIND11_MODULE(_core, m, py::mod_gil_not_used()) {
         .def("set_color", &SVGNode::setColor)
         .def("set_fill_color", &SVGNode::setFillColor)
         .def("set_font_color", &SVGNode::setFontColor)
-        .def("set_pen_width", &SVGNode::setFontColor)
+        .def("set_pen_width", &SVGNode::setPenWidth)
     ;
     py::class_<SVGEdge, shared_ptr<SVGEdge>>(m, "SVGEdge")
         .def(py::init<>())
@@ -48,7 +48,7 @@ PYBIND11_MODULE(_core, m, py::mod_gil_not_used()) {
         .def("set_color", &SVGEdge::setColor)
         .def("set_fill_color", &SVGEdge::setFillColor)
         .def("set_font_color", &SVGEdge::setFontColor)
-        .def("set_pen_width", &SVGEdge::setFontColor)
+        .def("set_pen_width", &SVGEdge::setPenWidth)
         .def("set_splines", py::overload_cast<const string&>(&SVGEdge::setSplines))
         .def("add_connection_point", py::overload_cast<double, double>(&SVGEdge::addConnectionPoint))
         .def("set_arrow_head", py::overload_cast<const string_view&>(&SVGEdge::setArrowHead))
@@ -62,7 +62,7 @@ PYBIND11_MODULE(_core, m, py::mod_gil_not_used()) {
         .def("set_color", &SVGGraph::setColor)
         .def("set_fill_color", &SVGGraph::setFillColor)
         .def("set_font_color", &SVGGraph::setFontColor)
-        .def("set_pen_width", &SVGGraph::setFontColor)
+        .def("set_pen_width", &SVGGraph::setPenWidth)
     ;
     py::class_<SVGDiagram>(m, "SVGDiagram")
         .def(py::init<>())

@@ -84,4 +84,16 @@ describe("Docs/NodeAttributes", () => {
         const svg = diagram.render();
         await compareSVG("node_attr", "color", svg);
     });
+    it("penWidth", async () => {
+        const diagram = new SVGDiagram();
+        for (let i = 0; i < 3; i++) {
+            const penWidth = 1 + i * 2;
+            const node = diagram.addNode(`node${i}`);
+            node.setCenter(i * 150, 0);
+            node.setLabel(`penWidth=${penWidth}`);
+            node.setPenWidth(penWidth);
+        }
+        const svg = diagram.render();
+        await compareSVG("node_attr", "pen_width", svg);
+    });
 });

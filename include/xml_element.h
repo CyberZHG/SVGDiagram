@@ -32,16 +32,26 @@ namespace svg_diagram {
         void addAttributes(const AttributesType& attributes);
         void addChild(const ChildType& child);
         void addChildren(const ChildrenType& children);
+        const ChildrenType& children() const;
         void setContent(const std::string& content);
 
         [[nodiscard]] virtual std::string toString(int indent) const;
         [[nodiscard]] virtual std::string toString() const;
 
+        /** Check whether the two XML elements have the same function.
+         *
+         * NOTE that this is only used for unit testing.
+         * During comparison, all numbers found in attribute text are treated as floating-point values.
+         * If the absolute difference between them is less than EPSILON, the two numbers are considered equal.
+         *
+         * @param other Another XML element.
+         * @return
+         */
         bool operator==(const XMLElement& other) const;
 
         /** Parse XML from string.
          *
-         * Note that this is only used for unit testing. It can only parse the output of this class.
+         * NOTE that this is only used for unit testing. It can only parse the output of this class.
          *
          * @param source XML string.
          * @return XML element.

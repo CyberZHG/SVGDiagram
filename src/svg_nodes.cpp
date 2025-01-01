@@ -177,8 +177,8 @@ pair<double, double> SVGNode::computeTextSize() {
     }
     const SVGTextSize textSize;
     const auto label = getAttribute(DOT_ATTR_KEY_LABEL);
-    setAttributeIfNotExist(DOT_ATTR_KEY_FONT_NAME, "Serif");
-    setAttributeIfNotExist(DOT_ATTR_KEY_FONT_SIZE, "16");
+    setAttributeIfNotExist(DOT_ATTR_KEY_FONT_NAME, "Times,serif");
+    setAttributeIfNotExist(DOT_ATTR_KEY_FONT_SIZE, "14");
     const double fontSize = stod(getAttribute(DOT_ATTR_KEY_FONT_SIZE));
     const string fontFamily = getAttribute(DOT_ATTR_KEY_FONT_NAME);
     auto [width, height] = textSize.computeTextSize(label, fontSize, fontFamily);
@@ -264,7 +264,9 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsCircle() {
 }
 
 pair<double, double> SVGNode::computeConnectionPointCircle(const double angle) const {
-    const double radius = stod(getAttribute(DOT_ATTR_KEY_WIDTH)) / 2.0;
+    const double width = stod(getAttribute(DOT_ATTR_KEY_WIDTH));
+    const double penWidth = stod(getAttribute(DOT_ATTR_KEY_PEN_WIDTH));
+    const double radius = (width + penWidth) / 2.0;
     return {_cx + radius * cos(angle), _cy + radius * sin(angle)};
 }
 
@@ -290,8 +292,9 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsRect() {
 }
 
 pair<double, double> SVGNode::computeConnectionPointRect(const double angle) const {
-    const double width = stod(getAttribute(DOT_ATTR_KEY_WIDTH));
-    const double height = stod(getAttribute(DOT_ATTR_KEY_HEIGHT));
+    const double strokeWidth = stod(getAttribute(DOT_ATTR_KEY_PEN_WIDTH));
+    const double width = stod(getAttribute(DOT_ATTR_KEY_WIDTH)) + strokeWidth;
+    const double height = stod(getAttribute(DOT_ATTR_KEY_HEIGHT)) + strokeWidth;
     double x1 = -width / 2, y1 = -height / 2;
     double x2 = width / 2, y2 = height / 2;
     const auto vertices = vector<pair<double, double>>{{x1, y1}, {x2, y1}, {x2, y2}, {x1, y2}};

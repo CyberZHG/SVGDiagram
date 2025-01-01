@@ -1,4 +1,5 @@
 #include "xml_element.h"
+#include "attribute_utils.h"
 
 #include <format>
 using namespace std;
@@ -70,11 +71,22 @@ void XMLElement::addChildren(const ChildrenType& children) {
     }
 }
 
+const XMLElement::ChildrenType & XMLElement::children() const {
+    return _children;
+}
+
 void XMLElement::setContent(const string& content) {
     _content = content;
 }
 
 string XMLElement::toString(const int indent) const {
+    if (_tag.empty()) {
+        string s;
+        for (const auto& child : _children) {
+            s += child->toString(indent);
+        }
+        return s;
+    }
     const auto indentStr = string(indent, ' ');
     string s = indentStr + "<" + _tag;
     for (const auto& key : _attributeKeys) {
@@ -112,28 +124,40 @@ bool XMLElement::operator==(const XMLElement& other) const {
     if (_attributes.size() != other._attributes.size()) {
         return false;
     }
-    for (const auto& [key, value] : _attributes) {
+    for (const auto& [key, value1] : _attributes) {
         if (!other._attributes.contains(key)) {
             return false;
         }
-        const auto& otherValue = other._attributes.at(key);
-        try {
-            size_t pos1, pos2;
-            const double value1 = stod(value, &pos1);
-            const double value2 = stod(otherValue, &pos2);
-            if (pos1 == value.size() && pos2 == otherValue.size()) {
-                if (fabs(value1 - value2) > EPSILON) {
+        const auto& value2 = other._attributes.at(key);
+        const size_t n = value1.size(), m = value2.size();
+        size_t i = 0, j = 0;
+        while (i < n && j < m) {
+            try {
+                size_t pos1, pos2;
+                const double doubleValue1 = stod(value1.substr(i), &pos1);
+                const double doubleValue2 = stod(value2.substr(j), &pos2);
+                if (fabs(doubleValue1 - doubleValue2) > EPSILON) {
                     return false;
                 }
-            } else {
-                if (value != otherValue) {
+                if ((i == pos1) ^ (j == pos2)) {
+                    return false;
+                }
+                if (i == pos1) {
+                    if (value1[i++] != value2[j++]) {
+                        return false;
+                    }
+                } else {
+                    i += pos1;
+                    j += pos2;
+                }
+            } catch (...) {
+                if (value1[i++] != value2[j++]) {
                     return false;
                 }
             }
-        } catch (...) {
-            if (value != otherValue) {
-                return false;
-            }
+        }
+        if (i != n || j != m) {
+            return false;
         }
     }
     if (_children.size() != other._children.size()) {

@@ -11,7 +11,7 @@ namespace svg_diagram {
 
     class SVGDiagram final {
     public:
-        SVGDiagram();
+        SVGDiagram() = default;
         ~SVGDiagram() = default;
 
         static constexpr double DEFAULT_MARGIN = 4;

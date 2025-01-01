@@ -29,7 +29,7 @@ namespace svg_diagram {
          * @param fontName Font family.
          * @return Width and height.
          */
-        [[nodiscard]] std::pair<double, double> computeTextSize(const std::string& text, double fontSize, const std::string& fontName = "Serif") const;
+        [[nodiscard]] std::pair<double, double> computeTextSize(const std::string& text, double fontSize, const std::string& fontName = "Times,serif") const;
 
         /** Compute the approximate text size
          * based on the number of lines and the maximum number of characters per line.
@@ -45,7 +45,7 @@ namespace svg_diagram {
         double _widthScale = DEFAULT_APPROXIMATION_WIDTH_SCALE;
         double _lineSpacingScale = DEFAULT_APPROXIMATION_LINE_SPACING_SCALE;
 #ifdef SVG_DIAGRAM_ENABLE_PANGO_CAIRO
-        static std::pair<double, double> computePangoCairoTextSize(const std::string& text, double fontSize, const std::string& fontFamily = "Serif") ;
+        static std::pair<double, double> computePangoCairoTextSize(const std::string& text, double fontSize, const std::string& fontFamily = "Times,serif") ;
 #endif
     };
 }

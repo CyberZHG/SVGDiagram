@@ -5,10 +5,6 @@
 using namespace std;
 using namespace svg_diagram;
 
-SVGDiagram::SVGDiagram() {
-    _svgDraws.emplace_back(make_unique<SVGDrawComment>("Created by: https://github.com/CyberZHG/SVGDiagram"));
-}
-
 void SVGDiagram::enableDebug() {
     _enabledDebug = true;
 }

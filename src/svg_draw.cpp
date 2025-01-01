@@ -100,14 +100,14 @@ SVGDrawBoundingBox SVGDrawNode::boundingBox() const {
 }
 
 SVGDrawText::SVGDrawText() {
-    setFont("Serif", 16);
+    setFont("Times,serif", 14);
 }
 
 SVGDrawText::SVGDrawText(const double x, const double y, const string& text) {
     cx = x;
     cy = y;
     this->text = text;
-    setFont("Serif", 16);
+    setFont("Times,serif", 14);
 }
 
 void SVGDrawText::setFont(const string& fontFamily, double fontSize) {

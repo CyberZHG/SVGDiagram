@@ -50,7 +50,7 @@ The two most important properties of `SVGNode` are its center and its text. By d
 from sp_svg_diagram import SVGDiagram
 
 diagram = SVGDiagram()
-node = diagram.add_node("a")
+node = diagram.add_node("A")
 node.set_center(0, 0)
 node.set_label("foo\nbar")
 diagram.to_svg("node.svg")
@@ -61,7 +61,7 @@ diagram.to_svg("node.svg")
 import { SVGDiagram } from 'sp-svg-diagram';
 
 const diagram = new SVGDiagram();
-const node = diagram.addNode("a");
+const node = diagram.addNode("A");
 node.setCenter(0.0, 0.0);
 node.setLabel("foo\nbar");
 const svg = diagram.render();
@@ -97,11 +97,11 @@ SVG output:
 from sp_svg_diagram import SVGDiagram
 
 diagram = SVGDiagram()
-node1 = diagram.add_node("a")
+node1 = diagram.add_node("A")
 node1.set_center(0, 0)
-node2 = diagram.add_node("b")
+node2 = diagram.add_node("B")
 node2.set_center(60, 80)
-diagram.add_edge("a", "b")
+diagram.add_edge("A", "B")
 diagram.to_svg("node.svg")
 ```
 ````
@@ -110,11 +110,11 @@ diagram.to_svg("node.svg")
 import { SVGDiagram } from 'sp-svg-diagram';
 
 const diagram = new SVGDiagram();
-const node1 = diagram.addNode("a");
+const node1 = diagram.addNode("A");
 node1.setCenter(0.0, 0.0);
-const node2 = diagram.addNode("b");
+const node2 = diagram.addNode("B");
 node2.setCenter(60.0, 80.0);
-diagram.addEdge("a", "b");
+diagram.addEdge("A", "B");
 const svg = diagram.render();
 ````
 

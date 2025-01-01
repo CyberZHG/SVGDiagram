@@ -35,5 +35,5 @@ TEST(TestDocsNodeAttributes, LabelDebug) {
     const auto node3 = diagram.addNode("C");
     node3->setCenter(300, 0);
     node3->setLabel("物华天宝\n人杰地灵");
-    diagram.render(OUTPUT_DIR + "label.svg");
+    diagram.render(OUTPUT_DIR + "label_debug.svg");
 }

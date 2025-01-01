@@ -13,6 +13,12 @@ namespace svg_diagram {
         bool filled = false;
     };
 
+    struct AttributeParsedColor {
+        std::string color;
+        double opacity = 1.0;
+        double weight = -1.0;
+    };
+
     class AttributeUtils {
     public:
         static double pointToInch(double points);
@@ -20,6 +26,7 @@ namespace svg_diagram {
         static double centimeterToInch(double centimeters);
 
         static bool isPartOfDouble(char ch);
+        static std::string removeSpaces(const std::string& str);
         static std::vector<std::string> splitString(const std::string& str, char delimiter);
         static std::vector<std::string> splitString(const std::string& str, const std::string& delimiter);
 
@@ -37,6 +44,7 @@ namespace svg_diagram {
 
         static bool parseBool(const std::string& value);
         static AttributeParsedStyle parseStyle(const std::string& value);
+        static std::vector<AttributeParsedColor> parseColorList(const std::string& value);
 
         using DCommands = std::vector<std::pair<char, std::vector<double>>>;
         static DCommands parseDCommands(const std::string& d);

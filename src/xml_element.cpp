@@ -47,6 +47,13 @@ void XMLElement::addAttribute(const string& name, const string& value) {
     _attributes.emplace(name, value);
 }
 
+void XMLElement::addAttribute(const string& name, const double value) {
+    if (!_attributes.contains(name)) {
+        _attributeKeys.push_back(name);
+    }
+    _attributes.emplace(name, format("{}", value));
+}
+
 void XMLElement::addAttributes(const AttributesType& attributes) {
     for (const auto& [key, value] : attributes) {
         addAttribute(key, value);

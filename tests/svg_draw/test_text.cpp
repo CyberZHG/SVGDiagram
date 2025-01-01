@@ -10,7 +10,7 @@ TEST(TestSVGDrawText, OneLineTextAutoSize) {
     diagram.clearSVGDraw();
     diagram.setBackgroundColor("white");
     auto text = make_unique<SVGDrawText>(0.0, 0.0, "Hello world!");
-    auto svg = text->render();
+    auto svg = text->generateXMLElements()[0]->toString();
     EXPECT_EQ(svg, R"(<text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Serif" font-size="16" >Hello world!</text>)" + string("\n"));
     diagram.addSVGDraw(std::move(text));
     svg = diagram.render();
@@ -30,7 +30,7 @@ TEST(TestSVGDrawText, TwoLinesAutoSize) {
     diagram.clearSVGDraw();
     diagram.setBackgroundColor("white");
     auto text = make_unique<SVGDrawText>(0.0, 0.0, "Hello world!\n世界你好！");
-    auto svg = text->render();
+    auto svg = text->generateXMLElements()[0]->toString();
     auto expected = R"(<text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Serif" font-size="16" >
   <tspan x="0" dy="-0.6em">Hello world!</tspan>
   <tspan x="0" dy="1.2em">世界你好！</tspan>
@@ -58,7 +58,7 @@ TEST(TestSVGDrawText, ThreeLinesAutoSize) {
     diagram.clearSVGDraw();
     diagram.setBackgroundColor("white");
     auto text = make_unique<SVGDrawText>(0.0, 0.0, "Hello world!\n世界你好！\r\nSalve, mundus!");
-    auto svg = text->render();
+    auto svg = text->generateXMLElements()[0]->toString();
     auto expected = R"(<text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Serif" font-size="16" >
   <tspan x="0" dy="-1.2em">Hello world!</tspan>
   <tspan x="0" dy="1.2em">世界你好！</tspan>

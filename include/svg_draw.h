@@ -4,6 +4,8 @@
 #include <string>
 #include <map>
 
+#include "xml_element.h"
+
 namespace svg_diagram {
 
     constexpr std::string_view SVG_ATTR_KEY_FILL = "fill";
@@ -28,12 +30,11 @@ namespace svg_diagram {
 
         static constexpr int DEFAULT_NUM_DECIMALS = 3;
 
-        /** Generate a SVG string.
+        /** Generate a vector of XML elements.
          *
-         * @return SVG string.
+         * @return XML elements.
          */
-        [[nodiscard]] virtual std::string render() const = 0;
-        [[nodiscard]] std::string renderWithIndent(int indent) const;
+        [[nodiscard]] virtual XMLElement::ChildrenType generateXMLElements() const = 0;
 
         /** Compute a bounding box for this object.
          *
@@ -58,12 +59,11 @@ namespace svg_diagram {
         [[nodiscard]] virtual bool isDefs() const;
 
         void setNumDecimals(int numDecimals);
-        [[nodiscard]] std::string formatDouble(double value) const;
 
     protected:
         std::map<std::string_view, std::string> _attributes;
 
-        [[nodiscard]] std::string renderAttributes() const;
+        void addAttributesToXMLElement(const XMLElement::ChildType& element) const;
 
     private:
         int _numDecimals = DEFAULT_NUM_DECIMALS;
@@ -77,7 +77,7 @@ namespace svg_diagram {
 
         std::string comment;
 
-        [[nodiscard]] std::string render() const override;
+        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
 
         [[nodiscard]] bool hasEntity() const override;
@@ -119,7 +119,7 @@ namespace svg_diagram {
 
         void setFont(const std::string& fontFamily, double fontSize);
 
-        [[nodiscard]] std::string render() const override;
+        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
     };
 
@@ -128,7 +128,7 @@ namespace svg_diagram {
         using SVGDrawNode::SVGDrawNode;
         SVGDrawCircle(double x, double y, double radius);
 
-        [[nodiscard]] std::string render() const override;
+        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
 
         /** A circle should have the same width and height.
          * If the width or height is misconfigured,
@@ -143,7 +143,7 @@ namespace svg_diagram {
     public:
         using SVGDrawNode::SVGDrawNode;
 
-        [[nodiscard]] std::string render() const override;
+        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
     };
 
     class SVGDrawLine final : public SVGDrawEntity {
@@ -153,7 +153,7 @@ namespace svg_diagram {
 
         double x1, y1, x2, y2;
 
-        [[nodiscard]] std::string render() const override;
+        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
     };
 
@@ -164,7 +164,7 @@ namespace svg_diagram {
 
         std::string d;
 
-        [[nodiscard]] std::string render() const override;
+        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
     };
 
@@ -188,12 +188,12 @@ namespace svg_diagram {
 
         [[nodiscard]] std::string singletonName() const override;
 
-        [[nodiscard]] std::string render() const override;
+        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
 
     private:
         std::string _shape;
 
-        [[nodiscard]] std::string renderNormal() const;
+        [[nodiscard]] XMLElement::ChildrenType renderNormal() const;
     };
 
 }

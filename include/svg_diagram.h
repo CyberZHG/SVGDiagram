@@ -14,7 +14,7 @@ namespace svg_diagram {
         SVGDiagram();
         ~SVGDiagram() = default;
 
-        static constexpr double DEFAULT_MARGIN = 8;
+        static constexpr double DEFAULT_MARGIN = 4;
 
         void enableDebug();
 
@@ -54,8 +54,8 @@ namespace svg_diagram {
 
         static bool guardSingleton(std::unordered_set<std::string>& singletonNames, const std::unique_ptr<SVGDraw>& svgDraw);
 
-        [[nodiscard]] std::string generateSVGOpen() const;
-        [[nodiscard]] std::string renderDefs(std::unordered_set<std::string>& singletonNames) const;
+        [[nodiscard]] std::pair<XMLElement::ChildType, XMLElement::ChildType> generateSVGElement() const;
+        [[nodiscard]] XMLElement::ChildType renderDefs(std::unordered_set<std::string>& singletonNames) const;
         static std::string generateSVGClose();
     };
 

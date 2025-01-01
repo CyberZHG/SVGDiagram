@@ -23,18 +23,6 @@ SVGDrawBoundingBox::SVGDrawBoundingBox(double x1, double y1, double x2, double y
     this->y2 = y2;
 }
 
-string SVGDraw::renderWithIndent(const int indent) const {
-    auto svg = render();
-    istringstream iss(svg);
-    ostringstream oss;
-    string line;
-    string prefix(indent, ' ');
-    while (getline(iss, line)) {
-        oss << prefix << line << "\n";
-    }
-    return oss.str();
-}
-
 string SVGDraw::singletonName() const {
     return "";
 }
@@ -51,51 +39,23 @@ void SVGDraw::setNumDecimals(const int numDecimals) {
     _numDecimals = numDecimals;
 }
 
-string SVGDraw::formatDouble(const double value) const {
-    string str = format("{}", value);
-    int numDecimals = 0;
-    bool start = false;
-    for (const auto& ch : str) {
-        if (ch == '.') {
-            start = true;
-        } else if (start) {
-            ++numDecimals;
-        }
-    }
-    if (numDecimals <= _numDecimals) {
-        return str;
-    }
-    return format("{:.{}f}", value, _numDecimals);
-}
-
-std::string SVGDraw::renderAttributes() const {
-    string svg;
+void SVGDraw::addAttributesToXMLElement(const XMLElement::ChildType& element) const {
     auto keys_view = _attributes | std::views::keys;
     std::vector<string> keys(keys_view.begin(), keys_view.end());
     ranges::sort(keys);
     for (const auto& key : keys) {
         if (const auto& value = _attributes.at(key); !value.empty()) {
-            svg += format(R"( {}="{}")", key, value);
+            element->addAttribute(key, value);
         }
     }
-    return svg;
 }
 
 SVGDrawComment::SVGDrawComment(const string& comment) {
     this->comment = comment;
 }
 
-string SVGDrawComment::render() const {
-    string escapedComment;
-    for (int i = 0; i < comment.length(); ++i) {
-        if (i + 1 < comment.length() && comment[i] == '-' && comment[i + 1] == '-') {
-            escapedComment += "‑‑";
-            ++i;
-        } else {
-            escapedComment += comment[i];
-        }
-    }
-    return format("<!-- {} -->\n", escapedComment);
+XMLElement::ChildrenType SVGDrawComment::generateXMLElements() const {
+    return {make_shared<XMLElementComment>(comment)};
 }
 
 SVGDrawBoundingBox SVGDrawComment::boundingBox() const {
@@ -155,31 +115,37 @@ void SVGDrawText::setFont(const string& fontFamily, double fontSize) {
     setAttribute(SVG_ATTR_KEY_FONT_SIZE, format("{}", fontSize));
 }
 
-string SVGDrawText::render() const {
+XMLElement::ChildrenType SVGDrawText::generateXMLElements() const {
     auto splitLines = [](const string& s) -> vector<string> {
         regex re("\r\n|\r|\n");
         sregex_token_iterator it(s.begin(), s.end(), re, -1);
         sregex_token_iterator end;
         return {it, end};
     };
-    string svg = format(R"(<text x="{}" y="{}" text-anchor="middle" dominant-baseline="central")", formatDouble(cx), formatDouble(cy));
-    svg += renderAttributes();
-    svg += " >";
+    const auto textElement = make_shared<XMLElement>("text");
+    textElement->addAttribute("x", cx);
+    textElement->addAttribute("y", cy);
+    textElement->addAttribute("text-anchor", "middle");
+    textElement->addAttribute("dominant-baseline", "central");
+    addAttributesToXMLElement(textElement);
     if (const auto lines = splitLines(text); lines.size() == 1) {
-        svg += this->text;
+        textElement->setContent(text);
     } else {
-        svg += "\n";
+        XMLElement::ChildrenType spans;
         for (int i = 0; i < lines.size(); ++i) {
             double dy = SVGTextSize::DEFAULT_APPROXIMATION_HEIGHT_SCALE + SVGTextSize::DEFAULT_APPROXIMATION_LINE_SPACING_SCALE;
             if (i == 0) {
                 dy = -(static_cast<double>(lines.size()) - 1) / 2 * dy;
             }
-            svg += format(R"(  <tspan x="{}" dy="{}em">{}</tspan>)", formatDouble(cx), dy, lines[i]);
-            svg += "\n";
+            const auto tspanElement = make_shared<XMLElement>("tspan");
+            tspanElement->addAttribute("x", cx);
+            tspanElement->addAttribute("dy", format("{}em", dy));
+            tspanElement->setContent(lines[i]);
+            spans.emplace_back(tspanElement);
         }
+        textElement->addChildren(spans);
     }
-    svg += "</text>\n";
-    return svg;
+    return {textElement};
 }
 
 SVGDrawBoundingBox SVGDrawText::boundingBox() const {
@@ -196,12 +162,14 @@ SVGDrawCircle::SVGDrawCircle(const double x, const double y, const double radius
     width = height = radius * 2;
 }
 
-string SVGDrawCircle::render() const {
+XMLElement::ChildrenType SVGDrawCircle::generateXMLElements() const {
     const double radius = min(width, height) / 2;
-    string svg = format(R"(<circle cx="{}" cy="{}" r="{}")", formatDouble(cx), formatDouble(cy), formatDouble(radius));
-    svg += renderAttributes();
-    svg += " />\n";
-    return svg;
+    const auto circleElement = make_shared<XMLElement>("circle");
+    circleElement->addAttribute("cx", cx);
+    circleElement->addAttribute("cy", cy);
+    circleElement->addAttribute("r", radius);
+    addAttributesToXMLElement(circleElement);
+    return {circleElement};
 }
 
 SVGDrawBoundingBox SVGDrawCircle::boundingBox() const {
@@ -209,13 +177,16 @@ SVGDrawBoundingBox SVGDrawCircle::boundingBox() const {
     return {cx - radius, cy - radius, cx + radius, cy + radius};
 }
 
-std::string SVGDrawRect::render() const {
+XMLElement::ChildrenType SVGDrawRect::generateXMLElements() const {
     const double x = cx - width / 2;
     const double y = cy - height / 2;
-    string svg = format(R"(<rect x="{}" y="{}" width="{}" height="{}")", formatDouble(x), formatDouble(y), formatDouble(width), formatDouble(height));
-    svg += renderAttributes();
-    svg += " />\n";
-    return svg;
+    const auto rectElement = make_shared<XMLElement>("rect");
+    rectElement->addAttribute("x", x);
+    rectElement->addAttribute("y", y);
+    rectElement->addAttribute("width", width);
+    rectElement->addAttribute("height", height);
+    addAttributesToXMLElement(rectElement);
+    return {rectElement};
 }
 
 SVGDrawLine::SVGDrawLine(const double x1, const double y1, const double x2, const double y2) {
@@ -225,11 +196,14 @@ SVGDrawLine::SVGDrawLine(const double x1, const double y1, const double x2, cons
     this->y2 = y2;
 }
 
-string SVGDrawLine::render() const {
-    string svg = format(R"(<line x1="{}" y1="{}" x2="{}" y2="{}")", formatDouble(x1), formatDouble(y1), formatDouble(x2), formatDouble(y2));
-    svg += renderAttributes();
-    svg += " />\n";
-    return svg;
+XMLElement::ChildrenType SVGDrawLine::generateXMLElements() const {
+    const auto lineElement = make_shared<XMLElement>("line");
+    lineElement->addAttribute("x1", x1);
+    lineElement->addAttribute("y1", y1);
+    lineElement->addAttribute("x2", x2);
+    lineElement->addAttribute("y2", y2);
+    addAttributesToXMLElement(lineElement);
+    return {lineElement};
 }
 
 SVGDrawBoundingBox SVGDrawLine::boundingBox() const {
@@ -240,7 +214,7 @@ SVGDrawPath::SVGDrawPath(const string& d) {
     this->d = d;
 }
 
-string SVGDrawPath::render() const {
+XMLElement::ChildrenType SVGDrawPath::generateXMLElements() const {
     const auto commands = AttributeUtils::parseDCommands(d);
     string reformat;
     for (int i = 0; i < commands.size(); ++i) {
@@ -250,13 +224,13 @@ string SVGDrawPath::render() const {
         }
         reformat += command;
         for (const auto& parameter : parameters) {
-            reformat += format(" {}", formatDouble(parameter));
+            reformat += format(" {}", parameter);
         }
     }
-    string svg = format(R"(<path d="{}")", reformat);
-    svg += renderAttributes();
-    svg += " />\n";
-    return svg;
+    const auto pathElement = make_shared<XMLElement>("path");
+    pathElement->addAttribute("d", reformat);
+    addAttributesToXMLElement(pathElement);
+    return {pathElement};
 }
 
 SVGDrawBoundingBox SVGDrawPath::boundingBox() const {
@@ -303,24 +277,25 @@ string SVGDrawMarker::singletonName() const {
     return format("arrow_type_{}__fill_{}__stroke_{}", _shape, fill, stroke);
 }
 
-string SVGDrawMarker::render() const {
+XMLElement::ChildrenType SVGDrawMarker::generateXMLElements() const {
     if (_shape == SHAPE_NORMAL) {
         return renderNormal();
     }
     cerr << "Unknown marker shape: " << _shape << endl;
-    return "";
+    return {};
 }
 
-string SVGDrawMarker::renderNormal() const {
-    string svg = format(R"(<marker id="{}")", singletonName());
-    svg += format(R"( markerWidth="{}" markerHeight="{}")", formatDouble(10.0), formatDouble(7.0));
-    svg += format(R"( refX="{}" refY="{}" orient="auto-start-reverse")", formatDouble(10.0), formatDouble(3.5));
-    svg += ">\n";
-    svg += R"(  <polygon points="0 0)";
-    svg += format(" {} {}", formatDouble(10.0), formatDouble(3.5));
-    svg += format(R"( 0 {}")", formatDouble(7.0));
-    svg += renderAttributes();
-    svg += R"( />)" + string("\n");
-    svg += "</marker>\n";
-    return svg;
+XMLElement::ChildrenType SVGDrawMarker::renderNormal() const {
+    const auto markerElement = make_shared<XMLElement>("marker");
+    markerElement->addAttribute("id", singletonName());
+    markerElement->addAttribute("markerWidth", 10.0);
+    markerElement->addAttribute("markerHeight", 7.0);
+    markerElement->addAttribute("refX", 10.0);
+    markerElement->addAttribute("refY", 3.5);
+    markerElement->addAttribute("orient", "auto-start-reverse");
+    const auto polygonElement = make_shared<XMLElement>("polygon");
+    polygonElement->addAttribute("points", format("0 0 10 3.5 0 7"));
+    addAttributesToXMLElement(polygonElement);
+    markerElement->addChild(polygonElement);
+    return {markerElement};
 }

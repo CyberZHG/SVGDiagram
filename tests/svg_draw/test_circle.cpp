@@ -9,7 +9,7 @@ TEST(TestSVGDrawCircle, OneCircleAutoSize) {
     diagram.clearSVGDraw();
     diagram.setBackgroundColor("white");
     auto circle = make_unique<SVGDrawCircle>(0.0, 0.0, 20.0);
-    auto svg = circle->render();
+    auto svg = circle->generateXMLElements()[0]->toString();
     EXPECT_EQ(svg, R"(<circle cx="0" cy="0" r="20" />)" + string("\n"));
     diagram.addSVGDraw(std::move(circle));
     svg = diagram.render();
@@ -30,7 +30,7 @@ TEST(TestSVGDrawCircle, OneCircleFixedSize) {
     diagram.setBackgroundColor("white");
     diagram.setCanvasSize(100, 100);
     auto circle = make_unique<SVGDrawCircle>(0.0, 0.0, 20.0);
-    auto svg = circle->render();
+    auto svg = circle->generateXMLElements()[0]->toString();
     EXPECT_EQ(svg, R"(<circle cx="0" cy="0" r="20" />)" + string("\n"));
     diagram.addSVGDraw(std::move(circle));
     svg = diagram.render();
@@ -50,11 +50,11 @@ TEST(TestSVGDrawCircle, TwoCirclesAutoSize) {
     diagram.clearSVGDraw();
     diagram.setBackgroundColor("white");
     auto circle1 = make_unique<SVGDrawCircle>(0.0, 0.0, 20.0);
-    auto svg = circle1->render();
+    auto svg = circle1->generateXMLElements()[0]->toString();
     EXPECT_EQ(svg, R"(<circle cx="0" cy="0" r="20" />)" + string("\n"));
     diagram.addSVGDraw(std::move(circle1));
     auto circle2 = make_unique<SVGDrawCircle>(50.0, 0.0, 20.0);
-    svg = circle2->render();
+    svg = circle2->generateXMLElements()[0]->toString();
     EXPECT_EQ(svg, R"(<circle cx="50" cy="0" r="20" />)" + string("\n"));
     diagram.addSVGDraw(std::move(circle2));
     svg = diagram.render();
@@ -76,11 +76,11 @@ TEST(TestSVGDrawCircle, TwoCirclesFixedSize) {
     diagram.setBackgroundColor("white");
     diagram.setCanvasSize(100, 100);
     auto circle1 = make_unique<SVGDrawCircle>(0.0, 0.0, 20.0);
-    auto svg = circle1->render();
+    auto svg = circle1->generateXMLElements()[0]->toString();
     EXPECT_EQ(svg, R"(<circle cx="0" cy="0" r="20" />)" + string("\n"));
     diagram.addSVGDraw(std::move(circle1));
     auto circle2 = make_unique<SVGDrawCircle>(50.0, 0.0, 20.0);
-    svg = circle2->render();
+    svg = circle2->generateXMLElements()[0]->toString();
     EXPECT_EQ(svg, R"(<circle cx="50" cy="0" r="20" />)" + string("\n"));
     diagram.addSVGDraw(std::move(circle2));
     svg = diagram.render();
@@ -102,7 +102,7 @@ TEST(TestSVGDrawCircle, OneCircleFillAndStroke) {
     auto circle = make_unique<SVGDrawCircle>(0.0, 0.0, 20.0);
     circle->setAttribute(SVG_ATTR_KEY_STROKE, "blue");
     circle->setAttribute(SVG_ATTR_KEY_FILL, "none");
-    auto svg = circle->render();
+    auto svg = circle->generateXMLElements()[0]->toString();
     EXPECT_EQ(svg, R"(<circle cx="0" cy="0" r="20" fill="none" stroke="blue" />)" + string("\n"));
     diagram.addSVGDraw(std::move(circle));
     svg = diagram.render();

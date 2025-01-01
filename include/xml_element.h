@@ -28,6 +28,7 @@ namespace svg_diagram {
 
         void setTag(const std::string& tag);
         void addAttribute(const std::string& name, const std::string& value);
+        void addAttribute(const std::string &name, double value);
         void addAttributes(const AttributesType& attributes);
         void addChild(const ChildType& child);
         void addChildren(const ChildrenType& children);

@@ -85,7 +85,6 @@ if(SVG_DIAGRAM_BUILD_TESTS)
             tests/svg_node/test_circle.cpp
             tests/test_utils.cpp
             tests/test_utils.h
-            tests/svg_draw/test_draw.cpp
             tests/svg_edge/test_line.cpp
             tests/svg_edge/test_spline.cpp
             tests/example/test_example_pentagon.cpp

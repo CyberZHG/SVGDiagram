@@ -37,6 +37,7 @@ jobs:
       - name: Lint
         run: |
           cd es
+          npm install
           npm run lint
 
       - name: Test

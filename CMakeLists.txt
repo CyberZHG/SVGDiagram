@@ -12,6 +12,8 @@ endif()
 add_library(SVGDiagram STATIC
         include/svg_diagram.h
         src/svg_diagram.cpp
+        include/svg_text_size.h
+        src/svg_text_size.cpp
 )
 
 target_include_directories(SVGDiagram
@@ -64,6 +66,7 @@ if(SVG_DIAGRAM_BUILD_TESTS)
 
     add_executable(runTests
             tests/test_main.cpp
+            tests/test_svg_text_size.cpp
     )
 
     target_link_libraries(runTests

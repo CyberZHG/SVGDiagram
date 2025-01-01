@@ -67,6 +67,17 @@ SVGDrawBoundingBox SVGDrawNode::boundingBox() const {
     return {cx - halfWidth, cy - halfHeight, cx + halfWidth, cy + halfHeight};
 }
 
+string SVGDrawNode::renderAttributes() const {
+    string svg;
+    if (!fill.empty()) {
+        svg += format(R"( fill="{}")", fill);
+    }
+    if (!stroke.empty()) {
+        svg += format(R"( stroke="{}")", stroke);
+    }
+    return svg;
+}
+
 SVGDrawCircle::SVGDrawCircle(const double x, const double y, const double radius) {
     cx = x;
     cy = y;
@@ -75,8 +86,9 @@ SVGDrawCircle::SVGDrawCircle(const double x, const double y, const double radius
 
 string SVGDrawCircle::render() const {
     const double radius = min(width, height) / 2;
-    string svg = format(R"(<circle cx="{}" cy="{}" r="{}" )", cx, cy, radius);
-    svg += "/>\n";
+    string svg = format(R"(<circle cx="{}" cy="{}" r="{}")", cx, cy, radius);
+    svg += renderAttributes();
+    svg += " />\n";
     return svg;
 }
 

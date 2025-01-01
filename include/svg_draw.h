@@ -69,8 +69,11 @@ namespace svg_diagram {
         using SVGDrawEntity::SVGDrawEntity;
 
         double cx, cy, width, height;
+        std::string fill;
+        std::string stroke;
 
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
+        [[nodiscard]] std::string renderAttributes() const;
     };
 
     class SVGDrawCircle final : public SVGDrawNode {

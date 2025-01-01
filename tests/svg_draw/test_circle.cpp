@@ -95,3 +95,23 @@ TEST(TestSVGDrawCircle, TwoCirclesFixedSize) {
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
+
+TEST(TestSVGDrawCircle, OneCircleFillAndStroke) {
+    SVGDiagram diagram;
+    diagram.clearSVGDraw();
+    auto circle = make_unique<SVGDrawCircle>(0.0, 0.0, 20.0);
+    circle->fill = "none";
+    circle->stroke = "blue";
+    auto svg = circle->render();
+    EXPECT_EQ(svg, R"(<circle cx="0" cy="0" r="20" fill="none" stroke="blue" />)" + string("\n"));
+    diagram.addSVGDraw(std::move(circle));
+    svg = diagram.render();
+    const auto expected = R"(<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="-28 -28 56 56">
+  <circle cx="0" cy="0" r="20" fill="none" stroke="blue" />
+</svg>
+)";
+    EXPECT_EQ(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}

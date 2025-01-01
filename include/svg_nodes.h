@@ -25,17 +25,31 @@ namespace svg_diagram {
     constexpr std::string_view DOT_ATTR_KEY_FONT_COLOR = "fontcolor";
     constexpr std::string_view DOT_ATTR_KEY_PEN_WIDTH = "penwidth";
 
+    class SVGNode;
+    class SVGSubgraph;
+    using NodesMapping = std::unordered_map<std::string, std::unique_ptr<SVGNode>>;
+
     class SVGItem {
     public:
         SVGItem() = default;
         virtual ~SVGItem() = default;
 
+        enum class Type {
+            NODE, EDGE, SUBGRAPH,
+        };
+
         void enableDebug();
         [[nodiscard]] bool enabledDebug() const;
 
+        void setParent(SVGSubgraph* parent);
+        [[nodiscard]] SVGSubgraph* parent() const;
+
+        [[nodiscard]] virtual Type type() const = 0;
+
+        [[nodiscard]] const std::unordered_map<std::string_view, std::string>& attributes() const;
         void setAttribute(const std::string_view& key, const std::string& value);
         void setAttributeIfNotExist(const std::string_view& key, const std::string& value);
-        [[nodiscard]] const std::string& getAttribute(const std::string_view& key) const;
+        [[nodiscard]] virtual const std::string& getAttribute(const std::string_view& key) const;
 
         void setPrecomputedTextSize(double width, double height);
         [[nodiscard]] std::pair<double, double> precomputedTextSize() const;
@@ -57,6 +71,7 @@ namespace svg_diagram {
         [[nodiscard]] std::pair<double, double> computeTextSizeWithMargin();
 
     private:
+        SVGSubgraph* _parent = nullptr;
         bool _enabledDebug = false;
         double _precomputedTextWidth = 0.0;
         double _precomputedTextHeight = 0.0;
@@ -72,7 +87,11 @@ namespace svg_diagram {
         static constexpr std::string_view NODE_SHAPE_CIRCLE = "circle";
         static constexpr std::string_view NODE_SHAPE_RECT = "rect";
         static constexpr std::string_view NODE_SHAPE_ELLIPSE = "ellipse";
-        static constexpr std::string_view NODE_SHAPE_DEFAULT = NODE_SHAPE_CIRCLE;
+        static constexpr std::string_view NODE_SHAPE_DEFAULT = NODE_SHAPE_ELLIPSE;
+
+        [[nodiscard]] Type type() const override;
+
+        [[nodiscard]] const std::string& getAttribute(const std::string_view& key) const override;
 
         void setShape(const std::string& shape);
         void setShape(const std::string_view& shape);
@@ -131,7 +150,9 @@ namespace svg_diagram {
         static constexpr std::string_view ARROW_SHAPE_NORMAL = "normal";
         static constexpr std::string_view ARROW_SHAPE_DEFAULT = ARROW_SHAPE_NORMAL;
 
-        using NodesMapping = std::unordered_map<std::string, std::unique_ptr<SVGNode>>;
+        [[nodiscard]] Type type() const override;
+
+        [[nodiscard]] const std::string& getAttribute(const std::string_view& key) const override;
 
         void setNodeFrom(const std::string& id);
         [[nodiscard]] const std::string& nodeFrom() const;
@@ -169,6 +190,31 @@ namespace svg_diagram {
         [[nodiscard]] double computeArrowTipMarginNormal() const;
         std::pair<double, double> addArrow(const std::string_view& shape, std::vector<std::unique_ptr<SVGDraw>>& svgDraws, const std::pair<double, double>& connectionPoint, double angle) const;
         std::pair<double, double> addArrowNormal(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, const std::pair<double, double>& connectionPoint, double angle) const;
+    };
+
+    class SVGSubgraph final : SVGItem {
+    public:
+        using SVGItem::SVGItem;
+
+        [[nodiscard]] Type type() const override;
+
+        void addChild(std::unique_ptr<SVGNode>& child);
+        void addChildren(std::vector<std::unique_ptr<SVGNode>>& children);
+
+        SVGNode& defaultNodeAttributes();
+        SVGEdge& defaultEdgeAttributes();
+
+        [[nodiscard]] std::optional<std::reference_wrapper<const std::string>> defaultNodeAttribute(const std::string_view& key) const;
+        [[nodiscard]] std::optional<std::reference_wrapper<const std::string>> defaultEdgeAttribute(const std::string_view& key) const;
+
+        void adjustNodeSizes() const;
+        [[nodiscard]] std::vector<std::unique_ptr<SVGDraw>> produceNodeSVGDraws() const;
+        [[nodiscard]] std::vector<std::unique_ptr<SVGDraw>> produceEdgeSVGDraws(const NodesMapping& nodes) const;
+
+    private:
+        std::vector<std::unique_ptr<SVGItem>> _children;
+        SVGNode _defaultNode;
+        SVGEdge _defaultEdge;
     };
 
 }

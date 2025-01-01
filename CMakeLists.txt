@@ -4,11 +4,13 @@ project(SVGDiagram)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 option(SVG_DIAGRAM_ENABLE_PANGO_CAIRO "Enable PangoCairo for computing SVG text sizes" OFF)
 option(SVG_DIAGRAM_ENABLE_TESTS "Build tests" OFF)
 option(SVG_DIAGRAM_ENABLE_STRICT "Use strict compile options" OFF)
 option(SVG_DIAGRAM_ENABLE_COVERAGE "Enable coverage reporting" OFF)
+option(SVG_DIAGRAM_BIND_PYTHON "Enable python binding" OFF)
 
 if(APPLE)
     set(ENV{PKG_CONFIG_PATH} "/opt/homebrew/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}")
@@ -133,4 +135,23 @@ if(SVG_DIAGRAM_ENABLE_TESTS)
     )
 
     add_test(NAME SVGDiagramTests COMMAND runTests)
+endif()
+
+if(SVG_DIAGRAM_BIND_PYTHON)
+    include(FetchContent)
+    FetchContent_Declare(
+            pybind11
+            GIT_REPOSITORY https://github.com/pybind/pybind11.git
+            GIT_TAG v3.0
+    )
+    FetchContent_MakeAvailable(pybind11)
+
+    pybind11_add_module(_core
+            python/bindings.cpp
+    )
+    target_link_libraries(_core
+            PRIVATE SVGDiagram
+    )
+    install(TARGETS _core
+            LIBRARY DESTINATION sp_svg_diagram)
 endif()

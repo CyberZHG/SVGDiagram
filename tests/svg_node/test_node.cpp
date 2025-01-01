@@ -7,5 +7,5 @@ using namespace svg_diagram;
 
 TEST(TestSVGNode, UndefinedID) {
     const auto node = std::make_shared<SVGNode>();
-    EXPECT_THROW(node->id(), runtime_error);
+    EXPECT_THROW(const auto id = node->id(), runtime_error);
 }

@@ -36,6 +36,9 @@ TEST(TestExample, Pentagon) {
         node->setColor(strokeColors[i]);
         node->setFillColor(fillColors[i]);
         node->setFontColor(textColors[i]);
+        if (i == 3) {
+            node->setShape(SVGNode::NODE_SHAPE_DOUBLE_CIRCLE);
+        }
 
         const auto from = format("node_{}", i);
         const auto to = format("node_{}", (i + 1) % 5);

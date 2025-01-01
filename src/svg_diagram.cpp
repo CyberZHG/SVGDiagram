@@ -18,7 +18,7 @@ void SVGDiagram::addSVGDraw(std::unique_ptr<SVGDraw> svgDraw) {
     _svgDraws.emplace_back(std::move(svgDraw));
 }
 
-void SVGDiagram::addSVGDraw(std::vector<std::unique_ptr<SVGDraw>> svgDraws) {
+void SVGDiagram::addSVGDraw(std::vector<std::unique_ptr<SVGDraw>>& svgDraws) {
     for (auto& svgDraw : svgDraws) {
         _svgDraws.emplace_back(std::move(svgDraw));
     }

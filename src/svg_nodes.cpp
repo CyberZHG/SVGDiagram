@@ -52,11 +52,11 @@ void SVGItem::setMargin(const double marginX, const double marginY) {
     setMargin(format("{},{}", marginX, marginY));
 }
 
-void SVGItem::setMarginInPixels(const double margin) {
+void SVGItem::setMarginInPoints(const double margin) {
     setMargin(margin / SVG_DEFAULT_DPI);
 }
 
-void SVGItem::setMarginInPixels(const double marginX, const double marginY) {
+void SVGItem::setMarginInPoints(const double marginX, const double marginY) {
     setMargin(marginX / SVG_DEFAULT_DPI, marginY / SVG_DEFAULT_DPI);
 }
 
@@ -167,6 +167,7 @@ pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
     return {0.0, 0.0};
 }
 
+/*
 pair<double, double> SVGNode::computeConnectionPoint(const double x1, const double y1, const double x2, const double y2) {
     return computeConnectionPoint(atan2(y2 - y1, x2 - x1));
 }
@@ -178,6 +179,7 @@ pair<double, double> SVGNode::computeConnectionPoint(const double x, const doubl
 pair<double, double> SVGNode::computeConnectionPoint(const pair<double, double>& p) {
     return computeConnectionPoint(p.first, p.second);
 }
+*/
 
 double SVGNode::computeAngle(const double x, const double y) const {
     return atan2(y - _cy, x - _cx);

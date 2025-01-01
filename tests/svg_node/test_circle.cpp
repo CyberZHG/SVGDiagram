@@ -12,7 +12,7 @@ TEST(TestSVGNodeCircle, OneCircleAutoSizeNoText) {
     diagram.enableDebug();
     auto node = std::make_unique<SVGNode>();
     node->setShape(SVGNode::NODE_SHAPE_CIRCLE);
-    node->setMarginInPixels(8, 4);
+    node->setMarginInPoints(8, 4);
     diagram.addNode("circle", std::move(node));
     const auto svg = diagram.render();
     const auto expected = R"(<!-- Node: circle -->
@@ -32,7 +32,7 @@ TEST(TestSVGNodeCircle, OneCircleAutoSizeText2) {
     diagram.enableDebug();
     auto node = std::make_unique<SVGNode>();
     node->setShape(SVGNode::NODE_SHAPE_CIRCLE);
-    node->setMarginInPixels(8, 4);
+    node->setMarginInPoints(8, 4);
     node->setLabel("2");
     node->setPrecomputedTextSize(10, 16);
     diagram.addNode("circle", std::move(node));
@@ -55,7 +55,7 @@ TEST(TestSVGNodeCircle, OneCircleAutoSizeText42) {
     diagram.enableDebug();
     auto node = std::make_unique<SVGNode>();
     node->setShape(SVGNode::NODE_SHAPE_CIRCLE);
-    node->setMarginInPixels(8, 4);
+    node->setMarginInPoints(8, 4);
     node->setLabel("42");
     node->setPrecomputedTextSize(20, 16);
     diagram.addNode("circle", std::move(node));
@@ -78,7 +78,7 @@ TEST(TestSVGNodeCircle, OneCircleAutoSizeTextA) {
     diagram.enableDebug();
     auto node = std::make_unique<SVGNode>();
     node->setShape(SVGNode::NODE_SHAPE_CIRCLE);
-    node->setMarginInPixels(8, 4);
+    node->setMarginInPoints(8, 4);
     node->setLabel("A");
     node->setPrecomputedTextSize(15, 16);
     diagram.addNode("circle", std::move(node));
@@ -101,7 +101,7 @@ TEST(TestSVGNodeCircle, OneCircleAutoSizeTextTwoLines) {
     diagram.enableDebug();
     auto node = std::make_unique<SVGNode>();
     node->setShape(SVGNode::NODE_SHAPE_CIRCLE);
-    node->setMarginInPixels(8, 4);
+    node->setMarginInPoints(8, 4);
     node->setLabel("天朗气清\n惠风和畅");
     node->setPrecomputedTextSize(80, 35);
     diagram.addNode("circle", std::move(node));

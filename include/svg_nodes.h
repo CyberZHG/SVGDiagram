@@ -43,8 +43,8 @@ namespace svg_diagram {
         void setMargin(const std::string& value);
         void setMargin(double margin);
         void setMargin(double marginX, double marginY);
-        void setMarginInPixels(double margin);
-        void setMarginInPixels(double marginX, double marginY);
+        void setMarginInPoints(double margin);
+        void setMarginInPoints(double marginX, double marginY);
         void setColor(const std::string& color);
         void setFillColor(const std::string& color);
         void setFontColor(const std::string& color);
@@ -79,9 +79,11 @@ namespace svg_diagram {
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDraws();
 
         std::pair<double, double> computeConnectionPoint(double angle);
+        /*
         std::pair<double, double> computeConnectionPoint(double x1, double y1, double x2, double y2);
         std::pair<double, double> computeConnectionPoint(double x, double y);
         std::pair<double, double> computeConnectionPoint(const std::pair<double, double>& p);
+        */
 
         [[nodiscard]] double computeAngle(double x, double y) const;
         [[nodiscard]] double computeAngle(const std::pair<double, double>& p) const;

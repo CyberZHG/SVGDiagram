@@ -9,13 +9,13 @@ using namespace svg_diagram;
 void TestSVGEdgeLineAddTwoNodesCase1(SVGDiagram& diagram) {
     auto node1 = std::make_unique<SVGNode>(100, 100);
     node1->setShape(SVGNode::NODE_SHAPE_CIRCLE);
-    node1->setMarginInPixels(8, 4);
+    node1->setMarginInPoints(8, 4);
     node1->setPrecomputedTextSize(10, 16);
     node1->setLabel("A");
     diagram.addNode("A", std::move(node1));
     auto node2 = std::make_unique<SVGNode>(200, 150);
     node2->setShape(SVGNode::NODE_SHAPE_CIRCLE);
-    node2->setMarginInPixels(16, 8);
+    node2->setMarginInPoints(16, 8);
     node2->setPrecomputedTextSize(10, 16);
     node2->setLabel("B");
     diagram.addNode("B", std::move(node2));

@@ -30,7 +30,7 @@ TEST(TestExample, Sequential) {
         node->setCenterInPoints(i * X_SHIFT, i * Y_SHIFT);
         node->setLabel(labels[i]);
         node->setShape(SVGNode::NODE_SHAPE_ELLIPSE);
-        node->setMarginInPixels(10, 20);
+        node->setMarginInPoints(10, 20);
         node->setColor(strokeColors[i]);
         node->setFillColor(fillColors[i]);
         node->setFontColor(textColors[i]);

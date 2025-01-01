@@ -115,7 +115,7 @@ node1.setCenter(0.0, 0.0);
 const node2 = diagram.addNode("B");
 node2.setCenter(60.0, 80.0);
 diagram.addEdge("A", "B");
-const svg = diagram.render();
+diagram.toSVG("demo.svg");
 ````
 
 ````{tab-item} C++

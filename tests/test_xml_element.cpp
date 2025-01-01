@@ -51,3 +51,34 @@ TEST(TestXMLElementParse, SpecialCase1) {
     const auto output = elements[0]->toString();
     EXPECT_EQ(output, expected);
 }
+
+TEST(TestXMLElementCompare, SpecialCase1) {
+    const auto xml1 = R"(<svg width="10" height="10"/>)" + string("\n");
+    const auto xml2 = R"(<svg height="10" width="10"/>)" + string("\n");
+    const auto xml3 = R"(<svg width="10" height="10.00000001"/>)" + string("\n");
+    const auto xml4 = R"(<svg width="10" height="11"/>)" + string("\n");
+    const auto element1 = XMLElement::parse(xml1)[0];
+    const auto element2 = XMLElement::parse(xml2)[0];
+    const auto element3 = XMLElement::parse(xml3)[0];
+    const auto element4 = XMLElement::parse(xml4)[0];
+    EXPECT_EQ(*element1.get(), *element2.get());
+    EXPECT_EQ(*element1.get(), *element3.get());
+    EXPECT_NE(*element1.get(), *element4.get());
+    EXPECT_EQ(*element2.get(), *element3.get());
+    EXPECT_NE(*element2.get(), *element4.get());
+    EXPECT_NE(*element3.get(), *element4.get());
+}
+
+TEST(TestXMLElementCompare, SpecialCase2) {
+    const auto xml1 = R"(<svg width="10" id="a"><text>foo</text></svg>)" + string("\n");
+    const auto xml2 = R"(<svg width="10" id="a"><text>foo</text></svg>)" + string("\n");
+    const auto xml3 = R"(<svg width="10" id="b"><text>foo</text></svg>)" + string("\n");
+    const auto xml4 = R"(<svg width="10" id="a"><text>bar</text></svg>)" + string("\n");
+    const auto element1 = XMLElement::parse(xml1)[0];
+    const auto element2 = XMLElement::parse(xml2)[0];
+    const auto element3 = XMLElement::parse(xml3)[0];
+    const auto element4 = XMLElement::parse(xml4)[0];
+    EXPECT_EQ(*element1.get(), *element2.get());
+    EXPECT_NE(*element1.get(), *element3.get());
+    EXPECT_NE(*element1.get(), *element4.get());
+}

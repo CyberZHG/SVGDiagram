@@ -36,6 +36,8 @@ namespace svg_diagram {
         [[nodiscard]] virtual std::string toString(int indent) const;
         [[nodiscard]] virtual std::string toString() const;
 
+        bool operator==(const XMLElement& other) const;
+
         /** Parse XML from string.
          *
          * Note that this is only used for unit testing. It can only parse the output of this class.
@@ -65,6 +67,10 @@ namespace svg_diagram {
         [[nodiscard]] std::string toString(int indent) const override;
         [[nodiscard]] std::string toString() const override;
     };
+
+    inline void PrintTo(const XMLElement& element, std::ostream* os) {
+        *os << element.toString();
+    }
 
 };
 

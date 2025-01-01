@@ -94,6 +94,52 @@ std::string XMLElement::toString() const {
     return toString(0);
 }
 
+bool XMLElement::operator==(const XMLElement& other) const {
+    constexpr double EPSILON = 1e-6;
+    if (_tag != other._tag) {
+        return false;
+    }
+    if (_content != other._content) {
+        return false;
+    }
+    if (_attributes.size() != other._attributes.size()) {
+        return false;
+    }
+    for (const auto& [key, value] : _attributes) {
+        if (!other._attributes.contains(key)) {
+            return false;
+        }
+        const auto& otherValue = other._attributes.at(key);
+        try {
+            size_t pos1, pos2;
+            const double value1 = stod(value, &pos1);
+            const double value2 = stod(otherValue, &pos2);
+            if (pos1 == value.size() && pos2 == otherValue.size()) {
+                if (fabs(value1 - value2) > EPSILON) {
+                    return false;
+                }
+            } else {
+                if (value != otherValue) {
+                    return false;
+                }
+            }
+        } catch (...) {
+            if (value != otherValue) {
+                return false;
+            }
+        }
+    }
+    if (_children.size() != other._children.size()) {
+        return false;
+    }
+    for (int i = 0; i < _children.size(); ++i) {
+        if (*_children[i].get() != *other._children[i].get()) {
+            return false;
+        }
+    }
+    return true;
+}
+
 XMLElement::ChildrenType XMLElement::parse(const string& source) {
     const auto [children, stop] = parse(source, 0);
     return children;

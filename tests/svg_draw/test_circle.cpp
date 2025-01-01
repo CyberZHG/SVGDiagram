@@ -1,5 +1,6 @@
 #include "svg_diagram.h"
 
+#include <format>
 #include <gtest/gtest.h>
 
 #include "../test_utils.h"

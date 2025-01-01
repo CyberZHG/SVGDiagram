@@ -1,6 +1,8 @@
 #include "svg_diagram.h"
 #include "../test_utils.h"
 
+#include <format>
+#include <cmath>
 #include <gtest/gtest.h>
 using namespace std;
 using namespace svg_diagram;

@@ -79,7 +79,7 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLineOneConnectionDashed) {
     auto edge = std::make_shared<SVGEdge>("A", "B");
     edge->setSplines(SVGEdge::SPLINES_SPLINE);
     edge->addConnectionPoint(-50, 120);
-    edge->setStyleDashed();
+    edge->appendStyleDashed();
     diagram.addEdge(edge);
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeSplineExpectedNodesSVGCase2() +
@@ -99,7 +99,7 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLineOneConnectionDotted) {
     auto edge = std::make_shared<SVGEdge>("A", "B");
     edge->setSplines(SVGEdge::SPLINES_SPLINE);
     edge->addConnectionPoint(-50, 120);
-    edge->setStyleDotted();
+    edge->appendStyleDotted();
     diagram.addEdge(edge);
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeSplineExpectedNodesSVGCase2() +

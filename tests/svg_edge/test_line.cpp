@@ -259,7 +259,7 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowBothDashed) {
     edge->addConnectionPoint(-50, 120);
     edge->setArrowHead(SVGEdge::ARROW_NORMAL);
     edge->setArrowTail(SVGEdge::ARROW_NORMAL);
-    edge->setStyleDashed();
+    edge->appendStyleDashed();
     diagram.addEdge(edge);
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
@@ -284,7 +284,7 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowBothDotted) {
     edge->addConnectionPoint(-50, 120);
     edge->setArrowHead(SVGEdge::ARROW_NORMAL);
     edge->setArrowTail(SVGEdge::ARROW_NORMAL);
-    edge->setStyleDotted();
+    edge->appendStyleDotted();
     diagram.addEdge(edge);
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +

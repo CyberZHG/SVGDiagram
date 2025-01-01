@@ -13,7 +13,7 @@
     <!-- Node: node_1 -->
     <g class="node" id="node_1">
       <title>node_1</title>
-      <circle cx="142.65847744427302" cy="-46.35254915624211" r="54.176470907581276" fill="papayawhip" stroke="darkgoldenrod"/>
+      <circle cx="142.65847744427302" cy="-46.35254915624211" r="54.176470907581276" fill="papayawhip" stroke="darkgoldenrod" stroke-dasharray="5,2"/>
       <text x="142.65847744427302" y="-46.35254915624211" text-anchor="middle" dominant-baseline="central" fill="goldenrod" font-family="Times,serif" font-size="14">
         <tspan x="142.65847744427302" dy="-1.2em">Observation</tspan><tspan x="142.65847744427302" dy="1.2em">Feeds</tspan><tspan x="142.65847744427302" dy="1.2em">Strategy</tspan>
       </text>
@@ -60,7 +60,7 @@
     <!-- Edge: edge2 (node_1 -> node_2) -->
     <g class="edge" id="edge2">
       <title>node_1->node_2</title>
-      <line x1="125.82432214025799" y1="5.457653485176422" x2="106.80633779438524" y2="63.98899081672565" stroke="darkgoldenrod"/>
+      <line x1="125.82432214025799" y1="5.457653485176422" x2="106.80633779438524" y2="63.98899081672565" stroke="darkgoldenrod" stroke-dasharray="5,2"/>
       <polygon points="103.71616785063577,73.49955597967718 103.4776399873522,62.90743133641333 110.13503560141828,65.07055029703797 103.71616785063577,73.49955597967718" fill="darkgoldenrod" stroke="darkgoldenrod"/>
       <text x="103.13291761065081" y="30.44009673240464" text-anchor="middle" dominant-baseline="central" fill="darkgoldenrod" font-family="Times,serif" font-size="14">C2</text>
     </g>

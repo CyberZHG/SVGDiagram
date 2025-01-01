@@ -95,7 +95,7 @@ TEST(TestSVGNodeDoubleCircle, Dashed) {
     diagram.enableDebug();
     const auto node = diagram.addNode("circle");
     node->setShape(SVGNode::SHAPE_DOUBLE_CIRCLE);
-    node->setStyleDashed();
+    node->appendStyleDashed();
     node->setPrecomputedTextSize(10, 16);
     const auto svg = diagram.render();
     const auto expected = R"(<!-- Node: circle -->
@@ -116,7 +116,7 @@ TEST(TestSVGNodeDoubleCircle, Dotted) {
     diagram.enableDebug();
     const auto node = diagram.addNode("circle");
     node->setShape(SVGNode::SHAPE_DOUBLE_CIRCLE);
-    node->setStyleDotted();
+    node->appendStyleDotted();
     node->setPrecomputedTextSize(10, 16);
     const auto svg = diagram.render();
     const auto expected = R"(<!-- Node: circle -->

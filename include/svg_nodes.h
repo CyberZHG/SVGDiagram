@@ -62,8 +62,8 @@ namespace svg_diagram {
         void setFontSize(double fontSize);
         void setFont(const std::string& fontName, double fontSize);
         void setStyle(const std::string& style);
-        void setStyleDashed();
-        void setStyleDotted();
+        void appendStyleDashed();
+        void appendStyleDotted();
         [[nodiscard]] AttributeParsedStyle style() const;
 
     protected:

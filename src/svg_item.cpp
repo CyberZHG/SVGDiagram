@@ -165,7 +165,7 @@ void SVGItem::setStyle(const string& style) {
     setAttribute(ATTR_KEY_STYLE, style);
 }
 
-void SVGItem::setStyleDashed() {
+void SVGItem::appendStyleDashed() {
     auto style = getAttribute(ATTR_KEY_STYLE);
     if (style.empty()) {
         style = string(ATTR_KEY_STYLE);
@@ -177,7 +177,7 @@ void SVGItem::setStyleDashed() {
     setStyle(style);
 }
 
-void SVGItem::setStyleDotted() {
+void SVGItem::appendStyleDotted() {
     auto style = getAttribute(ATTR_KEY_STYLE);
     if (style.empty()) {
         style = string(ATTR_KEY_STYLE);

@@ -57,37 +57,39 @@ namespace svg_diagram {
         void addAttributesToXMLElement(const XMLElement::ChildType& element) const;
     };
 
-    class SVGDrawComment final : public SVGDraw {
-    public:
-        using SVGDraw::SVGDraw;
-        explicit SVGDrawComment(const std::string& comment);
-
-        std::string comment;
-
-        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
-        [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
-
-        [[nodiscard]] bool hasEntity() const override;
-    };
-
-    class SVGDrawTitle final : public SVGDraw {
-    public:
-        using SVGDraw::SVGDraw;
-        explicit SVGDrawTitle(const std::string& title);
-
-        std::string title;
-
-        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
-        [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
-
-        [[nodiscard]] bool hasEntity() const override;
-    };
-
     class SVGDrawEntity : public SVGDraw {
     public:
         using SVGDraw::SVGDraw;
 
         [[nodiscard]] bool hasEntity() const override;
+    };
+
+    class SVGDrawNoEntity : public SVGDraw {
+    public:
+        using SVGDraw::SVGDraw;
+
+        [[nodiscard]] bool hasEntity() const override;
+        [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
+    };
+
+    class SVGDrawComment final : public SVGDrawNoEntity {
+    public:
+        using SVGDrawNoEntity::SVGDrawNoEntity;
+        explicit SVGDrawComment(const std::string& comment);
+
+        std::string comment;
+
+        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
+    };
+
+    class SVGDrawTitle final : public SVGDrawNoEntity {
+    public:
+        using SVGDrawNoEntity::SVGDrawNoEntity;
+        explicit SVGDrawTitle(const std::string& title);
+
+        std::string title;
+
+        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
     };
 
     class SVGDrawNode : public SVGDrawEntity {
@@ -188,7 +190,6 @@ namespace svg_diagram {
 
         [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
-
         [[nodiscard]] bool hasEntity() const override;
     };
 
@@ -209,17 +210,14 @@ namespace svg_diagram {
         [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
     };
 
-    class SVGDrawStop final : public SVGDraw {
+    class SVGDrawStop final : public SVGDrawNoEntity {
     public:
-        using SVGDraw::SVGDraw;
+        using SVGDrawNoEntity::SVGDrawNoEntity;
 
         void setColor(const std::string& color);
         void setOpacity(double opacity);
 
         [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
-        [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
-
-        [[nodiscard]] bool hasEntity() const override;
     };
 
 }

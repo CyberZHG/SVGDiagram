@@ -82,14 +82,6 @@ XMLElement::ChildrenType SVGDrawComment::generateXMLElements() const {
     return {make_shared<XMLElementComment>(comment)};
 }
 
-SVGDrawBoundingBox SVGDrawComment::boundingBox() const {
-    return {};
-}
-
-bool SVGDrawComment::hasEntity() const {
-    return false;
-}
-
 SVGDrawGroup::SVGDrawGroup(vector<unique_ptr<SVGDraw>>& draws) {
     this->addChildren(draws);
 }
@@ -183,14 +175,6 @@ XMLElement::ChildrenType SVGDrawStop::generateXMLElements() const {
     return {groupElement};
 }
 
-SVGDrawBoundingBox SVGDrawStop::boundingBox() const {
-    return {};
-}
-
-bool SVGDrawStop::hasEntity() const {
-    return false;
-}
-
 SVGDrawTitle::SVGDrawTitle(const string& title) {
     this->title = title;
 }
@@ -202,16 +186,16 @@ XMLElement::ChildrenType SVGDrawTitle::generateXMLElements() const {
     return {titleElement};
 }
 
-SVGDrawBoundingBox SVGDrawTitle::boundingBox() const {
-    return {};
+bool SVGDrawEntity::hasEntity() const {
+    return true;
 }
 
-bool SVGDrawTitle::hasEntity() const {
+bool SVGDrawNoEntity::hasEntity() const {
     return false;
 }
 
-bool SVGDrawEntity::hasEntity() const {
-    return true;
+SVGDrawBoundingBox SVGDrawNoEntity::boundingBox() const {
+    return {};
 }
 
 SVGDrawNode::SVGDrawNode(const double cx, const double cy, const double width, const double height) {

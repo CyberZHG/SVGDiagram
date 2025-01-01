@@ -176,7 +176,7 @@ namespace svg_diagram {
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
     };
 
-    class SVGDrawGroup final : public SVGDraw {
+    class SVGDrawGroup : public SVGDraw {
     public:
         using SVGDraw::SVGDraw;
         explicit SVGDrawGroup(std::vector<std::unique_ptr<SVGDraw>>& draws);
@@ -185,6 +185,36 @@ namespace svg_diagram {
 
         void addChild(std::unique_ptr<SVGDraw> child);
         void addChildren(std::vector<std::unique_ptr<SVGDraw>>& draws);
+
+        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
+        [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
+
+        [[nodiscard]] bool hasEntity() const override;
+    };
+
+    class SVGDrawDefs final : public SVGDrawGroup {
+    public:
+        using SVGDrawGroup::SVGDrawGroup;
+
+        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
+    };
+
+    class SVGDrawLinearGradient final : public SVGDrawGroup {
+    public:
+        using SVGDrawGroup::SVGDrawGroup;
+
+        void setID(const std::string& id);
+        void setRotation(double angle);
+
+        [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
+    };
+
+    class SVGDrawStop final : public SVGDraw {
+    public:
+        using SVGDraw::SVGDraw;
+
+        void setColor(const std::string& color);
+        void setOpacity(double opacity);
 
         [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;

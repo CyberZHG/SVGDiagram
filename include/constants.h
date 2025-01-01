@@ -42,6 +42,8 @@ namespace svg_diagram {
     constexpr std::string_view ATTR_STYLE_DOTTED = "dotted";
     constexpr std::string_view ATTR_STYLE_FILLED = "filled";
 
+    constexpr std::string_view SVG_ATTR_KEY_ID = "id";
+    constexpr std::string_view SVG_ATTR_KEY_STYLE = "style";
     constexpr std::string_view SVG_ATTR_KEY_FILL = "fill";
     constexpr std::string_view SVG_ATTR_KEY_FILL_OPACITY = "fill-opacity";
     constexpr std::string_view SVG_ATTR_KEY_STROKE = "stroke";
@@ -52,6 +54,10 @@ namespace svg_diagram {
     constexpr std::string_view SVG_ATTR_KEY_STROKE_WIDTH = "stroke-width";
     constexpr std::string_view SVG_ATTR_KEY_STROKE_DASHARRAY = "stroke-dasharray";
     constexpr std::string_view SVG_ATTR_KEY_STROKE_OPACITY = "stroke-opacity";
+    constexpr std::string_view SVG_ATTR_KEY_GRADIENT_TRANSFORM = "gradientTransform";
+    constexpr std::string_view SVG_ATTR_KEY_OFFSET = "offset";
+    constexpr std::string_view SVG_ATTR_KEY_STOP_COLOR = "stop-color";
+    constexpr std::string_view SVG_ATTR_KEY_STOP_OPACITY = "stop-opacity";
 }
 
 #endif //SVGDIAGRAM_CONSTANTS_H

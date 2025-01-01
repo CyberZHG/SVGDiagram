@@ -143,6 +143,54 @@ bool SVGDrawGroup::hasEntity() const {
     return false;
 }
 
+XMLElement::ChildrenType SVGDrawDefs::generateXMLElements() const {
+    const auto groupElement = make_shared<XMLElement>("defs");
+    addAttributesToXMLElement(groupElement);
+    for (const auto& child : children) {
+        groupElement->addChildren(child->generateXMLElements());
+    }
+    return {groupElement};
+}
+
+void SVGDrawLinearGradient::setID(const string& id) {
+    setAttribute(SVG_ATTR_KEY_ID, id);
+}
+
+void SVGDrawLinearGradient::setRotation(const double angle) {
+    setAttribute(SVG_ATTR_KEY_GRADIENT_TRANSFORM, format("rotate({})", angle));
+}
+
+XMLElement::ChildrenType SVGDrawLinearGradient::generateXMLElements() const {
+    const auto groupElement = make_shared<XMLElement>("linearGradient");
+    addAttributesToXMLElement(groupElement);
+    for (const auto& child : children) {
+        groupElement->addChildren(child->generateXMLElements());
+    }
+    return {groupElement};
+}
+
+void SVGDrawStop::setColor(const string& color) {
+    setAttribute(SVG_ATTR_KEY_STOP_COLOR, color);
+}
+
+void SVGDrawStop::setOpacity(const double opacity) {
+    setAttribute(SVG_ATTR_KEY_STOP_OPACITY, opacity);
+}
+
+XMLElement::ChildrenType SVGDrawStop::generateXMLElements() const {
+    const auto groupElement = make_shared<XMLElement>("stop");
+    addAttributesToXMLElement(groupElement);
+    return {groupElement};
+}
+
+SVGDrawBoundingBox SVGDrawStop::boundingBox() const {
+    return {};
+}
+
+bool SVGDrawStop::hasEntity() const {
+    return false;
+}
+
 SVGDrawTitle::SVGDrawTitle(const string& title) {
     this->title = title;
 }

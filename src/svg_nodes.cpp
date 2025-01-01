@@ -85,8 +85,9 @@ void SVGItem::setPenWidth(const double width) {
 }
 
 double SVGItem::penWidth() const {
-    if (const auto it = _attributes.find(DOT_ATTR_KEY_PEN_WIDTH); it != _attributes.end()) {
-        const auto width = stod(it->second);
+    const auto value = getAttribute(DOT_ATTR_KEY_PEN_WIDTH);
+    if (!value.empty()) {
+        const auto width = stod(value);
         if (fabs(width - 1.0) < GeometryUtils::EPSILON) {
             return 1.0;
         }
@@ -804,6 +805,26 @@ vector<unique_ptr<SVGDraw>> SVGGraph::produceSVGDraws(const NodesMapping &nodes)
         svgDraws.emplace_back(std::move(draw));
     }
     return svgDraws;
+}
+
+vector<shared_ptr<SVGNode>> SVGGraph::findNodes() const {
+    vector<shared_ptr<SVGNode>> nodes = _nodes;
+    for (auto& graph : _graphs) {
+        for (auto& node : graph->findNodes()) {
+            nodes.emplace_back(std::move(node));
+        }
+    }
+    return nodes;
+}
+
+vector<shared_ptr<SVGEdge>> SVGGraph::findEdges() const {
+    vector<shared_ptr<SVGEdge>> edges = _edges;
+    for (auto& graph : _graphs) {
+        for (auto& edge : graph->findEdges()) {
+            edges.emplace_back(std::move(edge));
+        }
+    }
+    return edges;
 }
 
 vector<unique_ptr<SVGDraw>> SVGGraph::produceNodeSVGDraws() const {

@@ -34,6 +34,8 @@ namespace svg_diagram {
         const std::shared_ptr<SVGEdge>& addEdge(const std::string& from, const std::string& to);
         void addEdge(const std::string& id, std::shared_ptr<SVGEdge>& edge);
         void addEdge(std::shared_ptr<SVGEdge>& edge);
+        const std::shared_ptr<SVGGraph>& addSubgraph(const std::string& id);
+        void addSubgraph(const std::string& id, std::shared_ptr<SVGGraph>& subgraph);
 
         [[nodiscard]] std::string render();
         void render(const std::string& filePath);
@@ -54,8 +56,7 @@ namespace svg_diagram {
         SVGGraph _graph;
         std::unordered_map<std::string, std::shared_ptr<SVGNode>> _nodes;
         std::unordered_map<std::string, std::shared_ptr<SVGEdge>> _edges;
-        std::vector<std::string> _nodeIds;
-        std::vector<std::string> _edgeIds;
+        std::unordered_map<std::string, std::shared_ptr<SVGGraph>> _subgraphs;
 
         std::string newEdgeId();
 

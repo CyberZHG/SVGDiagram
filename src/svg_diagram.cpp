@@ -43,9 +43,8 @@ SVGEdge& SVGDiagram::defaultEdgeAttributes() {
 
 const shared_ptr<SVGNode>& SVGDiagram::addNode(const string& id) {
     if (_nodes.contains(id)) {
-        throw runtime_error("SVGDiagram::addNode: Node id already exists");
+        throw runtime_error("SVGDiagram::addNode: Node ID already exists");
     }
-    _nodeIds.emplace_back(id);
     auto node = make_shared<SVGNode>();
     node->setID(id);
     _graph.addNode(node);
@@ -54,9 +53,8 @@ const shared_ptr<SVGNode>& SVGDiagram::addNode(const string& id) {
 
 void SVGDiagram::addNode(const string& id, shared_ptr<SVGNode>& node) {
     if (_nodes.contains(id)) {
-        throw runtime_error("SVGDiagram::addNode: Node id already exists");
+        throw runtime_error("SVGDiagram::addNode: Node ID already exists");
     }
-    _nodeIds.emplace_back(id);
     node->setID(id);
     _nodes[id] = node;
     _graph.addNode(node);
@@ -64,9 +62,8 @@ void SVGDiagram::addNode(const string& id, shared_ptr<SVGNode>& node) {
 
 const shared_ptr<SVGEdge>& SVGDiagram::addEdge(const string& id) {
     if (_edges.contains(id)) {
-        throw runtime_error("SVGDiagram::addEdge: Edge id already exists");
+        throw runtime_error("SVGDiagram::addEdge: Edge ID already exists");
     }
-    _edgeIds.emplace_back(id);
     auto edge = make_shared<SVGEdge>();
     edge->setID(id);
     _graph.addEdge(edge);
@@ -82,9 +79,8 @@ const shared_ptr<SVGEdge>& SVGDiagram::addEdge(const string& from, const string&
 
 void SVGDiagram::addEdge(const string& id, shared_ptr<SVGEdge>& edge) {
     if (_edges.contains(id)) {
-        throw runtime_error("SVGDiagram::addEdge: Edge id already exists");
+        throw runtime_error("SVGDiagram::addEdge: Edge ID already exists");
     }
-    _edgeIds.emplace_back(id);
     edge->setID(id);
     _edges[id] = edge;
     _graph.addEdge(edge);
@@ -93,6 +89,25 @@ void SVGDiagram::addEdge(const string& id, shared_ptr<SVGEdge>& edge) {
 void SVGDiagram::addEdge(shared_ptr<SVGEdge>& edge) {
     const auto id = newEdgeId();
     addEdge(id, edge);
+}
+
+const shared_ptr<SVGGraph>& SVGDiagram::addSubgraph(const string& id) {
+    if (_subgraphs.contains(id)) {
+        throw runtime_error("SVGDiagram::addSubgraph: Subgraph ID already exists");
+    }
+    auto graph = make_shared<SVGGraph>();
+    graph->setID(id);
+    _graph.addSubgraph(graph);
+    return _subgraphs[id] = graph;
+}
+
+void SVGDiagram::addSubgraph(const string& id, shared_ptr<SVGGraph>& subgraph) {
+    if (_subgraphs.contains(id)) {
+        throw runtime_error("SVGDiagram::addSubgraph: Subgraph ID already exists");
+    }
+    subgraph->setID(id);
+    _subgraphs[id] = subgraph;
+    _graph.addSubgraph(subgraph);
 }
 
 string SVGDiagram::render() {
@@ -128,6 +143,11 @@ string SVGDiagram::newEdgeId() {
 void SVGDiagram::produceSVGDrawsDynamic() {
     if (_enabledDebug) {
         _graph.enableDebug();
+    }
+    for (const auto& node : _graph.findNodes()) {
+        if (!_nodes.contains(node->id())) {
+            _nodes[node->id()] = node;
+        }
     }
     _svgDrawsDynamic = _graph.produceSVGDraws(_nodes);
 }

@@ -205,6 +205,8 @@ namespace svg_diagram {
         void adjustNodeSizes() const;
         [[nodiscard]] std::vector<std::unique_ptr<SVGDraw>> produceSVGDraws(const NodesMapping& nodes) const;
 
+        [[nodiscard]] std::vector<std::shared_ptr<SVGNode>> findNodes() const;
+        [[nodiscard]] std::vector<std::shared_ptr<SVGEdge>> findEdges() const;
     private:
         std::vector<std::shared_ptr<SVGNode>> _nodes;
         std::vector<std::shared_ptr<SVGEdge>> _edges;

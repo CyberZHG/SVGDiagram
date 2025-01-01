@@ -10,9 +10,9 @@ A library for rendering diagrams to SVG. This library does not provide any autom
 
 Click the image to see the code that generated it:
 
-|  [![](./doc/images/example_pentagon.svg)](./tests/example/test_example_pentagon.cpp)  | [![](./doc/images/example_pentagram.svg)](./tests/example/test_example_pentagram.cpp) |
-|:-------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------:|
-| [![](./doc/images/example_sequential.svg)](./tests/example/test_example_sequential.cpp) |                                                                                       |
+|   [![](./doc/images/example_pentagon.svg)](./tests/example/test_example_pentagon.cpp)   | [![](./doc/images/example_pentagram.svg)](./tests/example/test_example_pentagram.cpp) |
+|:---------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------:|
+| [![](./doc/images/example_sequential.svg)](./tests/example/test_example_sequential.cpp) |  [![](./doc/images/example_subgraph.svg)](./tests/example/test_example_subgraph.cpp)  |
 
 ## Development
 

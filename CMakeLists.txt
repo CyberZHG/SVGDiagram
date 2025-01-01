@@ -44,7 +44,10 @@ add_library(SVGDiagram STATIC
         include/svg_text_size.h
         src/svg_text_size.cpp
         include/svg_nodes.h
-        src/svg_nodes.cpp
+        src/svg_node.cpp
+        src/svg_edge.cpp
+        src/svg_graph.cpp
+        src/svg_item.cpp
         include/attribute_utils.h
         src/attribute_utils.cpp
         include/svg_draw.h

@@ -3,6 +3,7 @@
 #include <format>
 #include <iostream>
 #include <algorithm>
+#include <ranges>
 using namespace std;
 using namespace svg_diagram;
 
@@ -22,6 +23,28 @@ bool AttributeUtils::isPartOfDouble(const char ch) {
     return std::isdigit(ch) ||
            ch == '+' || ch == '-' ||
            ch == '.' || ch == 'e' || ch == 'E';
+}
+
+vector<string> AttributeUtils::splitString(const string& str, const char delimiter) {
+    vector<string> splits;
+    size_t last = 0, pos = 0;
+    while ((pos = str.find(delimiter, last)) != string::npos) {
+        splits.push_back(str.substr(last, pos - last));
+        last = pos + 1;
+    }
+    splits.push_back(str.substr(last));
+    return splits;
+}
+
+vector<string> AttributeUtils::splitString(const string& str, const string& delimiter) {
+    vector<string> splits;
+    size_t last = 0, pos = 0;
+    while ((pos = str.find(delimiter, last)) != string::npos) {
+        splits.push_back(str.substr(last, pos - last));
+        last = pos + 1;
+    }
+    splits.push_back(str.substr(last));
+    return splits;
 }
 
 double AttributeUtils::parseLengthToInch(const string& s) {

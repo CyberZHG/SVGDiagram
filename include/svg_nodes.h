@@ -26,6 +26,7 @@ namespace svg_diagram {
     constexpr std::string_view ATTRIBUTE_KEY_FILL_COLOR = "fillcolor";
     constexpr std::string_view ATTRIBUTE_KEY_FONT_COLOR = "fontcolor";
     constexpr std::string_view ATTRIBUTE_KEY_PEN_WIDTH = "penwidth";
+    constexpr std::string_view ATTRIBUTE_KEY_STYLE = "style";
 
     class SVGNode;
     class SVGGraph;
@@ -76,6 +77,7 @@ namespace svg_diagram {
         void setFontName(const std::string& fontName);
         void setFontSize(double fontSize);
         void setFont(const std::string& fontName, double fontSize);
+        void setStyle(const std::string& style);
 
     protected:
         void appendSVGDrawsLabelWithCenter(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, double cx, double cy);

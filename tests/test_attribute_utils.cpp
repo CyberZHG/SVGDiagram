@@ -93,3 +93,10 @@ TEST(TestAttributeUtils, ParseBool) {
     EXPECT_TRUE(AttributeUtils::parseBool("ON"));
     EXPECT_FALSE(AttributeUtils::parseBool("OFF"));
 }
+
+TEST(TestAttributeUtils, SplitString) {
+    EXPECT_EQ(AttributeUtils::splitString("12345", ','), vector<string>({"12345"}));
+    EXPECT_EQ(AttributeUtils::splitString("123,,45", ','), vector<string>({"123", "", "45"}));
+    EXPECT_EQ(AttributeUtils::splitString("123,,45", ","), vector<string>({"123", "", "45"}));
+    EXPECT_EQ(AttributeUtils::splitString(",12345,", ','), vector<string>({"", "12345", ""}));
+}

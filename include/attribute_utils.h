@@ -16,6 +16,8 @@ namespace svg_diagram {
         static double centimeterToInch(double centimeters);
 
         static bool isPartOfDouble(char ch);
+        static std::vector<std::string> splitString(const std::string& str, char delimiter);
+        static std::vector<std::string> splitString(const std::string& str, const std::string& delimiter);
 
         /** Parse a string to inch value.
          *

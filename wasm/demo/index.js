@@ -8,5 +8,4 @@ const nodeB = diagram.addNode("b");
 nodeB.setCenter(100.0, 100.0);
 nodeB.setLabel("bar");
 diagram.addEdge("a", "b");
-const svg = diagram.render();
-console.log(svg);
+diagram.toSVG("demo.svg");

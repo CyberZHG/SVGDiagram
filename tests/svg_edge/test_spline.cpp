@@ -83,8 +83,8 @@ TEST(TestSVGEdgeSpline, TwoCircleTwoLineSelfCycle) {
 
 string TestSVGEdgeSplineExpectedArrowNormalSVG() {
     return R"(  <defs>
-    <marker id="arrow_type_normal__fill_black__stroke_black" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto-start-reverse">
-      <polygon points="0 0 10 3.5 0 7" fill="black" stroke="black" />
+    <marker id="arrow_type_normal__fill_black__stroke_none" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto-start-reverse">
+      <polygon points="0 0 10 3.5 0 7" fill="black" stroke="none" />
     </marker>
   </defs>
 )";
@@ -99,7 +99,7 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLineArrowHead) {
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeSplineExpectedArrowNormalSVG() + TestSVGEdgeSplineExpectedNodesSVGCase2() +
-        R"s(  <line x1="115.824" y1="107.912" x2="176.386" y2="138.193" marker-end="url(#arrow_type_normal__fill_black__stroke_black)" stroke="black" />)s";
+        R"s(  <line x1="115.824" y1="107.912" x2="176.386" y2="138.193" marker-end="url(#arrow_type_normal__fill_black__stroke_none)" stroke="black" />)s";
     compareSVGContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
@@ -114,7 +114,7 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLineArrowTail) {
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeSplineExpectedArrowNormalSVG() + TestSVGEdgeSplineExpectedNodesSVGCase2() +
-        R"s(  <line x1="115.824" y1="107.912" x2="176.386" y2="138.193" marker-start="url(#arrow_type_normal__fill_black__stroke_black)" stroke="black" />)s";
+        R"s(  <line x1="115.824" y1="107.912" x2="176.386" y2="138.193" marker-start="url(#arrow_type_normal__fill_black__stroke_none)" stroke="black" />)s";
     compareSVGContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
@@ -130,7 +130,7 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLineArrowBoth) {
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeSplineExpectedArrowNormalSVG() + TestSVGEdgeSplineExpectedNodesSVGCase2() +
-        R"s(  <line x1="115.824" y1="107.912" x2="176.386" y2="138.193" marker-end="url(#arrow_type_normal__fill_black__stroke_black)" marker-start="url(#arrow_type_normal__fill_black__stroke_black)" stroke="black" />)s";
+        R"s(  <line x1="115.824" y1="107.912" x2="176.386" y2="138.193" marker-end="url(#arrow_type_normal__fill_black__stroke_none)" marker-start="url(#arrow_type_normal__fill_black__stroke_none)" stroke="black" />)s";
     compareSVGContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
@@ -146,7 +146,7 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLineOneConnectionArrowHead) {
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeSplineExpectedArrowNormalSVG() + TestSVGEdgeSplineExpectedNodesSVGCase2() +
-        R"s(  <path d="M 82.463 102.338 C 60.386 105.282 -65.221 112.581 -50 120 C -34.779 127.419 136.489 142.379 173.787 146.854" fill="none" marker-end="url(#arrow_type_normal__fill_black__stroke_black)" stroke="black" />)s";
+        R"s(  <path d="M 82.463 102.338 C 60.386 105.282 -65.221 112.581 -50 120 C -34.779 127.419 136.489 142.379 173.787 146.854" fill="none" marker-end="url(#arrow_type_normal__fill_black__stroke_none)" stroke="black" />)s";
     compareSVGContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
@@ -162,7 +162,7 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLineOneConnectionArrowTail) {
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeSplineExpectedArrowNormalSVG() + TestSVGEdgeSplineExpectedNodesSVGCase2() +
-        R"s(  <path d="M 82.463 102.338 C 60.386 105.282 -65.221 112.581 -50 120 C -34.779 127.419 136.489 142.379 173.787 146.854" fill="none" marker-start="url(#arrow_type_normal__fill_black__stroke_black)" stroke="black" />)s";
+        R"s(  <path d="M 82.463 102.338 C 60.386 105.282 -65.221 112.581 -50 120 C -34.779 127.419 136.489 142.379 173.787 146.854" fill="none" marker-start="url(#arrow_type_normal__fill_black__stroke_none)" stroke="black" />)s";
     compareSVGContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
@@ -179,7 +179,7 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLineOneConnectionArrowBoth) {
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeSplineExpectedArrowNormalSVG() + TestSVGEdgeSplineExpectedNodesSVGCase2() +
-        R"s(  <path d="M 82.463 102.338 C 60.386 105.282 -65.221 112.581 -50 120 C -34.779 127.419 136.489 142.379 173.787 146.854" fill="none" marker-end="url(#arrow_type_normal__fill_black__stroke_black)" marker-start="url(#arrow_type_normal__fill_black__stroke_black)" stroke="black" />)s";
+        R"s(  <path d="M 82.463 102.338 C 60.386 105.282 -65.221 112.581 -50 120 C -34.779 127.419 136.489 142.379 173.787 146.854" fill="none" marker-end="url(#arrow_type_normal__fill_black__stroke_none)" marker-start="url(#arrow_type_normal__fill_black__stroke_none)" stroke="black" />)s";
     compareSVGContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));

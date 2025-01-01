@@ -16,6 +16,10 @@ double AttributeUtils::pointToInch(const double points) {
     return points / POINTS_PER_INCH;
 }
 
+double AttributeUtils::svgPixelToPoint(const double pixels) {
+    return pixels / SVG_DEFAULT_DPI * POINTS_PER_INCH;
+}
+
 double AttributeUtils::centimeterToInch(const double centimeters) {
     return centimeters / CENTIMETERS_PER_INCH;
 }

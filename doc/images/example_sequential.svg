@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="472" viewBox="-102 -36 720 472">
+  <defs>
+    <marker id="arrow_type_normal__fill_darkgrey__stroke_none" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto-start-reverse">
+      <polygon points="0 0 10 3.5 0 7" fill="darkgrey" stroke="none" />
+    </marker>
+    <marker id="arrow_type_normal__fill_peru__stroke_none" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto-start-reverse">
+      <polygon points="0 0 10 3.5 0 7" fill="peru" stroke="none" />
+    </marker>
+    <marker id="arrow_type_normal__fill_darkgoldenrod__stroke_none" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto-start-reverse">
+      <polygon points="0 0 10 3.5 0 7" fill="darkgoldenrod" stroke="none" />
+    </marker>
+    <marker id="arrow_type_normal__fill_limegreen__stroke_none" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto-start-reverse">
+      <polygon points="0 0 10 3.5 0 7" fill="limegreen" stroke="none" />
+    </marker>
+    <marker id="arrow_type_normal__fill_dodgerblue__stroke_none" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto-start-reverse">
+      <polygon points="0 0 10 3.5 0 7" fill="dodgerblue" stroke="none" />
+    </marker>
+  </defs>
+  <!-- Created by: https://github.com/CyberZHG/SVGDiagram -->
+  <!-- node_id = node_0 -->
+  <rect x="-94" y="-28" width="188" height="56" fill="floralwhite" stroke="darkgrey" stroke-width="1" />
+  <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Serif" font-size="16" >Part the Veil of Snow</text>
+  <!-- node_id = node_1 -->
+  <rect x="26" y="52" width="148" height="56" fill="lightsalmon" stroke="peru" stroke-width="2" />
+  <text x="100" y="80" text-anchor="middle" dominant-baseline="central" fill="saddlebrown" font-family="Serif" font-size="16" >The Devil's Wall</text>
+  <!-- node_id = node_2 -->
+  <rect x="106" y="132" width="188" height="56" fill="papayawhip" stroke="darkgoldenrod" stroke-width="3" />
+  <text x="200" y="160" text-anchor="middle" dominant-baseline="central" fill="goldenrod" font-family="Serif" font-size="16" >Stranger in the Night</text>
+  <!-- node_id = node_3 -->
+  <rect x="202" y="212" width="196" height="56" fill="lightgreen" stroke="limegreen" stroke-width="4" />
+  <text x="300" y="240" text-anchor="middle" dominant-baseline="central" fill="olivedrab" font-family="Serif" font-size="16" >Night on Bald Mountain</text>
+  <!-- node_id = node_4 -->
+  <rect x="334" y="292" width="132" height="56" fill="deepskyblue" stroke="dodgerblue" stroke-width="5" />
+  <text x="400" y="320" text-anchor="middle" dominant-baseline="central" fill="royalblue" font-family="Serif" font-size="16" >Exile's Shadow</text>
+  <!-- node_id = node_5 -->
+  <rect x="390" y="372" width="220" height="56" fill="lightpink" stroke="lightcoral" stroke-width="6" />
+  <text x="500" y="400" text-anchor="middle" dominant-baseline="central" fill="indianred" font-family="Serif" font-size="16" >Songs and Dances of Death</text>
+  <!-- edge_id = node_0 -> node_1 -->
+  <path d="M -23.333 28 C -27.778 33.333 -58.222 52.978 -50 60 C -41.778 67.022 13.333 68.444 26 70.133" fill="none" marker-end="url(#arrow_type_normal__fill_darkgrey__stroke_none)" stroke="darkgrey" stroke-width="1" />
+  <!-- edge_id = node_1 -> node_2 -->
+  <path d="M 76.667 108 C 72.222 113.333 45.111 133.422 50 140 C 54.889 146.578 96.667 146.222 106 147.467" fill="none" marker-end="url(#arrow_type_normal__fill_peru__stroke_none)" stroke="peru" stroke-width="1.25" />
+  <!-- edge_id = node_2 -> node_3 -->
+  <path d="M 176.667 188 C 172.222 193.333 145.778 213.511 150 220 C 154.222 226.489 193.333 225.778 202 226.933" fill="none" marker-end="url(#arrow_type_normal__fill_darkgoldenrod__stroke_none)" stroke="darkgoldenrod" stroke-width="1.5" />
+  <!-- edge_id = node_3 -> node_4 -->
+  <path d="M 276.667 268 C 272.222 273.333 240.444 292.8 250 300 C 259.556 307.2 320 309.333 334 311.2" fill="none" marker-end="url(#arrow_type_normal__fill_limegreen__stroke_none)" stroke="limegreen" stroke-width="1.75" />
+  <!-- edge_id = node_4 -> node_5 -->
+  <path d="M 376.667 348 C 372.222 353.333 347.778 373.778 350 380 C 352.222 386.222 383.333 384.444 390 385.333" fill="none" marker-end="url(#arrow_type_normal__fill_dodgerblue__stroke_none)" stroke="dodgerblue" stroke-width="2" />
+</svg>

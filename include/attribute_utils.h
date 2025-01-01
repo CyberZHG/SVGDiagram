@@ -15,6 +15,7 @@ namespace svg_diagram {
         static double pointToSVGPixel(double points);
         static double inchToSVGPixel(double inch);
         static double pointToInch(double points);
+        static double svgPixelToPoint(double pixels);
         static double centimeterToInch(double centimeters);
 
         static bool isPartOfDouble(char ch);

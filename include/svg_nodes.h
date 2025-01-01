@@ -22,6 +22,7 @@ namespace svg_diagram {
     constexpr std::string_view DOT_ATTR_KEY_COLOR = "color";
     constexpr std::string_view DOT_ATTR_KEY_FILL_COLOR = "fillcolor";
     constexpr std::string_view DOT_ATTR_KEY_FONT_COLOR = "fontcolor";
+    constexpr std::string_view DOT_ATTR_KEY_PEN_WIDTH = "penwidth";
 
     class SVGItem {
     public:
@@ -46,6 +47,8 @@ namespace svg_diagram {
         void setColor(const std::string& color);
         void setFillColor(const std::string& color);
         void setFontColor(const std::string& color);
+        void setPenWidth(double width);
+        [[nodiscard]] double penWidthInPixels() const;
 
     private:
         bool _enabledDebug = false;

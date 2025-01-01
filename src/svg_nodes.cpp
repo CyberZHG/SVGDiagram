@@ -71,6 +71,21 @@ void SVGItem::setFontColor(const string& color) {
     setAttribute(DOT_ATTR_KEY_FONT_COLOR, color);
 }
 
+void SVGItem::setPenWidth(const double width) {
+    setAttribute(DOT_ATTR_KEY_PEN_WIDTH, format("{}", width));
+}
+
+double SVGItem::penWidthInPixels() const {
+    if (const auto it = _attributes.find(DOT_ATTR_KEY_PEN_WIDTH); it != _attributes.end()) {
+        const auto width = AttributeUtils::pointToSVGPixel(AttributeUtils::parseLengthToInch(it->second));
+        if (fabs(width - 1.0) < GeometryUtils::EPSILON) {
+            return 1.0;
+        }
+        return width;
+    }
+    return 1.0;
+}
+
 void SVGItem::enableDebug() {
     _enabledDebug = true;
 }
@@ -117,6 +132,7 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
     setAttributeIfNotExist(DOT_ATTR_KEY_COLOR, "black");
     setAttributeIfNotExist(DOT_ATTR_KEY_FILL_COLOR, "none");
     setAttributeIfNotExist(DOT_ATTR_KEY_FONT_COLOR, "black");
+    setAttributeIfNotExist(DOT_ATTR_KEY_PEN_WIDTH, format("{}", AttributeUtils::svgPixelToPoint(1.0)));
     const auto shape = getAttribute(DOT_ATTR_KEY_SHAPE);
     if (shape == NODE_SHAPE_NONE) {
         return produceSVGDrawsNone();
@@ -239,6 +255,9 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsCircle() {
     auto circle = make_unique<SVGDrawCircle>(_cx, _cy, max(width, height) / 2.0);
     circle->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
     circle->setFill(getAttribute(DOT_ATTR_KEY_FILL_COLOR));
+    if (const auto strokeWidth = penWidthInPixels(); strokeWidth != 1.0) {
+        circle->setStrokeWidth(getAttribute(DOT_ATTR_KEY_PEN_WIDTH));
+    }
     svgDraws.emplace_back(std::move(circle));
     appendSVGDrawsLabel(svgDraws);
     return svgDraws;
@@ -262,6 +281,9 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsRect() {
     auto rect = make_unique<SVGDrawRect>(_cx, _cy, width, height);
     rect->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
     rect->setFill(getAttribute(DOT_ATTR_KEY_FILL_COLOR));
+    if (const auto strokeWidth = penWidthInPixels(); strokeWidth != 1.0) {
+        rect->setStrokeWidth(getAttribute(DOT_ATTR_KEY_PEN_WIDTH));
+    }
     svgDraws.emplace_back(std::move(rect));
     appendSVGDrawsLabel(svgDraws);
     return svgDraws;
@@ -391,22 +413,27 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
         const auto [x, y] = nodeTo->computeConnectionPoint(xLast, yLast);
         svgDraws.emplace_back(make_unique<SVGDrawLine>(xLast, yLast, x, y));
     }
+    const auto strokeWidth = penWidthInPixels();
     for (const auto& line : svgDraws) {
-        dynamic_cast<SVGDrawLine*>(line.get())->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
+        const auto& draw = dynamic_cast<SVGDrawLine*>(line.get());
+        draw->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
+        if (strokeWidth != 1.0) {
+            draw->setStrokeWidth(getAttribute(DOT_ATTR_KEY_PEN_WIDTH));
+        }
     }
     const auto arrowHeadShape = getAttribute(DOT_ATTR_KEY_ARROW_HEAD);
     const auto arrowTailShape = getAttribute(DOT_ATTR_KEY_ARROW_TAIL);
     if (arrowHeadShape != ARROW_SHAPE_NONE) {
         auto marker = produceSVGMarker(arrowHeadShape);
         marker->setFill(getAttribute(DOT_ATTR_KEY_COLOR));
-        marker->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
+        marker->setStroke("none");
         dynamic_cast<SVGDrawEntity*>(svgDraws[svgDraws.size() - 1].get())->setAttribute(SVG_ATTR_KEY_MARKER_END, markerAttributeValue(marker));
         svgDraws.emplace_back(std::move(marker));
     }
     if (arrowTailShape != ARROW_SHAPE_NONE) {
         auto marker = produceSVGMarker(arrowTailShape);
         marker->setFill(getAttribute(DOT_ATTR_KEY_COLOR));
-        marker->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
+        marker->setStroke("none");
         dynamic_cast<SVGDrawEntity*>(svgDraws[0].get())->setAttribute(SVG_ATTR_KEY_MARKER_START, markerAttributeValue(marker));
         svgDraws.emplace_back(std::move(marker));
     }
@@ -417,11 +444,15 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
     const auto& nodeFrom = nodes.at(_nodeFrom);
     const auto& nodeTo = nodes.at(_nodeTo);
     vector<unique_ptr<SVGDraw>> svgDraws;
+    const auto strokeWidth = penWidthInPixels();
     if (_connectionPoints.empty()) {
         const auto [x1, y1] = nodeFrom->computeConnectionPoint(nodeTo->center());
         const auto [x2, y2] = nodeTo->computeConnectionPoint(nodeFrom->center());
         auto line = make_unique<SVGDrawLine>(x1, y1, x2, y2);
         line->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
+        if (strokeWidth != 1.0) {
+            line->setStrokeWidth(getAttribute(DOT_ATTR_KEY_PEN_WIDTH));
+        }
         svgDraws.emplace_back(std::move(line));
     } else {
         vector<pair<double, double>> points;
@@ -449,6 +480,9 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
         auto path = make_unique<SVGDrawPath>(d);
         path->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
         path->setFill("none");
+        if (strokeWidth != 1.0) {
+            path->setStrokeWidth(getAttribute(DOT_ATTR_KEY_PEN_WIDTH));
+        }
         svgDraws.emplace_back(std::move(path));
     }
     const auto arrowHeadShape = getAttribute(DOT_ATTR_KEY_ARROW_HEAD);
@@ -456,14 +490,14 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
     if (arrowHeadShape != ARROW_SHAPE_NONE) {
         auto marker = produceSVGMarker(arrowHeadShape);
         marker->setFill(getAttribute(DOT_ATTR_KEY_COLOR));
-        marker->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
+        marker->setStroke("none");
         dynamic_cast<SVGDrawEntity*>(svgDraws[0].get())->setAttribute(SVG_ATTR_KEY_MARKER_END, markerAttributeValue(marker));
         svgDraws.emplace_back(std::move(marker));
     }
     if (arrowTailShape != ARROW_SHAPE_NONE) {
         auto marker = produceSVGMarker(arrowTailShape);
         marker->setFill(getAttribute(DOT_ATTR_KEY_COLOR));
-        marker->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
+        marker->setStroke("none");
         dynamic_cast<SVGDrawEntity*>(svgDraws[0].get())->setAttribute(SVG_ATTR_KEY_MARKER_START, markerAttributeValue(marker));
         svgDraws.emplace_back(std::move(marker));
     }

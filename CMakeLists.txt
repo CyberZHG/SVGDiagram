@@ -89,6 +89,8 @@ if(SVG_DIAGRAM_BUILD_TESTS)
             tests/example/test_example_pentagon.cpp
             tests/example/test_example_pentagram.cpp
             tests/test_geometry_utils.cpp
+            tests/svg_node/test_rect.cpp
+            tests/example/test_example_sequential.cpp
     )
 
     target_link_libraries(runTests

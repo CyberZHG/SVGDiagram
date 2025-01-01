@@ -106,20 +106,24 @@ bool SVGDrawComment::hasEntity() const {
     return false;
 }
 
-bool SVGDrawEntity::hasEntity() const {
-    return true;
-}
-
-void SVGDrawEntity::setAttribute(const string_view& key, const string& value) {
+void SVGDrawAttribute::setAttribute(const string_view& key, const string& value) {
     _attributes[key] = value;
 }
 
-void SVGDrawEntity::setFill(const string& value) {
+void SVGDrawAttribute::setFill(const string& value) {
     setAttribute(SVG_ATTR_KEY_FILL, value);
 }
 
-void SVGDrawEntity::setStroke(const string& value) {
+void SVGDrawAttribute::setStroke(const string& value) {
     setAttribute(SVG_ATTR_KEY_STROKE, value);
+}
+
+void SVGDrawAttribute::setStrokeWidth(const string& value) {
+    setAttribute(SVG_ATTR_KEY_STROKE_WIDTH, value);
+}
+
+bool SVGDrawEntity::hasEntity() const {
+    return true;
 }
 
 SVGDrawNode::SVGDrawNode(const double cx, const double cy, const double width, const double height) {
@@ -287,20 +291,12 @@ void SVGDrawMarker::setShape(const string& shape) {
     _shape = shape;
 }
 
-void SVGDrawMarker::setFill(const string& value) {
-    _attributes[SVG_ATTR_KEY_FILL] = value;
-}
-
-void SVGDrawMarker::setStroke(const string& value) {
-    _attributes[SVG_ATTR_KEY_STROKE] = value;
-}
-
 string SVGDrawMarker::singletonName() const {
     string fill = "black";
     if (const auto it = _attributes.find(SVG_ATTR_KEY_FILL); it != _attributes.end()) {
         fill = it->second;
     }
-    string stroke = "black";
+    string stroke = "none";
     if (const auto it = _attributes.find(SVG_ATTR_KEY_STROKE); it != _attributes.end()) {
         stroke = it->second;
     }

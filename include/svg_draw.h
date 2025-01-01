@@ -12,6 +12,7 @@ namespace svg_diagram {
     constexpr std::string_view SVG_ATTR_KEY_FONT_SIZE = "font-size";
     constexpr std::string_view SVG_ATTR_KEY_MARKER_START = "marker-start";
     constexpr std::string_view SVG_ATTR_KEY_MARKER_END = "marker-end";
+    constexpr std::string_view SVG_ATTR_KEY_STROKE_WIDTH = "stroke-width";
 
     struct SVGDrawBoundingBox {
         double x1, y1, x2, y2;
@@ -82,14 +83,21 @@ namespace svg_diagram {
         [[nodiscard]] bool hasEntity() const override;
     };
 
-    class SVGDrawEntity : public SVGDraw {
+    class SVGDrawAttribute : public SVGDraw {
     public:
         using SVGDraw::SVGDraw;
 
-        [[nodiscard]] bool hasEntity() const override;
         void setAttribute(const std::string_view& key, const std::string& value);
         void setFill(const std::string& value);
         void setStroke(const std::string& value);
+        void setStrokeWidth(const std::string& value);
+    };
+
+    class SVGDrawEntity : public SVGDrawAttribute {
+    public:
+        using SVGDrawAttribute::SVGDrawAttribute;
+
+        [[nodiscard]] bool hasEntity() const override;
     };
 
     class SVGDrawNode : public SVGDrawEntity {
@@ -160,9 +168,9 @@ namespace svg_diagram {
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
     };
 
-    class SVGDrawDefs : public SVGDraw {
+    class SVGDrawDefs : public SVGDrawAttribute {
     public:
-        using SVGDraw::SVGDraw;
+        using SVGDrawAttribute::SVGDrawAttribute;
 
         [[nodiscard]] bool isDefs() const override;
         [[nodiscard]] bool hasEntity() const override;
@@ -177,8 +185,6 @@ namespace svg_diagram {
         static constexpr std::string_view SHAPE_NORMAL = "normal";
 
         void setShape(const std::string& shape);
-        void setFill(const std::string& value);
-        void setStroke(const std::string& value);
 
         [[nodiscard]] std::string singletonName() const override;
 

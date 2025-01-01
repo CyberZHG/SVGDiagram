@@ -53,7 +53,6 @@ namespace svg_diagram {
         std::vector<std::string> _nodeIds;
         std::vector<std::string> _edgeIds;
 
-        std::string newNodeId();
         std::string newEdgeId();
 
         void produceSVGDrawsDynamic();

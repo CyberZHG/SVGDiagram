@@ -1,7 +1,7 @@
-#include <random>
-
 #include "geometry_utils.h"
 
+#include <random>
+#include <numbers>
 #include <gtest/gtest.h>
 using namespace std;
 using namespace svg_diagram;
@@ -21,6 +21,17 @@ TEST(TestGeometryUtils, isSameAngle) {
         EXPECT_FALSE(GeometryUtils::isSameAngle(atan2(-ys[i], xs[i]), xs[i - 1], -ys[i - 1]));
         EXPECT_FALSE(GeometryUtils::isSameAngle(atan2(-ys[i], -xs[i]), -xs[i - 1], -ys[i - 1]));
     }
+}
+
+TEST(TestGeoemtryUtils, SegmentIntersectSameAngle) {
+    constexpr double x1 = 1.0, y1 = 1.0, x2 = 1.0, y2 = 1.0;
+    const auto result1 = GeometryUtils::intersect(numbers::pi, x1, y1, x2, y2);
+    EXPECT_EQ(result1, nullopt);
+    const auto result2 = GeometryUtils::intersect(numbers::pi / 4.0, x1, y1, x2, y2);
+    EXPECT_EQ(result2.value(), make_pair(x1, y1));
+    constexpr double x3 = 2.0, y3 = 2.0;
+    const auto result3 = GeometryUtils::intersect(numbers::pi / 4.0, x3, y3, x2, y2);
+    EXPECT_EQ(result3, nullopt);
 }
 
 TEST(TestGeometryUtils, computeBezierLengthStraightLine) {

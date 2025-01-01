@@ -94,17 +94,6 @@ void SVGDiagram::render(const string &filePath) {
     file.close();
 }
 
-string SVGDiagram::newNodeId() {
-    string newNodeId;
-    while (true) {
-        newNodeId = format("node{}", _nodeIndex++);
-        if (!_nodes.contains(newNodeId)) {
-            break;
-        }
-    }
-    return newNodeId;
-}
-
 string SVGDiagram::newEdgeId() {
     string newEdgeId;
     while (true) {

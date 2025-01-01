@@ -69,11 +69,12 @@ TEST(TestAttributeUtils, ParseDCommandLineTo) {
 }
 
 TEST(TestAttributeUtils, ParseDCommandArc) {
-    const auto commands = AttributeUtils::parseDCommands("M 10,10\nA 6 4 10 1 0 14,10a 6 4 10 1 1 14,10");
+    const auto commands = AttributeUtils::parseDCommands("M 10,10\nA 6 4 10 1 0 14,10a 6 4 10 1 1 14,10 Z");
     EXPECT_EQ(commands, AttributeUtils::DCommands({
         {'M', {10.0, 10.0}},
         {'A', {6.0, 4.0, 10.0, 1.0, 0.0, 14.0, 10.0}},
         {'a', {6.0, 4.0, 10.0, 1.0, 1.0, 14.0, 10.0}},
+        {'Z', {}},
     }));
     const auto points = AttributeUtils::computeDPathPoints(commands);
     const auto expected = vector<pair<double, double>>({
@@ -82,4 +83,9 @@ TEST(TestAttributeUtils, ParseDCommandArc) {
         {28.0, 20.0},
     });
     EXPECT_EQ(points, expected);
+}
+
+TEST(TestAttributeUtils, ParseBool) {
+    EXPECT_TRUE(AttributeUtils::parseBool("ON"));
+    EXPECT_FALSE(AttributeUtils::parseBool("OFF"));
 }

@@ -1,7 +1,5 @@
 import SVGDiagramWASMModule from './wasm/SVGDiagramWASM.js';
 
-import { writeFile } from 'fs/promises';
-
 const SVGDiagramWASM = await SVGDiagramWASMModule();
 
 /**
@@ -69,14 +67,6 @@ SVGEdge.prototype.setArrowHead = function (arrowShape = SVGEdge.ARROW_NORMAL) {
  */
 SVGEdge.prototype.setArrowTail = function (arrowShape = SVGEdge.ARROW_NORMAL) {
     this._setArrowTail(arrowShape);
-};
-/**
- * Generate SVG and save to a local file.
- *
- * @param {string} file_path - Output file path.
- */
-SVGDiagram.prototype.toSVG = async function(file_path) {
-    await writeFile(file_path, this.render());
 };
 
 export {

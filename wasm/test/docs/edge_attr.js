@@ -53,4 +53,23 @@ describe("Docs/EdgeAttributes", () => {
         const svg = diagram.render();
         await compareSVG("edge_attr", "arrow", svg);
     });
+    it("label", async () => {
+        const diagram = new SVGDiagram();
+        const node1 = diagram.addNode("A");
+        node1.setCenter(0, 0);
+        node1.setLabel("A");
+        const node2 = diagram.addNode("B");
+        node2.setCenter(150, 0);
+        node2.setLabel("B");
+        const edge1 = diagram.addEdge("A", "B");
+        edge1.setArrowHead();
+        edge1.setLabel("A → B");
+        edge1.addConnectionPoint(75, 20);
+        const edge2 = diagram.addEdge("B", "A");
+        edge2.setArrowHead();
+        edge2.setLabel("A ← B");
+        edge2.addConnectionPoint(75, -20);
+        const svg = diagram.render();
+        await compareSVG("edge_attr", "label", svg);
+    });
 });

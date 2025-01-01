@@ -84,3 +84,42 @@ TEST(TestDocsEdgeAttributes, Arrow) {
     }
     diagram.render(OUTPUT_DIR + "arrow.svg");
 }
+
+TEST(TestDocsEdgeAttributes, Label) {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setLabel("A");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setLabel("B");
+    const auto edge1 = diagram.addEdge("A", "B");
+    edge1->setArrowHead();
+    edge1->setLabel("A → B");
+    edge1->addConnectionPoint(75, 20);
+    const auto edge2 = diagram.addEdge("B", "A");
+    edge2->setArrowHead();
+    edge2->setLabel("A ← B");
+    edge2->addConnectionPoint(75, -20);
+    diagram.render(OUTPUT_DIR + "label.svg");
+}
+
+TEST(TestDocsEdgeAttributes, LabelDebug) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setLabel("A");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setLabel("B");
+    const auto edge1 = diagram.addEdge("A", "B");
+    edge1->setArrowHead();
+    edge1->setLabel("A → B");
+    edge1->addConnectionPoint(75, 20);
+    const auto edge2 = diagram.addEdge("B", "A");
+    edge2->setArrowHead();
+    edge2->setLabel("A ← B");
+    edge2->addConnectionPoint(75, -20);
+    diagram.render(OUTPUT_DIR + "label_debug.svg");
+}

@@ -57,8 +57,8 @@ PYBIND11_MODULE(_core, m, py::mod_gil_not_used()) {
         .def("set_font", &SVGEdge::setFont)
         .def("set_splines", py::overload_cast<const string&>(&SVGEdge::setSplines))
         .def("add_connection_point", py::overload_cast<double, double>(&SVGEdge::addConnectionPoint))
-        .def("set_arrow_head", py::overload_cast<const string_view&>(&SVGEdge::setArrowHead))
-        .def("set_arrow_tail", py::overload_cast<const string_view&>(&SVGEdge::setArrowTail))
+        .def("set_arrow_head", py::overload_cast<const string_view&>(&SVGEdge::setArrowHead), py::arg("arrow_shape") = std::string(SVGEdge::ARROW_NORMAL))
+        .def("set_arrow_tail", py::overload_cast<const string_view&>(&SVGEdge::setArrowTail), py::arg("arrow_shape") = std::string(SVGEdge::ARROW_NORMAL))
     ;
     py::class_<SVGGraph, shared_ptr<SVGGraph>>(m, "SVGGraph")
         .def(py::init<>())

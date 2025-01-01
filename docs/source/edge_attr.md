@@ -197,3 +197,83 @@ int main() {
 `````
 
 ![](_static/edge_attr/arrow.svg)
+
+## Label
+
+By default, the text of an `SVGEdge` is positioned to the right of the arrow direction and centered along the edge (excluding the arrow length).
+
+
+`````{tab-set}
+````{tab-item} Python
+```python
+from sp_svg_diagram import SVGDiagram
+
+diagram = SVGDiagram()
+node1 = diagram.add_node("A")
+node1.set_center(0, 0)
+node1.set_label("A")
+node2 = diagram.add_node("B")
+node2.set_center(150, 0)
+node2.set_label("B")
+edge1 = diagram.add_edge("A", "B")
+edge1.set_arrow_head()
+edge1.set_label("A → B")
+edge1.add_connection_point(75, 20)
+edge2 = diagram.add_edge("B", "A")
+edge2.set_arrow_head()
+edge2.set_label("A ← B")
+edge2.add_connection_point(75, -20)
+svg = diagram.render()
+compare_svg("edge_attr", "label", svg)
+```
+````
+````{tab-item} JavaScript
+```javascript
+import { SVGDiagram } from 'sp-svg-diagram';
+
+const diagram = new SVGDiagram();
+const node1 = diagram.addNode("A");
+node1.setCenter(0, 0);
+node1.setLabel("A");
+const node2 = diagram.addNode("B");
+node2.setCenter(150, 0);
+node2.setLabel("B");
+const edge1 = diagram.addEdge("A", "B");
+edge1.setArrowHead();
+edge1.setLabel("A → B");
+edge1.addConnectionPoint(75, 20);
+const edge2 = diagram.addEdge("B", "A");
+edge2.setArrowHead();
+edge2.setLabel("A ← B");
+edge2.addConnectionPoint(75, -20);
+const svg = diagram.render();
+````
+
+````{tab-item} C++
+```c++
+#include "svg_diagram.h"
+using namespace svg_diagram;
+
+int main() {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setLabel("A");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setLabel("B");
+    const auto edge1 = diagram.addEdge("A", "B");
+    edge1->setArrowHead();
+    edge1->setLabel("A → B");
+    edge1->addConnectionPoint(75, 20);
+    const auto edge2 = diagram.addEdge("B", "A");
+    edge2->setArrowHead();
+    edge2->setLabel("A ← B");
+    edge2->addConnectionPoint(75, -20);
+    diagram.render("label.svg");
+    return 0;
+}
+````
+`````
+
+![](_static/edge_attr/label.svg)

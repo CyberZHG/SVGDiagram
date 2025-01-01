@@ -134,3 +134,27 @@ TEST(TestDocsNodeAttributes, TextSizeDebug) {
     node2->setPrecomputedTextSize(80, 16);
     diagram.render(OUTPUT_DIR + "text_size_debug.svg");
 }
+
+TEST(TestDocsNodeAttributes, NodeSize) {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setLabel("A");
+    const auto node2 = diagram.addNode("B");
+    node2->setLabel("B");
+    node2->setCenter(150, 0);
+    node2->setFixedSize(80, 30);
+    diagram.render(OUTPUT_DIR + "node_size.svg");
+}
+
+TEST(TestDocsNodeAttributes, NodeSizeDebug) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node1 = diagram.addNode("A");
+    node1->setLabel("A");
+    const auto node2 = diagram.addNode("B");
+    node2->setLabel("B");
+    node2->setCenter(150, 0);
+    node2->setFixedSize(80, 30);
+    diagram.render(OUTPUT_DIR + "node_size_debug.svg");
+}
+

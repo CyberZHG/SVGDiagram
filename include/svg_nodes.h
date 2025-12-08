@@ -51,6 +51,13 @@ namespace svg_diagram {
         void setPenWidth(double width);
         [[nodiscard]] double penWidth() const;
 
+    protected:
+        void appendSVGDrawsLabelWithCenter(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, double cx, double cy);
+
+        [[nodiscard]] std::pair<double, double> computeTextSize();
+        [[nodiscard]] std::pair<double, double> computeMarginInPoints();
+        [[nodiscard]] std::pair<double, double> computeTextSizeWithMargin();
+
     private:
         bool _enabledDebug = false;
         double _precomputedTextWidth = 0.0;
@@ -92,10 +99,9 @@ namespace svg_diagram {
         double _cx = 0.0;
         double _cy = 0.0;
 
-        [[nodiscard]] std::pair<double, double> computeTextSize();
-        [[nodiscard]] std::pair<double, double> computeMarginInPixels();
         [[nodiscard]] bool isFixedSize() const;
         void updateNodeSize(double width, double height);
+        void updateNodeSize(const std::pair<double, double>& size);
 
         void appendSVGDrawsLabel(std::vector<std::unique_ptr<SVGDraw>>& svgDraws);
 
@@ -155,6 +161,8 @@ namespace svg_diagram {
         static constexpr double ARROW_WIDTH = 10.0;
         static constexpr double ARROW_HEIGHT = 7.0;
         static constexpr double ARROW_HALF_HEIGHT = ARROW_HEIGHT / 2.0;
+
+        std::pair<double, double> computeTextCenter(double cx, double cy, double dx, double dy);
 
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsLine(const NodesMapping& nodes);
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsSpline(const NodesMapping& nodes);

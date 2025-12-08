@@ -40,6 +40,9 @@ TEST(TestExample, Pentagon) {
         const auto& edge = diagram.addEdge(from, to);
         edge->setArrowHead();
         edge->setColor(strokeColors[i]);
+        edge->setLabel(format("C{}", i + 1));
+        edge->setFontColor(strokeColors[i]);
+        edge->setMarginInPoints(4.0);
     }
 
     const auto& node = diagram.addNode("node_c");

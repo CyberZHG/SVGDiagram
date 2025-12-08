@@ -13,7 +13,9 @@ namespace svg_diagram {
         using Point2D = std::pair<double, double>;
 
         static double distance(double x, double y);
+        static double distance(const Point2D &p);
         static double distance(double x1, double y1, double x2, double y2);
+        static Point2D normalize(double x, double y);
 
         static double cross(double x1, double y1, double x2, double y2);
         static bool isSameAngle(double angle, double x1, double y1);

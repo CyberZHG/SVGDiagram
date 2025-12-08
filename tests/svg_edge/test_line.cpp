@@ -250,3 +250,74 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowBoth) {
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
+
+string TestSVGEdgeLineExpectedNodesSVGCase1WithDebug() {
+    return R"(<!-- Node: A -->
+<g class="node" id="A">
+  <title>A</title>
+  <circle cx="100" cy="100" r="17.69180601295413" fill="none" stroke="black"/>
+  <rect x="95" y="92" width="10" height="16" fill="none" stroke="blue"/>
+  <rect x="87" y="88" width="26" height="24" fill="none" stroke="red"/>
+  <text x="100" y="100" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">A</text>
+</g>
+<!-- Node: B -->
+<g class="node" id="B">
+  <title>B</title>
+  <circle cx="200" cy="150" r="26.40075756488817" fill="none" stroke="black"/>
+  <rect x="195" y="142" width="10" height="16" fill="none" stroke="blue"/>
+  <rect x="179" y="134" width="42" height="32" fill="none" stroke="red"/>
+  <text x="200" y="150" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">B</text>
+</g>)";
+}
+
+TEST(TestSVGEdgeLine, TwoCircleOneLineWithLabel) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    TestSVGEdgeLineAddTwoNodesCase1(diagram);
+    auto edge = std::make_unique<SVGEdge>("A", "B");
+    edge->setSplines(SVGEdge::EDGE_SPLINES_LINE);
+    edge->setLabel("42");
+    edge->setPrecomputedTextSize(20, 16);
+    diagram.addEdge(std::move(edge));
+    const auto svg = diagram.render();
+    const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1WithDebug() +
+        R"(<!-- Edge: edge1 (A -> B) -->
+    <g class="edge" id="edge1">
+      <title>A->B</title>
+      <line x1="115.98055711430698" y1="107.99027855715349" x2="176.2299198125423" y2="138.11495990627114" stroke="black" stroke-width="1"/>
+      <rect x="130.90523846342467" y="125.4526192317123" width="20" height="16" fill="none" stroke="blue"/>
+      <rect x="130.90523846342467" y="125.4526192317123" width="20" height="16" fill="none" stroke="red"/>
+      <text x="140.90523846342467" y="133.4526192317123" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">42</text>
+    </g>)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionWithLabel) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    TestSVGEdgeLineAddTwoNodesCase1(diagram);
+    auto edge = std::make_unique<SVGEdge>();
+    edge->setNodeFrom("A");
+    edge->setNodeTo("B");
+    edge->setSplines(SVGEdge::EDGE_SPLINES_LINE);
+    edge->addConnectionPoint(-50, 120);
+    edge->setLabel("42");
+    edge->setPrecomputedTextSize(20, 16);
+    diagram.addEdge(std::move(edge));
+    const auto svg = diagram.render();
+    const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1WithDebug() +
+        R"(<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <line x1="82.2899233838756" y1="102.36134354881658" x2="-50" y2="120" stroke="black" stroke-width="1"/>
+  <line x1="-50" y1="120" x2="173.61354584857892" y2="146.83362550182946" stroke="black" stroke-width="1"/>
+  <rect x="-15.536551001821415" y="126.53561387978141" width="20" height="16" fill="none" stroke="blue"/>
+  <rect x="-15.536551001821415" y="126.53561387978141" width="20" height="16" fill="none" stroke="red"/>
+  <text x="-5.536551001821415" y="134.5356138797814" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">42</text>
+</g>)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}

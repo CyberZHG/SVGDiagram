@@ -87,6 +87,61 @@ double SVGItem::penWidth() const {
     return 1.0;
 }
 
+void SVGItem::appendSVGDrawsLabelWithCenter(vector<unique_ptr<SVGDraw>>& svgDraws, const double cx, const double cy) {
+    if (enabledDebug()) {
+        const auto [textWidth, textHeight] = computeTextSize();
+        const auto [marginX, marginY] = computeMarginInPoints();
+        auto textRect = make_unique<SVGDrawRect>(cx, cy, textWidth, textHeight);
+        textRect->setFill("none");
+        textRect->setStroke("blue");
+        svgDraws.emplace_back(std::move(textRect));
+        auto marginRect = make_unique<SVGDrawRect>(cx, cy, textWidth + marginX * 2, textHeight + marginY * 2);
+        marginRect->setFill("none");
+        marginRect->setStroke("red");
+        svgDraws.emplace_back(std::move(marginRect));
+    }
+    if (const auto label = getAttribute(DOT_ATTR_KEY_LABEL); !label.empty()) {
+        auto draw = make_unique<SVGDrawText>(cx, cy, label);
+        if (const auto& fontColor = getAttribute(DOT_ATTR_KEY_FONT_COLOR); fontColor != "black") {
+            draw->setFill(fontColor);
+        }
+        svgDraws.emplace_back(std::move(draw));
+    }
+}
+
+pair<double, double> SVGItem::computeTextSize() {
+    if (const auto [precomputedTextWidth, precomputedTextHeight] = precomputedTextSize();
+        precomputedTextWidth > 0 && precomputedTextHeight > 0) {
+        return {precomputedTextWidth, precomputedTextHeight};
+        }
+    const SVGTextSize textSize;
+    const auto label = getAttribute(DOT_ATTR_KEY_LABEL);
+    setAttributeIfNotExist(DOT_ATTR_KEY_FONT_NAME, "Times,serif");
+    setAttributeIfNotExist(DOT_ATTR_KEY_FONT_SIZE, "14");
+    const double fontSize = stod(getAttribute(DOT_ATTR_KEY_FONT_SIZE));
+    const string fontFamily = getAttribute(DOT_ATTR_KEY_FONT_NAME);
+    auto [width, height] = textSize.computeTextSize(label, fontSize, fontFamily);
+    if (width == 0.0) {
+        width = fontSize * SVGTextSize::DEFAULT_APPROXIMATION_WIDTH_SCALE;
+    }
+    if (height == 0.0) {
+        height = fontSize * SVGTextSize::DEFAULT_APPROXIMATION_HEIGHT_SCALE;
+    }
+    return {width, height};
+}
+
+pair<double, double> SVGItem::computeMarginInPoints() {
+    setAttributeIfNotExist(DOT_ATTR_KEY_MARGIN, "0.11,0.055");
+    const auto margin = getAttribute(DOT_ATTR_KEY_MARGIN);
+    return AttributeUtils::parseMarginToPixels(margin);
+}
+
+std::pair<double, double> SVGItem::computeTextSizeWithMargin() {
+    const auto [width, height] = computeTextSize();
+    const auto [marginX, marginY] = computeMarginInPoints();
+    return {width + marginX * 2, height + marginY * 2};
+}
+
 void SVGItem::enableDebug() {
     _enabledDebug = true;
 }
@@ -189,33 +244,6 @@ double SVGNode::computeAngle(const pair<double, double>& p) const {
     return computeAngle(p.first, p.second);
 }
 
-pair<double, double> SVGNode::computeTextSize() {
-    if (const auto [precomputedTextWidth, precomputedTextHeight] = precomputedTextSize();
-        precomputedTextWidth > 0 && precomputedTextHeight > 0) {
-        return {precomputedTextWidth, precomputedTextHeight};
-    }
-    const SVGTextSize textSize;
-    const auto label = getAttribute(DOT_ATTR_KEY_LABEL);
-    setAttributeIfNotExist(DOT_ATTR_KEY_FONT_NAME, "Times,serif");
-    setAttributeIfNotExist(DOT_ATTR_KEY_FONT_SIZE, "14");
-    const double fontSize = stod(getAttribute(DOT_ATTR_KEY_FONT_SIZE));
-    const string fontFamily = getAttribute(DOT_ATTR_KEY_FONT_NAME);
-    auto [width, height] = textSize.computeTextSize(label, fontSize, fontFamily);
-    if (width == 0.0) {
-        width = fontSize * SVGTextSize::DEFAULT_APPROXIMATION_WIDTH_SCALE;
-    }
-    if (height == 0.0) {
-        height = fontSize * SVGTextSize::DEFAULT_APPROXIMATION_HEIGHT_SCALE;
-    }
-    return {width, height};
-}
-
-pair<double, double> SVGNode::computeMarginInPixels() {
-    setAttributeIfNotExist(DOT_ATTR_KEY_MARGIN, "0.11,0.055");
-    const auto margin = getAttribute(DOT_ATTR_KEY_MARGIN);
-    return AttributeUtils::parseMarginToPixels(margin);
-}
-
 bool SVGNode::isFixedSize() const {
     return AttributeUtils::parseBool(getAttribute(DOT_ATTR_KEY_FIXED_SIZE));
 }
@@ -232,26 +260,12 @@ void SVGNode::updateNodeSize(const double width, const double height) {
     }
 }
 
+void SVGNode::updateNodeSize(const pair<double, double>& size) {
+    updateNodeSize(size.first, size.second);
+}
+
 void SVGNode::appendSVGDrawsLabel(vector<unique_ptr<SVGDraw>>& svgDraws) {
-    if (enabledDebug()) {
-        const auto [textWidth, textHeight] = computeTextSize();
-        const auto [marginX, marginY] = computeMarginInPixels();
-        auto textRect = make_unique<SVGDrawRect>(_cx, _cy, textWidth, textHeight);
-        textRect->setFill("none");
-        textRect->setStroke("blue");
-        svgDraws.emplace_back(std::move(textRect));
-        auto marginRect = make_unique<SVGDrawRect>(_cx, _cy, textWidth + marginX * 2, textHeight + marginY * 2);
-        marginRect->setFill("none");
-        marginRect->setStroke("red");
-        svgDraws.emplace_back(std::move(marginRect));
-    }
-    if (const auto label = getAttribute(DOT_ATTR_KEY_LABEL); !label.empty()) {
-        auto draw = make_unique<SVGDrawText>(_cx, _cy, label);
-        if (const auto& fontColor = getAttribute(DOT_ATTR_KEY_FONT_COLOR); fontColor != "black") {
-            draw->setFill(fontColor);
-        }
-        svgDraws.emplace_back(std::move(draw));
-    }
+    appendSVGDrawsLabelWithCenter(svgDraws, _cx, _cy);
 }
 
 vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsNone() {
@@ -261,9 +275,7 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsNone() {
 }
 
 void SVGNode::adjustNodeSizeCircle() {
-    const auto [textWidth, textHeight] = computeTextSize();
-    const auto [marginX, marginY] = computeMarginInPixels();
-    const auto diameter = GeometryUtils::distance(textWidth + marginX * 2, textHeight + marginY * 2);
+    const auto diameter = GeometryUtils::distance(computeTextSizeWithMargin());
     updateNodeSize(diameter, diameter);
 }
 
@@ -290,9 +302,7 @@ pair<double, double> SVGNode::computeConnectionPointCircle(const double angle) c
 }
 
 void SVGNode::adjustNodeSizeRect() {
-    const auto [textWidth, textHeight] = computeTextSize();
-    const auto [marginX, marginY] = computeMarginInPixels();
-    updateNodeSize(textWidth + marginX * 2, textHeight + marginY * 2);
+    updateNodeSize(computeTextSizeWithMargin());
 }
 
 vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsRect() {
@@ -336,7 +346,7 @@ pair<double, double> SVGNode::computeConnectionPointRect(const double angle) con
 
 void SVGNode::adjustNodeSizeEllipse() {
     const auto [textWidth, textHeight] = computeTextSize();
-    const auto [marginX, marginY] = computeMarginInPixels();
+    const auto [marginX, marginY] = computeMarginInPoints();
     updateNodeSize((textWidth + marginX * 2) * sqrt(2.0), (textHeight + marginY * 2) * sqrt(2.0));
 }
 
@@ -414,6 +424,7 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDraws(const NodesMapping& nodes) 
     setAttributeIfNotExist(DOT_ATTR_KEY_PEN_WIDTH, "1");
     setAttributeIfNotExist(DOT_ATTR_KEY_ARROW_HEAD, "none");
     setAttributeIfNotExist(DOT_ATTR_KEY_ARROW_TAIL, "none");
+    setAttributeIfNotExist(DOT_ATTR_KEY_MARGIN, "0,0");
     const auto splines = getAttribute(DOT_ATTR_KEY_SPLINES);
     if (splines == EDGE_SPLINES_LINE) {
         return produceSVGDrawsLine(nodes);
@@ -440,6 +451,27 @@ void SVGEdge::setArrowTail(const string_view& shape) {
     setAttribute(DOT_ATTR_KEY_ARROW_TAIL, string(shape));
 }
 
+std::pair<double, double> SVGEdge::computeTextCenter(const double cx, const double cy, double dx, double dy) {
+    const auto [width, height] = computeTextSizeWithMargin();
+    const auto points = vector<pair<double, double>>{
+        {cx - width / 2, cy - height / 2},
+        {cx - width / 2, cy + height / 2},
+        {cx + width / 2, cy + height / 2},
+        {cx + width / 2, cy - height / 2},
+    };
+    const auto d = GeometryUtils::normalize(dx, dy);
+    dx = d.first, dy = d.second;
+    const double ux = -dy, uy = dx;
+    double maxShift = 0.0;
+    for (const auto& [x, y] : points) {
+        const double totalArea = GeometryUtils::cross(x - cx, y - cy, dx, dy);
+        const double unitArea = GeometryUtils::cross(dx, dy, ux, uy);
+        const double shift = totalArea / unitArea;
+        maxShift = max(maxShift, shift);
+    }
+    return {cx + ux * maxShift, cy + uy * maxShift};
+}
+
 vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nodes) {
     const auto& nodeFrom = nodes.at(_nodeFrom);
     const auto& nodeTo = nodes.at(_nodeTo);
@@ -447,23 +479,26 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
     const auto arrowTailShape = getAttribute(DOT_ATTR_KEY_ARROW_TAIL);
     vector<unique_ptr<SVGDraw>> svgDraws;
     vector<unique_ptr<SVGDraw>> svgDrawArrows;
+    vector<pair<double, double>> points;
     if (_connectionPoints.empty()) {
         const double angleFrom = nodeFrom->computeAngle(nodeTo->centerInPoints());
         const double angleTo = nodeTo->computeAngle(nodeFrom->centerInPoints());
-        auto [x1, y1] = addArrow(arrowTailShape, svgDrawArrows, nodeFrom->computeConnectionPoint(angleFrom), angleFrom);
-        auto [x2, y2] = addArrow(arrowHeadShape, svgDrawArrows, nodeTo->computeConnectionPoint(angleTo), angleTo);
-        svgDraws.emplace_back(make_unique<SVGDrawLine>(x1, y1, x2, y2));
+        points.emplace_back(addArrow(arrowTailShape, svgDrawArrows, nodeFrom->computeConnectionPoint(angleFrom), angleFrom));
+        points.emplace_back(addArrow(arrowHeadShape, svgDrawArrows, nodeTo->computeConnectionPoint(angleTo), angleTo));
     } else {
         const double angleFrom = nodeFrom->computeAngle(_connectionPoints[0]);
-        auto [xLast, yLast] = addArrow(arrowTailShape, svgDrawArrows, nodeFrom->computeConnectionPoint(angleFrom), angleFrom);
+        points.emplace_back(addArrow(arrowTailShape, svgDrawArrows, nodeFrom->computeConnectionPoint(angleFrom), angleFrom));
         for (const auto& [x, y] : _connectionPoints) {
-            svgDraws.emplace_back(make_unique<SVGDrawLine>(xLast, yLast, x, y));
-            xLast = x;
-            yLast = y;
+            points.emplace_back(x, y);
         }
-        const double angleTo = nodeTo->computeAngle(xLast, yLast);
-        const auto [x, y] = addArrow(arrowHeadShape, svgDrawArrows, nodeTo->computeConnectionPoint(angleTo), angleTo);
-        svgDraws.emplace_back(make_unique<SVGDrawLine>(xLast, yLast, x, y));
+        const size_t n = _connectionPoints.size();
+        const double angleTo = nodeTo->computeAngle(_connectionPoints[n - 1]);
+        points.emplace_back(addArrow(arrowHeadShape, svgDrawArrows, nodeTo->computeConnectionPoint(angleTo), angleTo));
+    }
+    for (size_t i = 0; i + 1 < points.size(); ++i) {
+        const auto& [x1, y1] = points[i];
+        const auto& [x2, y2] = points[i + 1];
+        svgDraws.emplace_back(make_unique<SVGDrawLine>(x1, y1, x2, y2));
     }
     const auto strokeWidth = penWidth();
     for (const auto& line : svgDraws) {
@@ -475,6 +510,36 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
     }
     for (auto& arrow : svgDrawArrows) {
         svgDraws.emplace_back(std::move(arrow));
+    }
+    if (const auto label = getAttribute(DOT_ATTR_KEY_LABEL); !label.empty()) {
+        double totalLength = 0.0;
+        for (size_t i = 0; i + 1 < points.size(); ++i) {
+            const auto& [x1, y1] = points[i];
+            const auto& [x2, y2] = points[i + 1];
+            totalLength += GeometryUtils::distance(x1, y1, x2, y2);
+        }
+        const double halfLength = totalLength / 2.0;
+        double sumLength = 0.0;
+        size_t index = 0;
+        double lineX = 0.0, lineY = 0.0;
+        for (size_t i = 0; i + 1 < points.size(); ++i) {
+            const auto& [x1, y1] = points[i];
+            const auto& [x2, y2] = points[i + 1];
+            const double length = GeometryUtils::distance(x1, y1, x2, y2);
+            const double nextSum = sumLength + length;
+            if (nextSum > halfLength) {
+                index = i;
+                const double ratio = (halfLength - sumLength) / length;
+                lineX = x1 + ratio * (x2 - x1);
+                lineY = y1 + ratio * (y2 - y1);
+                break;
+            }
+            sumLength = nextSum;
+        }
+        const double dx = points[index + 1].first - points[index].first;
+        const double dy = points[index + 1].second - points[index].second;
+        const auto [cx, cy] = computeTextCenter(lineX, lineY, dx, dy);
+        appendSVGDrawsLabelWithCenter(svgDraws, cx, cy);
     }
     return svgDraws;
 }

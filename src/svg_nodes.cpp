@@ -545,6 +545,8 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
 }
 
 vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& nodes) {
+    static constexpr double NUM_SPLINE_LENGTH_APPROXIMATION_SEGMENTS = 100;
+    constexpr double SPLINE_LENGTH_APPROXIMATION_STEP = 1.0 / NUM_SPLINE_LENGTH_APPROXIMATION_SEGMENTS;
     if (_connectionPoints.empty()) {
         return produceSVGDrawsLine(nodes);
     }
@@ -568,6 +570,7 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
     points.emplace_back(ex, ey);
     points.emplace_back(ex, ey);
     auto d = format("M {} {}", points[1].first, points[1].second);
+    vector<vector<pair<double, double>>> splines;
     for (int i = 1; i + 2 < static_cast<int>(points.size()); ++i) {
         const auto [x0, y0] = points[i - 1];
         const auto [x1, y1] = points[i];
@@ -578,6 +581,7 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
         const double c2x = x2 - (x3 - x1) / 6.0;
         const double c2y = y2 - (y3 - y1) / 6.0;
         d += format(" C {} {} {} {} {} {}", c1x, c1y, c2x, c2y, x2, y2);
+        splines.emplace_back(vector{points[i], {c1x, c1y}, {c2x, c2y}, points[i + 1]});
     }
     auto path = make_unique<SVGDrawPath>(d);
     path->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
@@ -588,6 +592,45 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
     svgDraws.emplace_back(std::move(path));
     for (auto& arrow : svgDrawArrows) {
         svgDraws.emplace_back(std::move(arrow));
+    }
+    if (const auto label = getAttribute(DOT_ATTR_KEY_LABEL); !label.empty()) {
+        double totalLength = 0.0;
+        vector<double> lengths(splines.size());
+        for (size_t i = 0; i < splines.size(); ++i) {
+            lengths[i] = GeometryUtils::computeBezierLength(splines[i][0], splines[i][1], splines[i][2], splines[i][3]);
+            totalLength += lengths[i];
+        }
+        const double halfLength = totalLength / 2.0;
+        double sumLength = 0.0;
+        double splineX = 0.0, splineY = 0.0;
+        double dx = 0.0, dy = 0.0;
+        for (size_t i = 0; i < splines.size(); ++i) {
+            const double nextSum = sumLength + lengths[i];
+            if (nextSum > halfLength) {
+                const double targetLength = halfLength - sumLength;
+                auto [x1, y1] = splines[i][0];
+                double totalSegmentLength = 0.0;
+                for (int j = 1; j < NUM_SPLINE_LENGTH_APPROXIMATION_SEGMENTS; ++j) {
+                    const double t = j * SPLINE_LENGTH_APPROXIMATION_STEP;
+                    const auto [x2, y2] = GeometryUtils::computeBezierAt(splines[i], t);
+                    totalSegmentLength += GeometryUtils::distance(x1, y1, x2, y2);
+                    if (j + 1 == NUM_SPLINE_LENGTH_APPROXIMATION_SEGMENTS || totalSegmentLength > targetLength - GeometryUtils::EPSILON) {
+                        const double tMid = t - SPLINE_LENGTH_APPROXIMATION_STEP * 0.5;
+                        auto point = GeometryUtils::computeBezierAt(splines[i], tMid);
+                        splineX = point.first, splineY = point.second;
+                        point = GeometryUtils::computeBezierDerivative(splines[i], tMid);
+                        dx = point.first, dy = point.second;
+                        break;
+                    }
+                    x1 = x2;
+                    y1 = y2;
+                }
+                break;
+            }
+            sumLength = nextSum;
+        }
+        const auto [cx, cy] = computeTextCenter(splineX, splineY, dx, dy);
+        appendSVGDrawsLabelWithCenter(svgDraws, cx, cy);
     }
     return svgDraws;
 }

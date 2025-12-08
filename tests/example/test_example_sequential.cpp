@@ -44,6 +44,9 @@ TEST(TestExample, Sequential) {
             edge->setArrowHead();
             edge->setColor(strokeColors[i]);
             edge->setPenWidth(1 + i * 0.25);
+            edge->setLabel(format("C{}->C{}", i + 1, i + 2));
+            edge->setFontColor(strokeColors[i]);
+            edge->setMarginInPoints(4.0);
         }
     }
 

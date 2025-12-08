@@ -3,6 +3,7 @@
 
 #include <optional>
 #include <utility>
+#include <vector>
 
 namespace svg_diagram {
 
@@ -22,7 +23,10 @@ namespace svg_diagram {
         static std::optional<Point2D> intersect(double angle, double x1, double y1, double x2, double y2);
 
         static Point2D computeBezierDerivative(const Point2D& p0, const Point2D& p1, const Point2D& p2, const Point2D& p3, double t);
+        static Point2D computeBezierDerivative(const std::vector<Point2D>& points, double t);
         static double computeBezierLength(const Point2D& p0, const Point2D& p1, const Point2D& p2, const Point2D& p3);
+        static Point2D computeBezierAt(const Point2D& p0, const Point2D& p1, const Point2D& p2, const Point2D& p3, double t);
+        static Point2D computeBezierAt(const std::vector<Point2D>& points, double t);
     };
 
 }

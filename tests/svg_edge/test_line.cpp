@@ -278,6 +278,7 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineWithLabel) {
     edge->setSplines(SVGEdge::EDGE_SPLINES_LINE);
     edge->setLabel("42");
     edge->setPrecomputedTextSize(20, 16);
+    edge->setMarginInPoints(2.0);
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1WithDebug() +
@@ -285,9 +286,9 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineWithLabel) {
     <g class="edge" id="edge1">
       <title>A->B</title>
       <line x1="115.98055711430698" y1="107.99027855715349" x2="176.2299198125423" y2="138.11495990627114" stroke="black" stroke-width="1"/>
-      <rect x="130.90523846342467" y="125.4526192317123" width="20" height="16" fill="none" stroke="blue"/>
-      <rect x="130.90523846342467" y="125.4526192317123" width="20" height="16" fill="none" stroke="red"/>
-      <text x="140.90523846342467" y="133.4526192317123" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">42</text>
+      <rect x="129.70523846342465" y="127.85261923171231" width="20" height="16" fill="none" stroke="blue"/>
+      <rect x="127.70523846342465" y="125.85261923171231" width="24" height="20" fill="none" stroke="red"/>
+      <text x="139.70523846342465" y="135.8526192317123" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">42</text>
     </g>)";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
@@ -305,6 +306,7 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionWithLabel) {
     edge->addConnectionPoint(-50, 120);
     edge->setLabel("42");
     edge->setPrecomputedTextSize(20, 16);
+    edge->setMarginInPoints(2.0);
     diagram.addEdge(std::move(edge));
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1WithDebug() +
@@ -313,9 +315,9 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionWithLabel) {
   <title>A->B</title>
   <line x1="82.2899233838756" y1="102.36134354881658" x2="-50" y2="120" stroke="black" stroke-width="1"/>
   <line x1="-50" y1="120" x2="173.61354584857892" y2="146.83362550182946" stroke="black" stroke-width="1"/>
-  <rect x="-15.536551001821415" y="126.53561387978141" width="20" height="16" fill="none" stroke="blue"/>
-  <rect x="-15.536551001821415" y="126.53561387978141" width="20" height="16" fill="none" stroke="red"/>
-  <text x="-5.536551001821415" y="134.5356138797814" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">42</text>
+  <rect x="-15.801535228950753" y="128.7438157725259" width="20" height="16" fill="none" stroke="blue"/>
+  <rect x="-17.801535228950755" y="126.74381577252589" width="24" height="20" fill="none" stroke="red"/>
+  <text x="-5.801535228950753" y="136.7438157725259" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">42</text>
 </g>)";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();

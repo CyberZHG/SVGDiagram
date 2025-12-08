@@ -240,3 +240,73 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLineOneConnectionArrowBoth) {
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
+
+string TestSVGEdgeSplineExpectedNodesSVGCase2WithDebug() {
+    return R"(<!-- Node: A -->
+<g class="node" id="A">
+  <title>A</title>
+  <circle cx="100" cy="100" r="17.69180601295413" fill="none" stroke="black"/>
+  <rect x="95" y="92" width="10" height="16" fill="none" stroke="blue"/>
+  <rect x="87" y="88" width="26" height="24" fill="none" stroke="red"/>
+  <text x="100" y="100" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">A</text>
+</g>
+<!-- Node: B -->
+<g class="node" id="B">
+  <title>B</title>
+  <circle cx="200" cy="150" r="26.40075756488817" fill="none" stroke="black"/>
+  <rect x="195" y="142" width="10" height="16" fill="none" stroke="blue"/>
+  <rect x="179" y="134" width="42" height="32" fill="none" stroke="red"/>
+  <text x="200" y="150" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">B</text>
+</g>)";
+}
+
+TEST(TestSVGEdgeSpline, TwoCircleOneLineWithLabel) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    TestSVGEdgeSplineAddTwoNodesCase1(diagram);
+    auto edge = std::make_unique<SVGEdge>("A", "B");
+    edge->setSplines(SVGEdge::EDGE_SPLINES_SPLINE);
+    edge->setLabel("42");
+    edge->setPrecomputedTextSize(20, 16);
+    edge->setMarginInPoints(2.0);
+    diagram.addEdge(std::move(edge));
+    const auto svg = diagram.render();
+    const auto expected = TestSVGEdgeSplineExpectedNodesSVGCase2WithDebug() +
+        R"(<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <line x1="115.98055711430698" y1="107.99027855715349" x2="176.2299198125423" y2="138.11495990627114" stroke="black" stroke-width="1"/>
+  <rect x="129.70523846342465" y="127.85261923171231" width="20" height="16" fill="none" stroke="blue"/>
+  <rect x="127.70523846342465" y="125.85261923171231" width="24" height="20" fill="none" stroke="red"/>
+  <text x="139.70523846342465" y="135.8526192317123" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">42</text>
+</g>)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGEdgeSpline, TwoCircleOneLineOneConnectionWithLabel) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    TestSVGEdgeSplineAddTwoNodesCase1(diagram);
+    auto edge = std::make_unique<SVGEdge>("A", "B");
+    edge->setSplines(SVGEdge::EDGE_SPLINES_SPLINE);
+    edge->addConnectionPoint(-50, 120);
+    edge->setLabel("42");
+    edge->setPrecomputedTextSize(20, 16);
+    edge->setMarginInPoints(2.0);
+    diagram.addEdge(std::move(edge));
+    const auto svg = diagram.render();
+    const auto expected = TestSVGEdgeSplineExpectedNodesSVGCase2WithDebug() +
+        R"(<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <path d="M 82.2899233838756 102.36134354881658 C 60.24160281989634 105.30111962401381 -65.22060374411723 112.58795300783119 -50 120 C -34.77939625588278 127.41204699216881 136.34462154048242 142.36135458485788 173.61354584857892 146.83362550182946" fill="none" stroke="black" stroke-width="1"/>
+  <rect x="-17.146953277543147" y="131.09970362028665" width="20" height="16" fill="none" stroke="blue"/>
+  <rect x="-19.146953277543147" y="129.09970362028665" width="24" height="20" fill="none" stroke="red"/>
+  <text x="-7.146953277543149" y="139.09970362028665" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">42</text>
+</g>)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}

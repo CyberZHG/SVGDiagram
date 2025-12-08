@@ -45,19 +45,11 @@ void SVGItem::setMargin(const string& value) {
 }
 
 void SVGItem::setMargin(const double margin) {
-    setMargin(format("{}", margin));
+    setMargin(format("{}", margin / POINTS_PER_INCH));
 }
 
 void SVGItem::setMargin(const double marginX, const double marginY) {
-    setMargin(format("{},{}", marginX, marginY));
-}
-
-void SVGItem::setMarginInPoints(const double margin) {
-    setMargin(margin / SVG_DEFAULT_DPI);
-}
-
-void SVGItem::setMarginInPoints(const double marginX, const double marginY) {
-    setMargin(marginX / SVG_DEFAULT_DPI, marginY / SVG_DEFAULT_DPI);
+    setMargin(format("{},{}", marginX / POINTS_PER_INCH, marginY / POINTS_PER_INCH));
 }
 
 void SVGItem::setColor(const string& color) {
@@ -78,7 +70,7 @@ void SVGItem::setPenWidth(const double width) {
 
 double SVGItem::penWidth() const {
     if (const auto it = _attributes.find(DOT_ATTR_KEY_PEN_WIDTH); it != _attributes.end()) {
-        const auto width = AttributeUtils::pointToSVGPixel(AttributeUtils::parseLengthToInch(it->second));
+        const auto width = stod(it->second);
         if (fabs(width - 1.0) < GeometryUtils::EPSILON) {
             return 1.0;
         }
@@ -90,7 +82,7 @@ double SVGItem::penWidth() const {
 void SVGItem::appendSVGDrawsLabelWithCenter(vector<unique_ptr<SVGDraw>>& svgDraws, const double cx, const double cy) {
     if (enabledDebug()) {
         const auto [textWidth, textHeight] = computeTextSize();
-        const auto [marginX, marginY] = computeMarginInPoints();
+        const auto [marginX, marginY] = computeMargin();
         auto textRect = make_unique<SVGDrawRect>(cx, cy, textWidth, textHeight);
         textRect->setFill("none");
         textRect->setStroke("blue");
@@ -130,15 +122,15 @@ pair<double, double> SVGItem::computeTextSize() {
     return {width, height};
 }
 
-pair<double, double> SVGItem::computeMarginInPoints() {
-    setAttributeIfNotExist(DOT_ATTR_KEY_MARGIN, "0.11,0.055");
+pair<double, double> SVGItem::computeMargin() {
+    setAttributeIfNotExist(DOT_ATTR_KEY_MARGIN, "0.1111111111111111,0.05555555555555555");
     const auto margin = getAttribute(DOT_ATTR_KEY_MARGIN);
-    return AttributeUtils::parseMarginToPixels(margin);
+    return AttributeUtils::parseMargin(margin);
 }
 
 std::pair<double, double> SVGItem::computeTextSizeWithMargin() {
     const auto [width, height] = computeTextSize();
-    const auto [marginX, marginY] = computeMarginInPoints();
+    const auto [marginX, marginY] = computeMargin();
     return {width + marginX * 2, height + marginY * 2};
 }
 
@@ -164,12 +156,12 @@ void SVGNode::setShape(const string_view& shape) {
     setShape(string(shape));
 }
 
-void SVGNode::setCenterInPoints(const double cx, const double cy) {
+void SVGNode::setCenter(const double cx, const double cy) {
     _cx = cx;
     _cy = cy;
 }
 
-pair<double, double> SVGNode::centerInPoints() const {
+pair<double, double> SVGNode::center() const {
     return {_cx, _cy};
 }
 
@@ -190,7 +182,6 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
     setAttributeIfNotExist(DOT_ATTR_KEY_COLOR, "black");
     setAttributeIfNotExist(DOT_ATTR_KEY_FILL_COLOR, "none");
     setAttributeIfNotExist(DOT_ATTR_KEY_FONT_COLOR, "black");
-    setAttributeIfNotExist(DOT_ATTR_KEY_PEN_WIDTH, format("{}", AttributeUtils::svgPixelToPoint(1.0)));
     const auto shape = getAttribute(DOT_ATTR_KEY_SHAPE);
     if (shape == NODE_SHAPE_NONE) {
         return produceSVGDrawsNone();
@@ -287,7 +278,7 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsCircle() {
     circle->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
     circle->setFill(getAttribute(DOT_ATTR_KEY_FILL_COLOR));
     if (const auto strokeWidth = penWidth(); strokeWidth != 1.0) {
-        circle->setStrokeWidth(getAttribute(DOT_ATTR_KEY_PEN_WIDTH));
+        circle->setStrokeWidth(strokeWidth);
     }
     svgDraws.emplace_back(std::move(circle));
     appendSVGDrawsLabel(svgDraws);
@@ -296,8 +287,7 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsCircle() {
 
 pair<double, double> SVGNode::computeConnectionPointCircle(const double angle) const {
     const double width = stod(getAttribute(DOT_ATTR_KEY_WIDTH));
-    const double penWidth = stod(getAttribute(DOT_ATTR_KEY_PEN_WIDTH));
-    const double radius = (width + penWidth) / 2.0;
+    const double radius = (width + penWidth()) / 2.0;
     return {_cx + radius * cos(angle), _cy + radius * sin(angle)};
 }
 
@@ -313,7 +303,7 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsRect() {
     rect->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
     rect->setFill(getAttribute(DOT_ATTR_KEY_FILL_COLOR));
     if (const auto strokeWidth = penWidth(); strokeWidth != 1.0) {
-        rect->setStrokeWidth(getAttribute(DOT_ATTR_KEY_PEN_WIDTH));
+        rect->setStrokeWidth(strokeWidth);
     }
     svgDraws.emplace_back(std::move(rect));
     appendSVGDrawsLabel(svgDraws);
@@ -321,7 +311,7 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsRect() {
 }
 
 pair<double, double> SVGNode::computeConnectionPointRect(const double angle) const {
-    const double strokeWidth = stod(getAttribute(DOT_ATTR_KEY_PEN_WIDTH));
+    const double strokeWidth = penWidth();
     const double width = stod(getAttribute(DOT_ATTR_KEY_WIDTH)) + strokeWidth;
     const double height = stod(getAttribute(DOT_ATTR_KEY_HEIGHT)) + strokeWidth;
     double x1 = -width / 2, y1 = -height / 2;
@@ -346,7 +336,7 @@ pair<double, double> SVGNode::computeConnectionPointRect(const double angle) con
 
 void SVGNode::adjustNodeSizeEllipse() {
     const auto [textWidth, textHeight] = computeTextSize();
-    const auto [marginX, marginY] = computeMarginInPoints();
+    const auto [marginX, marginY] = computeMargin();
     updateNodeSize((textWidth + marginX * 2) * sqrt(2.0), (textHeight + marginY * 2) * sqrt(2.0));
 }
 
@@ -358,7 +348,7 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsEllipse() {
     ellipse->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
     ellipse->setFill(getAttribute(DOT_ATTR_KEY_FILL_COLOR));
     if (const auto strokeWidth = penWidth(); strokeWidth != 1.0) {
-        ellipse->setStrokeWidth(getAttribute(DOT_ATTR_KEY_PEN_WIDTH));
+        ellipse->setStrokeWidth(strokeWidth);
     }
     svgDraws.emplace_back(std::move(ellipse));
     appendSVGDrawsLabel(svgDraws);
@@ -366,7 +356,7 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsEllipse() {
 }
 
 pair<double, double> SVGNode::computeConnectionPointEllipse(const double angle) const {
-    const double strokeWidth = stod(getAttribute(DOT_ATTR_KEY_PEN_WIDTH));
+    const double strokeWidth = penWidth();
     const double width = stod(getAttribute(DOT_ATTR_KEY_WIDTH)) + strokeWidth;
     const double height = stod(getAttribute(DOT_ATTR_KEY_HEIGHT)) + strokeWidth;
     const double rx = width / 2, ry = height / 2;
@@ -421,7 +411,6 @@ void SVGEdge::addConnectionPoint(const double x, const double y) {
 vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDraws(const NodesMapping& nodes) {
     setAttributeIfNotExist(DOT_ATTR_KEY_SPLINES, string(EDGE_SPLINES_DEFAULT));
     setAttributeIfNotExist(DOT_ATTR_KEY_COLOR, "black");
-    setAttributeIfNotExist(DOT_ATTR_KEY_PEN_WIDTH, "1");
     setAttributeIfNotExist(DOT_ATTR_KEY_ARROW_HEAD, "none");
     setAttributeIfNotExist(DOT_ATTR_KEY_ARROW_TAIL, "none");
     setAttributeIfNotExist(DOT_ATTR_KEY_MARGIN, "0,0");
@@ -481,8 +470,8 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
     vector<unique_ptr<SVGDraw>> svgDrawArrows;
     vector<pair<double, double>> points;
     if (_connectionPoints.empty()) {
-        const double angleFrom = nodeFrom->computeAngle(nodeTo->centerInPoints());
-        const double angleTo = nodeTo->computeAngle(nodeFrom->centerInPoints());
+        const double angleFrom = nodeFrom->computeAngle(nodeTo->center());
+        const double angleTo = nodeTo->computeAngle(nodeFrom->center());
         points.emplace_back(addArrow(arrowTailShape, svgDrawArrows, nodeFrom->computeConnectionPoint(angleFrom), angleFrom));
         points.emplace_back(addArrow(arrowHeadShape, svgDrawArrows, nodeTo->computeConnectionPoint(angleTo), angleTo));
     } else {
@@ -505,7 +494,7 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
         const auto& draw = dynamic_cast<SVGDrawLine*>(line.get());
         draw->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
         if (strokeWidth != 1.0) {
-            draw->setStrokeWidth(getAttribute(DOT_ATTR_KEY_PEN_WIDTH));
+            draw->setStrokeWidth(strokeWidth);
         }
     }
     for (auto& arrow : svgDrawArrows) {
@@ -587,7 +576,7 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
     path->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
     path->setFill("none");
     if (strokeWidth != 1.0) {
-        path->setStrokeWidth(getAttribute(DOT_ATTR_KEY_PEN_WIDTH));
+        path->setStrokeWidth(strokeWidth);
     }
     svgDraws.emplace_back(std::move(path));
     for (auto& arrow : svgDrawArrows) {
@@ -671,7 +660,7 @@ pair<double, double> SVGEdge::addArrowNormal(vector<unique_ptr<SVGDraw>>& svgDra
     polygon->setStroke(getAttribute(DOT_ATTR_KEY_COLOR));
     polygon->setFill(getAttribute(DOT_ATTR_KEY_COLOR));
     if (const double strokeWidth = penWidth(); strokeWidth != 1.0) {
-        polygon->setStrokeWidth(getAttribute(DOT_ATTR_KEY_PEN_WIDTH));
+        polygon->setStrokeWidth(strokeWidth);
     }
     svgDraws.emplace_back(std::move(polygon));
     return {x0 + ARROW_WIDTH * cos(angle), y0 + ARROW_WIDTH * sin(angle)};

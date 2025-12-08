@@ -5,20 +5,12 @@
 using namespace std;
 using namespace svg_diagram;
 
-double AttributeUtils::pointToSVGPixel(const double points) {
-    return points / POINTS_PER_INCH * SVG_DEFAULT_DPI;
-}
-
-double AttributeUtils::inchToSVGPixel(const double inch) {
-    return inch * SVG_DEFAULT_DPI;
-}
-
 double AttributeUtils::pointToInch(const double points) {
     return points / POINTS_PER_INCH;
 }
 
-double AttributeUtils::svgPixelToPoint(const double pixels) {
-    return pixels / SVG_DEFAULT_DPI * POINTS_PER_INCH;
+double AttributeUtils::inchToPoint(const double inches) {
+    return inches * POINTS_PER_INCH;
 }
 
 double AttributeUtils::centimeterToInch(const double centimeters) {
@@ -75,9 +67,9 @@ pair<double, double> AttributeUtils::parseMarginToInches(const string& margin) {
     return {m, m};
 }
 
-pair<double, double> AttributeUtils::parseMarginToPixels(const string& margin) {
+pair<double, double> AttributeUtils::parseMargin(const string& margin) {
     const auto [width, height] = parseMarginToInches(margin);
-    return {inchToSVGPixel(width), inchToSVGPixel(height)};
+    return {inchToPoint(width), inchToPoint(height)};
 }
 
 bool AttributeUtils::parseBool(const string& value) {

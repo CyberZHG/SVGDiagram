@@ -89,6 +89,7 @@ namespace svg_diagram {
         void setFill(const std::string& value);
         void setStroke(const std::string& value);
         void setStrokeWidth(const std::string& value);
+        void setStrokeWidth(double value);
     };
 
     class SVGDrawEntity : public SVGDrawAttribute {

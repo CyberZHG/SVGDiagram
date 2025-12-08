@@ -43,8 +43,6 @@ namespace svg_diagram {
         void setMargin(const std::string& value);
         void setMargin(double margin);
         void setMargin(double marginX, double marginY);
-        void setMarginInPoints(double margin);
-        void setMarginInPoints(double marginX, double marginY);
         void setColor(const std::string& color);
         void setFillColor(const std::string& color);
         void setFontColor(const std::string& color);
@@ -55,7 +53,7 @@ namespace svg_diagram {
         void appendSVGDrawsLabelWithCenter(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, double cx, double cy);
 
         [[nodiscard]] std::pair<double, double> computeTextSize();
-        [[nodiscard]] std::pair<double, double> computeMarginInPoints();
+        [[nodiscard]] std::pair<double, double> computeMargin();
         [[nodiscard]] std::pair<double, double> computeTextSizeWithMargin();
 
     private:
@@ -79,8 +77,8 @@ namespace svg_diagram {
         void setShape(const std::string& shape);
         void setShape(const std::string_view& shape);
 
-        void setCenterInPoints(double cx, double cy);
-        [[nodiscard]] std::pair<double, double> centerInPoints() const;
+        void setCenter(double cx, double cy);
+        [[nodiscard]] std::pair<double, double> center() const;
 
         void adjustNodeSize();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDraws();

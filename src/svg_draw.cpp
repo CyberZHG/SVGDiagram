@@ -137,6 +137,10 @@ void SVGDrawAttribute::setStrokeWidth(const string& value) {
     setAttribute(SVG_ATTR_KEY_STROKE_WIDTH, value);
 }
 
+void SVGDrawAttribute::setStrokeWidth(const double value) {
+    setAttribute(SVG_ATTR_KEY_STROKE_WIDTH, format("{}", value));
+}
+
 bool SVGDrawEntity::hasEntity() const {
     return true;
 }

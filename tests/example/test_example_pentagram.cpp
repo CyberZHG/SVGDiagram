@@ -10,6 +10,9 @@ using namespace svg_diagram;
 TEST(TestExample, Pentagram) {
     SVGDiagram diagram;
     diagram.setBackgroundColor("white");
+    diagram.defaultNodeAttributes().setShape(SVGNode::NODE_SHAPE_RECT);
+    diagram.defaultEdgeAttributes().setMargin(4.0);
+    diagram.defaultEdgeAttributes().setArrowHead();
 
     const auto labels = vector{
         "Adamah's\nRedemption",
@@ -34,18 +37,15 @@ TEST(TestExample, Pentagram) {
         const double nodeAngle = -numbers::pi / 2.3 + numbers::pi * 2 * i / 5.0;
         node->setCenter(RADIUS * cos(nodeAngle), RADIUS * sin(nodeAngle));
         node->setLabel(labels[i]);
-        node->setShape(SVGNode::NODE_SHAPE_RECT);
         node->setColor(strokeColors[i]);
         node->setFontColor(textColors[i]);
 
         const auto from = "node_c";
         const auto to = format("node_{}", i);
         const auto& edge = diagram.addEdge(from, to);
-        edge->setArrowHead();
         edge->setColor(strokeColors[i]);
         edge->setLabel(format("C{}", i + 1));
         edge->setFontColor(strokeColors[i]);
-        edge->setMargin(4.0);
     }
 
     diagram.render("example_pentagram.svg");

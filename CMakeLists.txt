@@ -119,6 +119,7 @@ if(SVG_DIAGRAM_ENABLE_TESTS)
             tests/example/test_example_sequential.cpp
             tests/test_xml_element.cpp
             tests/svg_node/test_ellipse.cpp
+            tests/example/test_example_subgraph.cpp
     )
 
     target_link_libraries(runTests

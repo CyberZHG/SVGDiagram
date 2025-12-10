@@ -9,6 +9,10 @@
 using namespace std;
 using namespace svg_diagram;
 
+const unordered_map<string_view, string>& SVGItem::attributes() const {
+    return _attributes;
+}
+
 void SVGItem::setAttribute(const string_view& key, const string& value) {
     _attributes[key] = value;
 }
@@ -32,8 +36,20 @@ void SVGItem::setPrecomputedTextSize(const double width, const double height) {
     _precomputedTextHeight = height;
 }
 
-std::pair<double, double> SVGItem::precomputedTextSize() const {
+pair<double, double> SVGItem::precomputedTextSize() const {
     return {_precomputedTextWidth, _precomputedTextHeight};
+}
+
+const string& SVGItem::id() const {
+    const auto it = _attributes.find(DOT_ATTR_KEY_ID);
+    if (it == _attributes.end()) {
+        throw runtime_error("Attribute 'ID' not found");
+    }
+    return it->second;
+}
+
+void SVGItem::setID(const string& id) {
+    setAttribute(DOT_ATTR_KEY_ID, id);
 }
 
 void SVGItem::setLabel(const string& label) {
@@ -69,8 +85,9 @@ void SVGItem::setPenWidth(const double width) {
 }
 
 double SVGItem::penWidth() const {
-    if (const auto it = _attributes.find(DOT_ATTR_KEY_PEN_WIDTH); it != _attributes.end()) {
-        const auto width = stod(it->second);
+    const auto value = getAttribute(DOT_ATTR_KEY_PEN_WIDTH);
+    if (!value.empty()) {
+        const auto width = stod(value);
         if (fabs(width - 1.0) < GeometryUtils::EPSILON) {
             return 1.0;
         }
@@ -134,6 +151,10 @@ std::pair<double, double> SVGItem::computeTextSizeWithMargin() {
     return {width + marginX * 2, height + marginY * 2};
 }
 
+SVGItem::SVGItem(const string& id) {
+    setID(id);
+}
+
 void SVGItem::enableDebug() {
     _enabledDebug = true;
 }
@@ -142,10 +163,42 @@ bool SVGItem::enabledDebug() const {
     return _enabledDebug;
 }
 
+void SVGItem::setParent(SVGGraph* parent) {
+    _parent = parent;
+}
+
+SVGGraph * SVGItem::parent() const {
+    return _parent;
+}
 
 SVGNode::SVGNode(const double cx, const double cy) {
     _cx = cx;
     _cy = cy;
+}
+
+void SVGNode::setAttributeIfNotExist(const std::string_view &key, const std::string &value) {
+    if (attributes().contains(key)) {
+        return;
+    }
+    if (parent() != nullptr) {
+        if (const auto ret = parent()->defaultNodeAttribute(key); ret.has_value()) {
+            return;
+        }
+    }
+    setAttribute(key, value);
+}
+
+const string& SVGNode::getAttribute(const std::string_view& key) const {
+    static const string EMPTY_STRING;
+    if (const auto it = attributes().find(key); it != attributes().end()) {
+        return it->second;
+    }
+    if (parent() != nullptr) {
+        if (const auto ret = parent()->defaultNodeAttribute(key); ret.has_value()) {
+            return ret.value();
+        }
+    }
+    return EMPTY_STRING;
 }
 
 void SVGNode::setShape(const string& shape) {
@@ -369,6 +422,31 @@ pair<double, double> SVGNode::computeConnectionPointEllipse(const double angle) 
 SVGEdge::SVGEdge(const string& idFrom, const string& idTo) {
     _nodeFrom = idFrom;
     _nodeTo = idTo;
+}
+
+void SVGEdge::setAttributeIfNotExist(const std::string_view &key, const std::string &value) {
+    if (attributes().contains(key)) {
+        return;
+    }
+    if (parent() != nullptr) {
+        if (const auto ret = parent()->defaultEdgeAttribute(key); ret.has_value()) {
+            return;
+        }
+    }
+    setAttribute(key, value);
+}
+
+const string& SVGEdge::getAttribute(const string_view& key) const {
+    static const string EMPTY_STRING;
+    if (const auto it = attributes().find(key); it != attributes().end()) {
+        return it->second;
+    }
+    if (parent() != nullptr) {
+        if (const auto ret = parent()->defaultEdgeAttribute(key); ret.has_value()) {
+            return ret.value();
+        }
+    }
+    return EMPTY_STRING;
 }
 
 void SVGEdge::setNodeFrom(const string& id) {
@@ -664,4 +742,136 @@ pair<double, double> SVGEdge::addArrowNormal(vector<unique_ptr<SVGDraw>>& svgDra
     }
     svgDraws.emplace_back(std::move(polygon));
     return {x0 + ARROW_WIDTH * cos(angle), y0 + ARROW_WIDTH * sin(angle)};
+}
+
+void SVGGraph::addNode(shared_ptr<SVGNode>& node) {
+    node->setParent(this);
+    _nodes.emplace_back(node);
+}
+
+void SVGGraph::addEdge(shared_ptr<SVGEdge>& edge) {
+    edge->setParent(this);
+    _edges.emplace_back(edge);
+}
+
+void SVGGraph::addSubgraph(shared_ptr<SVGGraph>& subgraph) {
+    subgraph->setParent(this);
+    _graphs.emplace_back(subgraph);
+}
+
+SVGNode& SVGGraph::defaultNodeAttributes() {
+    return _defaultNode;
+}
+
+SVGEdge& SVGGraph::defaultEdgeAttributes() {
+    return _defaultEdge;
+}
+
+optional<reference_wrapper<const string>> SVGGraph::defaultNodeAttribute(const string_view& key) const {
+    if (const auto it = _defaultNode.attributes().find(key); it != _defaultNode.attributes().end()) {
+        return std::ref(it->second);
+    }
+    if (parent() != nullptr) {
+        return parent()->defaultNodeAttribute(key);
+    }
+    return {};
+}
+
+optional<reference_wrapper<const string>> SVGGraph::defaultEdgeAttribute(const string_view& key) const {
+    if (const auto it = _defaultEdge.attributes().find(key); it != _defaultEdge.attributes().end()) {
+        return it->second;
+    }
+    if (parent() != nullptr) {
+        return parent()->defaultEdgeAttribute(key);
+    }
+    return {};
+}
+
+void SVGGraph::adjustNodeSizes() const {
+    for (auto& node : _nodes) {
+        node->adjustNodeSize();
+    }
+    for (auto& graph : _graphs) {
+        graph->adjustNodeSizes();
+    }
+}
+
+vector<unique_ptr<SVGDraw>> SVGGraph::produceSVGDraws(const NodesMapping &nodes) const {
+    vector<unique_ptr<SVGDraw>> svgDraws;
+    for (auto& draw : produceNodeSVGDraws()) {
+        svgDraws.emplace_back(std::move(draw));
+    }
+    for (auto& draw : produceEdgeSVGDraws(nodes)) {
+        svgDraws.emplace_back(std::move(draw));
+    }
+    return svgDraws;
+}
+
+vector<shared_ptr<SVGNode>> SVGGraph::findNodes() const {
+    vector<shared_ptr<SVGNode>> nodes = _nodes;
+    for (auto& graph : _graphs) {
+        for (auto& node : graph->findNodes()) {
+            nodes.emplace_back(std::move(node));
+        }
+    }
+    return nodes;
+}
+
+vector<shared_ptr<SVGEdge>> SVGGraph::findEdges() const {
+    vector<shared_ptr<SVGEdge>> edges = _edges;
+    for (auto& graph : _graphs) {
+        for (auto& edge : graph->findEdges()) {
+            edges.emplace_back(std::move(edge));
+        }
+    }
+    return edges;
+}
+
+vector<unique_ptr<SVGDraw>> SVGGraph::produceNodeSVGDraws() const {
+    adjustNodeSizes();
+    vector<unique_ptr<SVGDraw>> svgDraws;
+    for (auto& node : _nodes) {
+        if (enabledDebug()) {
+            node->enableDebug();
+        }
+        const auto& id = node->id();
+        svgDraws.emplace_back(make_unique<SVGDrawComment>(format("Node: {}", id)));
+        auto group = make_unique<SVGDrawGroup>();
+        group->setAttribute("id", id);
+        group->setAttribute("class", "node");
+        group->addChild(make_unique<SVGDrawTitle>(id));
+        auto subDraws = node->produceSVGDraws();
+        group->addChildren(subDraws);
+        svgDraws.emplace_back(std::move(group));
+    }
+    for (auto& graph : _graphs) {
+        for (auto subDraws = graph->produceNodeSVGDraws(); auto& subDraw : subDraws) {
+            svgDraws.emplace_back(std::move(subDraw));
+        }
+    }
+    return svgDraws;
+}
+
+vector<unique_ptr<SVGDraw>> SVGGraph::produceEdgeSVGDraws(const NodesMapping& nodes) const {
+    vector<unique_ptr<SVGDraw>> svgDraws;
+    for (auto& edge : _edges) {
+        if (enabledDebug()) {
+            edge->enableDebug();
+        }
+        const auto& id = edge->id();
+        svgDraws.emplace_back(make_unique<SVGDrawComment>(format("Edge: {} ({} -> {})", id, edge->nodeFrom(), edge->nodeTo())));
+        auto group = make_unique<SVGDrawGroup>();
+        group->setAttribute("id", id);
+        group->setAttribute("class", "edge");
+        group->addChild(make_unique<SVGDrawTitle>(format("{}->{}", edge->nodeFrom(), edge->nodeTo())));
+        auto subDraws = edge->produceSVGDraws(nodes);
+        group->addChildren(subDraws);
+        svgDraws.emplace_back(std::move(group));
+    }
+    for (auto& graph : _graphs) {
+        for (auto subDraws = graph->produceEdgeSVGDraws(nodes); auto& subDraw : subDraws) {
+            svgDraws.emplace_back(std::move(subDraw));
+        }
+    }
+    return svgDraws;
 }

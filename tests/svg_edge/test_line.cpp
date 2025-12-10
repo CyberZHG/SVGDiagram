@@ -7,18 +7,18 @@ using namespace std;
 using namespace svg_diagram;
 
 void TestSVGEdgeLineAddTwoNodesCase1(SVGDiagram& diagram) {
-    auto node1 = std::make_unique<SVGNode>(100, 100);
+    auto node1 = std::make_shared<SVGNode>(100, 100);
     node1->setShape(SVGNode::NODE_SHAPE_CIRCLE);
     node1->setMargin(8, 4);
     node1->setPrecomputedTextSize(10, 16);
     node1->setLabel("A");
-    diagram.addNode("A", std::move(node1));
-    auto node2 = std::make_unique<SVGNode>(200, 150);
+    diagram.addNode("A", node1);
+    auto node2 = std::make_shared<SVGNode>(200, 150);
     node2->setShape(SVGNode::NODE_SHAPE_CIRCLE);
     node2->setMargin(16, 8);
     node2->setPrecomputedTextSize(10, 16);
     node2->setLabel("B");
-    diagram.addNode("B", std::move(node2));
+    diagram.addNode("B", node2);
 }
 
 string TestSVGEdgeLineExpectedNodesSVGCase1() {
@@ -39,9 +39,9 @@ string TestSVGEdgeLineExpectedNodesSVGCase1() {
 TEST(TestSVGEdgeLine, TwoCircleOneLine) {
     SVGDiagram diagram;
     TestSVGEdgeLineAddTwoNodesCase1(diagram);
-    auto edge = std::make_unique<SVGEdge>("A", "B");
+    auto edge = std::make_shared<SVGEdge>("A", "B");
     edge->setSplines(SVGEdge::EDGE_SPLINES_LINE);
-    diagram.addEdge(std::move(edge));
+    diagram.addEdge(edge);
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
         R"(<!-- Edge: edge1 (A -> B) -->
@@ -57,10 +57,10 @@ TEST(TestSVGEdgeLine, TwoCircleOneLine) {
 TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnection) {
     SVGDiagram diagram;
     TestSVGEdgeLineAddTwoNodesCase1(diagram);
-    auto edge = std::make_unique<SVGEdge>("A", "B");
+    auto edge = std::make_shared<SVGEdge>("A", "B");
     edge->setSplines(SVGEdge::EDGE_SPLINES_LINE);
     edge->addConnectionPoint(-50, 120);
-    diagram.addEdge(std::move(edge));
+    diagram.addEdge(edge);
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
         R"(<!-- Edge: edge1 (A -> B) -->
@@ -77,18 +77,18 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnection) {
 TEST(TestSVGEdgeLine, TwoCircleTwoLineSelfCycle) {
     SVGDiagram diagram;
     TestSVGEdgeLineAddTwoNodesCase1(diagram);
-    auto edge1 = std::make_unique<SVGEdge>("A", "A");
+    auto edge1 = std::make_shared<SVGEdge>("A", "A");
     edge1->setSplines(SVGEdge::EDGE_SPLINES_LINE);
     edge1->addConnectionPoint(130, 140);
     edge1->addConnectionPoint(100, 160);
     edge1->addConnectionPoint(70, 140);
-    diagram.addEdge(std::move(edge1));
-    auto edge2 = std::make_unique<SVGEdge>("B", "B");
+    diagram.addEdge(edge1);
+    auto edge2 = std::make_shared<SVGEdge>("B", "B");
     edge2->setSplines(SVGEdge::EDGE_SPLINES_LINE);
     edge2->addConnectionPoint(250, 130);
     edge2->addConnectionPoint(270, 150);
     edge2->addConnectionPoint(250, 170);
-    diagram.addEdge("B -> B", std::move(edge2));
+    diagram.addEdge("B -> B", edge2);
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
         R"(<!-- Edge: edge1 (A -> A) -->
@@ -124,10 +124,10 @@ string TestSVGEdgeLineExpectedArrowNormalSVG() {
 TEST(TestSVGEdgeLine, TwoCircleOneLineArrowHead) {
     SVGDiagram diagram;
     TestSVGEdgeLineAddTwoNodesCase1(diagram);
-    auto edge = std::make_unique<SVGEdge>("A", "B");
+    auto edge = std::make_shared<SVGEdge>("A", "B");
     edge->setSplines(SVGEdge::EDGE_SPLINES_LINE);
     edge->setArrowHead(SVGEdge::ARROW_SHAPE_NORMAL);
-    diagram.addEdge(std::move(edge));
+    diagram.addEdge(edge);
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
         R"s(<!-- Edge: edge1 (A -> B) -->
@@ -144,10 +144,10 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineArrowHead) {
 TEST(TestSVGEdgeLine, TwoCircleOneLineArrowTail) {
     SVGDiagram diagram;
     TestSVGEdgeLineAddTwoNodesCase1(diagram);
-    auto edge = std::make_unique<SVGEdge>("A", "B");
+    auto edge = std::make_shared<SVGEdge>("A", "B");
     edge->setSplines(SVGEdge::EDGE_SPLINES_LINE);
     edge->setArrowTail(SVGEdge::ARROW_SHAPE_NORMAL);
-    diagram.addEdge(std::move(edge));
+    diagram.addEdge(edge);
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
         R"s(<!-- Edge: edge1 (A -> B) -->
@@ -164,11 +164,11 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineArrowTail) {
 TEST(TestSVGEdgeLine, TwoCircleOneLineArrowBoth) {
     SVGDiagram diagram;
     TestSVGEdgeLineAddTwoNodesCase1(diagram);
-    auto edge = std::make_unique<SVGEdge>("A", "B");
+    auto edge = std::make_shared<SVGEdge>("A", "B");
     edge->setSplines(SVGEdge::EDGE_SPLINES_LINE);
     edge->setArrowHead(SVGEdge::ARROW_SHAPE_NORMAL);
     edge->setArrowTail(SVGEdge::ARROW_SHAPE_NORMAL);
-    diagram.addEdge(std::move(edge));
+    diagram.addEdge(edge);
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
         R"s(<!-- Edge: edge1 (A -> B) -->
@@ -186,11 +186,11 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineArrowBoth) {
 TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowHead) {
     SVGDiagram diagram;
     TestSVGEdgeLineAddTwoNodesCase1(diagram);
-    auto edge = std::make_unique<SVGEdge>("A", "B");
+    auto edge = std::make_shared<SVGEdge>("A", "B");
     edge->setSplines(SVGEdge::EDGE_SPLINES_LINE);
     edge->addConnectionPoint(-50, 120);
     edge->setArrowHead(SVGEdge::ARROW_SHAPE_NORMAL);
-    diagram.addEdge(std::move(edge));
+    diagram.addEdge(edge);
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
         R"s(<!-- Edge: edge1 (A -> B) -->
@@ -208,11 +208,11 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowHead) {
 TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowTail) {
     SVGDiagram diagram;
     TestSVGEdgeLineAddTwoNodesCase1(diagram);
-    auto edge = std::make_unique<SVGEdge>("A", "B");
+    auto edge = std::make_shared<SVGEdge>("A", "B");
     edge->setSplines(SVGEdge::EDGE_SPLINES_LINE);
     edge->addConnectionPoint(-50, 120);
     edge->setArrowTail(SVGEdge::ARROW_SHAPE_NORMAL);
-    diagram.addEdge(std::move(edge));
+    diagram.addEdge(edge);
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
         R"s(<!-- Edge: edge1 (A -> B) -->
@@ -230,12 +230,12 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowTail) {
 TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowBoth) {
     SVGDiagram diagram;
     TestSVGEdgeLineAddTwoNodesCase1(diagram);
-    auto edge = std::make_unique<SVGEdge>("A", "B");
+    auto edge = std::make_shared<SVGEdge>("A", "B");
     edge->setSplines(SVGEdge::EDGE_SPLINES_LINE);
     edge->addConnectionPoint(-50, 120);
     edge->setArrowHead(SVGEdge::ARROW_SHAPE_NORMAL);
     edge->setArrowTail(SVGEdge::ARROW_SHAPE_NORMAL);
-    diagram.addEdge(std::move(edge));
+    diagram.addEdge(edge);
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
         R"s(<!-- Edge: edge1 (A -> B) -->
@@ -274,12 +274,12 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineWithLabel) {
     SVGDiagram diagram;
     diagram.enableDebug();
     TestSVGEdgeLineAddTwoNodesCase1(diagram);
-    auto edge = std::make_unique<SVGEdge>("A", "B");
+    auto edge = std::make_shared<SVGEdge>("A", "B");
     edge->setSplines(SVGEdge::EDGE_SPLINES_LINE);
     edge->setLabel("42");
     edge->setPrecomputedTextSize(20, 16);
     edge->setMargin(2.0);
-    diagram.addEdge(std::move(edge));
+    diagram.addEdge(edge);
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1WithDebug() +
         R"(<!-- Edge: edge1 (A -> B) -->
@@ -299,7 +299,7 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionWithLabel) {
     SVGDiagram diagram;
     diagram.enableDebug();
     TestSVGEdgeLineAddTwoNodesCase1(diagram);
-    auto edge = std::make_unique<SVGEdge>();
+    auto edge = std::make_shared<SVGEdge>();
     edge->setNodeFrom("A");
     edge->setNodeTo("B");
     edge->setSplines(SVGEdge::EDGE_SPLINES_LINE);
@@ -307,7 +307,7 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionWithLabel) {
     edge->setLabel("42");
     edge->setPrecomputedTextSize(20, 16);
     edge->setMargin(2.0);
-    diagram.addEdge(std::move(edge));
+    diagram.addEdge(edge);
     const auto svg = diagram.render();
     const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1WithDebug() +
         R"(<!-- Edge: edge1 (A -> B) -->

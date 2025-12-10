@@ -4,11 +4,13 @@
 #include <string>
 #include <unordered_map>
 #include <memory>
+#include <optional>
 
 #include "svg_draw.h"
 
 namespace svg_diagram {
 
+    constexpr std::string_view DOT_ATTR_KEY_ID = "id";
     constexpr std::string_view DOT_ATTR_KEY_LABEL = "label";
     constexpr std::string_view DOT_ATTR_KEY_SHAPE = "shape";
     constexpr std::string_view DOT_ATTR_KEY_SPLINES = "splines";
@@ -25,20 +27,31 @@ namespace svg_diagram {
     constexpr std::string_view DOT_ATTR_KEY_FONT_COLOR = "fontcolor";
     constexpr std::string_view DOT_ATTR_KEY_PEN_WIDTH = "penwidth";
 
+    class SVGNode;
+    class SVGGraph;
+    using NodesMapping = std::unordered_map<std::string, std::shared_ptr<SVGNode>>;
+
     class SVGItem {
     public:
         SVGItem() = default;
+        explicit SVGItem(const std::string& id);
         virtual ~SVGItem() = default;
 
         void enableDebug();
         [[nodiscard]] bool enabledDebug() const;
 
+        void setParent(SVGGraph* parent);
+        [[nodiscard]] SVGGraph* parent() const;
+
+        [[nodiscard]] const std::unordered_map<std::string_view, std::string>& attributes() const;
         void setAttribute(const std::string_view& key, const std::string& value);
-        void setAttributeIfNotExist(const std::string_view& key, const std::string& value);
-        [[nodiscard]] const std::string& getAttribute(const std::string_view& key) const;
+        virtual void setAttributeIfNotExist(const std::string_view& key, const std::string& value);
+        [[nodiscard]] virtual const std::string& getAttribute(const std::string_view& key) const;
 
         void setPrecomputedTextSize(double width, double height);
         [[nodiscard]] std::pair<double, double> precomputedTextSize() const;
+        [[nodiscard]] const std::string& id() const;
+        void setID(const std::string& id);
         void setLabel(const std::string& label);
         void setMargin(const std::string& value);
         void setMargin(double margin);
@@ -57,6 +70,7 @@ namespace svg_diagram {
         [[nodiscard]] std::pair<double, double> computeTextSizeWithMargin();
 
     private:
+        SVGGraph* _parent = nullptr;
         bool _enabledDebug = false;
         double _precomputedTextWidth = 0.0;
         double _precomputedTextHeight = 0.0;
@@ -72,7 +86,10 @@ namespace svg_diagram {
         static constexpr std::string_view NODE_SHAPE_CIRCLE = "circle";
         static constexpr std::string_view NODE_SHAPE_RECT = "rect";
         static constexpr std::string_view NODE_SHAPE_ELLIPSE = "ellipse";
-        static constexpr std::string_view NODE_SHAPE_DEFAULT = NODE_SHAPE_CIRCLE;
+        static constexpr std::string_view NODE_SHAPE_DEFAULT = NODE_SHAPE_ELLIPSE;
+
+        void setAttributeIfNotExist(const std::string_view& key, const std::string& value) override;
+        [[nodiscard]] const std::string& getAttribute(const std::string_view& key) const override;
 
         void setShape(const std::string& shape);
         void setShape(const std::string_view& shape);
@@ -131,7 +148,8 @@ namespace svg_diagram {
         static constexpr std::string_view ARROW_SHAPE_NORMAL = "normal";
         static constexpr std::string_view ARROW_SHAPE_DEFAULT = ARROW_SHAPE_NORMAL;
 
-        using NodesMapping = std::unordered_map<std::string, std::unique_ptr<SVGNode>>;
+        void setAttributeIfNotExist(const std::string_view& key, const std::string& value) override;
+        [[nodiscard]] const std::string& getAttribute(const std::string_view& key) const override;
 
         void setNodeFrom(const std::string& id);
         [[nodiscard]] const std::string& nodeFrom() const;
@@ -169,6 +187,37 @@ namespace svg_diagram {
         [[nodiscard]] double computeArrowTipMarginNormal() const;
         std::pair<double, double> addArrow(const std::string_view& shape, std::vector<std::unique_ptr<SVGDraw>>& svgDraws, const std::pair<double, double>& connectionPoint, double angle) const;
         std::pair<double, double> addArrowNormal(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, const std::pair<double, double>& connectionPoint, double angle) const;
+    };
+
+    class SVGGraph final : public SVGItem {
+    public:
+        using SVGItem::SVGItem;
+
+        void addNode(std::shared_ptr<SVGNode>& node);
+        void addEdge(std::shared_ptr<SVGEdge>& edge);
+        void addSubgraph(std::shared_ptr<SVGGraph>& subgraph);
+
+        SVGNode& defaultNodeAttributes();
+        SVGEdge& defaultEdgeAttributes();
+
+        [[nodiscard]] std::optional<std::reference_wrapper<const std::string>> defaultNodeAttribute(const std::string_view& key) const;
+        [[nodiscard]] std::optional<std::reference_wrapper<const std::string>> defaultEdgeAttribute(const std::string_view& key) const;
+
+        void adjustNodeSizes() const;
+        [[nodiscard]] std::vector<std::unique_ptr<SVGDraw>> produceSVGDraws(const NodesMapping& nodes) const;
+
+        [[nodiscard]] std::vector<std::shared_ptr<SVGNode>> findNodes() const;
+        [[nodiscard]] std::vector<std::shared_ptr<SVGEdge>> findEdges() const;
+    private:
+        std::vector<std::shared_ptr<SVGNode>> _nodes;
+        std::vector<std::shared_ptr<SVGEdge>> _edges;
+        std::vector<std::shared_ptr<SVGGraph>> _graphs;
+
+        SVGNode _defaultNode;
+        SVGEdge _defaultEdge;
+
+        [[nodiscard]] std::vector<std::unique_ptr<SVGDraw>> produceNodeSVGDraws() const;
+        [[nodiscard]] std::vector<std::unique_ptr<SVGDraw>> produceEdgeSVGDraws(const NodesMapping& nodes) const;
     };
 
 }

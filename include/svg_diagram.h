@@ -14,7 +14,7 @@ namespace svg_diagram {
         SVGDiagram() = default;
         ~SVGDiagram() = default;
 
-        static constexpr double DEFAULT_MARGIN = 4;
+        static constexpr double DEFAULT_MARGIN = 8;
 
         void enableDebug();
 
@@ -25,12 +25,17 @@ namespace svg_diagram {
         void setCanvasSize(int width, int height);
         void setBackgroundColor(const std::string& backgroundColor);
 
-        const std::unique_ptr<SVGNode>& addNode(const std::string& id);
-        void addNode(const std::string& id, std::unique_ptr<SVGNode> node);
-        const std::unique_ptr<SVGEdge>& addEdge(const std::string& id);
-        const std::unique_ptr<SVGEdge>& addEdge(const std::string& from, const std::string& to);
-        void addEdge(const std::string& id, std::unique_ptr<SVGEdge> edge);
-        void addEdge(std::unique_ptr<SVGEdge> edge);
+        SVGNode& defaultNodeAttributes();
+        SVGEdge& defaultEdgeAttributes();
+
+        const std::shared_ptr<SVGNode>& addNode(const std::string& id);
+        void addNode(const std::string& id, std::shared_ptr<SVGNode>& node);
+        const std::shared_ptr<SVGEdge>& addEdge(const std::string& id);
+        const std::shared_ptr<SVGEdge>& addEdge(const std::string& from, const std::string& to);
+        void addEdge(const std::string& id, std::shared_ptr<SVGEdge>& edge);
+        void addEdge(std::shared_ptr<SVGEdge>& edge);
+        const std::shared_ptr<SVGGraph>& addSubgraph(const std::string& id);
+        void addSubgraph(const std::string& id, std::shared_ptr<SVGGraph>& subgraph);
 
         [[nodiscard]] std::string render();
         void render(const std::string& filePath);
@@ -48,10 +53,10 @@ namespace svg_diagram {
         std::pair<double, double> _margin = {DEFAULT_MARGIN, DEFAULT_MARGIN};
         std::string _backgroundColor;
 
-        std::unordered_map<std::string, std::unique_ptr<SVGNode>> _nodes;
-        std::unordered_map<std::string, std::unique_ptr<SVGEdge>> _edges;
-        std::vector<std::string> _nodeIds;
-        std::vector<std::string> _edgeIds;
+        SVGGraph _graph;
+        std::unordered_map<std::string, std::shared_ptr<SVGNode>> _nodes;
+        std::unordered_map<std::string, std::shared_ptr<SVGEdge>> _edges;
+        std::unordered_map<std::string, std::shared_ptr<SVGGraph>> _subgraphs;
 
         std::string newEdgeId();
 

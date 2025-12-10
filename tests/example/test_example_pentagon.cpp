@@ -10,6 +10,9 @@ using namespace svg_diagram;
 TEST(TestExample, Pentagon) {
     SVGDiagram diagram;
     diagram.setBackgroundColor("white");
+    diagram.defaultNodeAttributes().setShape(SVGNode::NODE_SHAPE_CIRCLE);
+    diagram.defaultEdgeAttributes().setMargin(4.0);
+    diagram.defaultEdgeAttributes().setArrowHead();
 
     const auto labels = vector{
         "Planning\nBreeds\nSuccess",
@@ -30,7 +33,6 @@ TEST(TestExample, Pentagon) {
         const double nodeAngle = -numbers::pi / 2.0 + numbers::pi * 2 * i / 5.0;
         node->setCenter(RADIUS * cos(nodeAngle), RADIUS * sin(nodeAngle));
         node->setLabel(labels[i]);
-        node->setShape(SVGNode::NODE_SHAPE_CIRCLE);
         node->setColor(strokeColors[i]);
         node->setFillColor(fillColors[i]);
         node->setFontColor(textColors[i]);
@@ -38,11 +40,9 @@ TEST(TestExample, Pentagon) {
         const auto from = format("node_{}", i);
         const auto to = format("node_{}", (i + 1) % 5);
         const auto& edge = diagram.addEdge(from, to);
-        edge->setArrowHead();
         edge->setColor(strokeColors[i]);
         edge->setLabel(format("C{}", i + 1));
         edge->setFontColor(strokeColors[i]);
-        edge->setMargin(4.0);
     }
 
     const auto& node = diagram.addNode("node_c");

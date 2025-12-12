@@ -9,13 +9,13 @@
 
 namespace svg_diagram {
 
-    constexpr std::string_view SVG_ATTR_KEY_FILL = "fill";
-    constexpr std::string_view SVG_ATTR_KEY_STROKE = "stroke";
-    constexpr std::string_view SVG_ATTR_KEY_FONT_FAMILY = "font-family";
-    constexpr std::string_view SVG_ATTR_KEY_FONT_SIZE = "font-size";
-    constexpr std::string_view SVG_ATTR_KEY_MARKER_START = "marker-start";
-    constexpr std::string_view SVG_ATTR_KEY_MARKER_END = "marker-end";
-    constexpr std::string_view SVG_ATTR_KEY_STROKE_WIDTH = "stroke-width";
+    constexpr std::string_view SVG_ATTRIBUTE_KEY_FILL = "fill";
+    constexpr std::string_view SVG_ATTRIBUTE_KEY_STROKE = "stroke";
+    constexpr std::string_view SVG_ATTRIBUTE_KEY_FONT_FAMILY = "font-family";
+    constexpr std::string_view SVG_ATTRIBUTE_KEY_FONT_SIZE = "font-size";
+    constexpr std::string_view SVG_ATTRIBUTE_KEY_MARKER_START = "marker-start";
+    constexpr std::string_view SVG_ATTRIBUTE_KEY_MARKER_END = "marker-end";
+    constexpr std::string_view SVG_ATTRIBUTE_KEY_STROKE_WIDTH = "stroke-width";
 
     struct SVGDrawBoundingBox {
         double x1, y1, x2, y2;

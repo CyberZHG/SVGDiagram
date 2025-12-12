@@ -10,22 +10,22 @@
 
 namespace svg_diagram {
 
-    constexpr std::string_view DOT_ATTR_KEY_ID = "id";
-    constexpr std::string_view DOT_ATTR_KEY_LABEL = "label";
-    constexpr std::string_view DOT_ATTR_KEY_SHAPE = "shape";
-    constexpr std::string_view DOT_ATTR_KEY_SPLINES = "splines";
-    constexpr std::string_view DOT_ATTR_KEY_MARGIN = "margin";
-    constexpr std::string_view DOT_ATTR_KEY_WIDTH = "width";
-    constexpr std::string_view DOT_ATTR_KEY_HEIGHT = "height";
-    constexpr std::string_view DOT_ATTR_KEY_FONT_NAME = "fontname";
-    constexpr std::string_view DOT_ATTR_KEY_FONT_SIZE = "fontsize";
-    constexpr std::string_view DOT_ATTR_KEY_FIXED_SIZE = "fixedsize";
-    constexpr std::string_view DOT_ATTR_KEY_ARROW_HEAD = "arrowhead";
-    constexpr std::string_view DOT_ATTR_KEY_ARROW_TAIL = "arrowtail";
-    constexpr std::string_view DOT_ATTR_KEY_COLOR = "color";
-    constexpr std::string_view DOT_ATTR_KEY_FILL_COLOR = "fillcolor";
-    constexpr std::string_view DOT_ATTR_KEY_FONT_COLOR = "fontcolor";
-    constexpr std::string_view DOT_ATTR_KEY_PEN_WIDTH = "penwidth";
+    constexpr std::string_view ATTRIBUTE_KEY_ID = "id";
+    constexpr std::string_view ATTRIBUTE_KEY_LABEL = "label";
+    constexpr std::string_view ATTRIBUTE_KEY_SHAPE = "shape";
+    constexpr std::string_view ATTRIBUTE_KEY_SPLINES = "splines";
+    constexpr std::string_view ATTRIBUTE_KEY_MARGIN = "margin";
+    constexpr std::string_view ATTRIBUTE_KEY_WIDTH = "width";
+    constexpr std::string_view ATTRIBUTE_KEY_HEIGHT = "height";
+    constexpr std::string_view ATTRIBUTE_KEY_FONT_NAME = "fontname";
+    constexpr std::string_view ATTRIBUTE_KEY_FONT_SIZE = "fontsize";
+    constexpr std::string_view ATTRIBUTE_KEY_FIXED_SIZE = "fixedsize";
+    constexpr std::string_view ATTRIBUTE_KEY_ARROW_HEAD = "arrowhead";
+    constexpr std::string_view ATTRIBUTE_KEY_ARROW_TAIL = "arrowtail";
+    constexpr std::string_view ATTRIBUTE_KEY_COLOR = "color";
+    constexpr std::string_view ATTRIBUTE_KEY_FILL_COLOR = "fillcolor";
+    constexpr std::string_view ATTRIBUTE_KEY_FONT_COLOR = "fontcolor";
+    constexpr std::string_view ATTRIBUTE_KEY_PEN_WIDTH = "penwidth";
 
     class SVGNode;
     class SVGGraph;
@@ -45,7 +45,9 @@ namespace svg_diagram {
 
         [[nodiscard]] const std::unordered_map<std::string_view, std::string>& attributes() const;
         void setAttribute(const std::string_view& key, const std::string& value);
+        void setAttribute(const std::string_view& key, double value);
         virtual void setAttributeIfNotExist(const std::string_view& key, const std::string& value);
+        void setDoubleAttributeIfNotExist(const std::string_view& key, double value);
         [[nodiscard]] virtual const std::string& getAttribute(const std::string_view& key) const;
 
         void setPrecomputedTextSize(double width, double height);
@@ -53,11 +55,20 @@ namespace svg_diagram {
         [[nodiscard]] const std::string& id() const;
         void setID(const std::string& id);
         void setLabel(const std::string& label);
+        [[nodiscard]] double width() const;
+        void setWidth(double width);
+        [[nodiscard]] double height() const;
+        void setHeight(double height);
+        void setSize(double width, double height);
+        [[nodiscard]] std::pair<double, double> margin() const;
         void setMargin(const std::string& value);
         void setMargin(double margin);
         void setMargin(double marginX, double marginY);
+        [[nodiscard]] std::string color() const;
         void setColor(const std::string& color);
+        [[nodiscard]] std::string fillColor() const;
         void setFillColor(const std::string& color);
+        [[nodiscard]] std::string fontColor() const;
         void setFontColor(const std::string& color);
         void setPenWidth(double width);
         [[nodiscard]] double penWidth() const;
@@ -89,6 +100,7 @@ namespace svg_diagram {
         static constexpr std::string_view NODE_SHAPE_DEFAULT = NODE_SHAPE_ELLIPSE;
 
         void setAttributeIfNotExist(const std::string_view& key, const std::string& value) override;
+
         [[nodiscard]] const std::string& getAttribute(const std::string_view& key) const override;
 
         void setShape(const std::string& shape);
@@ -203,12 +215,19 @@ namespace svg_diagram {
         [[nodiscard]] std::optional<std::reference_wrapper<const std::string>> defaultNodeAttribute(const std::string_view& key) const;
         [[nodiscard]] std::optional<std::reference_wrapper<const std::string>> defaultEdgeAttribute(const std::string_view& key) const;
 
-        void adjustNodeSizes() const;
-        [[nodiscard]] std::vector<std::unique_ptr<SVGDraw>> produceSVGDraws(const NodesMapping& nodes) const;
+        [[nodiscard]] std::pair<double, double> center() const;
+
+        void adjustNodeSizes();
+        [[nodiscard]] std::vector<std::unique_ptr<SVGDraw>> produceSVGDraws(const NodesMapping& nodes);
 
         [[nodiscard]] std::vector<std::shared_ptr<SVGNode>> findNodes() const;
         [[nodiscard]] std::vector<std::shared_ptr<SVGEdge>> findEdges() const;
+
     private:
+        double _cx = 0.0;
+        double _cy = 0.0;
+        double _textY = 0.0;
+
         std::vector<std::shared_ptr<SVGNode>> _nodes;
         std::vector<std::shared_ptr<SVGEdge>> _edges;
         std::vector<std::shared_ptr<SVGGraph>> _graphs;
@@ -218,6 +237,7 @@ namespace svg_diagram {
 
         [[nodiscard]] std::vector<std::unique_ptr<SVGDraw>> produceNodeSVGDraws() const;
         [[nodiscard]] std::vector<std::unique_ptr<SVGDraw>> produceEdgeSVGDraws(const NodesMapping& nodes) const;
+        [[nodiscard]] std::vector<std::unique_ptr<SVGDraw>> produceClusterSVGDraws();
     };
 
 }

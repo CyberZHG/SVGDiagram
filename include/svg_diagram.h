@@ -20,7 +20,7 @@ namespace svg_diagram {
 
         void clearSVGDraw();
         void addSVGDraw(std::unique_ptr<SVGDraw> svgDraw);
-        void addSVGDraw(std::vector<std::unique_ptr<SVGDraw>> svgDraws);
+        void addSVGDraw(std::vector<std::unique_ptr<SVGDraw>>& svgDraws);
 
         void setCanvasSize(int width, int height);
         void setBackgroundColor(const std::string& backgroundColor);

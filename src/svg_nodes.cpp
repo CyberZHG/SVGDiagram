@@ -767,7 +767,7 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
 }
 
 double SVGEdge::computeArrowTipMargin(const string_view& shape) const {
-    if (shape == ARROW_SHAPE_NORMAL) {
+    if (shape == ARROW_SHAPE_NORMAL || shape == ARROW_SHAPE_EMPTY) {
         return computeArrowTipMarginNormal();
     }
     return 0.0;
@@ -784,12 +784,15 @@ pair<double, double> SVGEdge::addArrow(const string_view& shape, vector<unique_p
     const double arrowTipMargin = computeArrowTipMargin(shape);
     const pair arrowTip = {connectionPoint.first + arrowTipMargin * cos(angle), connectionPoint.second + arrowTipMargin * sin(angle)};
     if (shape == ARROW_SHAPE_NORMAL) {
-        return addArrowNormal(svgDraws, arrowTip, angle);
+        return addArrowNormal(svgDraws, arrowTip, angle, true);
+    }
+    if (shape == ARROW_SHAPE_EMPTY) {
+        return addArrowNormal(svgDraws, arrowTip, angle, false);
     }
     return {connectionPoint.first - 0.2 * cos(angle), connectionPoint.second - 0.2 * sin(angle)};
 }
 
-pair<double, double> SVGEdge::addArrowNormal(vector<unique_ptr<SVGDraw>>& svgDraws, const pair<double, double>& connectionPoint, const double angle) const {
+pair<double, double> SVGEdge::addArrowNormal(vector<unique_ptr<SVGDraw>>& svgDraws, const pair<double, double>& connectionPoint, const double angle, const bool solid) const {
     const double x0 = connectionPoint.first;
     const double y0 = connectionPoint.second;
     const double sideLen = GeometryUtils::distance(ARROW_WIDTH, ARROW_HALF_HEIGHT);
@@ -800,7 +803,11 @@ pair<double, double> SVGEdge::addArrowNormal(vector<unique_ptr<SVGDraw>>& svgDra
     const double y2 = y0 + sideLen * sin(angle + halfAngle);
     auto polygon = make_unique<SVGDrawPolygon>(vector<pair<double, double>>{{x0, y0}, {x1, y1}, {x2, y2}, {x0, y0}});
     polygon->setStroke(color());
-    polygon->setFill(color());
+    if (solid) {
+        polygon->setFill(color());
+    } else {
+        polygon->setFill("none");
+    }
     if (const double strokeWidth = penWidth(); strokeWidth != 1.0) {
         polygon->setStrokeWidth(strokeWidth);
     }

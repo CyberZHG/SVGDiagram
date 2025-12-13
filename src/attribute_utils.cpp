@@ -1,5 +1,6 @@
 #include "attribute_utils.h"
 
+#include <format>
 #include <iostream>
 #include <algorithm>
 using namespace std;
@@ -32,8 +33,7 @@ double AttributeUtils::parseLengthToInch(const string& s) {
         }
     }
     if (numberStart == -1) {
-        cerr << "[AttributeUtils::parseLengthToInch] Unable to parse: " << s << endl;
-        return 0.0;
+        throw runtime_error(format("Could not parse length: {}", s));
     }
     int numberEnd = static_cast<int>(s.length());
     for (int i = numberStart + 1; i < static_cast<int>(s.length()); ++i) {

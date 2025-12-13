@@ -161,6 +161,7 @@ namespace svg_diagram {
 
         static constexpr std::string_view ARROW_SHAPE_NONE = "none";
         static constexpr std::string_view ARROW_SHAPE_NORMAL = "normal";
+        static constexpr std::string_view ARROW_SHAPE_EMPTY = "empty";
         static constexpr std::string_view ARROW_SHAPE_DEFAULT = ARROW_SHAPE_NORMAL;
 
         void setAttributeIfNotExist(const std::string_view& key, const std::string& value) override;
@@ -201,7 +202,7 @@ namespace svg_diagram {
         [[nodiscard]] double computeArrowTipMargin(const std::string_view& shape) const;
         [[nodiscard]] double computeArrowTipMarginNormal() const;
         std::pair<double, double> addArrow(const std::string_view& shape, std::vector<std::unique_ptr<SVGDraw>>& svgDraws, const std::pair<double, double>& connectionPoint, double angle) const;
-        std::pair<double, double> addArrowNormal(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, const std::pair<double, double>& connectionPoint, double angle) const;
+        std::pair<double, double> addArrowNormal(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, const std::pair<double, double>& connectionPoint, double angle, bool solid = true) const;
     };
 
     class SVGGraph final : public SVGItem {

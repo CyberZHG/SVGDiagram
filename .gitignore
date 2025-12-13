@@ -28,3 +28,7 @@ CTestTestfile.cmake
 *.exe
 *.out
 *.log
+
+# Python
+.venv
+*__pycache__*

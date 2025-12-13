@@ -60,6 +60,7 @@ namespace svg_diagram {
         [[nodiscard]] double height() const;
         void setHeight(double height);
         void setSize(double width, double height);
+        void setFixedSize(double width, double height);
         [[nodiscard]] std::pair<double, double> margin() const;
         void setMargin(const std::string& value);
         void setMargin(double margin);
@@ -95,9 +96,12 @@ namespace svg_diagram {
 
         static constexpr std::string_view NODE_SHAPE_NONE = "none";
         static constexpr std::string_view NODE_SHAPE_CIRCLE = "circle";
+        static constexpr std::string_view NODE_SHAPE_DOUBLE_CIRCLE = "doublecircle";
         static constexpr std::string_view NODE_SHAPE_RECT = "rect";
         static constexpr std::string_view NODE_SHAPE_ELLIPSE = "ellipse";
         static constexpr std::string_view NODE_SHAPE_DEFAULT = NODE_SHAPE_ELLIPSE;
+
+        static constexpr auto DOUBLE_BORDER_MARGIN = 4.0;
 
         void setAttributeIfNotExist(const std::string_view& key, const std::string& value) override;
 
@@ -113,11 +117,6 @@ namespace svg_diagram {
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDraws();
 
         std::pair<double, double> computeConnectionPoint(double angle);
-        /*
-        std::pair<double, double> computeConnectionPoint(double x1, double y1, double x2, double y2);
-        std::pair<double, double> computeConnectionPoint(double x, double y);
-        std::pair<double, double> computeConnectionPoint(const std::pair<double, double>& p);
-        */
 
         [[nodiscard]] double computeAngle(double x, double y) const;
         [[nodiscard]] double computeAngle(const std::pair<double, double>& p) const;
@@ -137,6 +136,10 @@ namespace svg_diagram {
         void adjustNodeSizeCircle();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsCircle();
         [[nodiscard]] std::pair<double, double> computeConnectionPointCircle(double angle) const;
+
+        void adjustNodeSizeDoubleCircle();
+        std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsDoubleCircle();
+        [[nodiscard]] std::pair<double, double> computeConnectionPointDoubleCircle(double angle) const;
 
         void adjustNodeSizeRect();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsRect();
@@ -221,7 +224,6 @@ namespace svg_diagram {
         [[nodiscard]] std::vector<std::unique_ptr<SVGDraw>> produceSVGDraws(const NodesMapping& nodes);
 
         [[nodiscard]] std::vector<std::shared_ptr<SVGNode>> findNodes() const;
-        [[nodiscard]] std::vector<std::shared_ptr<SVGEdge>> findEdges() const;
 
     private:
         double _cx = 0.0;

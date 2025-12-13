@@ -47,3 +47,36 @@ TEST(TestSVGNodeRect, RectConnections) {
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
+
+TEST(TestSVGNodeRect, RectConnectionOnCorner) {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setShape(SVGNode::NODE_SHAPE_RECT);
+    node1->setFixedSize(20, 20);
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(30, 30);
+    node2->setShape(SVGNode::NODE_SHAPE_RECT);
+    node2->setFixedSize(20, 20);
+    const auto edge = diagram.addEdge("A", "B");
+
+    const auto svg = diagram.render();
+    const auto expected = R"(<!-- Node: A -->
+<g class="node" id="A">
+  <title>A</title>
+  <rect x="-10" y="-10" width="20" height="20" fill="none" stroke="black"/>
+</g>
+<!-- Node: B -->
+<g class="node" id="B">
+  <title>B</title>
+  <rect x="20" y="20" width="20" height="20" fill="none" stroke="black"/>
+</g>
+<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <line x1="10.35857864376269" y1="10.35857864376269" x2="19.64142135623731" y2="19.64142135623731" stroke="black"/>
+</g>)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}

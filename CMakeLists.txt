@@ -121,6 +121,8 @@ if(SVG_DIAGRAM_ENABLE_TESTS)
             tests/svg_node/test_ellipse.cpp
             tests/example/test_example_subgraph.cpp
             tests/test_graph.cpp
+            tests/svg_node/test_node.cpp
+            tests/svg_node/test_double_circle.cpp
     )
 
     target_link_libraries(runTests

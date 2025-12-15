@@ -11,6 +11,7 @@ option(SVG_DIAGRAM_ENABLE_TESTS "Build tests" OFF)
 option(SVG_DIAGRAM_ENABLE_STRICT "Use strict compile options" OFF)
 option(SVG_DIAGRAM_ENABLE_COVERAGE "Enable coverage reporting" OFF)
 option(SVG_DIAGRAM_BIND_PYTHON "Enable python binding" OFF)
+option(SVG_DIAGRAM_BIND_ES "Enable ECMAScript binding" OFF)
 
 if(APPLE)
     set(ENV{PKG_CONFIG_PATH} "/opt/homebrew/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}")
@@ -155,3 +156,24 @@ if(SVG_DIAGRAM_BIND_PYTHON)
     install(TARGETS _core
             LIBRARY DESTINATION sp_svg_diagram)
 endif()
+
+if (SVG_DIAGRAM_BIND_ES)
+
+    add_executable(SVGDiagramWASM
+            es/svg_diagram_es.cpp)
+
+    target_link_libraries(SVGDiagramWASM
+            PRIVATE SVGDiagram
+    )
+
+    target_compile_options(SVGDiagramWASM PRIVATE "-O3")
+
+    set_target_properties(SVGDiagramWASM PROPERTIES SUFFIX ".js")
+
+    target_link_options(SVGDiagramWASM PRIVATE
+            "--bind"
+            "-sMODULARIZE=1"
+            "-sEXPORT_ES6=1"
+            "-sEXPORT_NAME=SVGDiagramWASMModule"
+    )
+endif ()

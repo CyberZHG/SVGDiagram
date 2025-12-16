@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Basic Concepts &mdash; SVGDiagram  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/sphinx-dropdown.css?v=995e94df" />
+      <link rel="stylesheet" type="text/css" href="_static/panels-bootstrap.min.css?v=21c0b90a" />
+      <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="_static/design-tabs.js?v=36754332"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Installation" href="install.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SVGDiagram
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Basic Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#svgdiagram">SVGDiagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#svgnode">SVGNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#svgedge">SVGEdge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#svggraph">SVGGraph</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SVGDiagram</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Basic Concepts</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/concept.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="basic-concepts">
+<h1>Basic Concepts<a class="headerlink" href="#basic-concepts" title="Permalink to this heading"></a></h1>
+<section id="svgdiagram">
+<h2>SVGDiagram<a class="headerlink" href="#svgdiagram" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">SVGDiagram</span></code> serves as the entry point for most operations. Through this class, you can create basic nodes (<code class="docutils literal notranslate"><span class="pre">SVGNode</span></code>), edges connecting two nodes (<code class="docutils literal notranslate"><span class="pre">SVGEdge</span></code>), and subgraphs (<code class="docutils literal notranslate"><span class="pre">SVGGraph</span></code>) that control default properties for some nodes and edges. Once all editing is complete, <code class="docutils literal notranslate"><span class="pre">SVGDiagram</span></code> can generate an SVG, with the SVG’s dimensions automatically adjusted to encompass all visible elements.</p>
+<p>To create a <code class="docutils literal notranslate"><span class="pre">SVGDiagram</span></code> and generate an empty SVG:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-0">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sp_svg_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVGDiagram</span>
+
+<span class="n">diagram</span> <span class="o">=</span> <span class="n">SVGDiagram</span><span class="p">()</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">to_svg</span><span class="p">(</span><span class="s2">&quot;empty.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-1">
+JavaScript</label><div class="sd-tab-content docutils">
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sp-svg-diagram&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">diagram</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="p">();</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">svg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-2" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-2">
+C++</label><div class="sd-tab-content docutils">
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;svg_diagram.h&quot;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">svg_diagram</span><span class="o">::</span><span class="n">SVGDiagram</span><span class="w"> </span><span class="n">diagram</span><span class="p">;</span>
+<span class="w">    </span><span class="n">diagram</span><span class="p">.</span><span class="n">render</span><span class="p">(</span><span class="s">&quot;empty.svg&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><img alt="" src="_images/empty.svg" /></p>
+</section>
+<section id="svgnode">
+<h2>SVGNode<a class="headerlink" href="#svgnode" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">SVGNode</span></code> is used to display text along with its border. It automatically calculates the border size based on the text dimensions. However, it should be noted that the text size is only an approximate estimate. A more precise method, which relies on third-party libraries, is provided only in the C++ implementation, and the corresponding compilation option is disabled by default.</p>
+<p>The two most important properties of <code class="docutils literal notranslate"><span class="pre">SVGNode</span></code> are its center and its text. By default, all values related to position or size are measured in <code class="docutils literal notranslate"><span class="pre">points</span></code>. When creating a node with <code class="docutils literal notranslate"><span class="pre">SVGDiagram</span></code>, the function’s input parameter is the node’s ID, which must be unique within a single diagram.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-3">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sp_svg_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVGDiagram</span>
+
+<span class="n">diagram</span> <span class="o">=</span> <span class="n">SVGDiagram</span><span class="p">()</span>
+<span class="n">node</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+<span class="n">node</span><span class="o">.</span><span class="n">set_center</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">node</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;foo</span><span class="se">\n</span><span class="s2">bar&quot;</span><span class="p">)</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">to_svg</span><span class="p">(</span><span class="s2">&quot;node.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-4" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-4">
+JavaScript</label><div class="sd-tab-content docutils">
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sp-svg-diagram&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">diagram</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="p">();</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addNode</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">);</span>
+<span class="nx">node</span><span class="p">.</span><span class="nx">setCenter</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">);</span>
+<span class="nx">node</span><span class="p">.</span><span class="nx">setLabel</span><span class="p">(</span><span class="s2">&quot;foo\nbar&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">svg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-5" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-5">
+C++</label><div class="sd-tab-content docutils">
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;svg_diagram.h&quot;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">svg_diagram</span><span class="p">;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">SVGDiagram</span><span class="w"> </span><span class="n">diagram</span><span class="p">;</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addNode</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node</span><span class="o">-&gt;</span><span class="n">setCenter</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="s">&quot;foo</span><span class="se">\n</span><span class="s">bar&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">diagram</span><span class="p">.</span><span class="n">render</span><span class="p">(</span><span class="s">&quot;node.svg&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>SVG output:</p>
+<p><img alt="" src="_images/node.svg" /></p>
+</section>
+<section id="svgedge">
+<h2>SVGEdge<a class="headerlink" href="#svgedge" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">SVGEdge</span></code> is used to connect two <code class="docutils literal notranslate"><span class="pre">SVGNode</span></code> instances. When creating an edge through <code class="docutils literal notranslate"><span class="pre">SVGDiagram</span></code>, the function takes the IDs of the two nodes as input, where the first parameter corresponds to the edge’s ‘tail’ and the second to its ‘head’. By default, no arrow is drawn; the edge is represented simply as a straight line. It should be noted that this is merely a drawing library and does not provide any automatic layout functionality.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-6">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sp_svg_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVGDiagram</span>
+
+<span class="n">diagram</span> <span class="o">=</span> <span class="n">SVGDiagram</span><span class="p">()</span>
+<span class="n">node1</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+<span class="n">node1</span><span class="o">.</span><span class="n">set_center</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">node2</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+<span class="n">node2</span><span class="o">.</span><span class="n">set_center</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">)</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">to_svg</span><span class="p">(</span><span class="s2">&quot;node.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-7" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-7">
+JavaScript</label><div class="sd-tab-content docutils">
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sp-svg-diagram&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">diagram</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="p">();</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">node1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addNode</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">);</span>
+<span class="nx">node1</span><span class="p">.</span><span class="nx">setCenter</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">node2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addNode</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">);</span>
+<span class="nx">node2</span><span class="p">.</span><span class="nx">setCenter</span><span class="p">(</span><span class="mf">60.0</span><span class="p">,</span><span class="w"> </span><span class="mf">80.0</span><span class="p">);</span>
+<span class="nx">diagram</span><span class="p">.</span><span class="nx">addEdge</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;b&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">svg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-8" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-8">
+C++</label><div class="sd-tab-content docutils">
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;svg_diagram.h&quot;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">svg_diagram</span><span class="p">;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">SVGDiagram</span><span class="w"> </span><span class="n">diagram</span><span class="p">;</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">node1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addNode</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node1</span><span class="o">-&gt;</span><span class="n">setCenter</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">node2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addNode</span><span class="p">(</span><span class="s">&quot;B&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node2</span><span class="o">-&gt;</span><span class="n">setCenter</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">);</span>
+<span class="w">    </span><span class="n">diagram</span><span class="p">.</span><span class="n">addEdge</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;B&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">diagram</span><span class="p">.</span><span class="n">render</span><span class="p">(</span><span class="s">&quot;edge.svg&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>SVG output:</p>
+<p><img alt="" src="_images/edge.svg" /></p>
+</section>
+<section id="svggraph">
+<h2>SVGGraph<a class="headerlink" href="#svggraph" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">SVGGraph</span></code> is used to specify default properties for certain nodes or edges. By default, it is not rendered. However, if a border or fill color is set, it will draw a rectangle that encompasses all its child elements. <code class="docutils literal notranslate"><span class="pre">SVGDiagram</span></code> itself also creates an <code class="docutils literal notranslate"><span class="pre">SVGGraph</span></code> by default to serve as the top-level container.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CyberZHG.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

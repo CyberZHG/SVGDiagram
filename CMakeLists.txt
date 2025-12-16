@@ -148,7 +148,7 @@ if(SVG_DIAGRAM_BIND_PYTHON)
     FetchContent_MakeAvailable(pybind11)
 
     pybind11_add_module(_core
-            python/src/bindings.cpp
+            python/bindings.cpp
     )
     target_link_libraries(_core
             PRIVATE SVGDiagram

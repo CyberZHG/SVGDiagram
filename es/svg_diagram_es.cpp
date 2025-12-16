@@ -28,6 +28,5 @@ EMSCRIPTEN_BINDINGS(SVGDiagramWASM) {
         .function("addNode", select_overload<const std::shared_ptr<SVGNode>&(const std::string&)>(&SVGDiagram::addNode))
         .function("addEdge", select_overload<const std::shared_ptr<SVGEdge>&(const std::string&, const std::string&)>(&SVGDiagram::addEdge))
         .function("render", select_overload<std::string()>(&SVGDiagram::render))
-        .function("toSVG", select_overload<void(const std::string&)>(&SVGDiagram::render))
     ;
 }

@@ -2,12 +2,15 @@ SVGDiagram
 ==========
 
 ```{toctree}
-:maxdepth: 2
+:maxdepth: 1
 :caption: Contents
 
 install
 concept
+node_attr
 ```
+
+**Work in progress...**
 
 A library for rendering diagrams to SVG. This library does not provide any automatic layout for nodes and edges.
 

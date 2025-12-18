@@ -129,6 +129,7 @@ if(SVG_DIAGRAM_ENABLE_TESTS)
             tests/test_svg_diagram.cpp
             tests/svg_edge/test_arrow_empty.cpp
             tests/docs/test_concept.cpp
+            tests/docs/test_node_attr.cpp
     )
 
     target_link_libraries(runTests
@@ -161,7 +162,7 @@ endif()
 if (SVG_DIAGRAM_BIND_ES)
 
     add_executable(SVGDiagramWASM
-            es/svg_diagram_es.cpp)
+            es/svg_diagram_wasm.cpp)
 
     target_link_libraries(SVGDiagramWASM
             PRIVATE SVGDiagram

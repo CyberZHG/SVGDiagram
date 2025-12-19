@@ -157,12 +157,13 @@ if(SVG_DIAGRAM_BIND_PYTHON)
     )
     install(TARGETS _core
             LIBRARY DESTINATION sp_svg_diagram)
+    install(FILES python/wrapper/__init__.py DESTINATION sp_svg_diagram)
 endif()
 
 if (SVG_DIAGRAM_BIND_ES)
 
     add_executable(SVGDiagramWASM
-            es/svg_diagram_wasm.cpp)
+            wasm/svg_diagram_wasm.cpp)
 
     target_link_libraries(SVGDiagramWASM
             PRIVATE SVGDiagram

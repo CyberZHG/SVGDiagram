@@ -13,6 +13,7 @@ describe('Init', () => {
         nodeB.setLabel("bar");
         diagram.addEdge("a", "b");
         const svg = diagram.render();
+        diagram.toSVG("init.svg", svg);
         assert(svg.length > 0);
     });
 });

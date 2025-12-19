@@ -31,9 +31,9 @@ jobs:
 
       - name: Lint
         run: |
-          black --check sp_svg_diagram python/tests
-          isort --check-only sp_svg_diagram python/tests
-          flake8 sp_svg_diagram python/tests
+          black --check python/wrapper python/tests
+          isort --check-only python/wrapper python/tests
+          flake8 python/wrapper python/tests
 
       - name: Test
         run: |

@@ -7,7 +7,15 @@ using namespace svg_diagram;
 
 namespace py = pybind11;
 
+bool compareSVG(const string& a, const string& b) {
+    XMLElement rootA, rootB;
+    rootA.addChildren(XMLElement::parse(a));
+    rootB.addChildren(XMLElement::parse(b));
+    return rootA == rootB;
+}
+
 PYBIND11_MODULE(_core, m, py::mod_gil_not_used()) {
+    m.def("_compare_svg", &compareSVG);
     py::class_<SVGNode, shared_ptr<SVGNode>>(m, "SVGNode")
         .def(py::init<>())
         .def_property_readonly_static("SHAPE_NONE", [](py::object) { return std::string(SVGNode::NODE_SHAPE_NONE); })
@@ -61,6 +69,7 @@ PYBIND11_MODULE(_core, m, py::mod_gil_not_used()) {
         .def("add_node", py::overload_cast<const string&>(&SVGDiagram::addNode))
         .def("add_edge", py::overload_cast<const string&, const string&>(&SVGDiagram::addEdge))
         .def("add_subgraph", py::overload_cast<const string&>(&SVGDiagram::addSubgraph))
+        .def("render", py::overload_cast<>(&SVGDiagram::render))
         .def("to_svg", py::overload_cast<const string&>(&SVGDiagram::render))
     ;
 }

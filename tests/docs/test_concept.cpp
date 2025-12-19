@@ -7,9 +7,11 @@
 using namespace std;
 using namespace svg_diagram;
 
+static const auto OUTPUT_DIR = string("../docs/source/_static/concept/");
+
 TEST(TestDocsConcept, Empty) {
     SVGDiagram diagram;
-    diagram.render("docs__concept__empty.svg");
+    diagram.render(OUTPUT_DIR + "empty.svg");
 }
 
 TEST(TestDocsConcept, Node) {
@@ -17,7 +19,7 @@ TEST(TestDocsConcept, Node) {
     const auto node = diagram.addNode("A");
     node->setCenter(0, 0);
     node->setLabel("foo\nbar");
-    diagram.render("docs__concept__node.svg");
+    diagram.render(OUTPUT_DIR + "node.svg");
 }
 
 TEST(TestDocsConcept, Edge) {
@@ -27,5 +29,5 @@ TEST(TestDocsConcept, Edge) {
     const auto node2 = diagram.addNode("B");
     node2->setCenter(60, 80);
     diagram.addEdge("A", "B");
-    diagram.render("docs__concept__edge.svg");
+    diagram.render(OUTPUT_DIR + "edge.svg");
 }

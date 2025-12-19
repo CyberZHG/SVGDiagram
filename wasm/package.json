@@ -17,7 +17,7 @@
   },
   "scripts": {
     "build": "bash build.sh",
-    "lint": "npx eslint demo index.js test/*.js",
-    "test": "mocha"
+    "lint": "npx eslint demo index.js test/**/*.js",
+    "test": "mocha test/**/*.js"
   }
 }

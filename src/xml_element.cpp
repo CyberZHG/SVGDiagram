@@ -115,7 +115,7 @@ std::string XMLElement::toString() const {
 }
 
 bool XMLElement::operator==(const XMLElement& other) const {
-    constexpr double EPSILON = 1e-6;
+    static constexpr double EPSILON = 1e-6;
     if (_tag != other._tag) {
         return false;
     }
@@ -125,6 +125,17 @@ bool XMLElement::operator==(const XMLElement& other) const {
     if (_attributes.size() != other._attributes.size()) {
         return false;
     }
+    const auto mayBeNumber = [](const string& s, const size_t index) {
+        if (isdigit(s[index])) {
+            return true;
+        }
+        if (index + 1 < s.size() && isdigit(s[index + 1])) {
+            if (s[index] == '.' || s[index] == '+' || s[index] == '-') {
+                return true;
+            }
+        }
+        return false;
+    };
     for (const auto& [key, value1] : _attributes) {
         if (!other._attributes.contains(key)) {
             return false;
@@ -133,7 +144,7 @@ bool XMLElement::operator==(const XMLElement& other) const {
         const size_t n = value1.size(), m = value2.size();
         size_t i = 0, j = 0;
         while (i < n && j < m) {
-            try {
+            if (mayBeNumber(value1, i) && mayBeNumber(value2, j)) {
                 size_t pos1, pos2;
                 const double doubleValue1 = stod(value1.substr(i), &pos1);
                 const double doubleValue2 = stod(value2.substr(j), &pos2);
@@ -142,7 +153,7 @@ bool XMLElement::operator==(const XMLElement& other) const {
                 }
                 i += pos1;
                 j += pos2;
-            } catch (...) {
+            } else {
                 if (value1[i++] != value2[j++]) {
                     return false;
                 }

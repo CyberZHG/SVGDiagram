@@ -7,6 +7,8 @@
 using namespace std;
 using namespace svg_diagram;
 
+static const auto OUTPUT_DIR = string("../docs/source/_static/node_attr/");
+
 TEST(TestDocsNodeAttributes, Label) {
     SVGDiagram diagram;
     const auto node1 = diagram.addNode("A");
@@ -18,7 +20,7 @@ TEST(TestDocsNodeAttributes, Label) {
     const auto node3 = diagram.addNode("C");
     node3->setCenter(300, 0);
     node3->setLabel("物华天宝\n人杰地灵");
-    diagram.render("docs__node_attr__label.svg");
+    diagram.render(OUTPUT_DIR + "label.svg");
 }
 
 TEST(TestDocsNodeAttributes, LabelDebug) {
@@ -33,5 +35,5 @@ TEST(TestDocsNodeAttributes, LabelDebug) {
     const auto node3 = diagram.addNode("C");
     node3->setCenter(300, 0);
     node3->setLabel("物华天宝\n人杰地灵");
-    diagram.render("docs__node_attr__label_debug.svg");
+    diagram.render(OUTPUT_DIR + "label_debug.svg");
 }

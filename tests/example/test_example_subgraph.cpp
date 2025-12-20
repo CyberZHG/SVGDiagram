@@ -30,7 +30,7 @@ TEST(TestExample, Subgraph) {
     };
 
     const auto startNode = diagram.addNode("start");
-    startNode->setShape(SVGNode::NODE_SHAPE_CIRCLE);
+    startNode->setShape(SVGNode::SHAPE_CIRCLE);
     startNode->setLabel("START");
     startNode->setFontColor("white");
     startNode->setFillColor("darkgrey");
@@ -60,7 +60,7 @@ TEST(TestExample, Subgraph) {
     edges[5]->setNodeFrom("node_1"); edges[5]->setNodeTo("node_5");
 
     auto leftBottomSubgraph = make_shared<SVGGraph>("LBG");
-    leftBottomSubgraph->defaultNodeAttributes().setShape(SVGNode::NODE_SHAPE_RECT);
+    leftBottomSubgraph->defaultNodeAttributes().setShape(SVGNode::SHAPE_RECT);
     leftBottomSubgraph->addNode(nodes[2]);
     leftBottomSubgraph->addNode(nodes[3]);
     leftBottomSubgraph->addEdge(edges[2]);
@@ -70,7 +70,7 @@ TEST(TestExample, Subgraph) {
     leftBottomSubgraph->setLabel("Left Bottom");
     leftBottomSubgraph->setPenWidth(5.0);
     auto rightBottomSubgraph = make_shared<SVGGraph>("RBG");
-    rightBottomSubgraph->defaultNodeAttributes().setShape(SVGNode::NODE_SHAPE_RECT);
+    rightBottomSubgraph->defaultNodeAttributes().setShape(SVGNode::SHAPE_RECT);
     rightBottomSubgraph->addNode(nodes[4]);
     rightBottomSubgraph->addNode(nodes[5]);
     rightBottomSubgraph->addEdge(edges[4]);

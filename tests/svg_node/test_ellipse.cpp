@@ -14,7 +14,7 @@ TEST(TestSVGNodeEllipse, RectConnections) {
     diagram.setBackgroundColor("white");
     const auto& central = diagram.addNode("c");
     central->setCenter(0.0, 0.0);
-    central->setShape(SVGNode::NODE_SHAPE_ELLIPSE);
+    central->setShape(SVGNode::SHAPE_ELLIPSE);
     central->setLabel("Central");
     constexpr double start = numbers::pi / 19.0;
     for (int i = 0; i < 17; ++i) {
@@ -23,7 +23,7 @@ TEST(TestSVGNodeEllipse, RectConnections) {
         constexpr double shift = 2.0 * numbers::pi / 17.0;
         const double angle = start + i * shift;
         node->setCenter(120.0 * cos(angle), 120.0 * sin(angle));
-        node->setShape(SVGNode::NODE_SHAPE_ELLIPSE);
+        node->setShape(SVGNode::SHAPE_ELLIPSE);
         node->setLabel(format("{}", i));
         if (i % 2 == 0) {
             const auto& edge = diagram.addEdge("c", nodeName);

@@ -11,7 +11,7 @@ TEST(TestSVGNodeDoubleCircle, OneCircle) {
     SVGDiagram diagram;
     diagram.enableDebug();
     const auto node = diagram.addNode("circle");
-    node->setShape(SVGNode::NODE_SHAPE_DOUBLE_CIRCLE);
+    node->setShape(SVGNode::SHAPE_DOUBLE_CIRCLE);
     node->setPrecomputedTextSize(10, 16);
     const auto svg = diagram.render();
     const auto expected = R"(<!-- Node: circle -->
@@ -31,7 +31,7 @@ TEST(TestSVGNodeDoubleCircle, OneCircleColor) {
     SVGDiagram diagram;
     diagram.enableDebug();
     const auto node = diagram.addNode("circle");
-    node->setShape(SVGNode::NODE_SHAPE_DOUBLE_CIRCLE);
+    node->setShape(SVGNode::SHAPE_DOUBLE_CIRCLE);
     node->setPrecomputedTextSize(10, 16);
     node->setColor("red");
     node->setFillColor("white");
@@ -53,12 +53,12 @@ TEST(TestSVGNodeDoubleCircle, TwoCirclesPenWidth) {
     SVGDiagram diagram;
     const auto node1 = diagram.addNode("A");
     node1->setCenter(0.0, 0.0);
-    node1->setShape(SVGNode::NODE_SHAPE_DOUBLE_CIRCLE);
+    node1->setShape(SVGNode::SHAPE_DOUBLE_CIRCLE);
     node1->setPrecomputedTextSize(10, 16);
     node1->setPenWidth(2);
     const auto node2 = diagram.addNode("B");
     node2->setCenter(100.0, 0.0);
-    node2->setShape(SVGNode::NODE_SHAPE_DOUBLE_CIRCLE);
+    node2->setShape(SVGNode::SHAPE_DOUBLE_CIRCLE);
     node2->setPrecomputedTextSize(10, 16);
     node2->setPenWidth(2);
     const auto edge = diagram.addEdge("A", "B");

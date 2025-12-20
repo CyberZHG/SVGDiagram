@@ -9,10 +9,10 @@ using namespace svg_diagram;
 
 TEST(TestExample, Sequential) {
     SVGDiagram diagram;
-    diagram.defaultNodeAttributes().setShape(SVGNode::NODE_SHAPE_ELLIPSE);
+    diagram.defaultNodeAttributes().setShape(SVGNode::SHAPE_ELLIPSE);
     diagram.defaultNodeAttributes().setMargin(10, 20);
     diagram.defaultEdgeAttributes().setMargin(4.0);
-    diagram.defaultEdgeAttributes().setArrowHead(SVGEdge::ARROW_SHAPE_EMPTY);
+    diagram.defaultEdgeAttributes().setArrowHead(SVGEdge::ARROW_EMPTY);
 
     const auto labels = vector{
         "Part the Veil of Snow",

@@ -25,7 +25,7 @@ TEST(TestSVGGraph, OneCircle) {
     const auto graph = diagram.addSubgraph("cluster1");
     auto node = make_shared<SVGNode>("node1");
     graph->addNode(node);
-    graph->defaultNodeAttributes().setShape(SVGNode::NODE_SHAPE_CIRCLE);
+    graph->defaultNodeAttributes().setShape(SVGNode::SHAPE_CIRCLE);
     graph->defaultNodeAttributes().setPenWidth(10.0);
     graph->defaultNodeAttributes().setAttribute(ATTRIBUTE_KEY_FIXED_SIZE, "ON");
     graph->defaultNodeAttributes().setSize(20.0, 20.0);
@@ -57,7 +57,7 @@ TEST(TestSVGGraph, OneCircleWithLabel) {
     const auto graph = diagram.addSubgraph("cluster1");
     auto node = make_shared<SVGNode>("node1");
     graph->addNode(node);
-    graph->defaultNodeAttributes().setShape(SVGNode::NODE_SHAPE_ELLIPSE);
+    graph->defaultNodeAttributes().setShape(SVGNode::SHAPE_ELLIPSE);
     graph->defaultNodeAttributes().setAttribute(ATTRIBUTE_KEY_FIXED_SIZE, "ON");
     graph->defaultNodeAttributes().setSize(100.0, 100.0);
     graph->setColor("black");
@@ -92,7 +92,7 @@ TEST(TestSVGGraph, OneCircleWithLongLabel) {
     const auto graph = diagram.addSubgraph("cluster1");
     auto node = make_shared<SVGNode>("node1");
     graph->addNode(node);
-    graph->defaultNodeAttributes().setShape(SVGNode::NODE_SHAPE_ELLIPSE);
+    graph->defaultNodeAttributes().setShape(SVGNode::SHAPE_ELLIPSE);
     graph->defaultNodeAttributes().setAttribute(ATTRIBUTE_KEY_FIXED_SIZE, "ON");
     graph->defaultNodeAttributes().setSize(20.0, 20.0);
     graph->setColor("black");

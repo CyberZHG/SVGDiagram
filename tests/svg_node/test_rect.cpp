@@ -14,7 +14,7 @@ TEST(TestSVGNodeRect, RectConnections) {
     diagram.setBackgroundColor("white");
     const auto& central = diagram.addNode("c");
     central->setCenter(0.0, 0.0);
-    central->setShape(SVGNode::NODE_SHAPE_RECT);
+    central->setShape(SVGNode::SHAPE_RECT);
     central->setLabel("Central");
     constexpr double start = numbers::pi / 19.0;
     for (int i = 0; i < 17; ++i) {
@@ -23,7 +23,7 @@ TEST(TestSVGNodeRect, RectConnections) {
         constexpr double shift = 2.0 * numbers::pi / 17.0;
         const double angle = start + i * shift;
         node->setCenter(120.0 * cos(angle), 120.0 * sin(angle));
-        node->setShape(SVGNode::NODE_SHAPE_RECT);
+        node->setShape(SVGNode::SHAPE_RECT);
         node->setLabel(format("{}", i));
         if (i % 2 == 0) {
             const auto& edge = diagram.addEdge("c", nodeName);
@@ -52,11 +52,11 @@ TEST(TestSVGNodeRect, RectConnectionOnCorner) {
     SVGDiagram diagram;
     const auto node1 = diagram.addNode("A");
     node1->setCenter(0, 0);
-    node1->setShape(SVGNode::NODE_SHAPE_RECT);
+    node1->setShape(SVGNode::SHAPE_RECT);
     node1->setFixedSize(20, 20);
     const auto node2 = diagram.addNode("B");
     node2->setCenter(30, 30);
-    node2->setShape(SVGNode::NODE_SHAPE_RECT);
+    node2->setShape(SVGNode::SHAPE_RECT);
     node2->setFixedSize(20, 20);
     const auto edge = diagram.addEdge("A", "B");
 

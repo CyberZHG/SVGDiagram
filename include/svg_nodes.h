@@ -94,12 +94,12 @@ namespace svg_diagram {
         using SVGItem::SVGItem;
         SVGNode(double cx, double cy);
 
-        static constexpr std::string_view NODE_SHAPE_NONE = "none";
-        static constexpr std::string_view NODE_SHAPE_CIRCLE = "circle";
-        static constexpr std::string_view NODE_SHAPE_DOUBLE_CIRCLE = "doublecircle";
-        static constexpr std::string_view NODE_SHAPE_RECT = "rect";
-        static constexpr std::string_view NODE_SHAPE_ELLIPSE = "ellipse";
-        static constexpr std::string_view NODE_SHAPE_DEFAULT = NODE_SHAPE_ELLIPSE;
+        static constexpr std::string_view SHAPE_NONE = "none";
+        static constexpr std::string_view SHAPE_CIRCLE = "circle";
+        static constexpr std::string_view SHAPE_DOUBLE_CIRCLE = "doublecircle";
+        static constexpr std::string_view SHAPE_RECT = "rect";
+        static constexpr std::string_view SHAPE_ELLIPSE = "ellipse";
+        static constexpr std::string_view SHAPE_DEFAULT = SHAPE_ELLIPSE;
 
         static constexpr auto DOUBLE_BORDER_MARGIN = 4.0;
 
@@ -155,14 +155,14 @@ namespace svg_diagram {
         using SVGItem::SVGItem;
         SVGEdge(const std::string& idFrom, const std::string& idTo);
 
-        static constexpr std::string_view EDGE_SPLINES_LINE = "line";
-        static constexpr std::string_view EDGE_SPLINES_SPLINE = "spline";
-        static constexpr std::string_view EDGE_SPLINES_DEFAULT = EDGE_SPLINES_SPLINE;
+        static constexpr std::string_view SPLINES_LINE = "line";
+        static constexpr std::string_view SPLINES_SPLINE = "spline";
+        static constexpr std::string_view SPLINES_DEFAULT = SPLINES_SPLINE;
 
-        static constexpr std::string_view ARROW_SHAPE_NONE = "none";
-        static constexpr std::string_view ARROW_SHAPE_NORMAL = "normal";
-        static constexpr std::string_view ARROW_SHAPE_EMPTY = "empty";
-        static constexpr std::string_view ARROW_SHAPE_DEFAULT = ARROW_SHAPE_NORMAL;
+        static constexpr std::string_view ARROW_NONE = "none";
+        static constexpr std::string_view ARROW_NORMAL = "normal";
+        static constexpr std::string_view ARROW_EMPTY = "empty";
+        static constexpr std::string_view ARROW_DEFAULT = ARROW_NORMAL;
 
         void setAttributeIfNotExist(const std::string_view& key, const std::string& value) override;
         [[nodiscard]] const std::string& getAttribute(const std::string_view& key) const override;

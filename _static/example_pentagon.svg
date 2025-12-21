@@ -7,9 +7,7 @@
       <title>node_0</title>
       <circle cx="9.184850993605149e-15" cy="-150" r="45.484502855368234" fill="lightsalmon" stroke="peru"/>
       <text x="9.184850993605149e-15" y="-150" text-anchor="middle" dominant-baseline="central" fill="saddlebrown" font-family="Times,serif" font-size="14">
-        <tspan x="9.184850993605149e-15" dy="-1.2em">Planning</tspan>
-        <tspan x="9.184850993605149e-15" dy="1.2em">Breeds</tspan>
-        <tspan x="9.184850993605149e-15" dy="1.2em">Success</tspan>
+        <tspan x="9.184850993605149e-15" dy="-1.2em">Planning</tspan><tspan x="9.184850993605149e-15" dy="1.2em">Breeds</tspan><tspan x="9.184850993605149e-15" dy="1.2em">Success</tspan>
       </text>
     </g>
     <!-- Node: node_1 -->
@@ -17,9 +15,7 @@
       <title>node_1</title>
       <circle cx="142.65847744427302" cy="-46.35254915624211" r="54.176470907581276" fill="papayawhip" stroke="darkgoldenrod"/>
       <text x="142.65847744427302" y="-46.35254915624211" text-anchor="middle" dominant-baseline="central" fill="goldenrod" font-family="Times,serif" font-size="14">
-        <tspan x="142.65847744427302" dy="-1.2em">Observation</tspan>
-        <tspan x="142.65847744427302" dy="1.2em">Feeds</tspan>
-        <tspan x="142.65847744427302" dy="1.2em">Strategy</tspan>
+        <tspan x="142.65847744427302" dy="-1.2em">Observation</tspan><tspan x="142.65847744427302" dy="1.2em">Feeds</tspan><tspan x="142.65847744427302" dy="1.2em">Strategy</tspan>
       </text>
     </g>
     <!-- Node: node_2 -->
@@ -27,9 +23,7 @@
       <title>node_2</title>
       <circle cx="88.16778784387097" cy="121.35254915624212" r="48.30207034900264" fill="lightgreen" stroke="limegreen"/>
       <text x="88.16778784387097" y="121.35254915624212" text-anchor="middle" dominant-baseline="central" fill="olivedrab" font-family="Times,serif" font-size="14">
-        <tspan x="88.16778784387097" dy="-1.2em">Deceit</tspan>
-        <tspan x="88.16778784387097" dy="1.2em">Cloaks</tspan>
-        <tspan x="88.16778784387097" dy="1.2em">the Truth</tspan>
+        <tspan x="88.16778784387097" dy="-1.2em">Deceit</tspan><tspan x="88.16778784387097" dy="1.2em">Cloaks</tspan><tspan x="88.16778784387097" dy="1.2em">the Truth</tspan>
       </text>
     </g>
     <!-- Node: node_3 -->
@@ -38,9 +32,7 @@
       <circle cx="-88.16778784387095" cy="121.35254915624212" r="45.484502855368234" fill="deepskyblue" stroke="dodgerblue"/>
       <circle cx="-88.16778784387095" cy="121.35254915624212" r="49.484502855368234" fill="none" stroke="dodgerblue"/>
       <text x="-88.16778784387095" y="121.35254915624212" text-anchor="middle" dominant-baseline="central" fill="royalblue" font-family="Times,serif" font-size="14">
-        <tspan x="-88.16778784387095" dy="-1.2em">Delusion</tspan>
-        <tspan x="-88.16778784387095" dy="1.2em">Ensnares</tspan>
-        <tspan x="-88.16778784387095" dy="1.2em">Reason</tspan>
+        <tspan x="-88.16778784387095" dy="-1.2em">Delusion</tspan><tspan x="-88.16778784387095" dy="1.2em">Ensnares</tspan><tspan x="-88.16778784387095" dy="1.2em">Reason</tspan>
       </text>
     </g>
     <!-- Node: node_4 -->
@@ -48,18 +40,14 @@
       <title>node_4</title>
       <circle cx="-142.65847744427305" cy="-46.35254915624209" r="54.176470907581276" fill="lightpink" stroke="lightcoral"/>
       <text x="-142.65847744427305" y="-46.35254915624209" text-anchor="middle" dominant-baseline="central" fill="indianred" font-family="Times,serif" font-size="14">
-        <tspan x="-142.65847744427305" dy="-1.2em">Opportunity</tspan>
-        <tspan x="-142.65847744427305" dy="1.2em">Hides in</tspan>
-        <tspan x="-142.65847744427305" dy="1.2em">the Margins</tspan>
+        <tspan x="-142.65847744427305" dy="-1.2em">Opportunity</tspan><tspan x="-142.65847744427305" dy="1.2em">Hides in</tspan><tspan x="-142.65847744427305" dy="1.2em">the Margins</tspan>
       </text>
     </g>
     <!-- Node: node_c -->
     <g class="node" id="node_c">
       <title>node_c</title>
       <text x="0" y="0" text-anchor="middle" dominant-baseline="central" fill="indigo" font-family="Times,serif" font-size="16">
-        <tspan x="0" dy="-1.2em">Victory</tspan>
-        <tspan x="0" dy="1.2em">Flows from</tspan>
-        <tspan x="0" dy="1.2em">the Turning of Tides</tspan>
+        <tspan x="0" dy="-1.2em">Victory</tspan><tspan x="0" dy="1.2em">Flows from</tspan><tspan x="0" dy="1.2em">the Turning of Tides</tspan>
       </text>
     </g>
     <!-- Edge: edge1 (node_0 -> node_1) -->

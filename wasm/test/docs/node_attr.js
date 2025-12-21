@@ -74,4 +74,14 @@ describe("Docs/NodeAttributes", () => {
         const svg = diagram.render();
         await compareSVG("node_attr", "node_size", svg);
     });
+    it("color", async () => {
+        const diagram = new SVGDiagram();
+        const node = diagram.addNode("A");
+        node.setLabel("color");
+        node.setColor("limegreen");
+        node.setFillColor("#EEEEEE");
+        node.setFontColor("rgb(66,92,214)");
+        const svg = diagram.render();
+        await compareSVG("node_attr", "color", svg);
+    });
 });

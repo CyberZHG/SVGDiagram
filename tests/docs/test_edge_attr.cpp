@@ -157,3 +157,20 @@ TEST(TestDocsEdgeAttributes, PenWidth) {
     edge->setMargin(4);
     diagram.render(OUTPUT_DIR + "pen_width.svg");
 }
+
+TEST(TestDocsEdgeAttributes, Font) {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setLabel("A");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setLabel("B");
+    const auto edge = diagram.addEdge("A", "B");
+    edge->setLabel("font");
+    edge->setMargin(4);
+    edge->setFontName("Consolas");
+    edge->setFontSize(16);
+    edge->setFont("Consolas,'Courier New',monospace", 16);
+    diagram.render(OUTPUT_DIR + "font.svg");
+}

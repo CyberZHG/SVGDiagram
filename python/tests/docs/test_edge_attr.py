@@ -104,3 +104,21 @@ def test_pen_width():
     edge.set_margin(4, 4)
     svg = diagram.render()
     compare_svg("edge_attr", "pen_width", svg)
+
+
+def test_font():
+    diagram = SVGDiagram()
+    node1 = diagram.add_node("A")
+    node1.set_center(0, 0)
+    node1.set_label("A")
+    node2 = diagram.add_node("B")
+    node2.set_center(150, 0)
+    node2.set_label("B")
+    edge = diagram.add_edge("A", "B")
+    edge.set_label("font")
+    edge.set_margin(4, 4)
+    edge.set_font_name("Consolas")
+    edge.set_font_size(16)
+    edge.set_font("Consolas,'Courier New',monospace", 16)
+    svg = diagram.render()
+    compare_svg("edge_attr", "font", svg)

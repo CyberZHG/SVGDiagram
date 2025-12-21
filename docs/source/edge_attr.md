@@ -348,3 +348,75 @@ int main() {
 `````
 
 ![](_static/edge_attr/color.svg)
+
+## Pen Width
+
+The thickness of the line, which also affects the arrow.
+
+`````{tab-set}
+````{tab-item} Python
+```python
+from sp_svg_diagram import SVGDiagram, SVGEdge
+
+diagram = SVGDiagram()
+node1 = diagram.add_node("A")
+node1.set_center(0, 0)
+node1.set_label("A")
+node2 = diagram.add_node("B")
+node2.set_center(150, 0)
+node2.set_label("B")
+edge = diagram.add_edge("A", "B")
+edge.set_arrow_head(SVGEdge.ARROW_NORMAL)
+edge.set_arrow_tail(SVGEdge.ARROW_EMPTY)
+edge.set_label("penWidth=3")
+edge.set_pen_width(3)
+edge.set_margin(4, 4)
+svg = diagram.render()
+```
+````
+````{tab-item} JavaScript
+```javascript
+import { SVGDiagram, SVGEdge } from 'sp-svg-diagram';
+
+const diagram = new SVGDiagram();
+const node1 = diagram.addNode("A");
+node1.setCenter(0, 0);
+node1.setLabel("A");
+const node2 = diagram.addNode("B");
+node2.setCenter(150, 0);
+node2.setLabel("B");
+const edge = diagram.addEdge("A", "B");
+edge.setArrowHead(SVGEdge.ARROW_NORMAL);
+edge.setArrowTail(SVGEdge.ARROW_EMPTY);
+edge.setLabel("penWidth=3");
+edge.setPenWidth(3);
+edge.setMargin(4, 4);
+const svg = diagram.render();
+````
+
+````{tab-item} C++
+```c++
+#include "svg_diagram.h"
+using namespace svg_diagram;
+
+int main() {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setLabel("A");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setLabel("B");
+    const auto edge = diagram.addEdge("A", "B");
+    edge->setArrowHead(SVGEdge::ARROW_NORMAL);
+    edge->setArrowTail(SVGEdge::ARROW_EMPTY);
+    edge->setLabel("penWidth=3");
+    edge->setPenWidth(3);
+    edge->setMargin(4);
+    diagram.render("pen_width.svg");
+    return 0;
+}
+````
+`````
+
+![](_static/edge_attr/pen_width.svg)

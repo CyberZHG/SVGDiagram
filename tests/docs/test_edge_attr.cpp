@@ -124,7 +124,6 @@ TEST(TestDocsEdgeAttributes, LabelDebug) {
     diagram.render(OUTPUT_DIR + "label_debug.svg");
 }
 
-
 TEST(TestDocsEdgeAttributes, Color) {
     SVGDiagram diagram;
     const auto node1 = diagram.addNode("A");
@@ -140,4 +139,21 @@ TEST(TestDocsEdgeAttributes, Color) {
     edge->setColor("red");
     edge->setFontColor("blue");
     diagram.render(OUTPUT_DIR + "color.svg");
+}
+
+TEST(TestDocsEdgeAttributes, PenWidth) {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setLabel("A");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setLabel("B");
+    const auto edge = diagram.addEdge("A", "B");
+    edge->setArrowHead(SVGEdge::ARROW_NORMAL);
+    edge->setArrowTail(SVGEdge::ARROW_EMPTY);
+    edge->setLabel("penWidth=3");
+    edge->setPenWidth(3);
+    edge->setMargin(4);
+    diagram.render(OUTPUT_DIR + "pen_width.svg");
 }

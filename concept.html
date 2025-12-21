@@ -12,6 +12,7 @@
       <link rel="stylesheet" type="text/css" href="_static/sphinx-dropdown.css?v=995e94df" />
       <link rel="stylesheet" type="text/css" href="_static/panels-bootstrap.min.css?v=21c0b90a" />
       <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/github_ribbon.css?v=31e881cd" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -75,12 +76,13 @@
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Basic Concepts</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/concept.md.txt" rel="nofollow"> View page source</a>
+              <a href="https://github.com/CyberZHG/SVGDiagram/blob/main/docs/source/concept.md" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
            <div itemprop="articleBody">
              
   <section id="basic-concepts">
@@ -208,7 +210,7 @@ JavaScript</label><div class="sd-tab-content docutils">
 <span class="kd">const</span><span class="w"> </span><span class="nx">node2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addNode</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">);</span>
 <span class="nx">node2</span><span class="p">.</span><span class="nx">setCenter</span><span class="p">(</span><span class="mf">60.0</span><span class="p">,</span><span class="w"> </span><span class="mf">80.0</span><span class="p">);</span>
 <span class="nx">diagram</span><span class="p">.</span><span class="nx">addEdge</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;B&quot;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">svg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+<span class="nx">diagram</span><span class="p">.</span><span class="nx">toSVG</span><span class="p">(</span><span class="s2">&quot;demo.svg&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -244,6 +246,11 @@ C++</label><div class="sd-tab-content docutils">
 
            </div>
           </div>
+
+<a href="https://github.com/CyberZHG/SVGDiagram" class="github_ribbon">
+    <img style="position: absolute; top: 0; right: 0; border: 0;" src="_static/github_ribbon.svg" alt="Fork me on GitHub">
+</a>
+
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="node_attr.html" class="btn btn-neutral float-right" title="Node Attributes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>

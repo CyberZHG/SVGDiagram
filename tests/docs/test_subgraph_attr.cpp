@@ -47,3 +47,27 @@ TEST(TestDocsSubgraphAttributes, Inherited) {
 
     diagram.render(OUTPUT_DIR + "inherited.svg");
 }
+
+TEST(TestDocsSubgraphAttributes, Draw) {
+    SVGDiagram diagram;
+    auto subgraphInner = std::make_shared<SVGGraph>("subgraph-inner");
+    subgraphInner->setLabel("Inner");
+    subgraphInner->setColor("black");
+    subgraphInner->setFillColor("lightgreen");
+    const auto subgraphOuter = diagram.addSubgraph("subgraph-outer");
+    subgraphOuter->addSubgraph(subgraphInner);
+    subgraphOuter->setLabel("Outer");
+    subgraphOuter->setColor("black");
+    subgraphOuter->setFillColor("papayawhip");
+    auto node1 = std::make_shared<SVGNode>("A");
+    node1->setLabel("A");
+    node1->setCenter(0, 0);
+    auto node2 = std::make_shared<SVGNode>("B");
+    node2->setLabel("B");
+    node2->setCenter(150, 0);
+    const auto edge = diagram.addEdge("A", "B");
+    edge->setArrowHead();
+    subgraphInner->addNode(node1);
+    subgraphOuter->addNode(node2);
+    diagram.render(OUTPUT_DIR + "draw.svg");
+}

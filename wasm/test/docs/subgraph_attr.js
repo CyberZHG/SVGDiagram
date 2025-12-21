@@ -1,5 +1,5 @@
 import { describe, it } from "mocha";
-import { SVGDiagram } from "../../index.js";
+import { SVGDiagram, createNode, createSubgraph } from "../../index.js";
 import { compareSVG } from "./utils.js";
 
 describe("Docs/SubgraphAttributes", () => {
@@ -41,5 +41,29 @@ describe("Docs/SubgraphAttributes", () => {
 
         const svg = diagram.render();
         await compareSVG("subgraph_attr", "inherited", svg);
+    });
+    it("draw", async () => {
+        const diagram = new SVGDiagram();
+        const subgraphInner = createSubgraph("subgraph-inner");
+        subgraphInner.setLabel("Inner");
+        subgraphInner.setColor("black");
+        subgraphInner.setFillColor("lightgreen");
+        const subgraphOuter = diagram.addSubgraph("subgraph-outer");
+        subgraphOuter.addSubgraph(subgraphInner);
+        subgraphOuter.setLabel("Outer");
+        subgraphOuter.setColor("black");
+        subgraphOuter.setFillColor("papayawhip");
+        const node1 = createNode("A");
+        node1.setLabel("A");
+        node1.setCenter(0, 0);
+        const node2 = createNode("B");
+        node2.setLabel("B");
+        node2.setCenter(150, 0);
+        const edge = diagram.addEdge("A", "B");
+        edge.setArrowHead();
+        subgraphInner.addNode(node1);
+        subgraphOuter.addNode(node2);
+        const svg = diagram.render();
+        await compareSVG("subgraph_attr", "draw", svg);
     });
 });

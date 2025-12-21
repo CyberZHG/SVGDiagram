@@ -4,6 +4,9 @@ import { writeFile } from 'fs/promises';
 
 const SVGDiagramWASM = await SVGDiagramWASMModule();
 const _compareSVG = SVGDiagramWASM._compareSVG;
+const createNode = SVGDiagramWASM.createNode;
+const createEdge = SVGDiagramWASM.createEdge;
+const createSubgraph = SVGDiagramWASM.createSubgraph;
 const SVGDiagram = SVGDiagramWASM.SVGDiagram;
 const SVGNode = SVGDiagramWASM.SVGNode;
 const SVGEdge = SVGDiagramWASM.SVGEdge;
@@ -33,4 +36,13 @@ SVGDiagram.prototype.toSVG = async function(file_path) {
     await writeFile(file_path, this.render());
 };
 
-export { _compareSVG, SVGDiagram, SVGNode, SVGEdge, SVGGraph };
+export {
+    _compareSVG,
+    createNode,
+    createEdge,
+    createSubgraph,
+    SVGDiagram,
+    SVGNode,
+    SVGEdge,
+    SVGGraph,
+};

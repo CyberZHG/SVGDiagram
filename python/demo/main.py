@@ -1,4 +1,4 @@
-from python.wrapper import SVGDiagram
+from sp_svg_diagram import SVGDiagram
 
 
 if __name__ == "__main__":

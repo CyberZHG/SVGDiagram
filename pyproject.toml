@@ -4,10 +4,10 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "sp-svg-diagram"
-version = "0.1.5"
+version = "1.0.0"
 description = "A library for rendering diagrams to SVG."
 requires-python = ">=3.8"
-readme = "README.md"
+readme = "python/README.md"
 license = { text = "MIT" }
 
 classifiers = [

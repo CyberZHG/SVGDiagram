@@ -8,7 +8,7 @@ SVGDiagram
 A library for rendering diagrams to SVG. This library does not provide any automatic layout for nodes and edges.
 
 Example output:
-![](./_static/example_pentagon.svg)
+![](https://raw.githubusercontent.com/CyberZHG/SVGDiagram/main/docs/images/example_pentagon.svg)
 
 ```{toctree}
 :maxdepth: 2

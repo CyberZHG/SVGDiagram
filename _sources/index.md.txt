@@ -8,6 +8,7 @@ SVGDiagram
 install
 concept
 node_attr
+edge_attr
 ```
 
 A library for rendering diagrams to SVG. This library does not provide any automatic layout for nodes and edges.

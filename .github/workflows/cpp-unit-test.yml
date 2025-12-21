@@ -2,10 +2,9 @@ name: C++ Unit Tests
 
 on:
   push:
-    branches: [ "temporary_disabled" ]
-    # branches: [ "main" ]
-  # pull_request:
-    # branches: [ "main" ]
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:

@@ -96,4 +96,18 @@ describe("Docs/NodeAttributes", () => {
         const svg = diagram.render();
         await compareSVG("node_attr", "pen_width", svg);
     });
+    it("font", async () => {
+        const diagram = new SVGDiagram();
+        for (let i = 0; i < 3; i++) {
+            const fontSize = 14 + i;
+            const node = diagram.addNode(`node${i}`);
+            node.setCenter(i * 150, 0);
+            node.setLabel(`fontSize=${fontSize}`);
+            node.setFontName("Consolas")
+            node.setFontSize(fontSize)
+            node.setFont("Consolas,'Courier New',monospace", fontSize)
+        }
+        const svg = diagram.render();
+        await compareSVG("node_attr", "font", svg);
+    });
 });

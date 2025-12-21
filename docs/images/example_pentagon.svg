@@ -56,7 +56,7 @@
     <!-- Node: node_c -->
     <g class="node" id="node_c">
       <title>node_c</title>
-      <text x="0" y="0" text-anchor="middle" dominant-baseline="central" fill="indigo" font-family="Times,serif" font-size="14">
+      <text x="0" y="0" text-anchor="middle" dominant-baseline="central" fill="indigo" font-family="Times,serif" font-size="16">
         <tspan x="0" dy="-1.2em">Victory</tspan>
         <tspan x="0" dy="1.2em">Flows from</tspan>
         <tspan x="0" dy="1.2em">the Turning of Tides</tspan>

@@ -41,6 +41,9 @@ EMSCRIPTEN_BINDINGS(SVGDiagramWASM) {
         .function("setFillColor", &SVGItem::setFillColor)
         .function("setFontColor", &SVGItem::setFontColor)
         .function("setPenWidth", &SVGItem::setPenWidth)
+        .function("setFontName", &SVGItem::setFontName)
+        .function("setFontSize", &SVGItem::setFontSize)
+        .function("setFont", &SVGItem::setFont)
     ;
     class_<SVGNode, base<SVGItem>>("SVGNode")
         .constructor<>()

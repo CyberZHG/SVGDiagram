@@ -218,6 +218,11 @@ namespace svg_diagram {
         void addEdge(std::shared_ptr<SVGEdge>& edge);
         void addSubgraph(std::shared_ptr<SVGGraph>& subgraph);
 
+        void removeNode(const SVGNode* node);
+        void removeEdge(const SVGEdge* edge);
+        void removeSubgraph(const SVGGraph* subgraph);
+        void removeChild(const SVGItem* item);
+
         SVGNode& defaultNodeAttributes();
         SVGEdge& defaultEdgeAttributes();
 

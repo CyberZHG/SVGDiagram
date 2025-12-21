@@ -388,3 +388,60 @@ int main() {
 `````
 
 ![](_static/node_attr/color.svg)
+
+## Pen Width
+
+The stroke width of the node's border.
+
+`````{tab-set}
+````{tab-item} Python
+```python
+from sp_svg_diagram import SVGDiagram
+
+diagram = SVGDiagram()
+for i in range(3):
+    pen_width = 1 + i * 2
+    node = diagram.add_node(f"node{i}")
+    node.set_center(i * 150, 0)
+    node.set_label(f"penWidth={pen_width}")
+    node.set_pen_width(pen_width)
+svg = diagram.render()
+```
+````
+````{tab-item} JavaScript
+```javascript
+import { SVGDiagram } from 'sp-svg-diagram';
+
+const diagram = new SVGDiagram();
+for (let i = 0; i < 3; i++) {
+    const penWidth = 1 + i * 2;
+    const node = diagram.addNode(`node${i}`);
+    node.setCenter(i * 150, 0);
+    node.setLabel(`penWidth=${penWidth}`);
+    node.setPenWidth(penWidth);
+}
+const svg = diagram.render();
+````
+
+````{tab-item} C++
+```c++
+#include "svg_diagram.h"
+#include <format>
+using namespace svg_diagram;
+
+int main() {
+    SVGDiagram diagram;
+    for (int i = 0; i < 3; ++i) {
+        const auto penWidth = 1 + i * 2;
+        const auto node = diagram.addNode(std::format("node{}", i));
+        node->setCenter(i * 150, 0);
+        node->setLabel(std::format("penWidth={}", penWidth));
+        node->setPenWidth(penWidth);
+    }
+    diagram.render("pen_width.svg");
+    return 0;
+}
+````
+`````
+
+![](_static/node_attr/pen_width.svg)

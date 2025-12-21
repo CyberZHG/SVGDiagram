@@ -167,3 +167,15 @@ TEST(TestDocsNodeAttributes, Color) {
     node->setFontColor("rgb(66,92,214)");
     diagram.render(OUTPUT_DIR + "color.svg");
 }
+
+TEST(TestDocsNodeAttributes, PenWidth) {
+    SVGDiagram diagram;
+    for (int i = 0; i < 3; ++i) {
+        const auto penWidth = 1 + i * 2;
+        const auto node = diagram.addNode(std::format("node{}", i));
+        node->setCenter(i * 150, 0);
+        node->setLabel(std::format("penWidth={}", penWidth));
+        node->setPenWidth(penWidth);
+    }
+    diagram.render(OUTPUT_DIR + "pen_width.svg");
+}

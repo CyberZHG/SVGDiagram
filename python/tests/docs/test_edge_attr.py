@@ -69,3 +69,21 @@ def test_label():
     edge2.add_connection_point(75, -20)
     svg = diagram.render()
     compare_svg("edge_attr", "label", svg)
+
+
+def test_color():
+    diagram = SVGDiagram()
+    node1 = diagram.add_node("A")
+    node1.set_center(0, 0)
+    node1.set_label("A")
+    node2 = diagram.add_node("B")
+    node2.set_center(150, 0)
+    node2.set_label("B")
+    edge = diagram.add_edge("A", "B")
+    edge.set_arrow_head(SVGEdge.ARROW_NORMAL)
+    edge.set_arrow_tail(SVGEdge.ARROW_EMPTY)
+    edge.set_label("color")
+    edge.set_color("red")
+    edge.set_font_color("blue")
+    svg = diagram.render()
+    compare_svg("edge_attr", "color", svg)

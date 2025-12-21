@@ -72,4 +72,21 @@ describe("Docs/EdgeAttributes", () => {
         const svg = diagram.render();
         await compareSVG("edge_attr", "label", svg);
     });
+    it("color", async () => {
+        const diagram = new SVGDiagram();
+        const node1 = diagram.addNode("A");
+        node1.setCenter(0, 0);
+        node1.setLabel("A");
+        const node2 = diagram.addNode("B");
+        node2.setCenter(150, 0);
+        node2.setLabel("B");
+        const edge = diagram.addEdge("A", "B");
+        edge.setArrowHead(SVGEdge.ARROW_NORMAL);
+        edge.setArrowTail(SVGEdge.ARROW_EMPTY);
+        edge.setLabel("color");
+        edge.setColor("red")
+        edge.setFontColor("blue")
+        const svg = diagram.render();
+        await compareSVG("edge_attr", "color", svg);
+    });
 });

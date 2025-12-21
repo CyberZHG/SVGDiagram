@@ -63,4 +63,15 @@ describe("Docs/NodeAttributes", () => {
         const svg = diagram.render();
         await compareSVG("node_attr", "text_size", svg);
     });
+    it("nodeSize", async () => {
+        const diagram = new SVGDiagram();
+        const node1 = diagram.addNode("A");
+        node1.setLabel("A");
+        const node2 = diagram.addNode("B");
+        node2.setLabel("B");
+        node2.setCenter(150, 0);
+        node2.setFixedSize(80, 30);
+        const svg = diagram.render();
+        await compareSVG("node_attr", "node_size", svg);
+    });
 });

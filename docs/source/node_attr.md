@@ -283,3 +283,57 @@ int main() {
 In the figure below, the blue rectangle represents the size of the text:
 
 ![](_static/node_attr/text_size_debug.svg)
+
+## Node Size
+
+You can directly set the size of an `SVGNode`. When this property is set, both the text size and margin will be ignored.
+
+`````{tab-set}
+````{tab-item} Python
+```python
+from sp_svg_diagram import SVGDiagram
+
+diagram = SVGDiagram()
+node1 = diagram.add_node("A")
+node1.set_label("A")
+node2 = diagram.add_node("B")
+node2.set_label("B")
+node2.set_center(150, 0)
+node2.set_fixed_size(80, 30)
+svg = diagram.render()
+```
+````
+````{tab-item} JavaScript
+```javascript
+import { SVGDiagram } from 'sp-svg-diagram';
+
+const diagram = new SVGDiagram();
+const node1 = diagram.addNode("A");
+node1.setLabel("A");
+const node2 = diagram.addNode("B");
+node2.setLabel("B");
+node2.setCenter(150, 0);
+node2.setFixedSize(80, 30);
+const svg = diagram.render();
+````
+
+````{tab-item} C++
+```c++
+#include "svg_diagram.h"
+using namespace svg_diagram;
+
+int main() {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setLabel("A");
+    const auto node2 = diagram.addNode("B");
+    node2->setLabel("B");
+    node2->setCenter(150, 0);
+    node2->setFixedSize(80, 30);
+    diagram.render("node_size.svg");
+    return 0;
+}
+````
+`````
+
+![](_static/node_attr/node_size.svg)

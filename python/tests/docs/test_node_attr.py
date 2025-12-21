@@ -64,3 +64,15 @@ def test_text_size():
     node2.set_text_size(80, 16)
     svg = diagram.render()
     compare_svg("node_attr", "text_size", svg)
+
+
+def test_node_size():
+    diagram = SVGDiagram()
+    node1 = diagram.add_node("A")
+    node1.set_label("A")
+    node2 = diagram.add_node("B")
+    node2.set_label("B")
+    node2.set_center(150, 0)
+    node2.set_fixed_size(80, 30)
+    svg = diagram.render()
+    compare_svg("node_attr", "node_size", svg)

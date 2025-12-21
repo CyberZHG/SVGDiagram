@@ -6,8 +6,7 @@
       <title>A</title>
       <ellipse cx="0" cy="0" rx="74.95331880577405" ry="33.09259735953043" fill="none" stroke="black"/>
       <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">
-        <tspan x="0" dy="-0.6em">Larger</tspan>
-        <tspan x="0" dy="1.2em">Margin</tspan>
+        <tspan x="0" dy="-0.6em">Larger</tspan><tspan x="0" dy="1.2em">Margin</tspan>
       </text>
     </g>
     <!-- Node: B -->
@@ -15,8 +14,7 @@
       <title>B</title>
       <ellipse cx="150" cy="0" rx="29.698484809834998" ry="21.778888860545663" fill="none" stroke="black"/>
       <text x="150" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">
-        <tspan x="150" dy="-0.6em">No</tspan>
-        <tspan x="150" dy="1.2em">Margin</tspan>
+        <tspan x="150" dy="-0.6em">No</tspan><tspan x="150" dy="1.2em">Margin</tspan>
       </text>
     </g>
     <!-- Node: C -->
@@ -24,8 +22,7 @@
       <title>C</title>
       <ellipse cx="300" cy="0" rx="25.455844122715714" ry="7.636753236814717" fill="none" stroke="black"/>
       <text x="300" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">
-        <tspan x="300" dy="-0.6em">Negative</tspan>
-        <tspan x="300" dy="1.2em">Margin</tspan>
+        <tspan x="300" dy="-0.6em">Negative</tspan><tspan x="300" dy="1.2em">Margin</tspan>
       </text>
     </g>
   </g>

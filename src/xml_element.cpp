@@ -99,8 +99,19 @@ string XMLElement::toString(const int indent) const {
         s += ">";
         if (!_children.empty()) {
             s += "\n";
-            for (const auto& child : _children) {
-                s += child->toString(indent + 2);
+            if (_tag == "text") {
+                // Since whitespace characters also affect text rendering,
+                // special handling is required here to merge the `tspan` elements into a single line.
+                s += string(indent + 2, ' ');
+                for (const auto& child : _children) {
+                    const auto childStr = child->toString(0);
+                    s += childStr.substr(0, childStr.size() - 1);
+                }
+                s += '\n';
+            } else {
+                for (const auto& child : _children) {
+                    s += child->toString(indent + 2);
+                }
             }
             s += indentStr;
         }

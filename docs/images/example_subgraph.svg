@@ -28,8 +28,7 @@
       <title>node_0</title>
       <ellipse cx="-250" cy="125" rx="137.88582233137677" ry="50.06316010800758" fill="floralwhite" stroke="darkgrey"/>
       <text x="-250" y="125" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">
-        <tspan x="-250" dy="-0.6em">O Lips, </tspan>
-        <tspan x="-250" dy="1.2em">Weave Me Songs and Psalms</tspan>
+        <tspan x="-250" dy="-0.6em">O Lips, </tspan><tspan x="-250" dy="1.2em">Weave Me Songs and Psalms</tspan>
       </text>
     </g>
     <!-- Node: node_2 -->
@@ -37,8 +36,7 @@
       <title>node_2</title>
       <rect x="-448" y="264.6" width="146" height="70.80000000000001" fill="papayawhip" stroke="darkgoldenrod"/>
       <text x="-375" y="300" text-anchor="middle" dominant-baseline="central" fill="goldenrod" font-family="Times,serif" font-size="14">
-        <tspan x="-375" dy="-0.6em">Seek Not to Tread </tspan>
-        <tspan x="-375" dy="1.2em">the Sly Fox's Path</tspan>
+        <tspan x="-375" dy="-0.6em">Seek Not to Tread </tspan><tspan x="-375" dy="1.2em">the Sly Fox's Path</tspan>
       </text>
     </g>
     <!-- Node: node_3 -->
@@ -46,8 +44,7 @@
       <title>node_3</title>
       <rect x="-212" y="264.6" width="174" height="70.80000000000001" fill="lightgreen" stroke="limegreen"/>
       <text x="-125" y="300" text-anchor="middle" dominant-baseline="central" fill="olivedrab" font-family="Times,serif" font-size="14">
-        <tspan x="-125" dy="-0.6em">Nor Yearn for </tspan>
-        <tspan x="-125" dy="1.2em">the Great Bear's Might</tspan>
+        <tspan x="-125" dy="-0.6em">Nor Yearn for </tspan><tspan x="-125" dy="1.2em">the Great Bear's Might</tspan>
       </text>
     </g>
     <!-- Node: node_1 -->
@@ -55,8 +52,7 @@
       <title>node_1</title>
       <ellipse cx="250" cy="125" rx="113.13708498984761" ry="50.06316010800758" fill="lightsalmon" stroke="peru" stroke-width="5"/>
       <text x="250" y="125" text-anchor="middle" dominant-baseline="central" fill="saddlebrown" font-family="Times,serif" font-size="14">
-        <tspan x="250" dy="-0.6em">Twine Warnings and </tspan>
-        <tspan x="250" dy="1.2em">Tales From the North</tspan>
+        <tspan x="250" dy="-0.6em">Twine Warnings and </tspan><tspan x="250" dy="1.2em">Tales From the North</tspan>
       </text>
     </g>
     <!-- Node: node_4 -->
@@ -64,8 +60,7 @@
       <title>node_4</title>
       <rect x="41.5" y="264.6" width="167" height="70.80000000000001" fill="deepskyblue" stroke="dodgerblue" stroke-width="5"/>
       <text x="125" y="300" text-anchor="middle" dominant-baseline="central" fill="royalblue" font-family="Times,serif" font-size="14">
-        <tspan x="125" dy="-0.6em">If Truth May </tspan>
-        <tspan x="125" dy="1.2em">Be Subject to Witness</tspan>
+        <tspan x="125" dy="-0.6em">If Truth May </tspan><tspan x="125" dy="1.2em">Be Subject to Witness</tspan>
       </text>
     </g>
     <!-- Node: node_5 -->
@@ -73,8 +68,7 @@
       <title>node_5</title>
       <rect x="288" y="264.6" width="174" height="70.80000000000001" fill="lightpink" stroke="lightcoral" stroke-width="5"/>
       <text x="375" y="300" text-anchor="middle" dominant-baseline="central" fill="indianred" font-family="Times,serif" font-size="14">
-        <tspan x="375" dy="-0.6em">I Offer Blood and </tspan>
-        <tspan x="375" dy="1.2em">Tears to the Moonlight</tspan>
+        <tspan x="375" dy="-0.6em">I Offer Blood and </tspan><tspan x="375" dy="1.2em">Tears to the Moonlight</tspan>
       </text>
     </g>
     <!-- Edge: edge_0 (start -> node_0) -->

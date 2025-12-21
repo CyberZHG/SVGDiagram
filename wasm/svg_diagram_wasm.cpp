@@ -56,7 +56,7 @@ EMSCRIPTEN_BINDINGS(SVGDiagramWASM) {
         .smart_ptr<shared_ptr<SVGEdge>>("SVGEdge")
         .function("setConnection", &SVGEdge::setConnection)
         .function("setSplines", select_overload<void(const string&)>(&SVGEdge::setSplines))
-        .function("setConnectionPoint", select_overload<void(double, double)>(&SVGEdge::addConnectionPoint))
+        .function("addConnectionPoint", select_overload<void(double, double)>(&SVGEdge::addConnectionPoint))
         .function("setArrowHead", select_overload<void(const string_view&)>(&SVGEdge::setArrowHead))
         .function("setArrowTail", select_overload<void(const string_view&)>(&SVGEdge::setArrowTail))
     ;

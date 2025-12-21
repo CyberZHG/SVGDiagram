@@ -734,6 +734,16 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
         d += format(" C {} {} {} {} {} {}", c1x, c1y, c2x, c2y, x2, y2);
         splines.emplace_back(vector{points[i], {c1x, c1y}, {c2x, c2y}, points[i + 1]});
     }
+    if (enabledDebug()) {
+        for (const auto& spline : splines) {
+            auto line1 = make_unique<SVGDrawLine>(spline[0].first, spline[0].second, spline[1].first, spline[1].second);
+            auto line2 = make_unique<SVGDrawLine>(spline[2].first, spline[2].second, spline[3].first, spline[3].second);
+            line1->setStroke("blue");
+            line2->setStroke("blue");
+            svgDraws.emplace_back(std::move(line1));
+            svgDraws.emplace_back(std::move(line2));
+        }
+    }
     auto path = make_unique<SVGDrawPath>(d);
     path->setStroke(color());
     path->setFill("none");

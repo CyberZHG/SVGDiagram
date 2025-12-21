@@ -13,7 +13,7 @@ describe("Docs/NodeAttributes", () => {
         node2.setLabel("Pybind11\nEmscripten");
         const node3 = diagram.addNode("C");
         node3.setCenter(300.0, 0.0);
-        node3.setLabel("物华天宝\n人杰地灵");
+        node3.setLabel("星分翼轸\n地接衡庐");
         const svg = diagram.render();
         await compareSVG("node_attr", "label", svg);
     });
@@ -35,5 +35,22 @@ describe("Docs/NodeAttributes", () => {
         }
         const svg = diagram.render();
         await compareSVG("node_attr", "shape", svg);
+    });
+    it("margin", async () => {
+        const diagram = new SVGDiagram();
+        const node1 = diagram.addNode("A");
+        node1.setCenter(0, 0);
+        node1.setLabel("Larger\nMargin");
+        node1.setMargin(32, 8);
+        const node2 = diagram.addNode("B");
+        node2.setCenter(150, 0);
+        node2.setLabel("No\nMargin");
+        node2.setMargin(0, 0);
+        const node3 = diagram.addNode("C");
+        node3.setCenter(300, 0);
+        node3.setLabel("Negative\nMargin");
+        node3.setMargin(-10, -10);
+        const svg = diagram.render();
+        await compareSVG("node_attr", "margin", svg);
     });
 });

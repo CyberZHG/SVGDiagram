@@ -19,7 +19,7 @@ node2.set_center(150, 0)
 node2.set_label("Pybind11\nEmscripten")
 node3 = diagram.add_node("C")
 node3.set_center(300, 0)
-node3.set_label("物华天宝\n人杰地灵")
+node3.set_label("星分翼轸\n地接衡庐")
 svg = diagram.render()
 ```
 ````
@@ -36,7 +36,7 @@ node2.setCenter(150.0, 0.0);
 node2.setLabel("Pybind11\nEmscripten");
 const node3 = diagram.addNode("C");
 node3.setCenter(300.0, 0.0);
-node3.setLabel("物华天宝\n人杰地灵");
+node3.setLabel("星分翼轸\n地接衡庐");
 const svg = diagram.render();
 ````
 
@@ -55,7 +55,7 @@ int main() {
     node2->setLabel("Pybind11\nEmscripten");
     const auto node3 = diagram.addNode("C");
     node3->setCenter(300, 0);
-    node3->setLabel("物华天宝\n人杰地灵");
+    node3->setLabel("星分翼轸\n地接衡庐");
     diagram.render("label.svg");
     return 0;
 }
@@ -149,3 +149,79 @@ int main() {
 The figure below illustrates the relationship between the border size and the text:
 
 ![](_static/node_attr/shape_debug.svg)
+
+## Margin
+
+You can set horizontal and vertical margins. The default values are 8 and 4 respectively.
+
+`````{tab-set}
+````{tab-item} Python
+```python
+from sp_svg_diagram import SVGDiagram
+
+diagram = SVGDiagram()
+node1 = diagram.add_node("A")
+node1.set_center(0, 0)
+node1.set_label("Larger\nMargin")
+node1.set_margin(32, 8)
+node2 = diagram.add_node("B")
+node2.set_center(150, 0)
+node2.set_label("No\nMargin")
+node2.set_margin(0, 0)
+node3 = diagram.add_node("C")
+node3.set_center(300, 0)
+node3.set_label("Negative\nMargin")
+node3.set_margin(-10, -10)
+svg = diagram.render()
+```
+````
+````{tab-item} JavaScript
+```javascript
+import { SVGDiagram } from 'sp-svg-diagram';
+
+const diagram = new SVGDiagram();
+const node1 = diagram.addNode("A");
+node1.setCenter(0, 0);
+node1.setLabel("Larger\nMargin");
+node1.setMargin(32, 8);
+const node2 = diagram.addNode("B");
+node2.setCenter(150, 0);
+node2.setLabel("No\nMargin");
+node2.setMargin(0, 0);
+const node3 = diagram.addNode("C");
+node3.setCenter(300, 0);
+node3.setLabel("Negative\nMargin");
+node3.setMargin(-10, -10);
+const svg = diagram.render();
+````
+
+````{tab-item} C++
+```c++
+#include "svg_diagram.h"
+using namespace svg_diagram;
+
+int main() {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setLabel("Larger\nMargin");
+    node1->setMargin(32, 8);
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setLabel("No\nMargin");
+    node2->setMargin(0);
+    const auto node3 = diagram.addNode("C");
+    node3->setCenter(300, 0);
+    node3->setLabel("Negative\nMargin");
+    node3->setMargin(-10);
+    diagram.render("margin.svg");
+    return 0;
+}
+````
+`````
+
+![](_static/node_attr/margin.svg)
+
+Although negative margins can be specified, undefined behavior will occur if the absolute value exceeds half of the text size.
+
+![](_static/node_attr/margin_debug.svg)

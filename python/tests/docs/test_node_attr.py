@@ -13,7 +13,7 @@ def test_label():
     node2.set_label("Pybind11\nEmscripten")
     node3 = diagram.add_node("C")
     node3.set_center(300, 0)
-    node3.set_label("物华天宝\n人杰地灵")
+    node3.set_label("星分翼轸\n地接衡庐")
     svg = diagram.render()
     compare_svg("node_attr", "label", svg)
 
@@ -34,3 +34,21 @@ def test_shape():
         node.set_label(shape)
     svg = diagram.render()
     compare_svg("node_attr", "shape", svg)
+
+
+def test_margin():
+    diagram = SVGDiagram()
+    node1 = diagram.add_node("A")
+    node1.set_center(0, 0)
+    node1.set_label("Larger\nMargin")
+    node1.set_margin(32, 8)
+    node2 = diagram.add_node("B")
+    node2.set_center(150, 0)
+    node2.set_label("No\nMargin")
+    node2.set_margin(0, 0)
+    node3 = diagram.add_node("C")
+    node3.set_center(300, 0)
+    node3.set_label("Negative\nMargin")
+    node3.set_margin(-10, -10)
+    svg = diagram.render()
+    compare_svg("node_attr", "margin", svg)

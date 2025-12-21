@@ -59,3 +59,28 @@ TEST(TestDocsEdgeAttributes, SplinesDebug) {
     }
     diagram.render(OUTPUT_DIR + "splines_debug.svg");
 }
+
+TEST(TestDocsEdgeAttributes, Arrow) {
+    SVGDiagram diagram;
+    const auto arrowTypes = std::vector{
+        SVGEdge::ARROW_NONE,
+        SVGEdge::ARROW_NORMAL,
+        SVGEdge::ARROW_EMPTY,
+    };
+    for (int i = 0; i < static_cast<int>(arrowTypes.size()); i++) {
+        const double y = i * 60.0;
+        const auto tailNodeID = std::format("A{}", i);
+        const auto headNodeID = std::format("B{}", i);
+        const auto node1 = diagram.addNode(tailNodeID);
+        node1->setCenter(0, y);
+        node1->setLabel("A");
+        const auto node2 = diagram.addNode(headNodeID);
+        node2->setCenter(150, y);
+        node2->setLabel("B");
+        const auto edge = diagram.addEdge(tailNodeID, headNodeID);
+        edge->setArrowTail(SVGEdge::ARROW_NONE);
+        edge->setArrowHead(std::string(arrowTypes[i]));
+        edge->setLabel(std::string(arrowTypes[i]));
+    }
+    diagram.render(OUTPUT_DIR + "arrow.svg");
+}

@@ -49,3 +49,23 @@ def test_arrow():
         edge.set_label(arrow)
     svg = diagram.render()
     compare_svg("edge_attr", "arrow", svg)
+
+
+def test_label():
+    diagram = SVGDiagram()
+    node1 = diagram.add_node("A")
+    node1.set_center(0, 0)
+    node1.set_label("A")
+    node2 = diagram.add_node("B")
+    node2.set_center(150, 0)
+    node2.set_label("B")
+    edge1 = diagram.add_edge("A", "B")
+    edge1.set_arrow_head()
+    edge1.set_label("A → B")
+    edge1.add_connection_point(75, 20)
+    edge2 = diagram.add_edge("B", "A")
+    edge2.set_arrow_head()
+    edge2.set_label("A ← B")
+    edge2.add_connection_point(75, -20)
+    svg = diagram.render()
+    compare_svg("edge_attr", "label", svg)

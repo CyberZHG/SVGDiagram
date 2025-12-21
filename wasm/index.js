@@ -22,6 +22,13 @@ SVGEdge.ARROW_NONE = SVGDiagramWASM.ARROW_SHAPE_NONE;
 SVGEdge.ARROW_NORMAL = SVGDiagramWASM.ARROW_SHAPE_NORMAL;
 SVGEdge.ARROW_EMPTY = SVGDiagramWASM.ARROW_SHAPE_EMPTY;
 
+SVGEdge.prototype.setArrowHead = function (arrowShape = SVGEdge.ARROW_NORMAL) {
+    this._setArrowHead(arrowShape);
+};
+SVGEdge.prototype.setArrowTail = function (arrowShape = SVGEdge.ARROW_NORMAL) {
+    this._setArrowTail(arrowShape);
+};
+
 SVGDiagram.prototype.toSVG = async function(file_path) {
     await writeFile(file_path, this.render());
 };

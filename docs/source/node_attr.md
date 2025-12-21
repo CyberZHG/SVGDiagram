@@ -225,3 +225,61 @@ int main() {
 Although negative margins can be specified, undefined behavior will occur if the absolute value exceeds half of the text size.
 
 ![](_static/node_attr/margin_debug.svg)
+
+## Text Size
+
+By default, the library estimates text size. In the C++ version, you can get a better estimation with the `SVG_DIAGRAM_ENABLE_PANGO_CAIRO` compile option. If you are able to use a different approach to calculate or better estimate text sizes, you can also fix the text box size by configuring the relevant properties.
+
+`````{tab-set}
+````{tab-item} Python
+```python
+from sp_svg_diagram import SVGDiagram
+
+diagram = SVGDiagram()
+node1 = diagram.add_node("A")
+node1.set_label("🐱🐶🙈🙉🙊")
+node2 = diagram.add_node("B")
+node2.set_center(0, 50)
+node2.set_label("🐱🐶🙈🙉🙊")
+node2.set_text_size(80, 16)
+svg = diagram.render()
+```
+````
+````{tab-item} JavaScript
+```javascript
+import { SVGDiagram } from 'sp-svg-diagram';
+
+const diagram = new SVGDiagram();
+const node1 = diagram.addNode("A");
+node1.setLabel("🐱🐶🙈🙉🙊");
+const node2 = diagram.addNode("B");
+node2.setCenter(0, 50);
+node2.setLabel("🐱🐶🙈🙉🙊");
+node2.setTextSize(80, 16);
+const svg = diagram.render();
+````
+
+````{tab-item} C++
+```c++
+#include "svg_diagram.h"
+using namespace svg_diagram;
+
+int main() {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setLabel("🐱🐶🙈🙉🙊");
+    const auto node2 = diagram.addNode("B");
+    node2->setLabel("🐱🐶🙈🙉🙊");
+    node2->setCenter(0, 50);
+    node2->setPrecomputedTextSize(80, 16);
+    diagram.render("text_size.svg");
+    return 0;
+}
+````
+`````
+
+![](_static/node_attr/text_size.svg)
+
+In the figure below, the blue rectangle represents the size of the text:
+
+![](_static/node_attr/text_size_debug.svg)

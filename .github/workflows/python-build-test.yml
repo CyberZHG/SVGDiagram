@@ -38,4 +38,4 @@ jobs:
 
       - name: Test
         run: |
-          pytest python/tests
+          pytest -v python/tests

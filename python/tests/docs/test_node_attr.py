@@ -52,3 +52,15 @@ def test_margin():
     node3.set_margin(-10, -10)
     svg = diagram.render()
     compare_svg("node_attr", "margin", svg)
+
+
+def test_text_size():
+    diagram = SVGDiagram()
+    node1 = diagram.add_node("A")
+    node1.set_label("🐱🐶🙈🙉🙊")
+    node2 = diagram.add_node("B")
+    node2.set_center(0, 50)
+    node2.set_label("🐱🐶🙈🙉🙊")
+    node2.set_text_size(80, 16)
+    svg = diagram.render()
+    compare_svg("node_attr", "text_size", svg)

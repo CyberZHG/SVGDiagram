@@ -111,3 +111,26 @@ TEST(TestDocsNodeAttributes, MarginDebug) {
     node3->setMargin(-10);
     diagram.render(OUTPUT_DIR + "margin_debug.svg");
 }
+
+TEST(TestDocsNodeAttributes, TextSize) {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setLabel("🐱🐶🙈🙉🙊");
+    const auto node2 = diagram.addNode("B");
+    node2->setLabel("🐱🐶🙈🙉🙊");
+    node2->setCenter(0, 50);
+    node2->setPrecomputedTextSize(80, 16);
+    diagram.render(OUTPUT_DIR + "text_size.svg");
+}
+
+TEST(TestDocsNodeAttributes, TextSizeDebug) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node1 = diagram.addNode("A");
+    node1->setLabel("🐱🐶🙈🙉🙊");
+    const auto node2 = diagram.addNode("B");
+    node2->setLabel("🐱🐶🙈🙉🙊");
+    node2->setCenter(0, 50);
+    node2->setPrecomputedTextSize(80, 16);
+    diagram.render(OUTPUT_DIR + "text_size_debug.svg");
+}

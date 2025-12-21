@@ -52,6 +52,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Node Attributes</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#label">Label</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#shape">Shape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#margin">Margin</a></li>
 </ul>
 </li>
 </ul>
@@ -100,7 +101,7 @@ Python</label><div class="sd-tab-content docutils">
 <span class="n">node2</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;Pybind11</span><span class="se">\n</span><span class="s2">Emscripten&quot;</span><span class="p">)</span>
 <span class="n">node3</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">)</span>
 <span class="n">node3</span><span class="o">.</span><span class="n">set_center</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-<span class="n">node3</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;物华天宝</span><span class="se">\n</span><span class="s2">人杰地灵&quot;</span><span class="p">)</span>
+<span class="n">node3</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;星分翼轸</span><span class="se">\n</span><span class="s2">地接衡庐&quot;</span><span class="p">)</span>
 <span class="n">svg</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -119,7 +120,7 @@ JavaScript</label><div class="sd-tab-content docutils">
 <span class="nx">node2</span><span class="p">.</span><span class="nx">setLabel</span><span class="p">(</span><span class="s2">&quot;Pybind11\nEmscripten&quot;</span><span class="p">);</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">node3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addNode</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">);</span>
 <span class="nx">node3</span><span class="p">.</span><span class="nx">setCenter</span><span class="p">(</span><span class="mf">300.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">);</span>
-<span class="nx">node3</span><span class="p">.</span><span class="nx">setLabel</span><span class="p">(</span><span class="s2">&quot;物华天宝\n人杰地灵&quot;</span><span class="p">);</span>
+<span class="nx">node3</span><span class="p">.</span><span class="nx">setLabel</span><span class="p">(</span><span class="s2">&quot;星分翼轸\n地接衡庐&quot;</span><span class="p">);</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">svg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
 </pre></div>
 </div>
@@ -140,7 +141,7 @@ C++</label><div class="sd-tab-content docutils">
 <span class="w">    </span><span class="n">node2</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="s">&quot;Pybind11</span><span class="se">\n</span><span class="s">Emscripten&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">node3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addNode</span><span class="p">(</span><span class="s">&quot;C&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="n">node3</span><span class="o">-&gt;</span><span class="n">setCenter</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">    </span><span class="n">node3</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="s">&quot;物华天宝</span><span class="se">\n</span><span class="s">人杰地灵&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node3</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="s">&quot;星分翼轸</span><span class="se">\n</span><span class="s">地接衡庐&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="n">diagram</span><span class="p">.</span><span class="n">render</span><span class="p">(</span><span class="s">&quot;label.svg&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
@@ -236,6 +237,85 @@ C++</label><div class="sd-tab-content docutils">
 <p><img alt="" src="_images/shape.svg" /></p>
 <p>The figure below illustrates the relationship between the border size and the text:</p>
 <p><img alt="" src="_images/shape_debug.svg" /></p>
+</section>
+<section id="margin">
+<h2>Margin<a class="headerlink" href="#margin" title="Permalink to this heading"></a></h2>
+<p>You can set horizontal and vertical margins. The default values are 8 and 4 respectively.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-6">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sp_svg_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVGDiagram</span>
+
+<span class="n">diagram</span> <span class="o">=</span> <span class="n">SVGDiagram</span><span class="p">()</span>
+<span class="n">node1</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
+<span class="n">node1</span><span class="o">.</span><span class="n">set_center</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">node1</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;Larger</span><span class="se">\n</span><span class="s2">Margin&quot;</span><span class="p">)</span>
+<span class="n">node1</span><span class="o">.</span><span class="n">set_margin</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">node2</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
+<span class="n">node2</span><span class="o">.</span><span class="n">set_center</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">node2</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;No</span><span class="se">\n</span><span class="s2">Margin&quot;</span><span class="p">)</span>
+<span class="n">node2</span><span class="o">.</span><span class="n">set_margin</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">node3</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">)</span>
+<span class="n">node3</span><span class="o">.</span><span class="n">set_center</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">node3</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;Negative</span><span class="se">\n</span><span class="s2">Margin&quot;</span><span class="p">)</span>
+<span class="n">node3</span><span class="o">.</span><span class="n">set_margin</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">svg</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-7" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-7">
+JavaScript</label><div class="sd-tab-content docutils">
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sp-svg-diagram&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">diagram</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="p">();</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">node1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addNode</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">);</span>
+<span class="nx">node1</span><span class="p">.</span><span class="nx">setCenter</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span>
+<span class="nx">node1</span><span class="p">.</span><span class="nx">setLabel</span><span class="p">(</span><span class="s2">&quot;Larger\nMargin&quot;</span><span class="p">);</span>
+<span class="nx">node1</span><span class="p">.</span><span class="nx">setMargin</span><span class="p">(</span><span class="mf">32</span><span class="p">,</span><span class="w"> </span><span class="mf">8</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">node2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addNode</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">);</span>
+<span class="nx">node2</span><span class="p">.</span><span class="nx">setCenter</span><span class="p">(</span><span class="mf">150</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span>
+<span class="nx">node2</span><span class="p">.</span><span class="nx">setLabel</span><span class="p">(</span><span class="s2">&quot;No\nMargin&quot;</span><span class="p">);</span>
+<span class="nx">node2</span><span class="p">.</span><span class="nx">setMargin</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">node3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addNode</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">);</span>
+<span class="nx">node3</span><span class="p">.</span><span class="nx">setCenter</span><span class="p">(</span><span class="mf">300</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span>
+<span class="nx">node3</span><span class="p">.</span><span class="nx">setLabel</span><span class="p">(</span><span class="s2">&quot;Negative\nMargin&quot;</span><span class="p">);</span>
+<span class="nx">node3</span><span class="p">.</span><span class="nx">setMargin</span><span class="p">(</span><span class="o">-</span><span class="mf">10</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">10</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">svg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-8" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-8">
+C++</label><div class="sd-tab-content docutils">
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;svg_diagram.h&quot;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">svg_diagram</span><span class="p">;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">SVGDiagram</span><span class="w"> </span><span class="n">diagram</span><span class="p">;</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">node1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addNode</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node1</span><span class="o">-&gt;</span><span class="n">setCenter</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node1</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="s">&quot;Larger</span><span class="se">\n</span><span class="s">Margin&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node1</span><span class="o">-&gt;</span><span class="n">setMargin</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">);</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">node2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addNode</span><span class="p">(</span><span class="s">&quot;B&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node2</span><span class="o">-&gt;</span><span class="n">setCenter</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node2</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="s">&quot;No</span><span class="se">\n</span><span class="s">Margin&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node2</span><span class="o">-&gt;</span><span class="n">setMargin</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">node3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addNode</span><span class="p">(</span><span class="s">&quot;C&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node3</span><span class="o">-&gt;</span><span class="n">setCenter</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node3</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="s">&quot;Negative</span><span class="se">\n</span><span class="s">Margin&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node3</span><span class="o">-&gt;</span><span class="n">setMargin</span><span class="p">(</span><span class="mi">-10</span><span class="p">);</span>
+<span class="w">    </span><span class="n">diagram</span><span class="p">.</span><span class="n">render</span><span class="p">(</span><span class="s">&quot;margin.svg&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><img alt="" src="_images/margin.svg" /></p>
+<p>Although negative margins can be specified, undefined behavior will occur if the absolute value exceeds half of the text size.</p>
+<p><img alt="" src="_images/margin_debug.svg" /></p>
 </section>
 </section>
 

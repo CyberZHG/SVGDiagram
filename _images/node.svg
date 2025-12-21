@@ -6,8 +6,7 @@
       <title>A</title>
       <ellipse cx="0" cy="0" rx="26.16295090390226" ry="27.435743110038054" fill="none" stroke="black"/>
       <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">
-        <tspan x="0" dy="-0.6em">foo</tspan>
-        <tspan x="0" dy="1.2em">bar</tspan>
+        <tspan x="0" dy="-0.6em">foo</tspan><tspan x="0" dy="1.2em">bar</tspan>
       </text>
     </g>
   </g>

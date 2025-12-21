@@ -27,6 +27,14 @@ exclude_patterns = []
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
+html_css_files = ["css/github_ribbon.css"]
+html_context = {
+    "display_github": True,
+    "github_user": "CyberZHG",
+    "github_repo": "SVGDiagram",
+    "github_version": "main",
+    "conf_py_path": "/docs/source/",
+}
 
 # Options for myst_parser
 source_suffix = {

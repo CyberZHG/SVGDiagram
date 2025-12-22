@@ -1,12 +1,12 @@
 {
   "name": "sp-svg-diagram-demo",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "main": "index.js",
   "files": [
     "index.js"
   ],
   "dependencies": {
-    "sp-svg-diagram": "^0.1.2"
+    "sp-svg-diagram": "^1.0.0"
   }
 }

@@ -18,23 +18,23 @@ bool compareSVG(const string& a, const string& b) {
     return rootA == rootB;
 }
 
-shared_ptr<SVGNode> createNode(const string& id) {
+shared_ptr<SVGNode> createSVGNode(const string& id) {
     return make_shared<SVGNode>(id);
 }
 
-shared_ptr<SVGEdge> createEdge(const string& id) {
+shared_ptr<SVGEdge> createSVGEdge(const string& id) {
     return make_shared<SVGEdge>(id);
 }
 
-shared_ptr<SVGGraph> createSubgraph(const string& id) {
+shared_ptr<SVGGraph> createSVGGraph(const string& id) {
     return make_shared<SVGGraph>(id);
 }
 
 EMSCRIPTEN_BINDINGS(SVGDiagramWASM) {
     emscripten::function("_compareSVG", &compareSVG);
-    emscripten::function("createNode", &createNode);
-    emscripten::function("createEdge", &createEdge);
-    emscripten::function("createSubgraph", &createSubgraph);
+    emscripten::function("createSVGNode", &createSVGNode);
+    emscripten::function("createSVGEdge", &createSVGEdge);
+    emscripten::function("createSVGGraph", &createSVGGraph);
     constant("NODE_SHAPE_NONE", string(SVGNode::SHAPE_NONE));
     constant("NODE_SHAPE_CIRCLE", string(SVGNode::SHAPE_CIRCLE));
     constant("NODE_SHAPE_DOUBLE_CIRCLE", string(SVGNode::SHAPE_DOUBLE_CIRCLE));

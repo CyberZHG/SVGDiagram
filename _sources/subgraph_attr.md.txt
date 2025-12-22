@@ -181,10 +181,10 @@ svg = diagram.render()
 ````
 ````{tab-item} JavaScript
 ```javascript
-import { SVGDiagram, createNode, createSubgraph } from 'sp-svg-diagram';
+import { SVGDiagram, createSVGNode, createSVGGraph } from 'sp-svg-diagram';
 
 const diagram = new SVGDiagram();
-const subgraphInner = createSubgraph("subgraph-inner");
+const subgraphInner = createSVGGraph("subgraph-inner");
 subgraphInner.setLabel("Inner");
 subgraphInner.setColor("black");
 subgraphInner.setFillColor("lightgreen");
@@ -193,10 +193,10 @@ subgraphOuter.addSubgraph(subgraphInner);
 subgraphOuter.setLabel("Outer");
 subgraphOuter.setColor("black");
 subgraphOuter.setFillColor("papayawhip");
-const node1 = createNode("A");
+const node1 = createSVGNode("A");
 node1.setLabel("A");
 node1.setCenter(0, 0);
-const node2 = createNode("B");
+const node2 = createSVGNode("B");
 node2.setLabel("B");
 node2.setCenter(150, 0);
 const edge = diagram.addEdge("A", "B");

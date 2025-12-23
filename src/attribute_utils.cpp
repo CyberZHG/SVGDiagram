@@ -26,6 +26,16 @@ bool AttributeUtils::isPartOfDouble(const char ch) {
            ch == '.' || ch == 'e' || ch == 'E';
 }
 
+string AttributeUtils::removeSpaces(const string& str) {
+    string result;
+    for (const auto ch : str) {
+        if (!std::isspace(ch)) {
+            result += ch;
+        }
+    }
+    return result;
+}
+
 vector<string> AttributeUtils::splitString(const string& str, const char delimiter) {
     vector<string> splits;
     size_t last = 0, pos = 0;
@@ -109,7 +119,7 @@ bool AttributeUtils::parseBool(const string& value) {
 
 AttributeParsedStyle AttributeUtils::parseStyle(const string& value) {
     AttributeParsedStyle parsed;
-    for (const auto styles = splitString(value, ','); const auto& style : styles) {
+    for (const auto styles = splitString(removeSpaces(value), ','); const auto& style : styles) {
         if (style == ATTR_STYLE_SOLID) {
             parsed.solid = true;
             parsed.dashed = false;
@@ -125,6 +135,57 @@ AttributeParsedStyle AttributeUtils::parseStyle(const string& value) {
         }
     }
     return parsed;
+}
+
+vector<AttributeParsedColor> AttributeUtils::parseColorList(const string& value) {
+    vector<AttributeParsedColor> colors;
+    double totalWeights = 0.0;
+    int numNoWeight = 0;
+    for (const auto segments = splitString(removeSpaces(value), ':'); const auto& segment : segments) {
+        AttributeParsedColor color;
+        const auto parts = splitString(segment, ';');
+        if (parts.size() > 1) {
+            color.weight = stod(parts[1]);
+            totalWeights += color.weight;
+        } else {
+            ++numNoWeight;
+        }
+        if (parts[0].size() == 9 && parts[0][0] == '#') {
+            color.color = parts[0].substr(0, 7);
+            color.opacity = stoi(parts[0].substr(7), nullptr, 16) / 255.0;
+        } else {
+            color.color = parts[0];
+        }
+        colors.emplace_back(color);
+    }
+    if (0.0 < totalWeights && totalWeights <= 1.0) {
+        if (numNoWeight) {
+            const double weight = (1.0 - totalWeights) / numNoWeight;
+            for (auto& color : colors) {
+                if (color.weight < 0) {
+                    color.weight = weight;
+                }
+            }
+        }
+    } else if (totalWeights > 1.0) {
+        if (numNoWeight) {
+            for (auto& color : colors) {
+                if (color.weight < 0) {
+                    color.weight = 1.0;
+                }
+            }
+        }
+    }
+    if ((totalWeights < 1.0 && numNoWeight == 0) || totalWeights > 1.0) {
+        totalWeights = 0.0;
+        for (const auto& color : colors) {
+            totalWeights += color.weight;
+        }
+        for (auto& color : colors) {
+            color.weight /= totalWeights;
+        }
+    }
+    return colors;
 }
 
 AttributeUtils::DCommands AttributeUtils::parseDCommands(const string& d) {

@@ -27,12 +27,20 @@ void SVGDraw::setAttribute(const string_view& key, const string& value) {
     _attributes[key] = value;
 }
 
+void SVGDraw::setAttribute(const string_view& key, const double value) {
+    setAttribute(key, format("{}", value));
+}
+
 void SVGDraw::copyAttributes(const SVGDraw* other) {
     _attributes = other->_attributes;
 }
 
 void SVGDraw::setFill(const string& value) {
     setAttribute(SVG_ATTR_KEY_FILL, value);
+}
+
+void SVGDraw::setFillOpacity(const double opacity) {
+    setAttribute(SVG_ATTR_KEY_FILL_OPACITY, opacity);
 }
 
 void SVGDraw::setStroke(const string& value) {
@@ -49,6 +57,10 @@ void SVGDraw::setStrokeWidth(const double value) {
 
 void SVGDraw::setStrokeDashArray(const string& value) {
     setAttribute(SVG_ATTR_KEY_STROKE_DASHARRAY, value);
+}
+
+void SVGDraw::setStrokeOpacity(const double opacity) {
+    setAttribute(SVG_ATTR_KEY_STROKE_OPACITY, opacity);
 }
 
 void SVGDraw::addAttributesToXMLElement(const XMLElement::ChildType& element) const {

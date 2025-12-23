@@ -62,7 +62,7 @@ namespace svg_diagram {
         void setFontSize(double fontSize);
         void setFont(const std::string& fontName, double fontSize);
         void setStyle(const std::string& style);
-        void appendStyle(const std::string& style);
+        void appendStyle(const std::string& newStyle);
         void appendStyleSolid();
         void appendStyleDashed();
         void appendStyleDotted();
@@ -197,10 +197,11 @@ namespace svg_diagram {
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsLine(const NodesMapping& nodes);
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsSpline(const NodesMapping& nodes);
 
+        void setArrowStyles(SVGDraw* draw, bool fill) const;
         [[nodiscard]] double computeArrowTipMargin(const std::string_view& shape) const;
         [[nodiscard]] double computeArrowTipMarginNormal() const;
         std::pair<double, double> addArrow(const std::string_view& shape, std::vector<std::unique_ptr<SVGDraw>>& svgDraws, const std::pair<double, double>& connectionPoint, double angle) const;
-        std::pair<double, double> addArrowNormal(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, const std::pair<double, double>& connectionPoint, double angle, bool solid = true) const;
+        std::pair<double, double> addArrowNormal(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, const std::pair<double, double>& connectionPoint, double angle, bool fill = true) const;
     };
 
     class SVGGraph final : public SVGItem {

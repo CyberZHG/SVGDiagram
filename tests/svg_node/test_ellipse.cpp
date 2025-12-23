@@ -48,3 +48,20 @@ TEST(TestSVGNodeEllipse, RectConnections) {
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
+
+TEST(TestSVGNodeEllipse, StrokeOpacity) {
+    SVGDiagram diagram;
+    const auto node = diagram.addNode("A");
+    node->setShape(SVGNode::SHAPE_ELLIPSE);
+    node->setMargin(8, 4);
+    node->setColor("#FF000011");
+    const auto svg = diagram.render();
+    const auto expected = R"(<!-- Node: A -->
+<g class="node" id="A">
+  <title>A</title>
+  <ellipse cx="0" cy="0" rx="16.263455967290593" ry="15.556349186104047" fill="none" stroke="#FF0000" stroke-opacity="0.06666666666666667"/>
+</g>)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}

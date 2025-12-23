@@ -249,7 +249,13 @@ std::pair<double, double> SVGItem::computeTextSizeWithMargin() {
 }
 
 void SVGItem::setStrokeStyles(SVGDraw* draw) const {
-    draw->setStroke(color());
+    if (const auto colorList = AttributeUtils::parseColorList(color()); !colorList.empty()) {
+        const auto& color = colorList[0];
+        draw->setStroke(color.color);
+        if (color.opacity < 1.0) {
+            draw->setStrokeOpacity(color.opacity);
+        }
+    }
     if (const auto strokeWidth = penWidth(); strokeWidth != 1.0) {
         draw->setStrokeWidth(strokeWidth);
     }

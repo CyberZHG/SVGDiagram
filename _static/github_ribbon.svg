@@ -5,6 +5,14 @@
             <stop offset="50%" stop-opacity="80%"/>
             <stop offset="100%" stop-opacity="0"/>
         </linearGradient>
+        <filter id="inset-shadow">
+            <feOffset dx="0.7" dy="0.2"></feOffset>
+            <feGaussianBlur stdDeviation="0.4" result="offset-blur"></feGaussianBlur>
+            <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse"></feComposite>
+            <feFlood flood-color="black" flood-opacity=".95" result="color"></feFlood>
+            <feComposite operator="in" in="color" in2="inverse" result="shadow"></feComposite>
+            <feComposite operator="over" in="shadow" in2="SourceGraphic"></feComposite>
+        </filter>
     </defs>
     <!-- <rect id="background" fill="white" x="0" y="0" width="150" height="150"/> -->
     <g transform="rotate(45, 75, 75) scale(1.0)">

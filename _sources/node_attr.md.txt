@@ -506,3 +506,76 @@ int main() {
 `````
 
 ![](_static/node_attr/font.svg)
+
+## Stroke Style
+
+The default node border style is `solid`, rendered as solid lines. Two dashed styles are also available: `dashed` and `dotted`. These three styles are mutually exclusive, and the one specified last takes precedence.
+
+`````{tab-set}
+````{tab-item} Python
+```python
+from sp_svg_diagram import SVGDiagram
+
+diagram = SVGDiagram()
+labels = ["solid", "dashed", "dotted"]
+for i, label in enumerate(labels):
+    node = diagram.add_node(f"node{i}")
+    node.set_center(i * 150, 0)
+    node.set_label(label)
+    node.set_fill_color("lightgray")
+    if i == 1:
+        node.append_style_dashed()
+    elif i == 2:
+        node.append_style_dotted()
+svg = diagram.render()
+```
+````
+````{tab-item} JavaScript
+```javascript
+import { SVGDiagram } from 'sp-svg-diagram';
+
+const diagram = new SVGDiagram();
+const labels = ["solid", "dashed", "dotted"]
+for (const [i, label] of labels.entries()) {
+    const node = diagram.addNode(`node${i}`);
+    node.setCenter(i * 150, 0);
+    node.setLabel(label);
+    node.setFillColor("lightgray");
+    if (i === 1) {
+        node.appendStyleDashed();
+    } else if (i === 2) {
+        node.appendStyleDotted();
+    }
+}
+const svg = diagram.render();
+````
+
+````{tab-item} C++
+```c++
+#include "svg_diagram.h"
+#include <format>
+#include <vector>
+#include <string>
+using namespace svg_diagram;
+
+int main() {
+    SVGDiagram diagram;
+    const auto labels = std::vector<std::string>({"solid", "dashed", "dotted"});
+    for (int i = 0; i < static_cast<int>(labels.size()); ++i) {
+        const auto node = diagram.addNode(std::format("node{}", i));
+        node->setCenter(i * 150, 0);
+        node->setLabel(labels[i]);
+        node->setFillColor("lightgray");
+        if (i == 1) {
+            node->appendStyleDashed();
+        } else if (i == 2) {
+            node->appendStyleDotted();
+        }
+    }
+    diagram.render("stroke_style.svg");
+    return 0;
+}
+````
+`````
+
+![](_static/node_attr/stroke_style.svg)

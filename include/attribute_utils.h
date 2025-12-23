@@ -6,8 +6,12 @@
 
 namespace svg_diagram {
 
-    constexpr int POINTS_PER_INCH = 72;
-    constexpr double CENTIMETERS_PER_INCH = 2.54;
+    struct AttributeParsedStyle {
+        bool solid = false;
+        bool dashed = false;
+        bool dotted = false;
+        bool filled = false;
+    };
 
     class AttributeUtils {
     public:
@@ -16,6 +20,8 @@ namespace svg_diagram {
         static double centimeterToInch(double centimeters);
 
         static bool isPartOfDouble(char ch);
+        static std::vector<std::string> splitString(const std::string& str, char delimiter);
+        static std::vector<std::string> splitString(const std::string& str, const std::string& delimiter);
 
         /** Parse a string to inch value.
          *
@@ -30,6 +36,7 @@ namespace svg_diagram {
         static std::pair<double, double> parseMargin(const std::string& margin);
 
         static bool parseBool(const std::string& value);
+        static AttributeParsedStyle parseStyle(const std::string& value);
 
         using DCommands = std::vector<std::pair<char, std::vector<double>>>;
         static DCommands parseDCommands(const std::string& d);

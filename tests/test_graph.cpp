@@ -27,7 +27,7 @@ TEST(TestSVGGraph, OneCircle) {
     graph->addNode(node);
     graph->defaultNodeAttributes().setShape(SVGNode::SHAPE_CIRCLE);
     graph->defaultNodeAttributes().setPenWidth(10.0);
-    graph->defaultNodeAttributes().setAttribute(ATTRIBUTE_KEY_FIXED_SIZE, "ON");
+    graph->defaultNodeAttributes().setAttribute(ATTR_KEY_FIXED_SIZE, "ON");
     graph->defaultNodeAttributes().setSize(20.0, 20.0);
     graph->setColor("black");
     graph->setFillColor("white");
@@ -58,7 +58,7 @@ TEST(TestSVGGraph, OneCircleWithLabel) {
     auto node = make_shared<SVGNode>("node1");
     graph->addNode(node);
     graph->defaultNodeAttributes().setShape(SVGNode::SHAPE_ELLIPSE);
-    graph->defaultNodeAttributes().setAttribute(ATTRIBUTE_KEY_FIXED_SIZE, "ON");
+    graph->defaultNodeAttributes().setAttribute(ATTR_KEY_FIXED_SIZE, "ON");
     graph->defaultNodeAttributes().setSize(100.0, 100.0);
     graph->setColor("black");
     graph->setFillColor("white");
@@ -93,7 +93,7 @@ TEST(TestSVGGraph, OneCircleWithLongLabel) {
     auto node = make_shared<SVGNode>("node1");
     graph->addNode(node);
     graph->defaultNodeAttributes().setShape(SVGNode::SHAPE_ELLIPSE);
-    graph->defaultNodeAttributes().setAttribute(ATTRIBUTE_KEY_FIXED_SIZE, "ON");
+    graph->defaultNodeAttributes().setAttribute(ATTR_KEY_FIXED_SIZE, "ON");
     graph->defaultNodeAttributes().setSize(20.0, 20.0);
     graph->setColor("black");
     graph->setFillColor("white");

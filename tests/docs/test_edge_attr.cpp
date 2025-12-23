@@ -174,3 +174,28 @@ TEST(TestDocsEdgeAttributes, Font) {
     edge->setFont("Consolas,'Courier New',monospace", 16);
     diagram.render(OUTPUT_DIR + "font.svg");
 }
+
+TEST(TestDocsEdgeAttributes, StrokeStyle) {
+    SVGDiagram diagram;
+    const auto labels = std::vector<std::string>({"solid", "dashed", "dotted"});
+    for (int i = 0; i < static_cast<int>(labels.size()); i++) {
+        const double y = i * 60.0;
+        const auto tailNodeID = std::format("A{}", i);
+        const auto headNodeID = std::format("B{}", i);
+        const auto node1 = diagram.addNode(tailNodeID);
+        node1->setCenter(0, y);
+        node1->setLabel("A");
+        const auto node2 = diagram.addNode(headNodeID);
+        node2->setCenter(150, y);
+        node2->setLabel("B");
+        const auto edge = diagram.addEdge(tailNodeID, headNodeID);
+        edge->setArrowHead();
+        edge->setLabel(labels[i]);
+        if (i == 1) {
+            edge->appendStyleDashed();
+        } else if (i == 2) {
+            edge->appendStyleDotted();
+        }
+    }
+    diagram.render(OUTPUT_DIR + "stroke_style.svg");
+}

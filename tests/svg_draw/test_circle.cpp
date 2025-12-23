@@ -107,8 +107,8 @@ TEST(TestSVGDrawCircle, OneCircleFillAndStroke) {
     SVGDiagram diagram;
     diagram.clearSVGDraw();
     auto circle = make_unique<SVGDrawCircle>(0.0, 0.0, 20.0);
-    circle->setAttribute(SVG_ATTRIBUTE_KEY_STROKE, "blue");
-    circle->setAttribute(SVG_ATTRIBUTE_KEY_FILL, "none");
+    circle->setAttribute(SVG_ATTR_KEY_STROKE, "blue");
+    circle->setAttribute(SVG_ATTR_KEY_FILL, "none");
     auto svg = circle->generateXMLElements()[0]->toString();
     compareSVGContent(svg, R"(<circle cx="0" cy="0" r="20" fill="none" stroke="blue"/>)" + string("\n"));
     diagram.addSVGDraw(std::move(circle));

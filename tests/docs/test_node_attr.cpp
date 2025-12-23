@@ -193,3 +193,21 @@ TEST(TestDocsNodeAttributes, Font) {
     }
     diagram.render(OUTPUT_DIR + "font.svg");
 }
+
+TEST(TestDocsNodeAttributes, StrokeStyle) {
+    SVGDiagram diagram;
+    const auto labels = std::vector<std::string>({"solid", "dashed", "dotted"});
+    for (int i = 0; i < static_cast<int>(labels.size()); ++i) {
+        const auto node = diagram.addNode(std::format("node{}", i));
+        node->setCenter(i * 150, 0);
+        node->setLabel(labels[i]);
+        if (i == 0) {
+            node->appendStyleSolid();
+        } else if (i == 1) {
+            node->appendStyleDashed();
+        } else if (i == 2) {
+            node->appendStyleDotted();
+        }
+    }
+    diagram.render(OUTPUT_DIR + "stroke_style.svg");
+}

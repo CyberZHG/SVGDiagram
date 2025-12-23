@@ -9,14 +9,6 @@
 
 namespace svg_diagram {
 
-    constexpr std::string_view SVG_ATTRIBUTE_KEY_FILL = "fill";
-    constexpr std::string_view SVG_ATTRIBUTE_KEY_STROKE = "stroke";
-    constexpr std::string_view SVG_ATTRIBUTE_KEY_FONT_FAMILY = "font-family";
-    constexpr std::string_view SVG_ATTRIBUTE_KEY_FONT_SIZE = "font-size";
-    constexpr std::string_view SVG_ATTRIBUTE_KEY_MARKER_START = "marker-start";
-    constexpr std::string_view SVG_ATTRIBUTE_KEY_MARKER_END = "marker-end";
-    constexpr std::string_view SVG_ATTRIBUTE_KEY_STROKE_WIDTH = "stroke-width";
-
     struct SVGDrawBoundingBox {
         double x1, y1, x2, y2;
 
@@ -48,6 +40,13 @@ namespace svg_diagram {
         [[nodiscard]] virtual bool hasEntity() const = 0;
 
         void setAttribute(const std::string_view& key, const std::string& value);
+        void copyAttributes(const SVGDraw* other);
+
+        void setFill(const std::string& value);
+        void setStroke(const std::string& value);
+        void setStrokeWidth(const std::string& value);
+        void setStrokeWidth(double value);
+        void setStrokeDashArray(const std::string& value);
 
     protected:
         std::map<std::string_view, std::string> _attributes;
@@ -75,26 +74,15 @@ namespace svg_diagram {
 
         std::string title;
 
-
         [[nodiscard]] XMLElement::ChildrenType generateXMLElements() const override;
         [[nodiscard]] SVGDrawBoundingBox boundingBox() const override;
 
         [[nodiscard]] bool hasEntity() const override;
     };
 
-    class SVGDrawAttribute : public SVGDraw {
+    class SVGDrawEntity : public SVGDraw {
     public:
         using SVGDraw::SVGDraw;
-
-        void setFill(const std::string& value);
-        void setStroke(const std::string& value);
-        void setStrokeWidth(const std::string& value);
-        void setStrokeWidth(double value);
-    };
-
-    class SVGDrawEntity : public SVGDrawAttribute {
-    public:
-        using SVGDrawAttribute::SVGDrawAttribute;
 
         [[nodiscard]] bool hasEntity() const override;
     };

@@ -89,3 +89,45 @@ TEST(TestSVGNodeDoubleCircle, TwoCirclesPenWidth) {
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
+
+TEST(TestSVGNodeDoubleCircle, Dashed) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node = diagram.addNode("circle");
+    node->setShape(SVGNode::SHAPE_DOUBLE_CIRCLE);
+    node->appendStyleDashed();
+    node->setPrecomputedTextSize(10, 16);
+    const auto svg = diagram.render();
+    const auto expected = R"(<!-- Node: circle -->
+<g class="node" id="circle">
+  <title>circle</title>
+  <circle cx="0" cy="0" r="17.69180601295413" fill="none" stroke="black" stroke-dasharray="5,2"/>
+  <circle cx="0" cy="0" r="21.69180601295413" fill="none" stroke="black" stroke-dasharray="5,2"/>
+  <rect x="-5" y="-8" width="10" height="16" fill="none" stroke="blue"/>
+  <rect x="-13" y="-12" width="26" height="24" fill="none" stroke="red"/>
+</g>)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodeDoubleCircle, Dotted) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node = diagram.addNode("circle");
+    node->setShape(SVGNode::SHAPE_DOUBLE_CIRCLE);
+    node->appendStyleDotted();
+    node->setPrecomputedTextSize(10, 16);
+    const auto svg = diagram.render();
+    const auto expected = R"(<!-- Node: circle -->
+<g class="node" id="circle">
+  <title>circle</title>
+  <circle cx="0" cy="0" r="17.69180601295413" fill="none" stroke="black" stroke-dasharray="1,5"/>
+  <circle cx="0" cy="0" r="21.69180601295413" fill="none" stroke="black" stroke-dasharray="1,5"/>
+  <rect x="-5" y="-8" width="10" height="16" fill="none" stroke="blue"/>
+  <rect x="-13" y="-12" width="26" height="24" fill="none" stroke="red"/>
+</g>)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}

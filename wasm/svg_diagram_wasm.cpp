@@ -60,6 +60,10 @@ EMSCRIPTEN_BINDINGS(SVGDiagramWASM) {
         .function("setFontName", &SVGItem::setFontName)
         .function("setFontSize", &SVGItem::setFontSize)
         .function("setFont", &SVGItem::setFont)
+        .function("setStyle", &SVGItem::setStyle)
+        .function("appendStyleSolid", &SVGItem::appendStyleSolid)
+        .function("appendStyleDashed", &SVGItem::appendStyleDashed)
+        .function("appendStyleDotted", &SVGItem::appendStyleDotted)
     ;
     class_<SVGNode, base<SVGItem>>("SVGNode")
         .constructor<>()

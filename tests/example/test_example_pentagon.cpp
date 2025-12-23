@@ -36,7 +36,9 @@ TEST(TestExample, Pentagon) {
         node->setColor(strokeColors[i]);
         node->setFillColor(fillColors[i]);
         node->setFontColor(textColors[i]);
-        if (i == 3) {
+        if (i == 1) {
+            node->appendStyleDashed();
+        } else if (i == 3) {
             node->setShape(SVGNode::SHAPE_DOUBLE_CIRCLE);
         }
 
@@ -46,6 +48,9 @@ TEST(TestExample, Pentagon) {
         edge->setColor(strokeColors[i]);
         edge->setLabel(format("C{}", i + 1));
         edge->setFontColor(strokeColors[i]);
+        if (i == 1) {
+            edge->appendStyleDashed();
+        }
     }
 
     const auto& node = diagram.addNode("node_c");

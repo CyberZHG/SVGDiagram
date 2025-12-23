@@ -110,4 +110,20 @@ describe("Docs/NodeAttributes", () => {
         const svg = diagram.render();
         await compareSVG("node_attr", "font", svg);
     });
+    it("strokeStyle", async () => {
+        const diagram = new SVGDiagram();
+        const labels = ["solid", "dashed", "dotted"]
+        for (const [i, label] of labels.entries()) {
+            const node = diagram.addNode(`node${i}`);
+            node.setCenter(i * 150, 0);
+            node.setLabel(label);
+            if (i === 1) {
+                node.appendStyleDashed();
+            } else if (i === 2) {
+                node.appendStyleDotted();
+            }
+        }
+        const svg = diagram.render();
+        await compareSVG("node_attr", "stroke_style", svg);
+    });
 });

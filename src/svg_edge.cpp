@@ -1,0 +1,358 @@
+#include "svg_nodes.h"
+
+#include <format>
+#include <cmath>
+
+#include "attribute_utils.h"
+#include "svg_text_size.h"
+#include "geometry_utils.h"
+using namespace std;
+using namespace svg_diagram;
+
+SVGEdge::SVGEdge(const string& idFrom, const string& idTo) {
+    _nodeFrom = idFrom;
+    _nodeTo = idTo;
+}
+
+void SVGEdge::setAttributeIfNotExist(const std::string_view &key, const std::string &value) {
+    if (attributes().contains(key)) {
+        return;
+    }
+    if (parent() != nullptr) {
+        if (const auto ret = parent()->defaultEdgeAttribute(key); ret.has_value()) {
+            return;
+        }
+    }
+    setAttribute(key, value);
+}
+
+const string& SVGEdge::getAttribute(const string_view& key) const {
+    static const string EMPTY_STRING;
+    if (const auto it = attributes().find(key); it != attributes().end()) {
+        return it->second;
+    }
+    if (parent() != nullptr) {
+        if (const auto ret = parent()->defaultEdgeAttribute(key); ret.has_value()) {
+            return ret.value();
+        }
+    }
+    return EMPTY_STRING;
+}
+
+void SVGEdge::setNodeFrom(const string& id) {
+    _nodeFrom = id;
+}
+
+const string& SVGEdge::nodeFrom() const {
+    return _nodeFrom;
+}
+
+void SVGEdge::setNodeTo(const string& id) {
+    _nodeTo = id;
+}
+
+const string& SVGEdge::nodeTo() const {
+    return _nodeTo;
+}
+
+void SVGEdge::setConnection(const string& idFrom, const string& idTo) {
+    _nodeFrom = idFrom;
+    _nodeTo = idTo;
+}
+
+void SVGEdge::setSplines(const string& value) {
+    setAttribute(ATTR_KEY_SPLINES, value);
+}
+
+void SVGEdge::setSplines(const string_view& value) {
+    setSplines(string(value));
+}
+
+void SVGEdge::addConnectionPoint(const pair<double, double>& point) {
+    _connectionPoints.emplace_back(point);
+}
+
+void SVGEdge::addConnectionPoint(const double x, const double y) {
+    addConnectionPoint({x, y});
+}
+
+vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDraws(const NodesMapping& nodes) {
+    setAttributeIfNotExist(ATTR_KEY_SPLINES, string(SPLINES_DEFAULT));
+    setAttributeIfNotExist(ATTR_KEY_COLOR, string(ATTR_DEF_COLOR));
+    setAttributeIfNotExist(ATTR_KEY_ARROW_HEAD, string(ARROW_NONE));
+    setAttributeIfNotExist(ATTR_KEY_ARROW_TAIL, string(ARROW_NONE));
+    setAttributeIfNotExist(ATTR_KEY_MARGIN, string(ATTR_DEF_MARGIN_EDGE));
+    setAttributeIfNotExist(ATTR_KEY_FONT_NAME, string(ATTR_DEF_FONT_NAME));
+    setAttributeIfNotExist(ATTR_KEY_FONT_SIZE, string(ATTR_DEF_FONT_SIZE));
+    const auto splines = getAttribute(ATTR_KEY_SPLINES);
+    if (splines == SPLINES_LINE) {
+        return produceSVGDrawsLine(nodes);
+    }
+    if (splines == SPLINES_SPLINE) {
+        return produceSVGDrawsSpline(nodes);
+    }
+    return {};
+}
+
+void SVGEdge::setArrowHead() {
+    setArrowHead(ARROW_DEFAULT);
+}
+
+void SVGEdge::setArrowHead(const string_view& shape) {
+    setArrowHead(string(shape));
+}
+
+void SVGEdge::setArrowHead(const string& shape) {
+    setAttribute(ATTR_KEY_ARROW_HEAD, shape);
+}
+
+void SVGEdge::setArrowTail() {
+    setArrowTail(ARROW_DEFAULT);
+}
+
+void SVGEdge::setArrowTail(const string_view& shape) {
+    setArrowTail(string(shape));
+}
+
+void SVGEdge::setArrowTail(const string& shape) {
+    setAttribute(ATTR_KEY_ARROW_TAIL, shape);
+}
+
+std::pair<double, double> SVGEdge::computeTextCenter(const double cx, const double cy, double dx, double dy) {
+    const auto [width, height] = computeTextSizeWithMargin();
+    const auto points = vector<pair<double, double>>{
+        {cx - width / 2, cy - height / 2},
+        {cx - width / 2, cy + height / 2},
+        {cx + width / 2, cy + height / 2},
+        {cx + width / 2, cy - height / 2},
+    };
+    const auto d = GeometryUtils::normalize(dx, dy);
+    dx = d.first, dy = d.second;
+    const double ux = -dy, uy = dx;
+    double maxShift = 0.0;
+    for (const auto& [x, y] : points) {
+        const double totalArea = GeometryUtils::cross(x - cx, y - cy, dx, dy);
+        const double unitArea = GeometryUtils::cross(dx, dy, ux, uy);
+        const double shift = totalArea / unitArea;
+        maxShift = max(maxShift, shift);
+    }
+    return {cx + ux * maxShift, cy + uy * maxShift};
+}
+
+vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nodes) {
+    const auto& nodeFrom = nodes.at(_nodeFrom);
+    const auto& nodeTo = nodes.at(_nodeTo);
+    const auto arrowHeadShape = getAttribute(ATTR_KEY_ARROW_HEAD);
+    const auto arrowTailShape = getAttribute(ATTR_KEY_ARROW_TAIL);
+    vector<unique_ptr<SVGDraw>> svgDraws;
+    vector<unique_ptr<SVGDraw>> svgDrawArrows;
+    vector<pair<double, double>> points;
+    if (_connectionPoints.empty()) {
+        const double angleFrom = nodeFrom->computeAngle(nodeTo->center());
+        const double angleTo = nodeTo->computeAngle(nodeFrom->center());
+        points.emplace_back(addArrow(arrowTailShape, svgDrawArrows, nodeFrom->computeConnectionPoint(angleFrom), angleFrom));
+        points.emplace_back(addArrow(arrowHeadShape, svgDrawArrows, nodeTo->computeConnectionPoint(angleTo), angleTo));
+    } else {
+        const double angleFrom = nodeFrom->computeAngle(_connectionPoints[0]);
+        points.emplace_back(addArrow(arrowTailShape, svgDrawArrows, nodeFrom->computeConnectionPoint(angleFrom), angleFrom));
+        for (const auto& [x, y] : _connectionPoints) {
+            points.emplace_back(x, y);
+        }
+        const size_t n = _connectionPoints.size();
+        const double angleTo = nodeTo->computeAngle(_connectionPoints[n - 1]);
+        points.emplace_back(addArrow(arrowHeadShape, svgDrawArrows, nodeTo->computeConnectionPoint(angleTo), angleTo));
+    }
+    for (size_t i = 0; i + 1 < points.size(); ++i) {
+        const auto& [x1, y1] = points[i];
+        const auto& [x2, y2] = points[i + 1];
+        svgDraws.emplace_back(make_unique<SVGDrawLine>(x1, y1, x2, y2));
+    }
+    setStrokeStyles(svgDraws[0].get());
+    for (size_t i = 1; i < svgDraws.size(); ++i) {
+        svgDraws[i]->copyAttributes(svgDraws[0].get());
+    }
+    for (const auto& line : svgDraws) {
+        const auto& draw = dynamic_cast<SVGDrawLine*>(line.get());
+        setStrokeStyles(draw);
+    }
+    for (auto& arrow : svgDrawArrows) {
+        svgDraws.emplace_back(std::move(arrow));
+    }
+    if (const auto label = getAttribute(ATTR_KEY_LABEL); !label.empty()) {
+        double totalLength = 0.0;
+        for (size_t i = 0; i + 1 < points.size(); ++i) {
+            const auto& [x1, y1] = points[i];
+            const auto& [x2, y2] = points[i + 1];
+            totalLength += GeometryUtils::distance(x1, y1, x2, y2);
+        }
+        const double halfLength = totalLength / 2.0;
+        double sumLength = 0.0;
+        size_t index = 0;
+        double lineX = 0.0, lineY = 0.0;
+        for (size_t i = 0; i + 1 < points.size(); ++i) {
+            const auto& [x1, y1] = points[i];
+            const auto& [x2, y2] = points[i + 1];
+            const double length = GeometryUtils::distance(x1, y1, x2, y2);
+            const double nextSum = sumLength + length;
+            if (nextSum > halfLength) {
+                index = i;
+                const double ratio = (halfLength - sumLength) / length;
+                lineX = x1 + ratio * (x2 - x1);
+                lineY = y1 + ratio * (y2 - y1);
+                break;
+            }
+            sumLength = nextSum;
+        }
+        const double dx = points[index + 1].first - points[index].first;
+        const double dy = points[index + 1].second - points[index].second;
+        const auto [cx, cy] = computeTextCenter(lineX, lineY, dx, dy);
+        appendSVGDrawsLabelWithCenter(svgDraws, cx, cy);
+    }
+    return svgDraws;
+}
+
+vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& nodes) {
+    static constexpr double NUM_SPLINE_LENGTH_APPROXIMATION_SEGMENTS = 100;
+    constexpr double SPLINE_LENGTH_APPROXIMATION_STEP = 1.0 / NUM_SPLINE_LENGTH_APPROXIMATION_SEGMENTS;
+    if (_connectionPoints.empty()) {
+        return produceSVGDrawsLine(nodes);
+    }
+    const auto& nodeFrom = nodes.at(_nodeFrom);
+    const auto& nodeTo = nodes.at(_nodeTo);
+    const auto arrowHeadShape = getAttribute(ATTR_KEY_ARROW_HEAD);
+    const auto arrowTailShape = getAttribute(ATTR_KEY_ARROW_TAIL);
+    vector<unique_ptr<SVGDraw>> svgDraws;
+    vector<unique_ptr<SVGDraw>> svgDrawArrows;
+    vector<pair<double, double>> points;
+    const double angleFrom = nodeFrom->computeAngle(_connectionPoints[0]);
+    auto [sx, sy] = addArrow(arrowTailShape, svgDrawArrows, nodeFrom->computeConnectionPoint(angleFrom), angleFrom);
+    points.emplace_back(sx, sy);
+    points.emplace_back(sx, sy);
+    for (const auto& [x, y] : _connectionPoints) {
+        points.emplace_back(x, y);
+    }
+    const double angleTo = nodeTo->computeAngle(_connectionPoints[_connectionPoints.size() - 1]);
+    auto [ex, ey] = addArrow(arrowHeadShape, svgDrawArrows, nodeTo->computeConnectionPoint(angleTo), angleTo);
+    points.emplace_back(ex, ey);
+    points.emplace_back(ex, ey);
+    auto d = format("M {} {}", points[1].first, points[1].second);
+    vector<vector<pair<double, double>>> splines;
+    for (int i = 1; i + 2 < static_cast<int>(points.size()); ++i) {
+        const auto [x0, y0] = points[i - 1];
+        const auto [x1, y1] = points[i];
+        const auto [x2, y2] = points[i + 1];
+        const auto [x3, y3] = points[i + 2];
+        const double c1x = x1 + (x2 - x0) / 6.0;
+        const double c1y = y1 + (y2 - y0) / 6.0;
+        const double c2x = x2 - (x3 - x1) / 6.0;
+        const double c2y = y2 - (y3 - y1) / 6.0;
+        d += format(" C {} {} {} {} {} {}", c1x, c1y, c2x, c2y, x2, y2);
+        splines.emplace_back(vector{points[i], {c1x, c1y}, {c2x, c2y}, points[i + 1]});
+    }
+    if (enabledDebug()) {
+        for (const auto& spline : splines) {
+            auto line1 = make_unique<SVGDrawLine>(spline[0].first, spline[0].second, spline[1].first, spline[1].second);
+            auto line2 = make_unique<SVGDrawLine>(spline[2].first, spline[2].second, spline[3].first, spline[3].second);
+            line1->setStroke("blue");
+            line2->setStroke("blue");
+            svgDraws.emplace_back(std::move(line1));
+            svgDraws.emplace_back(std::move(line2));
+        }
+    }
+    auto path = make_unique<SVGDrawPath>(d);
+    setStrokeStyles(path.get());
+    path->setFill("none");
+    svgDraws.emplace_back(std::move(path));
+    for (auto& arrow : svgDrawArrows) {
+        svgDraws.emplace_back(std::move(arrow));
+    }
+    if (const auto label = getAttribute(ATTR_KEY_LABEL); !label.empty()) {
+        double totalLength = 0.0;
+        vector<double> lengths(splines.size());
+        for (size_t i = 0; i < splines.size(); ++i) {
+            lengths[i] = GeometryUtils::computeBezierLength(splines[i][0], splines[i][1], splines[i][2], splines[i][3]);
+            totalLength += lengths[i];
+        }
+        const double halfLength = totalLength / 2.0;
+        double sumLength = 0.0;
+        double splineX = 0.0, splineY = 0.0;
+        double dx = 0.0, dy = 0.0;
+        for (size_t i = 0; i < splines.size(); ++i) {
+            const double nextSum = sumLength + lengths[i];
+            if (nextSum > halfLength) {
+                const double targetLength = halfLength - sumLength;
+                auto [x1, y1] = splines[i][0];
+                double totalSegmentLength = 0.0;
+                for (int j = 1; j < NUM_SPLINE_LENGTH_APPROXIMATION_SEGMENTS; ++j) {
+                    const double t = j * SPLINE_LENGTH_APPROXIMATION_STEP;
+                    const auto [x2, y2] = GeometryUtils::computeBezierAt(splines[i], t);
+                    totalSegmentLength += GeometryUtils::distance(x1, y1, x2, y2);
+                    if (j + 1 == NUM_SPLINE_LENGTH_APPROXIMATION_SEGMENTS || totalSegmentLength > targetLength - GeometryUtils::EPSILON) {
+                        const double tMid = t - SPLINE_LENGTH_APPROXIMATION_STEP * 0.5;
+                        auto point = GeometryUtils::computeBezierAt(splines[i], tMid);
+                        splineX = point.first, splineY = point.second;
+                        point = GeometryUtils::computeBezierDerivative(splines[i], tMid);
+                        dx = point.first, dy = point.second;
+                        break;
+                    }
+                    x1 = x2;
+                    y1 = y2;
+                }
+                break;
+            }
+            sumLength = nextSum;
+        }
+        const auto [cx, cy] = computeTextCenter(splineX, splineY, dx, dy);
+        appendSVGDrawsLabelWithCenter(svgDraws, cx, cy);
+    }
+    return svgDraws;
+}
+
+double SVGEdge::computeArrowTipMargin(const string_view& shape) const {
+    if (shape == ARROW_NORMAL || shape == ARROW_EMPTY) {
+        return computeArrowTipMarginNormal();
+    }
+    return 0.0;
+}
+
+double SVGEdge::computeArrowTipMarginNormal() const {
+    const double angle = atan(ARROW_HALF_HEIGHT / ARROW_WIDTH);
+    const double strokeWidth = penWidth();
+    const double margin = strokeWidth / 2.0 / sin(angle);
+    return margin;
+}
+
+pair<double, double> SVGEdge::addArrow(const string_view& shape, vector<unique_ptr<SVGDraw>>& svgDraws, const pair<double, double>& connectionPoint, const double angle) const {
+    const double arrowTipMargin = computeArrowTipMargin(shape);
+    const pair arrowTip = {connectionPoint.first + arrowTipMargin * cos(angle), connectionPoint.second + arrowTipMargin * sin(angle)};
+    if (shape == ARROW_NORMAL) {
+        return addArrowNormal(svgDraws, arrowTip, angle, true);
+    }
+    if (shape == ARROW_EMPTY) {
+        return addArrowNormal(svgDraws, arrowTip, angle, false);
+    }
+    return {connectionPoint.first - 0.2 * cos(angle), connectionPoint.second - 0.2 * sin(angle)};
+}
+
+pair<double, double> SVGEdge::addArrowNormal(vector<unique_ptr<SVGDraw>>& svgDraws, const pair<double, double>& connectionPoint, const double angle, const bool solid) const {
+    const double x0 = connectionPoint.first;
+    const double y0 = connectionPoint.second;
+    const double sideLen = GeometryUtils::distance(ARROW_WIDTH, ARROW_HALF_HEIGHT);
+    const double halfAngle = atan(ARROW_HALF_HEIGHT / ARROW_WIDTH);
+    const double x1 = x0 + sideLen * cos(angle - halfAngle);
+    const double y1 = y0 + sideLen * sin(angle - halfAngle);
+    const double x2 = x0 + sideLen * cos(angle + halfAngle);
+    const double y2 = y0 + sideLen * sin(angle + halfAngle);
+    auto polygon = make_unique<SVGDrawPolygon>(vector<pair<double, double>>{{x0, y0}, {x1, y1}, {x2, y2}, {x0, y0}});
+    polygon->setStroke(color());
+    if (solid) {
+        polygon->setFill(color());
+    } else {
+        polygon->setFill("none");
+    }
+    if (const double strokeWidth = penWidth(); strokeWidth != 1.0) {
+        polygon->setStrokeWidth(strokeWidth);
+    }
+    svgDraws.emplace_back(std::move(polygon));
+    return {x0 + ARROW_WIDTH * cos(angle), y0 + ARROW_WIDTH * sin(angle)};
+}

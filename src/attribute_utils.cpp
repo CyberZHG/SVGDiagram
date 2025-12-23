@@ -1,8 +1,10 @@
 #include "attribute_utils.h"
+#include "constants.h"
 
 #include <format>
 #include <iostream>
 #include <algorithm>
+#include <ranges>
 using namespace std;
 using namespace svg_diagram;
 
@@ -22,6 +24,28 @@ bool AttributeUtils::isPartOfDouble(const char ch) {
     return std::isdigit(ch) ||
            ch == '+' || ch == '-' ||
            ch == '.' || ch == 'e' || ch == 'E';
+}
+
+vector<string> AttributeUtils::splitString(const string& str, const char delimiter) {
+    vector<string> splits;
+    size_t last = 0, pos = 0;
+    while ((pos = str.find(delimiter, last)) != string::npos) {
+        splits.push_back(str.substr(last, pos - last));
+        last = pos + 1;
+    }
+    splits.push_back(str.substr(last));
+    return splits;
+}
+
+vector<string> AttributeUtils::splitString(const string& str, const string& delimiter) {
+    vector<string> splits;
+    size_t last = 0, pos = 0;
+    while ((pos = str.find(delimiter, last)) != string::npos) {
+        splits.push_back(str.substr(last, pos - last));
+        last = pos + 1;
+    }
+    splits.push_back(str.substr(last));
+    return splits;
 }
 
 double AttributeUtils::parseLengthToInch(const string& s) {
@@ -81,6 +105,26 @@ bool AttributeUtils::parseBool(const string& value) {
         return tolower(c);
     });
     return lower == "true" || lower == "1" || lower == "on" || lower == "yes";
+}
+
+AttributeParsedStyle AttributeUtils::parseStyle(const string& value) {
+    AttributeParsedStyle parsed;
+    for (const auto styles = splitString(value, ','); const auto& style : styles) {
+        if (style == ATTR_STYLE_SOLID) {
+            parsed.solid = true;
+            parsed.dashed = false;
+            parsed.dotted = false;
+        } else if (style == ATTR_STYLE_DASHED) {
+            parsed.solid = false;
+            parsed.dashed = true;
+            parsed.dotted = false;
+        } else if (style == ATTR_STYLE_DOTTED) {
+            parsed.solid = false;
+            parsed.dashed = false;
+            parsed.dotted = true;
+        }
+    }
+    return parsed;
 }
 
 AttributeUtils::DCommands AttributeUtils::parseDCommands(const string& d) {

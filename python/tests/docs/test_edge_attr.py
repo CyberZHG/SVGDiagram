@@ -123,3 +123,26 @@ def test_font():
     edge.set_font("Consolas,'Courier New',monospace", 16)
     svg = diagram.render()
     compare_svg("edge_attr", "font", svg)
+
+
+def test_stroke_style():
+    diagram = SVGDiagram()
+    labels = ["solid", "dashed", "dotted"]
+    for i, label in enumerate(labels):
+        y = i * 60.0
+        tail_id, head_id = f"A{i}", f"B{i}"
+        node1 = diagram.add_node(tail_id)
+        node1.set_center(0, y)
+        node1.set_label("A")
+        node2 = diagram.add_node(head_id)
+        node2.set_center(150, y)
+        node2.set_label("B")
+        edge = diagram.add_edge(tail_id, head_id)
+        edge.set_arrow_head()
+        edge.set_label(label)
+        if i == 1:
+            edge.append_style_dashed()
+        elif i == 2:
+            edge.append_style_dotted()
+    svg = diagram.render()
+    compare_svg("edge_attr", "stroke_style", svg)

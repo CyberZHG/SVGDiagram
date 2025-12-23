@@ -7,25 +7,10 @@
 #include <optional>
 
 #include "svg_draw.h"
+#include "constants.h"
+#include "attribute_utils.h"
 
 namespace svg_diagram {
-
-    constexpr std::string_view ATTRIBUTE_KEY_ID = "id";
-    constexpr std::string_view ATTRIBUTE_KEY_LABEL = "label";
-    constexpr std::string_view ATTRIBUTE_KEY_SHAPE = "shape";
-    constexpr std::string_view ATTRIBUTE_KEY_SPLINES = "splines";
-    constexpr std::string_view ATTRIBUTE_KEY_MARGIN = "margin";
-    constexpr std::string_view ATTRIBUTE_KEY_WIDTH = "width";
-    constexpr std::string_view ATTRIBUTE_KEY_HEIGHT = "height";
-    constexpr std::string_view ATTRIBUTE_KEY_FONT_NAME = "fontname";
-    constexpr std::string_view ATTRIBUTE_KEY_FONT_SIZE = "fontsize";
-    constexpr std::string_view ATTRIBUTE_KEY_FIXED_SIZE = "fixedsize";
-    constexpr std::string_view ATTRIBUTE_KEY_ARROW_HEAD = "arrowhead";
-    constexpr std::string_view ATTRIBUTE_KEY_ARROW_TAIL = "arrowtail";
-    constexpr std::string_view ATTRIBUTE_KEY_COLOR = "color";
-    constexpr std::string_view ATTRIBUTE_KEY_FILL_COLOR = "fillcolor";
-    constexpr std::string_view ATTRIBUTE_KEY_FONT_COLOR = "fontcolor";
-    constexpr std::string_view ATTRIBUTE_KEY_PEN_WIDTH = "penwidth";
 
     class SVGNode;
     class SVGGraph;
@@ -76,6 +61,12 @@ namespace svg_diagram {
         void setFontName(const std::string& fontName);
         void setFontSize(double fontSize);
         void setFont(const std::string& fontName, double fontSize);
+        void setStyle(const std::string& style);
+        void appendStyle(const std::string& style);
+        void appendStyleSolid();
+        void appendStyleDashed();
+        void appendStyleDotted();
+        [[nodiscard]] AttributeParsedStyle style() const;
 
     protected:
         void appendSVGDrawsLabelWithCenter(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, double cx, double cy);
@@ -83,6 +74,8 @@ namespace svg_diagram {
         [[nodiscard]] std::pair<double, double> computeTextSize();
         [[nodiscard]] std::pair<double, double> computeMargin();
         [[nodiscard]] std::pair<double, double> computeTextSizeWithMargin();
+
+        void setStrokeStyles(SVGDraw* draw) const;
 
     private:
         SVGGraph* _parent = nullptr;

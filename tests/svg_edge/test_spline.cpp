@@ -73,6 +73,46 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLineOneConnection) {
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
+TEST(TestSVGEdgeSpline, TwoCircleOneLineOneConnectionDashed) {
+    SVGDiagram diagram;
+    TestSVGEdgeSplineAddTwoNodesCase1(diagram);
+    auto edge = std::make_shared<SVGEdge>("A", "B");
+    edge->setSplines(SVGEdge::SPLINES_SPLINE);
+    edge->addConnectionPoint(-50, 120);
+    edge->appendStyleDashed();
+    diagram.addEdge(edge);
+    const auto svg = diagram.render();
+    const auto expected = TestSVGEdgeSplineExpectedNodesSVGCase2() +
+        R"(<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <path d="M 82.16601989629028 102.37786401382796 C 60.13834991357524 105.31488667818996 -65.2205693912463 112.59318861076264 -50 120 C -34.7794306087537 127.40681138923736 136.2411968698067 142.3489436243768 173.48943624376807 146.81873234925217" fill="none" stroke="black" stroke-dasharray="5,2"/>
+</g>)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGEdgeSpline, TwoCircleOneLineOneConnectionDotted) {
+    SVGDiagram diagram;
+    TestSVGEdgeSplineAddTwoNodesCase1(diagram);
+    auto edge = std::make_shared<SVGEdge>("A", "B");
+    edge->setSplines(SVGEdge::SPLINES_SPLINE);
+    edge->addConnectionPoint(-50, 120);
+    edge->appendStyleDotted();
+    diagram.addEdge(edge);
+    const auto svg = diagram.render();
+    const auto expected = TestSVGEdgeSplineExpectedNodesSVGCase2() +
+        R"(<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <path d="M 82.16601989629028 102.37786401382796 C 60.13834991357524 105.31488667818996 -65.2205693912463 112.59318861076264 -50 120 C -34.7794306087537 127.40681138923736 136.2411968698067 142.3489436243768 173.48943624376807 146.81873234925217" fill="none" stroke="black" stroke-dasharray="1,5"/>
+</g>)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
 TEST(TestSVGEdgeSpline, TwoCircleTwoLineSelfCycle) {
     SVGDiagram diagram;
     TestSVGEdgeSplineAddTwoNodesCase1(diagram);

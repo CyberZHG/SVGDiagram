@@ -1,6 +1,7 @@
 #include "svg_draw.h"
 #include "svg_text_size.h"
 #include "attribute_utils.h"
+#include "constants.h"
 
 #include <format>
 #include <ranges>
@@ -24,6 +25,30 @@ SVGDrawBoundingBox::SVGDrawBoundingBox(double x1, double y1, double x2, double y
 
 void SVGDraw::setAttribute(const string_view& key, const string& value) {
     _attributes[key] = value;
+}
+
+void SVGDraw::copyAttributes(const SVGDraw* other) {
+    _attributes = other->_attributes;
+}
+
+void SVGDraw::setFill(const string& value) {
+    setAttribute(SVG_ATTR_KEY_FILL, value);
+}
+
+void SVGDraw::setStroke(const string& value) {
+    setAttribute(SVG_ATTR_KEY_STROKE, value);
+}
+
+void SVGDraw::setStrokeWidth(const string& value) {
+    setAttribute(SVG_ATTR_KEY_STROKE_WIDTH, value);
+}
+
+void SVGDraw::setStrokeWidth(const double value) {
+    setStrokeWidth(format("{}", value));
+}
+
+void SVGDraw::setStrokeDashArray(const string& value) {
+    setAttribute(SVG_ATTR_KEY_STROKE_DASHARRAY, value);
 }
 
 void SVGDraw::addAttributesToXMLElement(const XMLElement::ChildType& element) const {
@@ -125,22 +150,6 @@ bool SVGDrawTitle::hasEntity() const {
     return false;
 }
 
-void SVGDrawAttribute::setFill(const string& value) {
-    setAttribute(SVG_ATTRIBUTE_KEY_FILL, value);
-}
-
-void SVGDrawAttribute::setStroke(const string& value) {
-    setAttribute(SVG_ATTRIBUTE_KEY_STROKE, value);
-}
-
-void SVGDrawAttribute::setStrokeWidth(const string& value) {
-    setAttribute(SVG_ATTRIBUTE_KEY_STROKE_WIDTH, value);
-}
-
-void SVGDrawAttribute::setStrokeWidth(const double value) {
-    setStrokeWidth(format("{}", value));
-}
-
 bool SVGDrawEntity::hasEntity() const {
     return true;
 }
@@ -170,8 +179,8 @@ SVGDrawText::SVGDrawText(const double x, const double y, const string& text) {
 }
 
 void SVGDrawText::setFont(const string& fontFamily, double fontSize) {
-    setAttribute(SVG_ATTRIBUTE_KEY_FONT_FAMILY, fontFamily);
-    setAttribute(SVG_ATTRIBUTE_KEY_FONT_SIZE, format("{}", fontSize));
+    setAttribute(SVG_ATTR_KEY_FONT_FAMILY, fontFamily);
+    setAttribute(SVG_ATTR_KEY_FONT_SIZE, format("{}", fontSize));
 }
 
 XMLElement::ChildrenType SVGDrawText::generateXMLElements() const {
@@ -209,8 +218,8 @@ XMLElement::ChildrenType SVGDrawText::generateXMLElements() const {
 
 SVGDrawBoundingBox SVGDrawText::boundingBox() const {
     const SVGTextSize textSize;
-    const auto fontSize = stod(_attributes.at(SVG_ATTRIBUTE_KEY_FONT_SIZE));
-    const auto fontFamily = _attributes.at(SVG_ATTRIBUTE_KEY_FONT_FAMILY);
+    const auto fontSize = stod(_attributes.at(SVG_ATTR_KEY_FONT_SIZE));
+    const auto fontFamily = _attributes.at(SVG_ATTR_KEY_FONT_FAMILY);
     const auto [width, height] = textSize.computeTextSize(text, fontSize, fontFamily);
     return {cx - width / 2.0, cy - height / 2.0, cx + width / 2.0, cy + height / 2.0};
 }

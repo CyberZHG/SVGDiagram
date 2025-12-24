@@ -193,6 +193,17 @@ AttributeParsedStyle SVGItem::style() const {
     return AttributeUtils::parseStyle(getAttribute(ATTR_KEY_STYLE));
 }
 
+void SVGItem::setGradientAngle(const double angle) {
+    setAttribute(ATTR_KEY_GRADIENT_ANGLE, angle);
+}
+
+double SVGItem::gradientAngle() const {
+    if (const auto it = _attributes.find(ATTR_KEY_GRADIENT_ANGLE); it != _attributes.end()) {
+        return stod(it->second);
+    }
+    return 0.0;
+}
+
 void SVGItem::appendSVGDrawsLabelWithCenter(vector<unique_ptr<SVGDraw>>& svgDraws, const double cx, const double cy) {
     if (enabledDebug()) {
         const auto [textWidth, textHeight] = computeTextSize();
@@ -252,17 +263,65 @@ void SVGItem::setStrokeStyles(SVGDraw* draw) const {
     if (const auto colorList = AttributeUtils::parseColorList(color()); !colorList.empty()) {
         const auto& color = colorList[0];
         draw->setStroke(color.color);
-        if (color.opacity < 1.0) {
-            draw->setStrokeOpacity(color.opacity);
+        if (color.color != SVG_ATTR_COLOR_NONE) {
+            if (0.0 <= color.opacity && color.opacity < 1.0) {
+                draw->setStrokeOpacity(color.opacity);
+            }
+            if (const auto strokeWidth = penWidth(); strokeWidth != 1.0) {
+                draw->setStrokeWidth(strokeWidth);
+            }
         }
-    }
-    if (const auto strokeWidth = penWidth(); strokeWidth != 1.0) {
-        draw->setStrokeWidth(strokeWidth);
     }
     if (const auto parsedStyle = style(); parsedStyle.dashed) {
         draw->setStrokeDashArray("5,2");
     } else if (parsedStyle.dotted) {
         draw->setStrokeDashArray("1,5");
+    }
+}
+
+void SVGItem::setFillStyles(SVGDraw* draw, vector<unique_ptr<SVGDraw>>& svgDraws) const {
+    if (const auto colorList = AttributeUtils::parseColorList(fillColor()); !colorList.empty()) {
+        if (colorList.size() == 1) {
+            const auto& color = colorList[0];
+            draw->setFill(color.color);
+            if (color.color != SVG_ATTR_COLOR_NONE) {
+                if (0.0 <= color.opacity && color.opacity < 1.0) {
+                    draw->setFillOpacity(color.opacity);
+                }
+            }
+        } else if (colorList.size() > 1) {
+            vector<unique_ptr<SVGDraw>> stops;
+            if (const auto& firstColor = colorList[0]; firstColor.weight < 0.0) {
+                // Linear gradient
+                const double offset = 1.0 / static_cast<double>(colorList.size() - 1);
+                for (int i = 0; i < static_cast<int>(colorList.size()); ++i) {
+                    const auto& color = colorList[i];
+                    stops.emplace_back(make_unique<SVGDrawStop>(i * offset, color.color, color.opacity));
+                }
+            } else {
+                // Segmented color
+                double last = 0.0;
+                for (int i = 0; i < static_cast<int>(colorList.size()); ++i) {
+                    const auto&[color, opacity, weight] = colorList[i];
+                    if (i > 0) {
+                        stops.emplace_back(make_unique<SVGDrawStop>(last, color, opacity));
+                    }
+                    last += weight;
+                    if (i + 1 < static_cast<int>(colorList.size())) {
+                        stops.emplace_back(make_unique<SVGDrawStop>(last - 1e-6, color, opacity));
+                    }
+                }
+            }
+            const auto gradientID = id() + "__fill_color";
+            auto linearGradient = make_unique<SVGDrawLinearGradient>(stops);
+            linearGradient->setID(gradientID);
+            if (const auto angle = gradientAngle(); angle != 0.0) {
+                linearGradient->setRotation(-angle);
+            }
+            auto defs = make_unique<SVGDrawDefs>(std::move(linearGradient));
+            svgDraws.emplace_back(std::move(defs));
+            draw->setFill(format("url('#{}')", gradientID));
+        }
     }
 }
 

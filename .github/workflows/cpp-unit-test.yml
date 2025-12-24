@@ -13,12 +13,12 @@ jobs:
     strategy:
       matrix:
         include:
+          # - name: debug
+          #  BUILD_TYPE: Debug
+          #  ENABLE_COVERAGE: OFF
           - name: coverage
-            BUILD_TYPE: Debug
-            ENABLE_COVERAGE: ON
-          - name: release
             BUILD_TYPE: Release
-            ENABLE_COVERAGE: OFF
+            ENABLE_COVERAGE: ON
 
     env:
       BUILD_TYPE: ${{ matrix.BUILD_TYPE }}

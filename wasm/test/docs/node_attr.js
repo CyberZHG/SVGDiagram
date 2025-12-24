@@ -84,6 +84,42 @@ describe("Docs/NodeAttributes", () => {
         const svg = diagram.render();
         await compareSVG("node_attr", "color", svg);
     });
+    it("opacity", async () => {
+        const diagram = new SVGDiagram();
+        const ids = ["A", "B", "C"];
+        const colors = ["#00FFFFCC", "#FF00FFCC", "#FFFF00CC"];
+        for (const [i, node_id] of ids.entries()) {
+            const node = diagram.addNode(node_id);
+            const angle = -Math.PI / 2.0 + Math.PI * 2 * i / 3.0;
+            node.setCenter(50.0 * Math.cos(angle), 50.0 * Math.sin(angle));
+            node.setFixedSize(150, 150);
+            node.setColor("none");
+            node.setFillColor(colors[i]);
+        }
+        const svg = diagram.render();
+        await compareSVG("node_attr", "opacity", svg);
+    });
+    it("gradient_color", async () => {
+        const diagram = new SVGDiagram();
+        const node1 = diagram.addNode("A");
+        node1.setFillColor("gold:#FF0000EE");
+        node1.setLabel("A");
+        node1.setFixedSize(120, 80);
+        const node2 = diagram.addNode("B");
+        node2.setCenter(150, 0);
+        node2.setFillColor("gold:#FF0000EE");
+        node2.setLabel("B");
+        node2.setGradientAngle(45);
+        node2.setFixedSize(120, 80);
+        const node3 = diagram.addNode("C");
+        node3.setCenter(300, 0);
+        node3.setFillColor("white;1e-6:red:orange:yellow:green:blue:purple");
+        node3.setLabel("C");
+        node3.setGradientAngle(-90);
+        node3.setFixedSize(120, 80);
+        const svg = diagram.render();
+        await compareSVG("node_attr", "gradient_color", svg);
+    });
     it("penWidth", async () => {
         const diagram = new SVGDiagram();
         for (let i = 0; i < 3; i++) {

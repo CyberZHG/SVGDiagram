@@ -23,7 +23,7 @@ TEST(TestExample, Pentagon) {
         "Victory\nFlows from\nthe Turning of Tides",
     };
     const auto strokeColors = vector{"peru", "darkgoldenrod", "limegreen", "dodgerblue", "lightcoral"};
-    const auto fillColors = vector{"lightsalmon", "papayawhip", "lightgreen", "deepskyblue", "lightpink"};
+    const auto fillColors = vector{"lightsalmon", "papayawhip", "lightgreen:limegreen", "deepskyblue", "lightpink"};
     const auto textColors = vector{"saddlebrown", "goldenrod", "olivedrab", "royalblue", "indianred", "indigo"};
 
     for (int i = 0; i < 5; ++i) {
@@ -38,6 +38,8 @@ TEST(TestExample, Pentagon) {
         node->setFontColor(textColors[i]);
         if (i == 1) {
             node->appendStyleDashed();
+        } else if (i == 2) {
+            node->setGradientAngle(-45);
         } else if (i == 3) {
             node->setShape(SVGNode::SHAPE_DOUBLE_CIRCLE);
         }
@@ -50,6 +52,8 @@ TEST(TestExample, Pentagon) {
         edge->setFontColor(strokeColors[i]);
         if (i == 1) {
             edge->appendStyleDashed();
+        } else if (i == 4) {
+            edge->setArrowHead(SVGEdge::ARROW_EMPTY);
         }
     }
 

@@ -67,6 +67,8 @@ namespace svg_diagram {
         void appendStyleDashed();
         void appendStyleDotted();
         [[nodiscard]] AttributeParsedStyle style() const;
+        void setGradientAngle(double angle);
+        [[nodiscard]] double gradientAngle() const;
 
     protected:
         void appendSVGDrawsLabelWithCenter(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, double cx, double cy);
@@ -76,6 +78,7 @@ namespace svg_diagram {
         [[nodiscard]] std::pair<double, double> computeTextSizeWithMargin();
 
         void setStrokeStyles(SVGDraw* draw) const;
+        void setFillStyles(SVGDraw* draw, std::vector<std::unique_ptr<SVGDraw>>& svgDraws) const;
 
     private:
         SVGGraph* _parent = nullptr;

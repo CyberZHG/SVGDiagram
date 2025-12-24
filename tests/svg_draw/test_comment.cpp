@@ -45,3 +45,7 @@ TEST(TestSVGDrawComment, EmptyBoundingBox) {
     boundingBox = SVGDrawPolygon().boundingBox();
     ASSERT_EQ(boundingBox.x2, 0.0);
 }
+
+TEST(TestSVGDrawComment, Tag) {
+    ASSERT_EQ(SVGDrawComment().tag(), "!--");
+}

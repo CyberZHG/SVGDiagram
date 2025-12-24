@@ -340,6 +340,8 @@ int main() {
 
 ## Color
 
+### Solid Color
+
 There are three color-related properties: `color` sets the node's border color, `fillColor` sets the node's fill color, and `fontColor` sets the text color. Any color format supported by SVG can be used.
 
 `````{tab-set}
@@ -388,6 +390,162 @@ int main() {
 `````
 
 ![](_static/node_attr/color.svg)
+
+### Opacity
+
+You can set the opacity using `#RRGGBBAA`, where the last two hexadecimal digits represent the alpha (opacity) value.
+
+`````{tab-set}
+````{tab-item} Python
+```python
+import math
+
+from sp_svg_diagram import SVGDiagram
+
+diagram = SVGDiagram()
+ids = ["A", "B", "C"]
+colors = ["#00FFFFCC", "#FF00FFCC", "#FFFF00CC"]
+for i, (node_id, color) in enumerate(zip(ids, colors)):
+    node = diagram.add_node(node_id)
+    angle = -math.pi / 2.0 + math.pi * 2 * i / 3.0
+    node.set_center(50.0 * math.cos(angle), 50.0 * math.sin(angle))
+    node.set_fixed_size(150, 150)
+    node.set_color("none")
+    node.set_fill_color(colors[i])
+svg = diagram.render()
+```
+````
+````{tab-item} JavaScript
+```javascript
+import { SVGDiagram } from 'sp-svg-diagram';
+
+const diagram = new SVGDiagram();
+const ids = ["A", "B", "C"];
+const colors = ["#00FFFFCC", "#FF00FFCC", "#FFFF00CC"];
+for (const [i, node_id] of ids.entries()) {
+    const node = diagram.addNode(node_id);
+    const angle = -Math.PI / 2.0 + Math.PI * 2 * i / 3.0;
+    node.setCenter(50.0 * Math.cos(angle), 50.0 * Math.sin(angle));
+    node.setFixedSize(150, 150);
+    node.setColor("none");
+    node.setFillColor(colors[i]);
+}
+const svg = diagram.render();
+````
+
+````{tab-item} C++
+```c++
+#include <vector>
+#include <string>
+#include <cmath>
+#include "svg_diagram.h"
+using namespace svg_diagram;
+
+int main() {
+    SVGDiagram diagram;
+    const std::vector<std::string> ids = {"A", "B", "C"};
+    const std::vector<std::string> colors = {"#00FFFFCC", "#FF00FFCC", "#FFFF00CC"};
+    for (int i = 0; i < static_cast<int>(ids.size()); ++i) {
+        const auto node = diagram.addNode(ids[i]);
+        const double angle = -std::numbers::pi / 2.0 + std::numbers::pi * 2 * i / 3.0;
+        node->setCenter(50.0 * cos(angle), 50.0 * sin(angle));
+        node->setFixedSize(150, 150);
+        node->setColor("none");
+        node->setFillColor(colors[i]);
+    }
+    diagram.render("opacity.svg");
+    return 0;
+}
+````
+`````
+
+![](_static/node_attr/opacity.svg)
+
+### Gradient
+
+When multiple colors separated by `:` are specified, a linear color gradient is used for filling by default, with the default direction from left to right. The direction can be adjusted using `gradientAngle`.
+
+Appending `;` followed by a positive number less than `1.0` to a color specifies the proportion of the overall fill that the color occupies. If any color defines a proportion, the fill switches to a segmented (non-gradient) color fill. In this case, any colors without an explicitly defined proportion will evenly share the remaining proportion.
+
+`````{tab-set}
+````{tab-item} Python
+```python
+from sp_svg_diagram import SVGDiagram
+
+diagram = SVGDiagram()
+node1 = diagram.add_node("A")
+node1.set_fill_color("gold:#FF0000EE")
+node1.set_label("A")
+node1.set_fixed_size(120, 80)
+node2 = diagram.add_node("B")
+node2.set_center(150, 0)
+node2.set_fill_color("gold:#FF0000EE")
+node2.set_label("B")
+node2.set_gradient_angle(45)
+node2.set_fixed_size(120, 80)
+node3 = diagram.add_node("C")
+node3.set_center(300, 0)
+node3.set_fill_color("white;1e-6:red:orange:yellow:green:blue:purple")
+node3.set_label("C")
+node3.set_gradient_angle(-90)
+node3.set_fixed_size(120, 80)
+svg = diagram.render()
+```
+````
+````{tab-item} JavaScript
+```javascript
+import { SVGDiagram } from 'sp-svg-diagram';
+
+const diagram = new SVGDiagram();
+const node1 = diagram.addNode("A");
+node1.setFillColor("gold:#FF0000EE");
+node1.setLabel("A");
+node1.setFixedSize(120, 80);
+const node2 = diagram.addNode("B");
+node2.setCenter(150, 0);
+node2.setFillColor("gold:#FF0000EE");
+node2.setLabel("B");
+node2.setGradientAngle(45);
+node2.setFixedSize(120, 80);
+const node3 = diagram.addNode("C");
+node3.setCenter(300, 0);
+node3.setFillColor("white;1e-6:red:orange:yellow:green:blue:purple");
+node3.setLabel("C");
+node3.setGradientAngle(-90);
+node3.setFixedSize(120, 80);
+const svg = diagram.render();
+````
+
+````{tab-item} C++
+```c++
+#include "svg_diagram.h"
+using namespace svg_diagram;
+
+int main() {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setFillColor("gold:#FF0000EE");
+    node1->setLabel("A");
+    node1->setFixedSize(120, 80);
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setFillColor("gold:#FF0000EE");
+    node2->setLabel("B");
+    node2->setGradientAngle(45);
+    node2->setFixedSize(120, 80);
+    const auto node3 = diagram.addNode("C");
+    node3->setCenter(300, 0);
+    node3->setFillColor("white;1e-6:red:orange:yellow:green:blue:purple");
+    node3->setLabel("C");
+    node3->setGradientAngle(-90);
+    node3->setFixedSize(120, 80);
+    diagram.render("gradient_color.svg");
+    return 0;
+}
+````
+`````
+
+![](_static/node_attr/gradient_color.svg)
 
 ## Pen Width
 

@@ -53,7 +53,11 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#python">Python</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#javascript">JavaScript</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#cmake">CMake</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cmake">CMake</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#optional-requirements">Optional Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#development">Development</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="concept.html">Basic Concepts</a></li>
@@ -92,7 +96,7 @@
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h1>
 <section id="python">
 <h2>Python<a class="headerlink" href="#python" title="Permalink to this heading"></a></h2>
-<p>Install this package with <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
+<p>Make sure you have <code class="docutils literal notranslate"><span class="pre">cmake</span></code> installed and then you can install this package with <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>sp-svg-diagram
 </pre></div>
 </div>
@@ -125,6 +129,7 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">sp-</span></code> in the package name has no particular meaning; it is only there to avoid occupying the name for a better implementation.</p>
 <p>A simple demo:</p>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sp-svg-diagram&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">writeFile</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;fs/promises&#39;</span><span class="p">;</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">diagram</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="p">();</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">nodeA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addNode</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">);</span>
@@ -135,7 +140,7 @@
 <span class="nx">nodeB</span><span class="p">.</span><span class="nx">setLabel</span><span class="p">(</span><span class="s2">&quot;bar&quot;</span><span class="p">);</span>
 <span class="nx">diagram</span><span class="p">.</span><span class="nx">addEdge</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;b&quot;</span><span class="p">);</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">svg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">svg</span><span class="p">);</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">writeFile</span><span class="p">(</span><span class="s2">&quot;demo.svg&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">render</span><span class="p">());</span>
 </pre></div>
 </div>
 <p>The output should look like this:</p>
@@ -188,6 +193,30 @@
 </div>
 <p>The output should look like this:</p>
 <p><img alt="ES Demo" src="_images/cpp.svg" /></p>
+<section id="optional-requirements">
+<h3>Optional Requirements<a class="headerlink" href="#optional-requirements" title="Permalink to this heading"></a></h3>
+<p>By default, this library estimates text dimensions using approximations. For more accurate measurements, PangoCairo can be enabled.</p>
+<p>To install PangoCairo:</p>
+<p>MacOS:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>cairo<span class="w"> </span>pango<span class="w"> </span>pkg-config
+</pre></div>
+</div>
+<p>Linux:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>libcairo2-dev<span class="w"> </span>libpango1.0-dev<span class="w"> </span>pkg-config
+</pre></div>
+</div>
+<p>To enable PangoCairo, add the following to your CMake options:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-DSVG_DIAGRAM_ENABLE_PANGO_CAIRO<span class="o">=</span>ON
+</pre></div>
+</div>
+</section>
+<section id="development">
+<h3>Development<a class="headerlink" href="#development" title="Permalink to this heading"></a></h3>
+<p>To enable tests, add the following to your CMake options:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-DSVG_DIAGRAM_BUILD_TESTS<span class="o">=</span>ON
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 

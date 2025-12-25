@@ -1,6 +1,6 @@
 {
   "name": "sp-svg-diagram",
-  "version": "1.2.0",
+  "version": "1.2.3",
   "type": "module",
   "main": "index.js",
   "files": [
@@ -19,5 +19,7 @@
     "build": "bash build.sh",
     "lint": "npx eslint demo index.js test/**/*.js",
     "test": "mocha test/**/*.js"
-  }
+  },
+  "homepage": "https://cyberzhg.github.io/SVGDiagram/",
+  "repository": "github:CyberZHG/SVGDiagram"
 }

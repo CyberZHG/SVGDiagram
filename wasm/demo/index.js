@@ -1,4 +1,5 @@
 import { SVGDiagram } from 'sp-svg-diagram';
+import { writeFile } from 'fs/promises';
 
 const diagram = new SVGDiagram();
 const nodeA = diagram.addNode("a");
@@ -8,4 +9,4 @@ const nodeB = diagram.addNode("b");
 nodeB.setCenter(100.0, 100.0);
 nodeB.setLabel("bar");
 diagram.addEdge("a", "b");
-diagram.toSVG("demo.svg");
+await writeFile("demo.svg", diagram.render());

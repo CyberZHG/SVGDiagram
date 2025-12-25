@@ -31,34 +31,11 @@ Click the image to see the code that generated it:
 |:--------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------:|
 | [![](docs/images/example_sequential.svg)](./tests/example/test_example_sequential.cpp) |  [![](docs/images/example_subgraph.svg)](./tests/example/test_example_subgraph.cpp)  |
 
-## Development
+## Demo
 
-To enable tests, add the following to your CMake options:
+### GitHub SVG Ribbon Generator
 
-```bash
--DGRAPH_LAYOUT_BUILD_TESTS=ON
-```
+An online tool that generates "Fork me on GitHub" ribbons:
+https://cyberzhg.github.io/fork-me-on-github-svg-ribbon/
 
-## Optional Requirements
-
-By default, this library estimates text dimensions using approximations. For more accurate measurements, PangoCairo can be enabled.
-
-To install PangoCairo:
-
-MacOS:
-
-```bash
-brew install cairo pango pkg-config
-```
-
-Linux:
-
-```bash
-sudo apt install libcairo2-dev libpango1.0-dev pkg-config
-```
-
-To enable PangoCairo, add the following to your CMake options:
-
-```bash
--DSVG_DIAGRAM_ENABLE_PANGO_CAIRO=ON
-```
+<img width="840" height="752" alt="Image" src="https://github.com/user-attachments/assets/358953c1-c7a0-46d2-9e98-62c32b792d32" />

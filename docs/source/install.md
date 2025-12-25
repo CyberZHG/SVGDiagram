@@ -3,7 +3,7 @@ Installation
 
 ## Python
 
-Install this package with `pip`:
+Make sure you have `cmake` installed and then you can install this package with `pip`:
 
 ```bash
 pip install sp-svg-diagram
@@ -47,6 +47,7 @@ A simple demo:
 
 ```javascript
 import { SVGDiagram } from 'sp-svg-diagram';
+import { writeFile } from 'fs/promises';
 
 const diagram = new SVGDiagram();
 const nodeA = diagram.addNode("a");
@@ -57,7 +58,7 @@ nodeB.setCenter(100.0, 100.0);
 nodeB.setLabel("bar");
 diagram.addEdge("a", "b");
 const svg = diagram.render();
-console.log(svg);
+await writeFile("demo.svg", diagram.render());
 ```
 
 The output should look like this:
@@ -116,3 +117,35 @@ int main() {
 The output should look like this:
 
 ![ES Demo](_static/demo/cpp.svg)
+
+### Optional Requirements
+
+By default, this library estimates text dimensions using approximations. For more accurate measurements, PangoCairo can be enabled.
+
+To install PangoCairo:
+
+MacOS:
+
+```bash
+brew install cairo pango pkg-config
+```
+
+Linux:
+
+```bash
+sudo apt install libcairo2-dev libpango1.0-dev pkg-config
+```
+
+To enable PangoCairo, add the following to your CMake options:
+
+```bash
+-DSVG_DIAGRAM_ENABLE_PANGO_CAIRO=ON
+```
+
+### Development
+
+To enable tests, add the following to your CMake options:
+
+```bash
+-DSVG_DIAGRAM_BUILD_TESTS=ON
+```

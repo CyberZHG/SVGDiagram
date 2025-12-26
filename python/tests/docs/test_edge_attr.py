@@ -62,13 +62,34 @@ def test_label():
     edge1 = diagram.add_edge("A", "B")
     edge1.set_arrow_head()
     edge1.set_label("A → B")
-    edge1.add_connection_point(75, 20)
+    edge1.add_connection_point(76, 20)
     edge2 = diagram.add_edge("B", "A")
     edge2.set_arrow_head()
     edge2.set_label("A ← B")
-    edge2.add_connection_point(75, -20)
+    edge2.add_connection_point(76, -20)
     svg = diagram.render()
     compare_svg("edge_attr", "label", svg)
+
+
+def test_self_loop():
+    diagram = SVGDiagram()
+    loop_height, loop_angle = 30.0, 30.0
+    node = diagram.add_node("A")
+    node.set_label("Self Loops")
+    edge1 = diagram.add_self_loop_to_left("A", loop_height, loop_angle)
+    edge1.set_label("Left")
+    edge1.set_arrow_head()
+    edge2 = diagram.add_self_loop_to_right("A", loop_height, loop_angle)
+    edge2.set_label("Right")
+    edge2.set_arrow_head()
+    edge3 = diagram.add_self_loop_to_top("A", loop_height, loop_angle)
+    edge3.set_label("Top")
+    edge3.set_arrow_head()
+    edge4 = diagram.add_self_loop_to_bottom("A", loop_height, loop_angle)
+    edge4.set_label("Bottom")
+    edge4.set_arrow_head()
+    svg = diagram.render()
+    compare_svg("edge_attr", "self_loop", svg)
 
 
 def test_color():

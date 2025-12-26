@@ -35,6 +35,11 @@ namespace svg_diagram {
         void addNode(const std::string& id, std::shared_ptr<SVGNode>& node);
         const std::shared_ptr<SVGEdge>& addEdge(const std::string& id);
         const std::shared_ptr<SVGEdge>& addEdge(const std::string& from, const std::string& to);
+        const std::shared_ptr<SVGEdge>& addSelfLoop(const std::string& nodeId, double dir, double height, double angle = 30);
+        const std::shared_ptr<SVGEdge>& addSelfLoopToTop(const std::string& nodeId, double height, double angle = 30);
+        const std::shared_ptr<SVGEdge>& addSelfLoopToBottom(const std::string& nodeId, double height, double angle = 30);
+        const std::shared_ptr<SVGEdge>& addSelfLoopToLeft(const std::string& nodeId, double height, double angle = 30);
+        const std::shared_ptr<SVGEdge>& addSelfLoopToRight(const std::string& nodeId, double height, double angle = 30);
         void addEdge(const std::string& id, std::shared_ptr<SVGEdge>& edge);
         void addEdge(std::shared_ptr<SVGEdge>& edge);
         const std::shared_ptr<SVGGraph>& addSubgraph(const std::string& id);

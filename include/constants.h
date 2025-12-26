@@ -26,6 +26,10 @@ namespace svg_diagram {
     constexpr std::string_view ATTR_KEY_STYLE = "style";
     constexpr std::string_view ATTR_KEY_GRADIENT_ANGLE = "gradientangle";
 
+    constexpr std::string_view ATTR_KEY_SELF_LOOP_DIR = "__self_loop_dir__";
+    constexpr std::string_view ATTR_KEY_SELF_LOOP_ANGLE = "__self_loop_angle__";
+    constexpr std::string_view ATTR_KEY_SELF_LOOP_HEIGHT = "__self_loop_height__";
+
     constexpr std::string_view ATTR_DEF_COLOR = "black";
     constexpr std::string_view ATTR_DEF_COLOR_GRAPH = "none";
     constexpr std::string_view ATTR_DEF_FILL_COLOR = "none";

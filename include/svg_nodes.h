@@ -187,7 +187,11 @@ namespace svg_diagram {
         void setArrowTail(const std::string_view& shape);
         void setArrowTail(const std::string& shape);
 
+        void setSelfLoopAttributes(double dir, double height, double angle);
+
     private:
+        static constexpr std::string_view SPLINES_SELF_LOOP = "__self-loop__";
+
         std::string _nodeFrom, _nodeTo;
         std::vector<std::pair<double, double>> _connectionPoints;
 

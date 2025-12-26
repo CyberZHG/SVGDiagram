@@ -97,6 +97,11 @@ EMSCRIPTEN_BINDINGS(SVGDiagramWASM) {
         .function("setRotation", select_overload<void(double)>(&SVGDiagram::setRotation))
         .function("addNode", select_overload<const shared_ptr<SVGNode>&(const string&)>(&SVGDiagram::addNode))
         .function("addEdge", select_overload<const shared_ptr<SVGEdge>&(const string&, const string&)>(&SVGDiagram::addEdge))
+        .function("addSelfLoop", select_overload<const shared_ptr<SVGEdge>&(const string&, double, double, double)>(&SVGDiagram::addSelfLoop))
+        .function("addSelfLoopToLeft", select_overload<const shared_ptr<SVGEdge>&(const string&, double, double)>(&SVGDiagram::addSelfLoopToLeft))
+        .function("addSelfLoopToRight", select_overload<const shared_ptr<SVGEdge>&(const string&, double, double)>(&SVGDiagram::addSelfLoopToRight))
+        .function("addSelfLoopToTop", select_overload<const shared_ptr<SVGEdge>&(const string&, double, double)>(&SVGDiagram::addSelfLoopToTop))
+        .function("addSelfLoopToBottom", select_overload<const shared_ptr<SVGEdge>&(const string&, double, double)>(&SVGDiagram::addSelfLoopToBottom))
         .function("addSubgraph", select_overload<const shared_ptr<SVGGraph>&(const string&)>(&SVGDiagram::addSubgraph))
         .function("render", select_overload<string()>(&SVGDiagram::render))
     ;

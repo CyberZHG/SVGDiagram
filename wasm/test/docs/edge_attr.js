@@ -64,13 +64,33 @@ describe("Docs/EdgeAttributes", () => {
         const edge1 = diagram.addEdge("A", "B");
         edge1.setArrowHead();
         edge1.setLabel("A → B");
-        edge1.addConnectionPoint(75, 20);
+        edge1.addConnectionPoint(76, 20);
         const edge2 = diagram.addEdge("B", "A");
         edge2.setArrowHead();
         edge2.setLabel("A ← B");
-        edge2.addConnectionPoint(75, -20);
+        edge2.addConnectionPoint(76, -20);
         const svg = diagram.render();
         await compareSVG("edge_attr", "label", svg);
+    });
+    it("selfLoop", async () => {
+        const diagram = new SVGDiagram();
+        const loopHeight = 30.0, loopAngle = 30.0;
+        const node = diagram.addNode("A");
+        node.setLabel("Self Loops");
+        const edge1 = diagram.addSelfLoopToLeft("A", loopHeight, loopAngle);
+        edge1.setLabel("Left");
+        edge1.setArrowHead();
+        const edge2 = diagram.addSelfLoopToRight("A", loopHeight, loopAngle);
+        edge2.setLabel("Right");
+        edge2.setArrowHead();
+        const edge3 = diagram.addSelfLoopToTop("A", loopHeight, loopAngle);
+        edge3.setLabel("Top");
+        edge3.setArrowHead();
+        const edge4 = diagram.addSelfLoopToBottom("A", loopHeight, loopAngle);
+        edge4.setLabel("Bottom");
+        edge4.setArrowHead();
+        const svg = diagram.render();
+        await compareSVG("edge_attr", "self_loop", svg);
     });
     it("color", async () => {
         const diagram = new SVGDiagram();

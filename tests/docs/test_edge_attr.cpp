@@ -96,11 +96,11 @@ TEST(TestDocsEdgeAttributes, Label) {
     const auto edge1 = diagram.addEdge("A", "B");
     edge1->setArrowHead();
     edge1->setLabel("A → B");
-    edge1->addConnectionPoint(75, 20);
+    edge1->addConnectionPoint(76, 20);
     const auto edge2 = diagram.addEdge("B", "A");
     edge2->setArrowHead();
     edge2->setLabel("A ← B");
-    edge2->addConnectionPoint(75, -20);
+    edge2->addConnectionPoint(76, -20);
     diagram.render(OUTPUT_DIR + "label.svg");
 }
 
@@ -122,6 +122,26 @@ TEST(TestDocsEdgeAttributes, LabelDebug) {
     edge2->setLabel("A ← B");
     edge2->addConnectionPoint(75, -20);
     diagram.render(OUTPUT_DIR + "label_debug.svg");
+}
+
+TEST(TestDocsEdgeAttributes, SelfLoop) {
+    SVGDiagram diagram;
+    constexpr double loopHeight = 30.0, loopAngle = 30.0;
+    const auto node = diagram.addNode("A");
+    node->setLabel("Self Loops");
+    const auto edge1 = diagram.addSelfLoopToLeft("A", loopHeight, loopAngle);
+    edge1->setLabel("Left");
+    edge1->setArrowHead();
+    const auto edge2 = diagram.addSelfLoopToRight("A", loopHeight, loopAngle);
+    edge2->setLabel("Right");
+    edge2->setArrowHead();
+    const auto edge3 = diagram.addSelfLoopToTop("A", loopHeight, loopAngle);
+    edge3->setLabel("Top");
+    edge3->setArrowHead();
+    const auto edge4 = diagram.addSelfLoopToBottom("A", loopHeight, loopAngle);
+    edge4->setLabel("Bottom");
+    edge4->setArrowHead();
+    diagram.render(OUTPUT_DIR + "self_loop.svg");
 }
 
 TEST(TestDocsEdgeAttributes, Color) {

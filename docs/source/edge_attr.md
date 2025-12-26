@@ -200,7 +200,7 @@ int main() {
 
 ## Label
 
-By default, the text of an `SVGEdge` is positioned to the right of the arrow direction and centered along the edge (excluding the arrow length).
+By default, the text of an `SVGEdge` is positioned to the right of the arrow direction and centered along the edge (including the arrow length).
 
 `````{tab-set}
 ````{tab-item} Python
@@ -217,13 +217,12 @@ node2.set_label("B")
 edge1 = diagram.add_edge("A", "B")
 edge1.set_arrow_head()
 edge1.set_label("A → B")
-edge1.add_connection_point(75, 20)
+edge1.add_connection_point(76, 20)
 edge2 = diagram.add_edge("B", "A")
 edge2.set_arrow_head()
 edge2.set_label("A ← B")
-edge2.add_connection_point(75, -20)
+edge2.add_connection_point(76, -20)
 svg = diagram.render()
-compare_svg("edge_attr", "label", svg)
 ```
 ````
 ````{tab-item} JavaScript
@@ -240,11 +239,11 @@ node2.setLabel("B");
 const edge1 = diagram.addEdge("A", "B");
 edge1.setArrowHead();
 edge1.setLabel("A → B");
-edge1.addConnectionPoint(75, 20);
+edge1.addConnectionPoint(76, 20);
 const edge2 = diagram.addEdge("B", "A");
 edge2.setArrowHead();
 edge2.setLabel("A ← B");
-edge2.addConnectionPoint(75, -20);
+edge2.addConnectionPoint(76, -20);
 const svg = diagram.render();
 ````
 
@@ -264,11 +263,11 @@ int main() {
     const auto edge1 = diagram.addEdge("A", "B");
     edge1->setArrowHead();
     edge1->setLabel("A → B");
-    edge1->addConnectionPoint(75, 20);
+    edge1->addConnectionPoint(76, 20);
     const auto edge2 = diagram.addEdge("B", "A");
     edge2->setArrowHead();
     edge2->setLabel("A ← B");
-    edge2->addConnectionPoint(75, -20);
+    edge2->addConnectionPoint(76, -20);
     diagram.render("label.svg");
     return 0;
 }
@@ -276,6 +275,87 @@ int main() {
 `````
 
 ![](_static/edge_attr/label.svg)
+
+## Self Loop
+
+There are some helper functions for drawing self-loops, which require specifying the height of the loop and the opening angle.
+
+`````{tab-set}
+````{tab-item} Python
+```python
+from sp_svg_diagram import SVGDiagram
+
+diagram = SVGDiagram()
+loop_height, loop_angle = 30.0, 30.0
+node = diagram.add_node("A")
+node.set_label("Self Loops")
+edge1 = diagram.add_self_loop_to_left("A", loop_height, loop_angle)
+edge1.set_label("Left")
+edge1.set_arrow_head()
+edge2 = diagram.add_self_loop_to_right("A", loop_height, loop_angle)
+edge2.set_label("Right")
+edge2.set_arrow_head()
+edge3 = diagram.add_self_loop_to_top("A", loop_height, loop_angle)
+edge3.set_label("Top")
+edge3.set_arrow_head()
+edge4 = diagram.add_self_loop_to_bottom("A", loop_height, loop_angle)
+edge4.set_label("Bottom")
+edge4.set_arrow_head()
+svg = diagram.render()
+```
+````
+````{tab-item} JavaScript
+```javascript
+import { SVGDiagram } from 'sp-svg-diagram';
+
+const diagram = new SVGDiagram();
+const loopHeight = 30.0, loopAngle = 30.0;
+const node = diagram.addNode("A");
+node.setLabel("Self Loops");
+const edge1 = diagram.addSelfLoopToLeft("A", loopHeight, loopAngle);
+edge1.setLabel("Left");
+edge1.setArrowHead();
+const edge2 = diagram.addSelfLoopToRight("A", loopHeight, loopAngle);
+edge2.setLabel("Right");
+edge2.setArrowHead();
+const edge3 = diagram.addSelfLoopToTop("A", loopHeight, loopAngle);
+edge3.setLabel("Top");
+edge3.setArrowHead();
+const edge4 = diagram.addSelfLoopToBottom("A", loopHeight, loopAngle);
+edge4.setLabel("Bottom");
+edge4.setArrowHead();
+const svg = diagram.render();
+````
+
+````{tab-item} C++
+```c++
+#include "svg_diagram.h"
+using namespace svg_diagram;
+
+int main() {
+    SVGDiagram diagram;
+    constexpr double loopHeight = 30.0, loopAngle = 30.0;
+    const auto node = diagram.addNode("A");
+    node->setLabel("Self Loops");
+    const auto edge1 = diagram.addSelfLoopToLeft("A", loopHeight, loopAngle);
+    edge1->setLabel("Left");
+    edge1->setArrowHead();
+    const auto edge2 = diagram.addSelfLoopToRight("A", loopHeight, loopAngle);
+    edge2->setLabel("Right");
+    edge2->setArrowHead();
+    const auto edge3 = diagram.addSelfLoopToTop("A", loopHeight, loopAngle);
+    edge3->setLabel("Top");
+    edge3->setArrowHead();
+    const auto edge4 = diagram.addSelfLoopToBottom("A", loopHeight, loopAngle);
+    edge4->setLabel("Bottom");
+    edge4->setArrowHead();
+    diagram.render(OUTPUT_DIR + "self_loop.svg");
+    return 0;
+}
+````
+`````
+
+![](_static/edge_attr/self_loop.svg)
 
 ## Color
 

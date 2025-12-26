@@ -2,6 +2,7 @@
 
 #include <format>
 #include <cmath>
+#include <numbers>
 
 #include "attribute_utils.h"
 #include "svg_text_size.h"
@@ -115,6 +116,15 @@ void SVGEdge::setArrowTail(const string& shape) {
     setAttribute(ATTR_KEY_ARROW_TAIL, shape);
 }
 
+void SVGEdge::setSelfLoopAttributes(double dir, const double height, double angle) {
+    dir = -dir / 180 * numbers::pi;
+    angle = angle / 180 * numbers::pi;
+    setSplines(SPLINES_SELF_LOOP);
+    setAttribute(ATTR_KEY_SELF_LOOP_DIR, dir);
+    setAttribute(ATTR_KEY_SELF_LOOP_ANGLE, angle);
+    setAttribute(ATTR_KEY_SELF_LOOP_HEIGHT, height);
+}
+
 std::pair<double, double> SVGEdge::computeTextCenter(const double cx, const double cy, double dx, double dy) {
     const auto [width, height] = computeTextSizeWithMargin();
     const auto points = vector<pair<double, double>>{
@@ -143,25 +153,30 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
     const auto arrowTailShape = getAttribute(ATTR_KEY_ARROW_TAIL);
     vector<unique_ptr<SVGDraw>> svgDraws;
     vector<unique_ptr<SVGDraw>> svgDrawArrows;
-    vector<pair<double, double>> points;
+    vector<pair<double, double>> drawPoints, distancePoints;
     if (_connectionPoints.empty()) {
         const double angleFrom = nodeFrom->computeAngle(nodeTo->center());
         const double angleTo = nodeTo->computeAngle(nodeFrom->center());
-        points.emplace_back(addArrow(arrowTailShape, svgDrawArrows, nodeFrom->computeConnectionPoint(angleFrom), angleFrom));
-        points.emplace_back(addArrow(arrowHeadShape, svgDrawArrows, nodeTo->computeConnectionPoint(angleTo), angleTo));
+        distancePoints.emplace_back(nodeFrom->computeConnectionPoint(angleFrom));
+        distancePoints.emplace_back(nodeTo->computeConnectionPoint(angleTo));
+        drawPoints.emplace_back(addArrow(arrowTailShape, svgDrawArrows, distancePoints[0], angleFrom));
+        drawPoints.emplace_back(addArrow(arrowHeadShape, svgDrawArrows, distancePoints[1], angleTo));
     } else {
         const double angleFrom = nodeFrom->computeAngle(_connectionPoints[0]);
-        points.emplace_back(addArrow(arrowTailShape, svgDrawArrows, nodeFrom->computeConnectionPoint(angleFrom), angleFrom));
+        distancePoints.emplace_back(nodeFrom->computeConnectionPoint(angleFrom));
+        drawPoints.emplace_back(addArrow(arrowTailShape, svgDrawArrows, distancePoints[0], angleFrom));
         for (const auto& [x, y] : _connectionPoints) {
-            points.emplace_back(x, y);
+            distancePoints.emplace_back(x, y);
+            drawPoints.emplace_back(x, y);
         }
         const size_t n = _connectionPoints.size();
         const double angleTo = nodeTo->computeAngle(_connectionPoints[n - 1]);
-        points.emplace_back(addArrow(arrowHeadShape, svgDrawArrows, nodeTo->computeConnectionPoint(angleTo), angleTo));
+        distancePoints.emplace_back(nodeTo->computeConnectionPoint(angleTo));
+        drawPoints.emplace_back(addArrow(arrowHeadShape, svgDrawArrows, distancePoints.back(), angleTo));
     }
-    for (size_t i = 0; i + 1 < points.size(); ++i) {
-        const auto& [x1, y1] = points[i];
-        const auto& [x2, y2] = points[i + 1];
+    for (size_t i = 0; i + 1 < drawPoints.size(); ++i) {
+        const auto& [x1, y1] = drawPoints[i];
+        const auto& [x2, y2] = drawPoints[i + 1];
         svgDraws.emplace_back(make_unique<SVGDrawLine>(x1, y1, x2, y2));
     }
     setStrokeStyles(svgDraws[0].get());
@@ -177,18 +192,18 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
     }
     if (const auto label = getAttribute(ATTR_KEY_LABEL); !label.empty()) {
         double totalLength = 0.0;
-        for (size_t i = 0; i + 1 < points.size(); ++i) {
-            const auto& [x1, y1] = points[i];
-            const auto& [x2, y2] = points[i + 1];
+        for (size_t i = 0; i + 1 < distancePoints.size(); ++i) {
+            const auto& [x1, y1] = distancePoints[i];
+            const auto& [x2, y2] = distancePoints[i + 1];
             totalLength += GeometryUtils::distance(x1, y1, x2, y2);
         }
         const double halfLength = totalLength / 2.0;
         double sumLength = 0.0;
         size_t index = 0;
         double lineX = 0.0, lineY = 0.0;
-        for (size_t i = 0; i + 1 < points.size(); ++i) {
-            const auto& [x1, y1] = points[i];
-            const auto& [x2, y2] = points[i + 1];
+        for (size_t i = 0; i + 1 < distancePoints.size(); ++i) {
+            const auto& [x1, y1] = distancePoints[i];
+            const auto& [x2, y2] = distancePoints[i + 1];
             const double length = GeometryUtils::distance(x1, y1, x2, y2);
             const double nextSum = sumLength + length;
             if (nextSum > halfLength) {
@@ -200,8 +215,8 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
             }
             sumLength = nextSum;
         }
-        const double dx = points[index + 1].first - points[index].first;
-        const double dy = points[index + 1].second - points[index].second;
+        const double dx = distancePoints[index + 1].first - distancePoints[index].first;
+        const double dy = distancePoints[index + 1].second - distancePoints[index].second;
         const auto [cx, cy] = computeTextCenter(lineX, lineY, dx, dy);
         appendSVGDrawsLabelWithCenter(svgDraws, cx, cy);
     }
@@ -210,8 +225,9 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
 
 vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& nodes) {
     static constexpr double NUM_SPLINE_LENGTH_APPROXIMATION_SEGMENTS = 100;
+    const auto splinesType = getAttribute(ATTR_KEY_SPLINES);
     constexpr double SPLINE_LENGTH_APPROXIMATION_STEP = 1.0 / NUM_SPLINE_LENGTH_APPROXIMATION_SEGMENTS;
-    if (_connectionPoints.empty()) {
+    if (_connectionPoints.empty() && splinesType != SPLINES_SELF_LOOP) {
         return produceSVGDrawsLine(nodes);
     }
     const auto& nodeFrom = nodes.at(_nodeFrom);
@@ -220,47 +236,88 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
     const auto arrowTailShape = getAttribute(ATTR_KEY_ARROW_TAIL);
     vector<unique_ptr<SVGDraw>> svgDraws;
     vector<unique_ptr<SVGDraw>> svgDrawArrows;
-    vector<pair<double, double>> points;
-    const double nodeAngleFrom = nodeFrom->computeAngle(_connectionPoints[0]);
-    const auto ps = nodeFrom->computeConnectionPoint(nodeAngleFrom);
-    points.emplace_back(ps);
-    points.emplace_back(ps);
-    for (const auto& [x, y] : _connectionPoints) {
-        points.emplace_back(x, y);
-    }
-    const double nodeAngleTo = nodeTo->computeAngle(_connectionPoints[_connectionPoints.size() - 1]);
-    const auto pe = nodeTo->computeConnectionPoint(nodeAngleTo);
-    points.emplace_back(pe);
-    points.emplace_back(pe);
-    auto d = format("M {} {}", points[1].first, points[1].second);
     vector<vector<pair<double, double>>> splines;
-    for (int i = 1; i + 2 < static_cast<int>(points.size()); ++i) {
-        const auto [x0, y0] = points[i - 1];
-        const auto [x1, y1] = points[i];
-        auto [x2, y2] = points[i + 1];
-        const auto [x3, y3] = points[i + 2];
-        const double c1x = x1 + (x2 - x0) / 6.0;
-        const double c1y = y1 + (y2 - y0) / 6.0;
-        const double c2x = x2 - (x3 - x1) / 6.0;
-        const double c2y = y2 - (y3 - y1) / 6.0;
-        if (i == 1 && arrowTailShape != ARROW_NONE) {
-            const auto [nx, ny] = GeometryUtils::findPointOnBezierWithDistance(
-                points[i], {c1x, c1y}, {c2x, c2y}, points[i + 1], points[i],
-                ARROW_WIDTH + computeArrowTipMargin(arrowTailShape));
-            d = format("M {} {}", nx, ny);
-            const double arrowAngleFrom = atan2(ny - points[i].second, nx - points[i].first);
-            addArrow(arrowTailShape, svgDrawArrows, points[i], arrowAngleFrom);
+    if (splinesType == SPLINES_SELF_LOOP) {
+        const double selfCycleDir = stod(getAttribute(ATTR_KEY_SELF_LOOP_DIR));
+        const double selfCycleAngle = stod(getAttribute(ATTR_KEY_SELF_LOOP_ANGLE));
+        const double selfCycleHeight = stod(getAttribute(ATTR_KEY_SELF_LOOP_HEIGHT));
+        const double nodeAngleFrom = selfCycleDir + selfCycleAngle / 2.0;
+        const double nodeAngleTo = selfCycleDir - selfCycleAngle / 2.0;
+        auto [rx, ry] = nodeFrom->computeConnectionPoint(selfCycleDir);
+        rx += selfCycleHeight * cos(selfCycleDir);
+        ry += selfCycleHeight * sin(selfCycleDir);
+        const auto startPoint = nodeFrom->computeConnectionPoint(nodeAngleFrom);
+        const auto stopPoint = nodeTo->computeConnectionPoint(nodeAngleTo);
+        const double nx = cos(selfCycleDir), ny = sin(selfCycleDir);
+        const double tx = ny, ty = -nx;
+        const double radius = 0.5625 * selfCycleHeight;
+        const double shift = 0.375 * selfCycleHeight;
+        const double c1x = startPoint.first + nx * radius - tx * shift;
+        const double c1y = startPoint.second + ny * radius - ty * shift;
+        const double c2x = rx - tx * shift;
+        const double c2y = ry - ty * shift;
+        const double c3x = rx + tx * shift;
+        const double c3y = ry + ty * shift;
+        const double c4x = stopPoint.first + nx * radius + tx * shift;
+        const double c4y = stopPoint.second + ny * radius + ty * shift;
+        splines.emplace_back(vector{startPoint, {c1x, c1y}, {c2x, c2y}, {rx, ry}});
+        splines.emplace_back(vector{{rx, ry}, {c3x, c3y}, {c4x, c4y}, stopPoint});
+    } else {
+        vector<pair<double, double>> points;
+        const double nodeAngleFrom = nodeFrom->computeAngle(_connectionPoints[0]);
+        const auto startPoint = nodeFrom->computeConnectionPoint(nodeAngleFrom);
+        points.emplace_back(startPoint);
+        points.emplace_back(startPoint);
+        for (const auto& [x, y] : _connectionPoints) {
+            points.emplace_back(x, y);
         }
-        if (i + 3 == static_cast<int>(points.size()) && arrowHeadShape != ARROW_NONE) {
-            const auto [nx, ny] = GeometryUtils::findPointOnBezierWithDistance(
-                points[i], {c1x, c1y}, {c2x, c2y}, points[i + 1], points[i + 1],
+        const double nodeAngleTo = nodeTo->computeAngle(_connectionPoints[_connectionPoints.size() - 1]);
+        const auto stopPoint = nodeTo->computeConnectionPoint(nodeAngleTo);
+        points.emplace_back(stopPoint);
+        points.emplace_back(stopPoint);
+        for (int i = 1; i + 2 < static_cast<int>(points.size()); ++i) {
+            const auto [x0, y0] = points[i - 1];
+            const auto [x1, y1] = points[i];
+            auto [x2, y2] = points[i + 1];
+            const auto [x3, y3] = points[i + 2];
+            const double c1x = x1 + (x2 - x0) / 6.0;
+            const double c1y = y1 + (y2 - y0) / 6.0;
+            const double c2x = x2 - (x3 - x1) / 6.0;
+            const double c2y = y2 - (y3 - y1) / 6.0;
+            splines.emplace_back(vector{points[i], {c1x, c1y}, {c2x, c2y}, points[i + 1]});
+        }
+    }
+    auto d = format("M {} {}", splines[0][0].first, splines[0][0].second);
+    for (size_t i = 0; i < splines.size(); ++i) {
+        const auto& spline = splines[i];
+        auto [c1x, c1y] = spline[1];
+        auto [c2x, c2y] = spline[2];
+        auto [x2, y2] = spline[3];
+        if (i == 0 && arrowTailShape != ARROW_NONE) {
+            const auto [t, endPoint] = GeometryUtils::findPointOnBezierWithL2Distance(
+                spline[0], spline[1], spline[2], spline[3], spline[0],
+                ARROW_WIDTH + computeArrowTipMargin(arrowTailShape));
+            const auto& [nx, ny] = endPoint;
+            const double arrowAngleFrom = atan2(ny - spline[0].second, nx - spline[0].first);
+            addArrow(arrowTailShape, svgDrawArrows, spline[0], arrowAngleFrom);
+            const auto [spline1, spline2] = GeometryUtils::splitBezierAt(spline, t);
+            d = format("M {} {}", nx, ny);
+            c1x = spline2[1].first, c1y = spline2[1].second;
+            c2x = spline2[2].first, c2y = spline2[2].second;
+            x2 = spline2[3].first, y2 = spline2[3].second;
+        } else if (i + 1 == splines.size() && arrowHeadShape != ARROW_NONE) {
+            const auto [t, endPoint] = GeometryUtils::findPointOnBezierWithL2Distance(
+                spline[3], spline[2], spline[1], spline[0], spline[3],
                 ARROW_WIDTH + computeArrowTipMargin(arrowHeadShape));
-            const double arrowAngleTo = atan2(ny - points[i + 1].second, nx - points[i + 1].first);
-            addArrow(arrowHeadShape, svgDrawArrows, points[i + 1], arrowAngleTo);
-            x2 = nx, y2 = ny;
+            const auto& [nx, ny] = endPoint;
+            const double arrowAngleTo = atan2(ny - spline[3].second, nx - spline[3].first);
+            addArrow(arrowHeadShape, svgDrawArrows, spline[3], arrowAngleTo);
+            const auto [spline1, spline2] = GeometryUtils::splitBezierAt(spline, 1 - t);
+            c1x = spline1[1].first, c1y = spline1[1].second;
+            c2x = spline1[2].first, c2y = spline1[2].second;
+            x2 = spline1[3].first, y2 = spline1[3].second;
         }
         d += format(" C {} {} {} {} {} {}", c1x, c1y, c2x, c2y, x2, y2);
-        splines.emplace_back(vector{points[i], {c1x, c1y}, {c2x, c2y}, points[i + 1]});
     }
     if (enabledDebug()) {
         for (const auto& spline : splines) {

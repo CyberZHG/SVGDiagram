@@ -162,23 +162,37 @@ GeometryUtils::Point2D GeometryUtils::computeBezierAt(const vector<Point2D>& poi
     return computeBezierAt(points[0], points[1], points[2], points[3], t);
 }
 
-GeometryUtils::Point2D GeometryUtils::findPointOnBezierWithDistance(const Point2D& p0, const Point2D& p1, const Point2D& p2, const Point2D& p3, const Point2D& po, const double dist) {
-    double tl = 0.0, tr = 1.0;
-    while (tr - tl > 1e-4) {
-        const double tll = tl + (tr - tl) / 3.0;
-        const double trr = tr - (tr - tl) / 3.0;
-        const auto pl = computeBezierAt(p0, p1, p2, p3, tll);
-        const auto pr = computeBezierAt(p0, p1, p2, p3, trr);
-        const double dl = distance(pl, po);
-        const double dr = distance(pr, po);
-        if (fabs(dl - dist) < fabs(dr - dist)) {
-            tr = trr;
-        } else {
-            tl = tll;
-        }
-        if (fabs(fabs(dl - dist) - fabs(dr - dist)) < 1e-3) {
-            break;
+pair<double, GeometryUtils::Point2D> GeometryUtils::findPointOnBezierWithL2Distance(const Point2D& p0, const Point2D& p1, const Point2D& p2, const Point2D& p3, const Point2D& target, const double dist) {
+    double t = 0.0, step = 0.1;
+    Point2D best;
+    while (step > 1e-4) {
+        const double newT = t + step;
+        const auto p = computeBezierAt(p0, p1, p2, p3, newT);
+        if (const auto newDistance = distance(target, p); newDistance <= dist) {
+            best = p;
+            t = newT;
+        } else if (newDistance > dist) {
+            step = step / 10;
         }
     }
-    return computeBezierAt(p0, p1, p2, p3, (tl + tr) / 2.0);
+    return {t, best};
+}
+
+/** Split Bezier spline using de Casteljau algorithm.
+ *
+ * @param points The Bezier spline.
+ * @param t Split point.
+ * @return The points for two Bezier splines.
+ */
+pair<std::vector<GeometryUtils::Point2D>, std::vector<GeometryUtils::Point2D>> GeometryUtils::splitBezierAt(const vector<Point2D>& points, const double t) {
+    auto interpolate = [t](const Point2D& p0, const Point2D& p1) -> Point2D {
+        return {(1 - t) * p0.first + t * p1.first, (1 - t) * p0.second + t * p1.second};
+    };
+    const auto a0 = interpolate(points[0], points[1]);
+    const auto a1 = interpolate(points[1], points[2]);
+    const auto a2 = interpolate(points[2], points[3]);
+    const auto b0 = interpolate(a0, a1);
+    const auto b1 = interpolate(a1, a2);
+    const auto c = interpolate(b0, b1);
+    return {{points[0], a0, b0, c}, {c, b1, a2, points[3]}};
 }

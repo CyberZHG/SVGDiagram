@@ -28,7 +28,8 @@ namespace svg_diagram {
         static double computeBezierLength(const Point2D& p0, const Point2D& p1, const Point2D& p2, const Point2D& p3);
         static Point2D computeBezierAt(const Point2D& p0, const Point2D& p1, const Point2D& p2, const Point2D& p3, double t);
         static Point2D computeBezierAt(const std::vector<Point2D>& points, double t);
-        static Point2D findPointOnBezierWithDistance(const Point2D& p0, const Point2D& p1, const Point2D& p2, const Point2D& p3, const Point2D& po, double dist);
+        static std::pair<double, Point2D> findPointOnBezierWithL2Distance(const Point2D& p0, const Point2D& p1, const Point2D& p2, const Point2D& p3, const Point2D& target, double dist);
+        static std::pair<std::vector<Point2D>, std::vector<Point2D>> splitBezierAt(const std::vector<Point2D>& points, double t);
     };
 
 }

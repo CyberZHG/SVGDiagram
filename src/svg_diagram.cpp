@@ -105,6 +105,22 @@ const shared_ptr<SVGEdge>& SVGDiagram::addSelfLoop(const string& nodeId, const d
     return edge;
 }
 
+const shared_ptr<SVGEdge>& SVGDiagram::addSelfLoopToTop(const string& nodeId, const double height, const double angle) {
+    return addSelfLoop(nodeId, 90, height, angle);
+}
+
+const shared_ptr<SVGEdge>& SVGDiagram::addSelfLoopToBottom(const string& nodeId, const double height, const double angle) {
+    return addSelfLoop(nodeId, -90, height, angle);
+}
+
+const shared_ptr<SVGEdge>& SVGDiagram::addSelfLoopToLeft(const string& nodeId, const double height, const double angle) {
+    return addSelfLoop(nodeId, 180, height, angle);
+}
+
+const shared_ptr<SVGEdge>& SVGDiagram::addSelfLoopToRight(const string& nodeId, const double height, const double angle) {
+    return addSelfLoop(nodeId, 0, height, angle);
+}
+
 void SVGDiagram::addEdge(const string& id, shared_ptr<SVGEdge>& edge) {
     if (_edges.contains(id)) {
         throw runtime_error("SVGDiagram::addEdge: Edge ID already exists");

@@ -24,6 +24,7 @@ TEST(TestExample, Pentagram) {
     };
     const auto strokeColors = vector{"peru", "darkgoldenrod", "limegreen", "dodgerblue", "lightcoral"};
     const auto textColors = vector{"saddlebrown", "goldenrod", "olivedrab", "royalblue", "indianred"};
+    const auto selfLoopDirs = vector{90, 0, -90, -90, 180};
 
     const auto& centralNode = diagram.addNode("node_c");
     centralNode->setCenter(0.0, 0.0);
@@ -46,6 +47,12 @@ TEST(TestExample, Pentagram) {
         edge->setColor(strokeColors[i]);
         edge->setLabel(format("C{}", i + 1));
         edge->setFontColor(strokeColors[i]);
+
+        const auto& loop = diagram.addSelfLoop(to, selfLoopDirs[i], 30.0, 20.0);
+        loop->setColor(strokeColors[i]);
+        loop->setFontColor(strokeColors[i]);
+        loop->setArrowHead();
+        loop->setLabel(format("C{}", i + 1));
     }
 
     diagram.render("example_pentagram.svg");

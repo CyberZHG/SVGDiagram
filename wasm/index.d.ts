@@ -77,6 +77,11 @@ declare module 'sp-svg-diagram' {
         setRotation(angle: number): void
         addNode(nodeId: string): SVGNode
         addEdge(edgeId: string): SVGEdge
+        addSelfLoop(nodeID: string, dir: number, height: number, angle: number): SVGEdge
+        addSelfLoopToLeft(nodeID: string, height: number, angle: number): SVGEdge
+        addSelfLoopToRight(nodeID: string, height: number, angle: number): SVGEdge
+        addSelfLoopToTop(nodeID: string, height: number, angle: number): SVGEdge
+        addSelfLoopToBottom(nodeID: string, height: number, angle: number): SVGEdge
         addSubgraph(graphId: string): SVGGraph
         render(): string
     }

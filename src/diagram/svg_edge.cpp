@@ -241,15 +241,15 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
         const double selfCycleDir = stod(getAttribute(ATTR_KEY_SELF_LOOP_DIR));
         const double selfCycleAngle = stod(getAttribute(ATTR_KEY_SELF_LOOP_ANGLE));
         const double selfCycleHeight = stod(getAttribute(ATTR_KEY_SELF_LOOP_HEIGHT));
-        const double nodeAngleFrom = selfCycleDir - selfCycleAngle / 2.0;
-        const double nodeAngleTo = selfCycleDir + selfCycleAngle / 2.0;
+        const double nodeAngleFrom = selfCycleDir + selfCycleAngle / 2.0;
+        const double nodeAngleTo = selfCycleDir - selfCycleAngle / 2.0;
         auto [rx, ry] = nodeFrom->computeConnectionPoint(selfCycleDir);
         rx += selfCycleHeight * cos(selfCycleDir);
         ry += selfCycleHeight * sin(selfCycleDir);
         const auto startPoint = nodeFrom->computeConnectionPoint(nodeAngleFrom);
         const auto stopPoint = nodeTo->computeConnectionPoint(nodeAngleTo);
         const double nx = cos(selfCycleDir), ny = sin(selfCycleDir);
-        const double tx = -ny, ty = nx;
+        const double tx = ny, ty = -nx;
         const double radius = 0.5625 * selfCycleHeight;
         const double shift = 0.375 * selfCycleHeight;
         const double c1x = startPoint.first + nx * radius - tx * shift;

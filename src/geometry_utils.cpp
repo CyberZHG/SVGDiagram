@@ -135,7 +135,7 @@ double GeometryUtils::computeBezierLength(const Point2D& p0, const Point2D& p1, 
         const auto [dx, dy] = computeBezierDerivative(p0, p1, p2, p3, t);
         total += w16[i] * distance(dx, dy);
     }
-    return total / 2.0;
+    return total * 0.5;
 }
 
 /** Compute the point location on a bezier spline.

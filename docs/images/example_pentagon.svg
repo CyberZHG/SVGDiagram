@@ -61,35 +61,35 @@
       <title>node_0->node_1</title>
       <line x1="37.04044088900122" y1="-123.08854443807192" x2="89.10963028915815" y2="-85.25806394009194" stroke="peru"/>
       <polygon points="97.19980023290762,-79.38021141716722 87.05238190613449,-82.42650445977964 91.16687867218181,-88.08962342040427 97.19980023290762,-79.38021141716722" fill="peru" stroke="peru"/>
-      <text x="54.043818218518545" y="-91.74289988039638" text-anchor="middle" dominant-baseline="central" fill="peru" font-family="Times,serif" font-size="14">C1</text>
+      <text x="58.78204641717315" y="-88.30037558667958" text-anchor="middle" dominant-baseline="central" fill="peru" font-family="Times,serif" font-size="14">C1</text>
     </g>
     <!-- Edge: edge2 (node_1 -> node_2) -->
     <g class="edge" id="edge2">
       <title>node_1->node_2</title>
       <line x1="125.82432214025799" y1="5.457653485176422" x2="106.80633779438524" y2="63.98899081672565" stroke="darkgoldenrod" stroke-dasharray="5,2"/>
       <polygon points="103.71616785063577,73.49955597967718 103.4776399873522,62.90743133641333 110.13503560141828,65.07055029703797 103.71616785063577,73.49955597967718" fill="darkgoldenrod" stroke="darkgoldenrod"/>
-      <text x="103.13291761065081" y="30.44009673240464" text-anchor="middle" dominant-baseline="central" fill="darkgoldenrod" font-family="Times,serif" font-size="14">C2</text>
+      <text x="101.32307548521794" y="36.01021804673566" text-anchor="middle" dominant-baseline="central" fill="darkgoldenrod" font-family="Times,serif" font-size="14">C2</text>
     </g>
     <!-- Edge: edge3 (node_2 -> node_3) -->
     <g class="edge" id="edge3">
       <title>node_2->node_3</title>
       <line x1="39.56571749486833" y1="121.35254915624212" x2="-26.669740695615786" y2="121.35254915624212" stroke="limegreen"/>
       <polygon points="-36.669740695615786,121.35254915624212 -26.669740695615786,117.85254915624212 -26.669740695615786,124.85254915624212 -36.669740695615786,121.35254915624212" fill="limegreen" stroke="limegreen"/>
-      <text x="6.447988399626276" y="110.35254915624213" text-anchor="middle" dominant-baseline="central" fill="limegreen" font-family="Times,serif" font-size="14">C3</text>
+      <text x="0.5912162531828002" y="110.35254915624213" text-anchor="middle" dominant-baseline="central" fill="limegreen" font-family="Times,serif" font-size="14">C3</text>
     </g>
     <!-- Edge: edge4 (node_3 -> node_4) -->
     <g class="edge" id="edge4">
       <title>node_3->node_4</title>
       <line x1="-103.55204528268784" y1="74.00467330512949" x2="-122.20463788939227" y2="16.597896113838463" stroke="dodgerblue"/>
       <polygon points="-125.29480783314175,7.087330950886929 -118.87594008235924,15.516336633526148 -125.53333569642531,17.67945559415078 -125.29480783314175,7.087330950886929" fill="dodgerblue" stroke="dodgerblue"/>
-      <text x="-99.69592922936924" y="41.01805929093758" text-anchor="middle" dominant-baseline="central" fill="dodgerblue" font-family="Times,serif" font-size="14">C4</text>
+      <text x="-101.50577135480212" y="35.44793797660657" text-anchor="middle" dominant-baseline="central" fill="dodgerblue" font-family="Times,serif" font-size="14">C4</text>
     </g>
     <!-- Edge: edge5 (node_4 -> node_0) -->
     <g class="edge" id="edge5">
       <title>node_4->node_0</title>
       <line x1="-98.58608668646738" y1="-78.37301535265833" x2="-46.5168972863104" y2="-116.20349585063832" stroke="lightcoral"/>
       <polygon points="-38.42672734256093,-122.08134837356305 -44.45964890328675,-113.371936370326 -48.57414566933406,-119.03505533095063 -38.42672734256093,-122.08134837356305" fill="none" stroke="lightcoral"/>
-      <text x="-63.52027461582776" y="-84.85785129296278" text-anchor="middle" dominant-baseline="central" fill="lightcoral" font-family="Times,serif" font-size="14">C5</text>
+      <text x="-58.782046417173156" y="-88.30037558667956" text-anchor="middle" dominant-baseline="central" fill="lightcoral" font-family="Times,serif" font-size="14">C5</text>
     </g>
   </g>
 </svg>

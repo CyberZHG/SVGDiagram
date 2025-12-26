@@ -14,6 +14,10 @@ double GeometryUtils::distance(const Point2D& p) {
     return sqrt(x * x + y * y);
 }
 
+double GeometryUtils::distance(const Point2D& p1, const Point2D& p2) {
+    return distance(p2.first - p1.first, p2.second - p1.second);
+}
+
 double GeometryUtils::distance(const double x1, const double y1, const double x2, const double y2) {
     return distance(x2 - x1, y2 - y1);
 }
@@ -156,4 +160,25 @@ GeometryUtils::Point2D GeometryUtils::computeBezierAt(const Point2D& p0, const P
 
 GeometryUtils::Point2D GeometryUtils::computeBezierAt(const vector<Point2D>& points, const double t) {
     return computeBezierAt(points[0], points[1], points[2], points[3], t);
+}
+
+GeometryUtils::Point2D GeometryUtils::findPointOnBezierWithDistance(const Point2D& p0, const Point2D& p1, const Point2D& p2, const Point2D& p3, const Point2D& po, const double dist) {
+    double tl = 0.0, tr = 1.0;
+    while (tr - tl > 1e-4) {
+        const double tll = tl + (tr - tl) / 3.0;
+        const double trr = tr - (tr - tl) / 3.0;
+        const auto pl = computeBezierAt(p0, p1, p2, p3, tll);
+        const auto pr = computeBezierAt(p0, p1, p2, p3, trr);
+        const double dl = distance(pl, po);
+        const double dr = distance(pr, po);
+        if (fabs(dl - dist) < fabs(dr - dist)) {
+            tr = trr;
+        } else {
+            tl = tll;
+        }
+        if (fabs(fabs(dl - dist) - fabs(dr - dist)) < 1e-3) {
+            break;
+        }
+    }
+    return computeBezierAt(p0, p1, p2, p3, (tl + tr) / 2.0);
 }

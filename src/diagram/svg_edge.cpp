@@ -222,16 +222,16 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
     vector<unique_ptr<SVGDraw>> svgDrawArrows;
     vector<pair<double, double>> points;
     const double nodeAngleFrom = nodeFrom->computeAngle(_connectionPoints[0]);
-    //auto [sx, sy] = addArrow(arrowTailShape, svgDrawArrows, nodeFrom->computeConnectionPoint(nodeAngleFrom), nodeAngleFrom);
-    points.emplace_back(nodeFrom->center());
-    points.emplace_back(nodeFrom->computeConnectionPoint(nodeAngleFrom));
+    const auto ps = nodeFrom->computeConnectionPoint(nodeAngleFrom);
+    points.emplace_back(ps);
+    points.emplace_back(ps);
     for (const auto& [x, y] : _connectionPoints) {
         points.emplace_back(x, y);
     }
     const double nodeAngleTo = nodeTo->computeAngle(_connectionPoints[_connectionPoints.size() - 1]);
-    //auto [ex, ey] = addArrow(arrowHeadShape, svgDrawArrows, nodeTo->computeConnectionPoint(nodeAngleTo), nodeAngleTo);
-    points.emplace_back(nodeTo->computeConnectionPoint(nodeAngleTo));
-    points.emplace_back(nodeTo->center());
+    const auto pe = nodeTo->computeConnectionPoint(nodeAngleTo);
+    points.emplace_back(pe);
+    points.emplace_back(pe);
     auto d = format("M {} {}", points[1].first, points[1].second);
     vector<vector<pair<double, double>>> splines;
     for (int i = 1; i + 2 < static_cast<int>(points.size()); ++i) {

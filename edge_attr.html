@@ -58,6 +58,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#splines">Splines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#arrow">Arrow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#label">Label</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#self-loop">Self Loop</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#color">Color</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pen-width-margin">Pen Width &amp; Margin</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#font">Font</a></li>
@@ -300,7 +301,7 @@ C++</label><div class="sd-tab-content docutils">
 </section>
 <section id="label">
 <h2>Label<a class="headerlink" href="#label" title="Permalink to this heading"></a></h2>
-<p>By default, the text of an <code class="docutils literal notranslate"><span class="pre">SVGEdge</span></code> is positioned to the right of the arrow direction and centered along the edge (excluding the arrow length).</p>
+<p>By default, the text of an <code class="docutils literal notranslate"><span class="pre">SVGEdge</span></code> is positioned to the right of the arrow direction and centered along the edge (including the arrow length).</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-6" name="sd-tab-set-2" type="radio">
 </input><label class="sd-tab-label" for="sd-tab-item-6">
@@ -317,13 +318,12 @@ Python</label><div class="sd-tab-content docutils">
 <span class="n">edge1</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">)</span>
 <span class="n">edge1</span><span class="o">.</span><span class="n">set_arrow_head</span><span class="p">()</span>
 <span class="n">edge1</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;A → B&quot;</span><span class="p">)</span>
-<span class="n">edge1</span><span class="o">.</span><span class="n">add_connection_point</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">edge1</span><span class="o">.</span><span class="n">add_connection_point</span><span class="p">(</span><span class="mi">76</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
 <span class="n">edge2</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">)</span>
 <span class="n">edge2</span><span class="o">.</span><span class="n">set_arrow_head</span><span class="p">()</span>
 <span class="n">edge2</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;A ← B&quot;</span><span class="p">)</span>
-<span class="n">edge2</span><span class="o">.</span><span class="n">add_connection_point</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">edge2</span><span class="o">.</span><span class="n">add_connection_point</span><span class="p">(</span><span class="mi">76</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">svg</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
-<span class="n">compare_svg</span><span class="p">(</span><span class="s2">&quot;edge_attr&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">svg</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -342,11 +342,11 @@ JavaScript</label><div class="sd-tab-content docutils">
 <span class="kd">const</span><span class="w"> </span><span class="nx">edge1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addEdge</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;B&quot;</span><span class="p">);</span>
 <span class="nx">edge1</span><span class="p">.</span><span class="nx">setArrowHead</span><span class="p">();</span>
 <span class="nx">edge1</span><span class="p">.</span><span class="nx">setLabel</span><span class="p">(</span><span class="s2">&quot;A → B&quot;</span><span class="p">);</span>
-<span class="nx">edge1</span><span class="p">.</span><span class="nx">addConnectionPoint</span><span class="p">(</span><span class="mf">75</span><span class="p">,</span><span class="w"> </span><span class="mf">20</span><span class="p">);</span>
+<span class="nx">edge1</span><span class="p">.</span><span class="nx">addConnectionPoint</span><span class="p">(</span><span class="mf">76</span><span class="p">,</span><span class="w"> </span><span class="mf">20</span><span class="p">);</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">edge2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addEdge</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;A&quot;</span><span class="p">);</span>
 <span class="nx">edge2</span><span class="p">.</span><span class="nx">setArrowHead</span><span class="p">();</span>
 <span class="nx">edge2</span><span class="p">.</span><span class="nx">setLabel</span><span class="p">(</span><span class="s2">&quot;A ← B&quot;</span><span class="p">);</span>
-<span class="nx">edge2</span><span class="p">.</span><span class="nx">addConnectionPoint</span><span class="p">(</span><span class="mf">75</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">20</span><span class="p">);</span>
+<span class="nx">edge2</span><span class="p">.</span><span class="nx">addConnectionPoint</span><span class="p">(</span><span class="mf">76</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">20</span><span class="p">);</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">svg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
 </pre></div>
 </div>
@@ -368,11 +368,11 @@ C++</label><div class="sd-tab-content docutils">
 <span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">edge1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addEdge</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;B&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="n">edge1</span><span class="o">-&gt;</span><span class="n">setArrowHead</span><span class="p">();</span>
 <span class="w">    </span><span class="n">edge1</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="s">&quot;A → B&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="n">edge1</span><span class="o">-&gt;</span><span class="n">addConnectionPoint</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">);</span>
+<span class="w">    </span><span class="n">edge1</span><span class="o">-&gt;</span><span class="n">addConnectionPoint</span><span class="p">(</span><span class="mi">76</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">);</span>
 <span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">edge2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addEdge</span><span class="p">(</span><span class="s">&quot;B&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;A&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="n">edge2</span><span class="o">-&gt;</span><span class="n">setArrowHead</span><span class="p">();</span>
 <span class="w">    </span><span class="n">edge2</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="s">&quot;A ← B&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="n">edge2</span><span class="o">-&gt;</span><span class="n">addConnectionPoint</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span><span class="w"> </span><span class="mi">-20</span><span class="p">);</span>
+<span class="w">    </span><span class="n">edge2</span><span class="o">-&gt;</span><span class="n">addConnectionPoint</span><span class="p">(</span><span class="mi">76</span><span class="p">,</span><span class="w"> </span><span class="mi">-20</span><span class="p">);</span>
 <span class="w">    </span><span class="n">diagram</span><span class="p">.</span><span class="n">render</span><span class="p">(</span><span class="s">&quot;label.svg&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
@@ -382,12 +382,98 @@ C++</label><div class="sd-tab-content docutils">
 </div>
 <p><img alt="" src="_images/label.svg" /></p>
 </section>
+<section id="self-loop">
+<h2>Self Loop<a class="headerlink" href="#self-loop" title="Permalink to this heading"></a></h2>
+<p>There are some helper functions for drawing self-loops, which require specifying the height of the loop and the opening angle.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-9" name="sd-tab-set-3" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-9">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sp_svg_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVGDiagram</span>
+
+<span class="n">diagram</span> <span class="o">=</span> <span class="n">SVGDiagram</span><span class="p">()</span>
+<span class="n">loop_height</span><span class="p">,</span> <span class="n">loop_angle</span> <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span> <span class="mf">30.0</span>
+<span class="n">node</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
+<span class="n">node</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;Self Loops&quot;</span><span class="p">)</span>
+<span class="n">edge1</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_self_loop_to_left</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">loop_height</span><span class="p">,</span> <span class="n">loop_angle</span><span class="p">)</span>
+<span class="n">edge1</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;Left&quot;</span><span class="p">)</span>
+<span class="n">edge1</span><span class="o">.</span><span class="n">set_arrow_head</span><span class="p">()</span>
+<span class="n">edge2</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_self_loop_to_right</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">loop_height</span><span class="p">,</span> <span class="n">loop_angle</span><span class="p">)</span>
+<span class="n">edge2</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;Right&quot;</span><span class="p">)</span>
+<span class="n">edge2</span><span class="o">.</span><span class="n">set_arrow_head</span><span class="p">()</span>
+<span class="n">edge3</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_self_loop_to_top</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">loop_height</span><span class="p">,</span> <span class="n">loop_angle</span><span class="p">)</span>
+<span class="n">edge3</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;Top&quot;</span><span class="p">)</span>
+<span class="n">edge3</span><span class="o">.</span><span class="n">set_arrow_head</span><span class="p">()</span>
+<span class="n">edge4</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_self_loop_to_bottom</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">loop_height</span><span class="p">,</span> <span class="n">loop_angle</span><span class="p">)</span>
+<span class="n">edge4</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;Bottom&quot;</span><span class="p">)</span>
+<span class="n">edge4</span><span class="o">.</span><span class="n">set_arrow_head</span><span class="p">()</span>
+<span class="n">svg</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-10" name="sd-tab-set-3" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-10">
+JavaScript</label><div class="sd-tab-content docutils">
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sp-svg-diagram&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">diagram</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="p">();</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">loopHeight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">30.0</span><span class="p">,</span><span class="w"> </span><span class="nx">loopAngle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">30.0</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addNode</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">);</span>
+<span class="nx">node</span><span class="p">.</span><span class="nx">setLabel</span><span class="p">(</span><span class="s2">&quot;Self Loops&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">edge1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addSelfLoopToLeft</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">loopHeight</span><span class="p">,</span><span class="w"> </span><span class="nx">loopAngle</span><span class="p">);</span>
+<span class="nx">edge1</span><span class="p">.</span><span class="nx">setLabel</span><span class="p">(</span><span class="s2">&quot;Left&quot;</span><span class="p">);</span>
+<span class="nx">edge1</span><span class="p">.</span><span class="nx">setArrowHead</span><span class="p">();</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">edge2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addSelfLoopToRight</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">loopHeight</span><span class="p">,</span><span class="w"> </span><span class="nx">loopAngle</span><span class="p">);</span>
+<span class="nx">edge2</span><span class="p">.</span><span class="nx">setLabel</span><span class="p">(</span><span class="s2">&quot;Right&quot;</span><span class="p">);</span>
+<span class="nx">edge2</span><span class="p">.</span><span class="nx">setArrowHead</span><span class="p">();</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">edge3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addSelfLoopToTop</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">loopHeight</span><span class="p">,</span><span class="w"> </span><span class="nx">loopAngle</span><span class="p">);</span>
+<span class="nx">edge3</span><span class="p">.</span><span class="nx">setLabel</span><span class="p">(</span><span class="s2">&quot;Top&quot;</span><span class="p">);</span>
+<span class="nx">edge3</span><span class="p">.</span><span class="nx">setArrowHead</span><span class="p">();</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">edge4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addSelfLoopToBottom</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">loopHeight</span><span class="p">,</span><span class="w"> </span><span class="nx">loopAngle</span><span class="p">);</span>
+<span class="nx">edge4</span><span class="p">.</span><span class="nx">setLabel</span><span class="p">(</span><span class="s2">&quot;Bottom&quot;</span><span class="p">);</span>
+<span class="nx">edge4</span><span class="p">.</span><span class="nx">setArrowHead</span><span class="p">();</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">svg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-11" name="sd-tab-set-3" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-11">
+C++</label><div class="sd-tab-content docutils">
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;svg_diagram.h&quot;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">svg_diagram</span><span class="p">;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">SVGDiagram</span><span class="w"> </span><span class="n">diagram</span><span class="p">;</span>
+<span class="w">    </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">loopHeight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">30.0</span><span class="p">,</span><span class="w"> </span><span class="n">loopAngle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">30.0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addNode</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="s">&quot;Self Loops&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">edge1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addSelfLoopToLeft</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">loopHeight</span><span class="p">,</span><span class="w"> </span><span class="n">loopAngle</span><span class="p">);</span>
+<span class="w">    </span><span class="n">edge1</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="s">&quot;Left&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">edge1</span><span class="o">-&gt;</span><span class="n">setArrowHead</span><span class="p">();</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">edge2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addSelfLoopToRight</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">loopHeight</span><span class="p">,</span><span class="w"> </span><span class="n">loopAngle</span><span class="p">);</span>
+<span class="w">    </span><span class="n">edge2</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="s">&quot;Right&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">edge2</span><span class="o">-&gt;</span><span class="n">setArrowHead</span><span class="p">();</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">edge3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addSelfLoopToTop</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">loopHeight</span><span class="p">,</span><span class="w"> </span><span class="n">loopAngle</span><span class="p">);</span>
+<span class="w">    </span><span class="n">edge3</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="s">&quot;Top&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">edge3</span><span class="o">-&gt;</span><span class="n">setArrowHead</span><span class="p">();</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">edge4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addSelfLoopToBottom</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">loopHeight</span><span class="p">,</span><span class="w"> </span><span class="n">loopAngle</span><span class="p">);</span>
+<span class="w">    </span><span class="n">edge4</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="s">&quot;Bottom&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">edge4</span><span class="o">-&gt;</span><span class="n">setArrowHead</span><span class="p">();</span>
+<span class="w">    </span><span class="n">diagram</span><span class="p">.</span><span class="n">render</span><span class="p">(</span><span class="n">OUTPUT_DIR</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;self_loop.svg&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><img alt="" src="_images/self_loop.svg" /></p>
+</section>
 <section id="color">
 <h2>Color<a class="headerlink" href="#color" title="Permalink to this heading"></a></h2>
 <p>You can set the color of the line and the font. The arrow color matches the line color and is independent of fill color.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-9" name="sd-tab-set-3" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-9">
+<input checked="checked" id="sd-tab-item-12" name="sd-tab-set-4" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-12">
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sp_svg_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVGDiagram</span><span class="p">,</span> <span class="n">SVGEdge</span>
 
@@ -408,8 +494,8 @@ Python</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-10" name="sd-tab-set-3" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-10">
+<input id="sd-tab-item-13" name="sd-tab-set-4" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-13">
 JavaScript</label><div class="sd-tab-content docutils">
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="p">,</span><span class="w"> </span><span class="nx">SVGEdge</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sp-svg-diagram&#39;</span><span class="p">;</span>
 
@@ -430,8 +516,8 @@ JavaScript</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-11" name="sd-tab-set-3" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-11">
+<input id="sd-tab-item-14" name="sd-tab-set-4" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-14">
 C++</label><div class="sd-tab-content docutils">
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;svg_diagram.h&quot;</span>
 <span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">svg_diagram</span><span class="p">;</span>
@@ -463,8 +549,8 @@ C++</label><div class="sd-tab-content docutils">
 <h2>Pen Width &amp; Margin<a class="headerlink" href="#pen-width-margin" title="Permalink to this heading"></a></h2>
 <p>The thickness of the line, which also affects the arrow.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-12" name="sd-tab-set-4" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-12">
+<input checked="checked" id="sd-tab-item-15" name="sd-tab-set-5" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-15">
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sp_svg_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVGDiagram</span><span class="p">,</span> <span class="n">SVGEdge</span>
 
@@ -485,8 +571,8 @@ Python</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-13" name="sd-tab-set-4" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-13">
+<input id="sd-tab-item-16" name="sd-tab-set-5" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-16">
 JavaScript</label><div class="sd-tab-content docutils">
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="p">,</span><span class="w"> </span><span class="nx">SVGEdge</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sp-svg-diagram&#39;</span><span class="p">;</span>
 
@@ -507,8 +593,8 @@ JavaScript</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-14" name="sd-tab-set-4" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-14">
+<input id="sd-tab-item-17" name="sd-tab-set-5" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-17">
 C++</label><div class="sd-tab-content docutils">
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;svg_diagram.h&quot;</span>
 <span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">svg_diagram</span><span class="p">;</span>
@@ -539,8 +625,8 @@ C++</label><div class="sd-tab-content docutils">
 <section id="font">
 <h2>Font<a class="headerlink" href="#font" title="Permalink to this heading"></a></h2>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-15" name="sd-tab-set-5" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-15">
+<input checked="checked" id="sd-tab-item-18" name="sd-tab-set-6" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-18">
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sp_svg_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVGDiagram</span>
 
@@ -561,8 +647,8 @@ Python</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-16" name="sd-tab-set-5" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-16">
+<input id="sd-tab-item-19" name="sd-tab-set-6" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-19">
 JavaScript</label><div class="sd-tab-content docutils">
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sp-svg-diagram&#39;</span><span class="p">;</span>
 
@@ -583,8 +669,8 @@ JavaScript</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-17" name="sd-tab-set-5" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-17">
+<input id="sd-tab-item-20" name="sd-tab-set-6" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-20">
 C++</label><div class="sd-tab-content docutils">
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;svg_diagram.h&quot;</span>
 <span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">svg_diagram</span><span class="p">;</span>
@@ -616,8 +702,8 @@ C++</label><div class="sd-tab-content docutils">
 <h2>Stroke Style<a class="headerlink" href="#stroke-style" title="Permalink to this heading"></a></h2>
 <p>The default edge style is <code class="docutils literal notranslate"><span class="pre">solid</span></code>, rendered as solid lines. Two dashed styles are also available: <code class="docutils literal notranslate"><span class="pre">dashed</span></code> and <code class="docutils literal notranslate"><span class="pre">dotted</span></code>. These three styles are mutually exclusive, and the one specified last takes precedence.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-18" name="sd-tab-set-6" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-18">
+<input checked="checked" id="sd-tab-item-21" name="sd-tab-set-7" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-21">
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sp_svg_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVGDiagram</span>
 
@@ -643,8 +729,8 @@ Python</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-19" name="sd-tab-set-6" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-19">
+<input id="sd-tab-item-22" name="sd-tab-set-7" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-22">
 JavaScript</label><div class="sd-tab-content docutils">
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sp-svg-diagram&#39;</span><span class="p">;</span>
 
@@ -673,8 +759,8 @@ JavaScript</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-20" name="sd-tab-set-6" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-20">
+<input id="sd-tab-item-23" name="sd-tab-set-7" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-23">
 C++</label><div class="sd-tab-content docutils">
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;svg_diagram.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;format&gt;</span>

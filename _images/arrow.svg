@@ -48,14 +48,14 @@
       <title>A1->B1</title>
       <line x1="16.563455967290594" y1="60" x2="121.72299973982248" y2="60" stroke="black"/>
       <polygon points="131.72299973982248,60 121.72299973982248,63.5 121.72299973982248,56.5 131.72299973982248,60" fill="black" stroke="black"/>
-      <text x="69.14322785355654" y="67" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">normal</text>
+      <text x="75" y="67" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">normal</text>
     </g>
     <!-- Edge: edge3 (A2 -> B2) -->
     <g class="edge" id="edge3">
       <title>A2->B2</title>
       <line x1="16.563455967290594" y1="120" x2="121.72299973982248" y2="120" stroke="black"/>
       <polygon points="131.72299973982248,120 121.72299973982248,123.5 121.72299973982248,116.5 131.72299973982248,120" fill="none" stroke="black"/>
-      <text x="69.14322785355654" y="127" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">empty</text>
+      <text x="75" y="127" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">empty</text>
     </g>
   </g>
 </svg>

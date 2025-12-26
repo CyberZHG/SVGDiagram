@@ -38,4 +38,12 @@ Click the image to see the code that generated it:
 An online tool that generates "Fork me on GitHub" ribbons:
 https://cyberzhg.github.io/fork-me-on-github-svg-ribbon/
 
-<img width="840" height="752" alt="Image" src="https://github.com/user-attachments/assets/358953c1-c7a0-46d2-9e98-62c32b792d32" />
+<img width="848" height="445" alt="Image" src="https://github.com/user-attachments/assets/106dbeb7-0caa-4b3b-bd9b-6b4f781cf52d" />
+
+### Graph Layout
+
+A library for visualizing directed graphs.
+
+https://github.com/CyberZHG/GraphLayout
+
+<img width="640" height="659" alt="Image" src="https://github.com/user-attachments/assets/9de8e440-edae-4c67-95a6-4a5b1787ac39" />

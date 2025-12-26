@@ -19,7 +19,7 @@
       <line x1="28.277000260177527" y1="0" x2="121.72299973982248" y2="3.462933785811528e-15" stroke="red"/>
       <polygon points="18.277000260177527,0 28.277000260177527,-3.4999999999999996 28.277000260177527,3.4999999999999996 18.277000260177527,0" fill="none" stroke="red"/>
       <polygon points="131.72299973982248,2.238286986664175e-15 121.72299973982248,3.5000000000000044 121.72299973982248,-3.4999999999999973 131.72299973982248,2.238286986664175e-15" fill="red" stroke="red"/>
-      <text x="75" y="7.000000000000003" text-anchor="middle" dominant-baseline="central" fill="blue" font-family="Times,serif" font-size="14">color</text>
+      <text x="75" y="7.000000000000001" text-anchor="middle" dominant-baseline="central" fill="blue" font-family="Times,serif" font-size="14">color</text>
     </g>
   </g>
 </svg>

@@ -153,25 +153,30 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
     const auto arrowTailShape = getAttribute(ATTR_KEY_ARROW_TAIL);
     vector<unique_ptr<SVGDraw>> svgDraws;
     vector<unique_ptr<SVGDraw>> svgDrawArrows;
-    vector<pair<double, double>> points;
+    vector<pair<double, double>> drawPoints, distancePoints;
     if (_connectionPoints.empty()) {
         const double angleFrom = nodeFrom->computeAngle(nodeTo->center());
         const double angleTo = nodeTo->computeAngle(nodeFrom->center());
-        points.emplace_back(addArrow(arrowTailShape, svgDrawArrows, nodeFrom->computeConnectionPoint(angleFrom), angleFrom));
-        points.emplace_back(addArrow(arrowHeadShape, svgDrawArrows, nodeTo->computeConnectionPoint(angleTo), angleTo));
+        distancePoints.emplace_back(nodeFrom->computeConnectionPoint(angleFrom));
+        distancePoints.emplace_back(nodeTo->computeConnectionPoint(angleTo));
+        drawPoints.emplace_back(addArrow(arrowTailShape, svgDrawArrows, distancePoints[0], angleFrom));
+        drawPoints.emplace_back(addArrow(arrowHeadShape, svgDrawArrows, distancePoints[1], angleTo));
     } else {
         const double angleFrom = nodeFrom->computeAngle(_connectionPoints[0]);
-        points.emplace_back(addArrow(arrowTailShape, svgDrawArrows, nodeFrom->computeConnectionPoint(angleFrom), angleFrom));
+        distancePoints.emplace_back(nodeFrom->computeConnectionPoint(angleFrom));
+        drawPoints.emplace_back(addArrow(arrowTailShape, svgDrawArrows, distancePoints[0], angleFrom));
         for (const auto& [x, y] : _connectionPoints) {
-            points.emplace_back(x, y);
+            distancePoints.emplace_back(x, y);
+            drawPoints.emplace_back(x, y);
         }
         const size_t n = _connectionPoints.size();
         const double angleTo = nodeTo->computeAngle(_connectionPoints[n - 1]);
-        points.emplace_back(addArrow(arrowHeadShape, svgDrawArrows, nodeTo->computeConnectionPoint(angleTo), angleTo));
+        distancePoints.emplace_back(nodeTo->computeConnectionPoint(angleTo));
+        drawPoints.emplace_back(addArrow(arrowHeadShape, svgDrawArrows, distancePoints.back(), angleTo));
     }
-    for (size_t i = 0; i + 1 < points.size(); ++i) {
-        const auto& [x1, y1] = points[i];
-        const auto& [x2, y2] = points[i + 1];
+    for (size_t i = 0; i + 1 < drawPoints.size(); ++i) {
+        const auto& [x1, y1] = drawPoints[i];
+        const auto& [x2, y2] = drawPoints[i + 1];
         svgDraws.emplace_back(make_unique<SVGDrawLine>(x1, y1, x2, y2));
     }
     setStrokeStyles(svgDraws[0].get());
@@ -187,18 +192,18 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
     }
     if (const auto label = getAttribute(ATTR_KEY_LABEL); !label.empty()) {
         double totalLength = 0.0;
-        for (size_t i = 0; i + 1 < points.size(); ++i) {
-            const auto& [x1, y1] = points[i];
-            const auto& [x2, y2] = points[i + 1];
+        for (size_t i = 0; i + 1 < distancePoints.size(); ++i) {
+            const auto& [x1, y1] = distancePoints[i];
+            const auto& [x2, y2] = distancePoints[i + 1];
             totalLength += GeometryUtils::distance(x1, y1, x2, y2);
         }
         const double halfLength = totalLength / 2.0;
         double sumLength = 0.0;
         size_t index = 0;
         double lineX = 0.0, lineY = 0.0;
-        for (size_t i = 0; i + 1 < points.size(); ++i) {
-            const auto& [x1, y1] = points[i];
-            const auto& [x2, y2] = points[i + 1];
+        for (size_t i = 0; i + 1 < distancePoints.size(); ++i) {
+            const auto& [x1, y1] = distancePoints[i];
+            const auto& [x2, y2] = distancePoints[i + 1];
             const double length = GeometryUtils::distance(x1, y1, x2, y2);
             const double nextSum = sumLength + length;
             if (nextSum > halfLength) {
@@ -210,8 +215,8 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
             }
             sumLength = nextSum;
         }
-        const double dx = points[index + 1].first - points[index].first;
-        const double dy = points[index + 1].second - points[index].second;
+        const double dx = distancePoints[index + 1].first - distancePoints[index].first;
+        const double dy = distancePoints[index + 1].second - distancePoints[index].second;
         const auto [cx, cy] = computeTextCenter(lineX, lineY, dx, dy);
         appendSVGDrawsLabelWithCenter(svgDraws, cx, cy);
     }

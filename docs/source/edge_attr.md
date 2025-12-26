@@ -200,7 +200,7 @@ int main() {
 
 ## Label
 
-By default, the text of an `SVGEdge` is positioned to the right of the arrow direction and centered along the edge (excluding the arrow length).
+By default, the text of an `SVGEdge` is positioned to the right of the arrow direction and centered along the edge (including the arrow length).
 
 `````{tab-set}
 ````{tab-item} Python

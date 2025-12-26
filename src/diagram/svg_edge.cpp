@@ -221,28 +221,44 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
     vector<unique_ptr<SVGDraw>> svgDraws;
     vector<unique_ptr<SVGDraw>> svgDrawArrows;
     vector<pair<double, double>> points;
-    const double angleFrom = nodeFrom->computeAngle(_connectionPoints[0]);
-    auto [sx, sy] = addArrow(arrowTailShape, svgDrawArrows, nodeFrom->computeConnectionPoint(angleFrom), angleFrom);
-    points.emplace_back(sx, sy);
-    points.emplace_back(sx, sy);
+    const double nodeAngleFrom = nodeFrom->computeAngle(_connectionPoints[0]);
+    const auto ps = nodeFrom->computeConnectionPoint(nodeAngleFrom);
+    points.emplace_back(ps);
+    points.emplace_back(ps);
     for (const auto& [x, y] : _connectionPoints) {
         points.emplace_back(x, y);
     }
-    const double angleTo = nodeTo->computeAngle(_connectionPoints[_connectionPoints.size() - 1]);
-    auto [ex, ey] = addArrow(arrowHeadShape, svgDrawArrows, nodeTo->computeConnectionPoint(angleTo), angleTo);
-    points.emplace_back(ex, ey);
-    points.emplace_back(ex, ey);
+    const double nodeAngleTo = nodeTo->computeAngle(_connectionPoints[_connectionPoints.size() - 1]);
+    const auto pe = nodeTo->computeConnectionPoint(nodeAngleTo);
+    points.emplace_back(pe);
+    points.emplace_back(pe);
     auto d = format("M {} {}", points[1].first, points[1].second);
     vector<vector<pair<double, double>>> splines;
     for (int i = 1; i + 2 < static_cast<int>(points.size()); ++i) {
         const auto [x0, y0] = points[i - 1];
         const auto [x1, y1] = points[i];
-        const auto [x2, y2] = points[i + 1];
+        auto [x2, y2] = points[i + 1];
         const auto [x3, y3] = points[i + 2];
         const double c1x = x1 + (x2 - x0) / 6.0;
         const double c1y = y1 + (y2 - y0) / 6.0;
         const double c2x = x2 - (x3 - x1) / 6.0;
         const double c2y = y2 - (y3 - y1) / 6.0;
+        if (i == 1 && arrowTailShape != ARROW_NONE) {
+            const auto [nx, ny] = GeometryUtils::findPointOnBezierWithDistance(
+                points[i], {c1x, c1y}, {c2x, c2y}, points[i + 1], points[i],
+                ARROW_WIDTH + computeArrowTipMargin(arrowTailShape));
+            d = format("M {} {}", nx, ny);
+            const double arrowAngleFrom = atan2(ny - points[i].second, nx - points[i].first);
+            addArrow(arrowTailShape, svgDrawArrows, points[i], arrowAngleFrom);
+        }
+        if (i + 3 == static_cast<int>(points.size()) && arrowHeadShape != ARROW_NONE) {
+            const auto [nx, ny] = GeometryUtils::findPointOnBezierWithDistance(
+                points[i], {c1x, c1y}, {c2x, c2y}, points[i + 1], points[i + 1],
+                ARROW_WIDTH + computeArrowTipMargin(arrowHeadShape));
+            const double arrowAngleTo = atan2(ny - points[i + 1].second, nx - points[i + 1].first);
+            addArrow(arrowHeadShape, svgDrawArrows, points[i + 1], arrowAngleTo);
+            x2 = nx, y2 = ny;
+        }
         d += format(" C {} {} {} {} {} {}", c1x, c1y, c2x, c2y, x2, y2);
         splines.emplace_back(vector{points[i], {c1x, c1y}, {c2x, c2y}, points[i + 1]});
     }

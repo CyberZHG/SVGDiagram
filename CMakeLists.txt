@@ -33,7 +33,7 @@ endif()
 
 if(SVG_DIAGRAM_ENABLE_COVERAGE)
     if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-        add_compile_options(--coverage -g -fno-elide-constructors -fno-default-inline)
+        add_compile_options(--coverage -O0 -g -fno-elide-constructors -fno-default-inline)
         add_link_options(--coverage)
     endif()
 endif()

@@ -171,3 +171,38 @@ TEST(TestAttributeUtils, ParseColorList) {
     EXPECT_EQ(colorList[2].color, "blue");
     EXPECT_LE(colorList[2].weight, 1.0 / 3.0);
 }
+
+TEST(TestAttributeUtils, ParseRecordLabelTextOnly) {
+    const auto result = AttributeUtils::parseRecordLabel("foo");
+    EXPECT_EQ(result->children.size(), 1);
+    EXPECT_EQ(result->children[0]->label, "foo");
+    EXPECT_EQ(result->toString(), "foo");
+}
+
+TEST(TestAttributeUtils, ParseRecordLabelEscape) {
+    const auto result = AttributeUtils::parseRecordLabel(R"(\{foo\|bar\})");
+    EXPECT_EQ(result->children.size(), 1);
+    EXPECT_EQ(result->children[0]->label, "{foo|bar}");
+}
+
+TEST(TestAttributeUtils, ParseRecordLabelSplit1) {
+    const auto result = AttributeUtils::parseRecordLabel("foo|bar");
+    EXPECT_EQ(result->children.size(), 2);
+    EXPECT_EQ(result->children[0]->label, "foo");
+    EXPECT_EQ(result->children[1]->label, "bar");
+    EXPECT_EQ(result->toString(), "foo|bar");
+}
+
+TEST(TestAttributeUtils, ParseRecordLabelSplit2) {
+    const auto result = AttributeUtils::parseRecordLabel("{foo|bar}");
+    EXPECT_EQ(result->children.size(), 1);
+    EXPECT_EQ(result->children[0]->children.size(), 2);
+    EXPECT_EQ(result->children[0]->children[0]->label, "foo");
+    EXPECT_EQ(result->children[0]->children[1]->label, "bar");
+    EXPECT_EQ(result->toString(), "{foo|bar}");
+}
+
+TEST(TestAttributeUtils, ParseRecordSpecial1) {
+    EXPECT_EQ(AttributeUtils::parseRecordLabel("{{foo}|{bar}}")->toString(), "{{foo}|{bar}}");
+    EXPECT_EQ(AttributeUtils::parseRecordLabel("{{{}}|{||}}")->toString(), "{{{}}|{||}}");
+}

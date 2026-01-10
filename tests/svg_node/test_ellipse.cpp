@@ -9,7 +9,7 @@
 using namespace std;
 using namespace svg_diagram;
 
-TEST(TestSVGNodeEllipse, RectConnections) {
+TEST(TestSVGNodeEllipse, EllipseConnections) {
     SVGDiagram diagram;
     diagram.setBackgroundColor("white");
     const auto& central = diagram.addNode("c");

@@ -257,3 +257,14 @@ pair<double, double> SVGNode::computeConnectionPointEllipse(const double angle) 
     const double y = rx * ry * sin(angle) / base;
     return {_cx + x, _cy + y};
 }
+
+void SVGNode::adjustNodeSizeRecord() {
+}
+
+std::vector<std::unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsRecord() {
+    return {};
+}
+
+std::pair<double, double> SVGNode::computeConnectionPointRecord(const double angle) const {
+    return computeConnectionPointRect(angle);
+}

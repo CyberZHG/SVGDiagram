@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace svg_diagram {
 
@@ -17,6 +18,13 @@ namespace svg_diagram {
         std::string color;
         double opacity = 1.0;
         double weight = -1.0;
+    };
+
+    struct RecordLabel {
+        std::string label;
+        std::vector<std::unique_ptr<RecordLabel>> children;
+
+        [[nodiscard]] std::string toString(bool top = true) const;
     };
 
     class AttributeUtils {
@@ -49,6 +57,11 @@ namespace svg_diagram {
         using DCommands = std::vector<std::pair<char, std::vector<double>>>;
         static DCommands parseDCommands(const std::string& d);
         static std::vector<std::pair<double, double>> computeDPathPoints(const DCommands& commands);
+
+        static std::unique_ptr<RecordLabel> parseRecordLabel(const std::string& label);
+
+    private:
+        static std::unique_ptr<RecordLabel> parseRecordLabel(const std::string& label, size_t& index);
     };
 
 }

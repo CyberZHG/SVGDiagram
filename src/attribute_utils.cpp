@@ -8,6 +8,30 @@
 using namespace std;
 using namespace svg_diagram;
 
+string RecordLabel::toString(const bool top) const {
+    string s;
+    if (children.empty()) {
+        s += label;
+    } else {
+        if (!top) {
+            s += "{";
+        }
+        bool first = true;
+        for (const auto& child : children) {
+            if (first) {
+                first = false;
+            } else {
+                s += "|";
+            }
+            s += child->toString(false);
+        }
+        if (!top) {
+            s += "}";
+        }
+    }
+    return s;
+}
+
 double AttributeUtils::pointToInch(const double points) {
     return points / POINTS_PER_INCH;
 }
@@ -289,4 +313,39 @@ std::vector<std::pair<double, double>> AttributeUtils::computeDPathPoints(const 
         }
     }
     return points;
+}
+
+unique_ptr<RecordLabel> AttributeUtils::parseRecordLabel(const string& label) {
+    auto recordLabel = make_unique<RecordLabel>();
+    size_t index = 0;
+    while (index < label.size()) {
+        recordLabel->children.emplace_back(parseRecordLabel(label, index));
+        ++index;
+    }
+    return recordLabel;
+}
+
+unique_ptr<RecordLabel> AttributeUtils::parseRecordLabel(const string& label, size_t& index) {
+    auto recordLabel = make_unique<RecordLabel>();
+    while (index < label.size()) {
+        if (label[index] == '\\') {
+            if (index + 1 < label.size()) {
+                recordLabel->label.push_back(label[index + 1]);
+            }
+            index += 2;
+        } else if (label[index] == '{') {
+            ++index;
+            recordLabel->children.emplace_back(parseRecordLabel(label, index));
+            while (index < label.size() && label[index] == '|') {
+                ++index;
+                recordLabel->children.emplace_back(parseRecordLabel(label, index));
+            }
+            ++index;
+        } else if (label[index] == '|' || label[index] == '}') {
+            break;
+        } else {
+            recordLabel->label.push_back(label[index++]);
+        }
+    }
+    return recordLabel;
 }

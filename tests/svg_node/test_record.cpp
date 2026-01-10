@@ -113,6 +113,26 @@ TEST(TestSVGNodeRecord, FontSize) {
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
+TEST(TestSVGNodeRecord, EmptyText) {
+    SVGDiagram diagram;
+    const auto node = diagram.addNode("A");
+    node->setShape(SVGNode::SHAPE_RECORD);
+    node->setLabel("{{|}|}");
+    node->setFontSize(16);
+    const auto svg = diagram.render();
+    const auto expected = R"(<!-- Node: A -->
+<g class="node" id="A">
+  <title>A</title>
+  <rect x="-24" y="-24" width="48" height="48" fill="none" stroke="black"/>
+  <line x1="0" y1="-24" x2="0" y2="0" stroke="black"/>
+  <line x1="-24" y1="0" x2="24" y2="0" stroke="black"/>
+</g>
+)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
 TEST(TestSVGNodeRecord, SpecialCase1) {
     SVGDiagram diagram;
     const auto node = diagram.addNode("A");

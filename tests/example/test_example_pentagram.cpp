@@ -10,17 +10,17 @@ using namespace svg_diagram;
 TEST(TestExample, Pentagram) {
     SVGDiagram diagram;
     diagram.setBackgroundColor("white");
-    diagram.defaultNodeAttributes().setShape(SVGNode::SHAPE_RECT);
+    diagram.defaultNodeAttributes().setShape(SVGNode::SHAPE_RECORD);
     diagram.defaultEdgeAttributes().setMargin(4.0);
     diagram.defaultEdgeAttributes().setArrowHead();
 
     const auto labels = vector{
-        "Adamah's\nRedemption",
-        "Unground Visions",
-        "Flame Mirror's\nRevelation",
-        "Emanare's\nSource",
-        "Scouring Flame's\nSundering",
-        "C6:\nDual Birth",
+        "{C1|Adamah's|Redemption}",
+        "{C2|{Unground|Visions}}",
+        "{C3|{Flame|Mirror's}|Revelation}",
+        "{C4|Emanare's|Source}",
+        "{C5|{Scouring|Flame's}|Sundering}",
+        "{C6|Dual Birth}",
     };
     const auto strokeColors = vector{"peru", "darkgoldenrod", "limegreen", "dodgerblue", "lightcoral"};
     const auto textColors = vector{"saddlebrown", "goldenrod", "olivedrab", "royalblue", "indianred"};
@@ -29,7 +29,6 @@ TEST(TestExample, Pentagram) {
     const auto& centralNode = diagram.addNode("node_c");
     centralNode->setCenter(0.0, 0.0);
     centralNode->setLabel(labels[5]);
-    centralNode->setShape(SVGNode::SHAPE_RECT);
 
     for (int i = 0; i < 5; ++i) {
         constexpr double RADIUS = 150.0;

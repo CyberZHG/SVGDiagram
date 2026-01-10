@@ -72,8 +72,9 @@ namespace svg_diagram {
 
     protected:
         void appendSVGDrawsLabelWithCenter(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, double cx, double cy);
+        void appendSVGDrawsLabelWithCenter(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, const std::string& label, double cx, double cy);
 
-        [[nodiscard]] std::pair<double, double> computeTextSize();
+        [[nodiscard]] std::pair<double, double> computeTextSize() const;
         [[nodiscard]] std::pair<double, double> computeMargin();
         [[nodiscard]] std::pair<double, double> computeTextSizeWithMargin();
 
@@ -124,6 +125,9 @@ namespace svg_diagram {
     private:
         double _cx = 0.0;
         double _cy = 0.0;
+
+        std::unique_ptr<RecordLabel> _recordLabel = nullptr;
+        std::unordered_map<std::uintptr_t, std::pair<double, double>> _recordSizes;
 
         [[nodiscard]] bool isFixedSize() const;
         void updateNodeSize(double width, double height);

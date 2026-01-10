@@ -145,6 +145,7 @@ if(SVG_DIAGRAM_ENABLE_TESTS)
             tests/svg_draw/test_defs.cpp
             tests/example/test_example_random.cpp
             tests/svg_edge/test_self_loop.cpp
+            tests/svg_node/test_record.cpp
     )
 
     target_link_libraries(runTests

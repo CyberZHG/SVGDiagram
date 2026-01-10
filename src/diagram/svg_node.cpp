@@ -2,6 +2,7 @@
 
 #include <format>
 #include <cmath>
+#include <functional>
 
 #include "attribute_utils.h"
 #include "svg_text_size.h"
@@ -69,6 +70,8 @@ void SVGNode::adjustNodeSize() {
         adjustNodeSizeRect();
     } else if (shape == SHAPE_ELLIPSE) {
         adjustNodeSizeEllipse();
+    } else if (shape == SHAPE_RECORD) {
+        adjustNodeSizeRecord();
     }
 }
 
@@ -93,6 +96,9 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
     if (shape == SHAPE_ELLIPSE) {
         return produceSVGDrawsEllipse();
     }
+    if (shape == SHAPE_RECORD) {
+        return produceSVGDrawsRecord();
+    }
     return produceSVGDrawsNone();
 }
 
@@ -107,6 +113,9 @@ pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
     }
     if (shape == SHAPE_RECT || shape == SHAPE_NONE) {
         return computeConnectionPointRect(angle);
+    }
+    if (shape == SHAPE_RECORD) {
+        return computeConnectionPointRecord(angle);
     }
     return computeConnectionPointEllipse(angle);
 }
@@ -259,10 +268,92 @@ pair<double, double> SVGNode::computeConnectionPointEllipse(const double angle) 
 }
 
 void SVGNode::adjustNodeSizeRecord() {
+    _recordSizes.clear();
+    function<pair<double, double>(const unique_ptr<RecordLabel>&, bool)> adjustRecordSize;
+    adjustRecordSize = [&](const unique_ptr<RecordLabel>& recordLabel, const bool horizontal) -> pair<double, double> {
+        if (recordLabel->children.empty()) {
+            const SVGTextSize textSize;
+            const double fontSize = stod(getAttribute(ATTR_KEY_FONT_SIZE));
+            const string fontFamily = getAttribute(ATTR_KEY_FONT_NAME);
+            auto [width, height] = textSize.computeTextSize(recordLabel->label, fontSize, fontFamily);
+            if (width == 0.0) {
+                width = fontSize * SVGTextSize::DEFAULT_APPROXIMATION_WIDTH_SCALE;
+            }
+            if (height == 0.0) {
+                height = fontSize * SVGTextSize::DEFAULT_APPROXIMATION_HEIGHT_SCALE;
+            }
+            const auto [marginX, marginY] = computeMargin();
+            width += marginX * 2;
+            height += marginY * 2;
+            _recordSizes[reinterpret_cast<uintptr_t>(recordLabel.get())] = {width, height};
+            return {width, height};
+        }
+        double width = 0.0, height = 0.0;
+        for (const auto& child : recordLabel->children) {
+            const auto [subWidth, subHeight] = adjustRecordSize(child, !horizontal);
+            if (horizontal) {
+                width += subWidth;
+                height = max(height, subHeight);
+            } else {
+                height += subHeight;
+                width = max(width, subWidth);
+            }
+        }
+        _recordSizes[reinterpret_cast<uintptr_t>(recordLabel.get())] = {width, height};
+        return {width, height};
+    };
+    _recordLabel = AttributeUtils::parseRecordLabel(getAttribute(ATTR_KEY_LABEL));
+    const auto [width, height] = adjustRecordSize(_recordLabel, true);
+    updateNodeSize(width, height);
 }
 
 std::vector<std::unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsRecord() {
-    return {};
+    const auto nodeWidth = width();
+    const auto nodeHeight = height();
+    vector<unique_ptr<SVGDraw>> svgDraws;
+    auto rect = make_unique<SVGDrawRect>(_cx, _cy, nodeWidth, nodeHeight);
+    setStrokeStyles(rect.get());
+    setFillStyles(rect.get(), svgDraws);
+    svgDraws.emplace_back(std::move(rect));
+
+    function<void(const unique_ptr<RecordLabel>&, bool, double, double, double, double)> drawRecordLabel;
+    drawRecordLabel = [&](const unique_ptr<RecordLabel>& recordLabel, const bool horizontal, double x1, double y1, const double x2, const double y2) {
+        if (recordLabel->children.empty()) {
+            const double cx = (x1 + x2) / 2;
+            const double cy = (y1 + y2) / 2;
+            appendSVGDrawsLabelWithCenter(svgDraws, recordLabel->label, cx, cy);
+            return;
+        }
+        bool first = true;
+        for (const auto& child : recordLabel->children) {
+            if (first) {
+                first = false;
+            } else {
+                if (horizontal) {
+                    auto line = make_unique<SVGDrawLine>(x1, y1, x1, y2);
+                    setStrokeStyles(line.get());
+                    svgDraws.emplace_back(std::move(line));
+                } else {
+                    auto line = make_unique<SVGDrawLine>(x1, y1, x2, y1);
+                    setStrokeStyles(line.get());
+                    svgDraws.emplace_back(std::move(line));
+                }
+            }
+            const auto [subWidth, subHeight] = _recordSizes[reinterpret_cast<uintptr_t>(child.get())];
+            if (horizontal) {
+                drawRecordLabel(child, false, x1, y1, x1 + subWidth, y2);
+                x1 += subWidth;
+            } else {
+                drawRecordLabel(child, true, x1, y1, x2, y1 + subHeight);
+                y1 += subHeight;
+            }
+        }
+    };
+    const double x1 = _cx - nodeWidth / 2, y1 = _cy - nodeHeight / 2;
+    const double x2 = _cx + nodeWidth / 2, y2 = _cy + nodeHeight / 2;
+    drawRecordLabel(_recordLabel, true, x1, y1, x2, y2);
+
+    return svgDraws;
 }
 
 std::pair<double, double> SVGNode::computeConnectionPointRecord(const double angle) const {

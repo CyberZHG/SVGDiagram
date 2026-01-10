@@ -205,6 +205,10 @@ double SVGItem::gradientAngle() const {
 }
 
 void SVGItem::appendSVGDrawsLabelWithCenter(vector<unique_ptr<SVGDraw>>& svgDraws, const double cx, const double cy) {
+    appendSVGDrawsLabelWithCenter(svgDraws, getAttribute(ATTR_KEY_LABEL), cx, cy);
+}
+
+void SVGItem::appendSVGDrawsLabelWithCenter(vector<unique_ptr<SVGDraw>>& svgDraws, const string& label, double cx, double cy) {
     if (enabledDebug()) {
         const auto [textWidth, textHeight] = computeTextSize();
         const auto [marginX, marginY] = computeMargin();
@@ -217,7 +221,7 @@ void SVGItem::appendSVGDrawsLabelWithCenter(vector<unique_ptr<SVGDraw>>& svgDraw
         marginRect->setStroke("red");
         svgDraws.emplace_back(std::move(marginRect));
     }
-    if (const auto label = getAttribute(ATTR_KEY_LABEL); !label.empty()) {
+    if (!label.empty()) {
         auto draw = make_unique<SVGDrawText>(cx, cy, label);
         if (const auto& color = fontColor(); color != "black") {
             draw->setFill(color);
@@ -229,7 +233,7 @@ void SVGItem::appendSVGDrawsLabelWithCenter(vector<unique_ptr<SVGDraw>>& svgDraw
     }
 }
 
-pair<double, double> SVGItem::computeTextSize() {
+pair<double, double> SVGItem::computeTextSize() const {
     if (const auto [precomputedTextWidth, precomputedTextHeight] = precomputedTextSize();
         precomputedTextWidth > 0 && precomputedTextHeight > 0) {
         return {precomputedTextWidth, precomputedTextHeight};

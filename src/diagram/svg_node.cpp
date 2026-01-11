@@ -57,6 +57,15 @@ pair<double, double> SVGNode::center() const {
     return {_cx, _cy};
 }
 
+pair<double, double> SVGNode::fieldCenter(const string& fieldId) const {
+    const auto shape = getAttribute(ATTR_KEY_SHAPE);
+    if (shape != SHAPE_RECORD || !_recordPositions.contains(fieldId)) {
+        return center();
+    }
+    const auto& [cx, cy, width, height] = _recordPositions.at(fieldId);
+    return {cx, cy};
+}
+
 void SVGNode::adjustNodeSize() {
     setAttributeIfNotExist(ATTR_KEY_SHAPE, string(SHAPE_DEFAULT));
     setAttributeIfNotExist(ATTR_KEY_FONT_NAME, string(ATTR_DEF_FONT_NAME));
@@ -120,12 +129,30 @@ pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
     return computeConnectionPointEllipse(angle);
 }
 
+pair<double, double> SVGNode::computeFieldConnectionPoint(const string& fieldId, const double angle) {
+    const auto shape = getAttribute(ATTR_KEY_SHAPE);
+    if (shape != SHAPE_RECORD || !_recordPositions.contains(fieldId)) {
+        return computeConnectionPoint(angle);
+    }
+    const auto& [cx, cy, width, height] = _recordPositions.at(fieldId);
+    return computeConnectionPointRect(cx, cy, width, height, angle);
+}
+
 double SVGNode::computeAngle(const double x, const double y) const {
     return atan2(y - _cy, x - _cx);
 }
 
 double SVGNode::computeAngle(const pair<double, double>& p) const {
     return computeAngle(p.first, p.second);
+}
+
+double SVGNode::computeFieldAngle(const string &fieldId, const pair<double, double>& p) const {
+    const auto shape = getAttribute(ATTR_KEY_SHAPE);
+    if (shape != SHAPE_RECORD || !_recordPositions.contains(fieldId)) {
+        return computeAngle(p);
+    }
+    const auto& [cx, cy, width, height] = _recordPositions.at(fieldId);
+    return atan2(p.second - cy, p.first - cx);
 }
 
 bool SVGNode::isFixedSize() const {
@@ -215,15 +242,19 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsRect() {
 }
 
 pair<double, double> SVGNode::computeConnectionPointRect(const double angle) const {
+    return computeConnectionPointRect(_cx, _cy, width(), height(), angle);
+}
+
+pair<double, double> SVGNode::computeConnectionPointRect(const double cx, const double cy, const double width, const double height, const double angle) const {
     const double strokeWidth = penWidth();
-    const double totalWidth = width() + strokeWidth;
-    const double totalHeight = height() + strokeWidth;
+    const double totalWidth = width + strokeWidth;
+    const double totalHeight = height + strokeWidth;
     double x1 = -totalWidth / 2, y1 = -totalHeight / 2;
     double x2 = totalWidth / 2, y2 = totalHeight / 2;
     const auto vertices = vector<pair<double, double>>{{x1, y1}, {x2, y1}, {x2, y2}, {x1, y2}};
     for (const auto& [x, y] : vertices) {
         if (GeometryUtils::isSameAngle(angle, x, y)) {
-            return {_cx + x, _cy + y};
+            return {cx + x, cy + y};
         }
     }
     double x = 0.0, y = 0.0;
@@ -316,11 +347,15 @@ std::vector<std::unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsRecord() {
     setFillStyles(rect.get(), svgDraws);
     svgDraws.emplace_back(std::move(rect));
 
+    _recordPositions.clear();
     function<void(const unique_ptr<RecordLabel>&, bool, double, double, double, double)> drawRecordLabel;
     drawRecordLabel = [&](const unique_ptr<RecordLabel>& recordLabel, const bool horizontal, double x1, double y1, const double x2, const double y2) {
+        const double cx = (x1 + x2) / 2;
+        const double cy = (y1 + y2) / 2;
+        if (!recordLabel->fieldId.empty()) {
+            _recordPositions[recordLabel->fieldId] = {cx, cy, x2 - x1, y2 - y1};
+        }
         if (recordLabel->children.empty()) {
-            const double cx = (x1 + x2) / 2;
-            const double cy = (y1 + y2) / 2;
             appendSVGDrawsLabelWithCenter(svgDraws, recordLabel->label, cx, cy);
             return;
         }

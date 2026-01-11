@@ -22,6 +22,7 @@ namespace svg_diagram {
 
     struct RecordLabel {
         std::string label;
+        std::string fieldId;
         std::vector<std::unique_ptr<RecordLabel>> children;
 
         [[nodiscard]] std::string toString(bool top = true) const;

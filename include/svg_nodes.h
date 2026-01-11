@@ -113,14 +113,17 @@ namespace svg_diagram {
 
         void setCenter(double cx, double cy);
         [[nodiscard]] std::pair<double, double> center() const;
+        [[nodiscard]] std::pair<double, double> fieldCenter(const std::string& fieldId) const;
 
         void adjustNodeSize();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDraws();
 
         std::pair<double, double> computeConnectionPoint(double angle);
+        std::pair<double, double> computeFieldConnectionPoint(const std::string& fieldId, double angle);
 
         [[nodiscard]] double computeAngle(double x, double y) const;
         [[nodiscard]] double computeAngle(const std::pair<double, double>& p) const;
+        [[nodiscard]] double computeFieldAngle(const std::string& fieldId, const std::pair<double, double>& p) const;
 
     private:
         double _cx = 0.0;
@@ -128,6 +131,7 @@ namespace svg_diagram {
 
         std::unique_ptr<RecordLabel> _recordLabel = nullptr;
         std::unordered_map<std::uintptr_t, std::pair<double, double>> _recordSizes;
+        std::unordered_map<std::string, std::tuple<double, double, double, double>> _recordPositions;
 
         [[nodiscard]] bool isFixedSize() const;
         void updateNodeSize(double width, double height);
@@ -148,6 +152,7 @@ namespace svg_diagram {
         void adjustNodeSizeRect();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsRect();
         [[nodiscard]] std::pair<double, double> computeConnectionPointRect(double angle) const;
+        [[nodiscard]] std::pair<double, double> computeConnectionPointRect(double cx, double cy, double width, double height, double angle) const;
 
         void adjustNodeSizeEllipse();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsEllipse();
@@ -179,6 +184,8 @@ namespace svg_diagram {
         [[nodiscard]] const std::string& nodeFrom() const;
         void setNodeTo(const std::string &id);
         [[nodiscard]] const std::string& nodeTo() const;
+        void setFieldFrom(const std::string& id);
+        void setFieldTo(const std::string& id);
         void setConnection(const std::string& idFrom, const std::string& idTo);
 
         void setSplines(const std::string& value);
@@ -202,6 +209,7 @@ namespace svg_diagram {
         static constexpr std::string_view SPLINES_SELF_LOOP = "__self-loop__";
 
         std::string _nodeFrom, _nodeTo;
+        std::string _fieldFrom, _fieldTo;
         std::vector<std::pair<double, double>> _connectionPoints;
 
         static constexpr double ARROW_WIDTH = 10.0;

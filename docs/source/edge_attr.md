@@ -697,18 +697,29 @@ svg = diagram.render()
 ````
 ````{tab-item} JavaScript
 ```javascript
-import { SVGDiagram } from 'sp-svg-diagram';
+import { SVGDiagram, SVGNode } from 'sp-svg-diagram';
 
 const diagram = new SVGDiagram();
+const node1 = diagram.addNode("A");
+node1.setCenter(0, 0);
+node1.setShape(SVGNode.SHAPE_RECORD);
+node1.setLabel("|{|<foo> A|}|");
+const node2 = diagram.addNode("B");
+node2.setCenter(150, 0);
+node2.setShape(SVGNode.SHAPE_RECORD);
+node2.setLabel("{|{|<bar> B|}|}");
+const edge = diagram.addEdge("A", "B");
+edge.setFieldFrom("foo");
+edge.setFieldTo("bar");
+edge.addConnectionPoint(50, -20);
+edge.addConnectionPoint(100, 20);
+edge.setArrowHead();
 const svg = diagram.render();
 ````
 
 ````{tab-item} C++
 ```c++
 #include "svg_diagram.h"
-#include <format>
-#include <vector>
-#include <string>
 using namespace svg_diagram;
 
 int main() {

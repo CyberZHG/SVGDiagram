@@ -40,6 +40,7 @@ EMSCRIPTEN_BINDINGS(SVGDiagramWASM) {
     constant("NODE_SHAPE_DOUBLE_CIRCLE", string(SVGNode::SHAPE_DOUBLE_CIRCLE));
     constant("NODE_SHAPE_RECT", string(SVGNode::SHAPE_RECT));
     constant("NODE_SHAPE_ELLIPSE", string(SVGNode::SHAPE_ELLIPSE));
+    constant("NODE_SHAPE_RECORD", string(SVGNode::SHAPE_RECORD));
     constant("EDGE_SPLINES_LINE", string(SVGEdge::SPLINES_LINE));
     constant("EDGE_SPLINES_SPLINE", string(SVGEdge::SPLINES_SPLINE));
     constant("ARROW_SHAPE_NONE", string(SVGEdge::ARROW_NONE));
@@ -77,6 +78,8 @@ EMSCRIPTEN_BINDINGS(SVGDiagramWASM) {
         .smart_ptr<shared_ptr<SVGEdge>>("SVGEdge")
         .function("setConnection", &SVGEdge::setConnection)
         .function("setSplines", select_overload<void(const string&)>(&SVGEdge::setSplines))
+        .function("setFieldFrom", &SVGEdge::setFieldFrom)
+        .function("setFieldTo", &SVGEdge::setFieldTo)
         .function("addConnectionPoint", select_overload<void(double, double)>(&SVGEdge::addConnectionPoint))
         .function("_setArrowHead", select_overload<void(const string&)>(&SVGEdge::setArrowHead))
         .function("_setArrowTail", select_overload<void(const string&)>(&SVGEdge::setArrowTail))
@@ -92,6 +95,8 @@ EMSCRIPTEN_BINDINGS(SVGDiagramWASM) {
     ;
     class_<SVGDiagram>("SVGDiagram")
         .constructor<>()
+        .function("defaultNodeAttributes", &SVGDiagram::defaultNodeAttributes, return_value_policy::reference())
+        .function("defaultEdgeAttributes", &SVGDiagram::defaultEdgeAttributes, return_value_policy::reference())
         .function("setBackgroundColor", &SVGDiagram::setBackgroundColor)
         .function("setFixedViewBox", &SVGDiagram::setFixedViewBox)
         .function("setRotation", select_overload<void(double)>(&SVGDiagram::setRotation))

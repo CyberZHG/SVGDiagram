@@ -6,6 +6,7 @@ declare module 'sp-svg-diagram' {
     const NODE_SHAPE_DOUBLE_CIRCLE: string
     const NODE_SHAPE_RECT: string
     const NODE_SHAPE_ELLIPSE: string
+    const NODE_SHAPE_RECORD: string
     const EDGE_SPLINES_LINE: string
     const EDGE_SPLINES_SPLINE: string
     const ARROW_SHAPE_NONE: string
@@ -54,6 +55,8 @@ declare module 'sp-svg-diagram' {
         static ARROW_EMPTY: string
         setConnection(nodeFromId: string, nodeToId: string): void
         setSplines(splines: string): void
+        setFieldFrom(fieldId: string): void
+        setFieldTo(fieldId: string): void
         addConnectionPoint(x: number, y: number): void
         setArrowHead(arrow?: string): void
         setArrowTail(arrow?: string): void
@@ -64,7 +67,7 @@ declare module 'sp-svg-diagram' {
     export class SVGGraph extends SVGItem {
         constructor()
         defaultNodeAttributes(): SVGNode
-        defaultNodeAttributes(): SVGEdge
+        defaultEdgeAttributes(): SVGEdge
         addNode(nodeId: string): SVGNode
         addEdge(edgeId: string): SVGEdge
         addSubgraph(graphId: string): SVGGraph
@@ -72,6 +75,8 @@ declare module 'sp-svg-diagram' {
 
     export class SVGDiagram {
         constructor()
+        defaultNodeAttributes(): SVGNode
+        defaultEdgeAttributes(): SVGEdge
         setBackgroundColor(color: string): void
         setFixedViewBox(x: number, y: number, width: number, height: number): void
         setRotation(angle: number): void

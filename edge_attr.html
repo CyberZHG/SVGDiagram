@@ -63,6 +63,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#pen-width-margin">Pen Width &amp; Margin</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#font">Font</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#stroke-style">Stroke Style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#field">Field</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subgraph_attr.html">Subgraph Attributes</a></li>
@@ -798,6 +799,89 @@ C++</label><div class="sd-tab-content docutils">
 </div>
 </div>
 <p><img alt="" src="_images/stroke_style.svg" /></p>
+</section>
+<section id="field">
+<h2>Field<a class="headerlink" href="#field" title="Permalink to this heading"></a></h2>
+<p>If a node’s shape is of type <code class="docutils literal notranslate"><span class="pre">record</span></code>, you can name individual fields using <code class="docutils literal notranslate"><span class="pre">&lt;&gt;</span></code> when setting the node’s label. The start or end of an edge can then target the corresponding field.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-24" name="sd-tab-set-8" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-24">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sp_svg_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVGDiagram</span><span class="p">,</span> <span class="n">SVGNode</span>
+
+<span class="n">diagram</span> <span class="o">=</span> <span class="n">SVGDiagram</span><span class="p">()</span>
+<span class="n">node1</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
+<span class="n">node1</span><span class="o">.</span><span class="n">set_center</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">node1</span><span class="o">.</span><span class="n">set_shape</span><span class="p">(</span><span class="n">SVGNode</span><span class="o">.</span><span class="n">SHAPE_RECORD</span><span class="p">)</span>
+<span class="n">node1</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;|{|&lt;foo&gt; A|}|&quot;</span><span class="p">)</span>
+<span class="n">node2</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
+<span class="n">node2</span><span class="o">.</span><span class="n">set_center</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">node2</span><span class="o">.</span><span class="n">set_shape</span><span class="p">(</span><span class="n">SVGNode</span><span class="o">.</span><span class="n">SHAPE_RECORD</span><span class="p">)</span>
+<span class="n">node2</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;{|{|&lt;bar&gt; B|}|}&quot;</span><span class="p">)</span>
+<span class="n">edge</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">)</span>
+<span class="n">edge</span><span class="o">.</span><span class="n">set_field_from</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">)</span>
+<span class="n">edge</span><span class="o">.</span><span class="n">set_field_to</span><span class="p">(</span><span class="s2">&quot;bar&quot;</span><span class="p">)</span>
+<span class="n">edge</span><span class="o">.</span><span class="n">add_connection_point</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">edge</span><span class="o">.</span><span class="n">add_connection_point</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">edge</span><span class="o">.</span><span class="n">set_arrow_head</span><span class="p">()</span>
+<span class="n">svg</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-25" name="sd-tab-set-8" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-25">
+JavaScript</label><div class="sd-tab-content docutils">
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="p">,</span><span class="w"> </span><span class="nx">SVGNode</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sp-svg-diagram&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">diagram</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="p">();</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">node1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addNode</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">);</span>
+<span class="nx">node1</span><span class="p">.</span><span class="nx">setCenter</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span>
+<span class="nx">node1</span><span class="p">.</span><span class="nx">setShape</span><span class="p">(</span><span class="nx">SVGNode</span><span class="p">.</span><span class="nx">SHAPE_RECORD</span><span class="p">);</span>
+<span class="nx">node1</span><span class="p">.</span><span class="nx">setLabel</span><span class="p">(</span><span class="s2">&quot;|{|&lt;foo&gt; A|}|&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">node2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addNode</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">);</span>
+<span class="nx">node2</span><span class="p">.</span><span class="nx">setCenter</span><span class="p">(</span><span class="mf">150</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span>
+<span class="nx">node2</span><span class="p">.</span><span class="nx">setShape</span><span class="p">(</span><span class="nx">SVGNode</span><span class="p">.</span><span class="nx">SHAPE_RECORD</span><span class="p">);</span>
+<span class="nx">node2</span><span class="p">.</span><span class="nx">setLabel</span><span class="p">(</span><span class="s2">&quot;{|{|&lt;bar&gt; B|}|}&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">edge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addEdge</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;B&quot;</span><span class="p">);</span>
+<span class="nx">edge</span><span class="p">.</span><span class="nx">setFieldFrom</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">);</span>
+<span class="nx">edge</span><span class="p">.</span><span class="nx">setFieldTo</span><span class="p">(</span><span class="s2">&quot;bar&quot;</span><span class="p">);</span>
+<span class="nx">edge</span><span class="p">.</span><span class="nx">addConnectionPoint</span><span class="p">(</span><span class="mf">50</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">20</span><span class="p">);</span>
+<span class="nx">edge</span><span class="p">.</span><span class="nx">addConnectionPoint</span><span class="p">(</span><span class="mf">100</span><span class="p">,</span><span class="w"> </span><span class="mf">20</span><span class="p">);</span>
+<span class="nx">edge</span><span class="p">.</span><span class="nx">setArrowHead</span><span class="p">();</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">svg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-26" name="sd-tab-set-8" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-26">
+C++</label><div class="sd-tab-content docutils">
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;svg_diagram.h&quot;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">svg_diagram</span><span class="p">;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">SVGDiagram</span><span class="w"> </span><span class="n">diagram</span><span class="p">;</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">node1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addNode</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node1</span><span class="o">-&gt;</span><span class="n">setCenter</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node1</span><span class="o">-&gt;</span><span class="n">setShape</span><span class="p">(</span><span class="n">SVGNode</span><span class="o">::</span><span class="n">SHAPE_RECORD</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node1</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="s">&quot;|{|&lt;foo&gt; A|}|&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">node2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addNode</span><span class="p">(</span><span class="s">&quot;B&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node2</span><span class="o">-&gt;</span><span class="n">setCenter</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node2</span><span class="o">-&gt;</span><span class="n">setShape</span><span class="p">(</span><span class="n">SVGNode</span><span class="o">::</span><span class="n">SHAPE_RECORD</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node2</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="s">&quot;{|{|&lt;bar&gt; B|}|}&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">edge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addEdge</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;B&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">edge</span><span class="o">-&gt;</span><span class="n">setFieldFrom</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">edge</span><span class="o">-&gt;</span><span class="n">setFieldTo</span><span class="p">(</span><span class="s">&quot;bar&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">edge</span><span class="o">-&gt;</span><span class="n">addConnectionPoint</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="mi">-20</span><span class="p">);</span>
+<span class="w">    </span><span class="n">edge</span><span class="o">-&gt;</span><span class="n">addConnectionPoint</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">);</span>
+<span class="w">    </span><span class="n">edge</span><span class="o">-&gt;</span><span class="n">setArrowHead</span><span class="p">();</span>
+<span class="w">    </span><span class="n">diagram</span><span class="p">.</span><span class="n">render</span><span class="p">(</span><span class="s">&quot;field.svg&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><img alt="" src="_images/field.svg" /></p>
 </section>
 </section>
 

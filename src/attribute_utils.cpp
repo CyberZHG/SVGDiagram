@@ -11,7 +11,15 @@ using namespace svg_diagram;
 string RecordLabel::toString(const bool top) const {
     string s;
     if (children.empty()) {
-        s += label;
+        for (auto ch : label) {
+            if (ch == '{' || ch == '}' || ch == '<' || ch == '>' || ch == '|') {
+                s += '\\';
+            } else if (isspace(ch)) {
+                s += '\\';
+                ch = ' ';
+            }
+            s += ch;
+        }
     } else {
         if (!top) {
             s += "{";
@@ -333,6 +341,23 @@ unique_ptr<RecordLabel> AttributeUtils::parseRecordLabel(const string& label, si
                 recordLabel->label.push_back(label[index + 1]);
             }
             index += 2;
+        } else if (label[index] == ' ') {
+            ++index;
+        } else if (label[index] == '<') {
+            ++index;
+            while (index < label.size()) {
+                if (label[index] == '\\') {
+                    if (index + 1 < label.size()) {
+                        recordLabel->fieldId.push_back(label[index + 1]);
+                    }
+                    index += 2;
+                } else if (label[index] == '>') {
+                    ++index;
+                    break;
+                } else {
+                    recordLabel->fieldId.push_back(label[index++]);
+                }
+            }
         } else if (label[index] == '{') {
             ++index;
             recordLabel->children.emplace_back(parseRecordLabel(label, index));

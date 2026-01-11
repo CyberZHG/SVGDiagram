@@ -20,7 +20,7 @@ TEST(TestExample, Pentagram) {
         "{C3|{Flame|Mirror's}|Revelation}",
         "{C4|Emanare's|Source}",
         "{C5|{Scouring|Flame's}|Sundering}",
-        "{C6|Dual Birth}",
+        "{C6|Dual\\ Birth}",
     };
     const auto strokeColors = vector{"peru", "darkgoldenrod", "limegreen", "dodgerblue", "lightcoral"};
     const auto textColors = vector{"saddlebrown", "goldenrod", "olivedrab", "royalblue", "indianred"};

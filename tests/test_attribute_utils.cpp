@@ -180,9 +180,10 @@ TEST(TestAttributeUtils, ParseRecordLabelTextOnly) {
 }
 
 TEST(TestAttributeUtils, ParseRecordLabelEscape) {
-    const auto result = AttributeUtils::parseRecordLabel(R"(\{foo\|bar\})");
+    const auto result = AttributeUtils::parseRecordLabel(R"(\{foo\ \|bar\})");
     EXPECT_EQ(result->children.size(), 1);
-    EXPECT_EQ(result->children[0]->label, "{foo|bar}");
+    EXPECT_EQ(result->children[0]->label, "{foo |bar}");
+    EXPECT_EQ(result->toString(), R"(\{foo\ \|bar\})");
 }
 
 TEST(TestAttributeUtils, ParseRecordLabelSplit1) {
@@ -200,6 +201,24 @@ TEST(TestAttributeUtils, ParseRecordLabelSplit2) {
     EXPECT_EQ(result->children[0]->children[0]->label, "foo");
     EXPECT_EQ(result->children[0]->children[1]->label, "bar");
     EXPECT_EQ(result->toString(), "{foo|bar}");
+}
+
+TEST(TestAttributeUtils, ParseRecordFieldId1) {
+    const auto result = AttributeUtils::parseRecordLabel("foo|<foobar>bar");
+    EXPECT_EQ(result->children.size(), 2);
+    EXPECT_EQ(result->children[0]->label, "foo");
+    EXPECT_EQ(result->children[1]->label, "bar");
+    EXPECT_EQ(result->children[1]->fieldId, "foobar");
+    EXPECT_EQ(result->toString(), "foo|bar");
+}
+
+TEST(TestAttributeUtils, ParseRecordFieldId2) {
+    const auto result = AttributeUtils::parseRecordLabel("foo|<\\<foobar\\>>bar");
+    EXPECT_EQ(result->children.size(), 2);
+    EXPECT_EQ(result->children[0]->label, "foo");
+    EXPECT_EQ(result->children[1]->label, "bar");
+    EXPECT_EQ(result->children[1]->fieldId, "<foobar>");
+    EXPECT_EQ(result->toString(), "foo|bar");
 }
 
 TEST(TestAttributeUtils, ParseRecordSpecial1) {

@@ -150,6 +150,55 @@ The figure below illustrates the relationship between the border size and the te
 
 ![](_static/node_attr/shape_debug.svg)
 
+### Record Shape
+
+When using the record shape, you can divide the current node with straight lines either horizontally or vertically. Since there is no `rankdir` property, using `|` at the first level creates a horizontal division. Curly braces `{}` can be used to further subdivide on top of the previous level: the second level defaults to vertical division, and each subsequent level alternates the division direction accordingly.
+
+`````{tab-set}
+````{tab-item} Python
+```python
+from sp_svg_diagram import SVGDiagram, SVGNode
+
+diagram = SVGDiagram()
+svg = diagram.render()
+```
+````
+````{tab-item} JavaScript
+```javascript
+import { SVGDiagram, SVGNode } from 'sp-svg-diagram';
+
+const diagram = new SVGDiagram();
+const svg = diagram.render();
+````
+
+````{tab-item} C++
+```c++
+#include "svg_diagram.h"
+#include <string>
+#include <vector>
+using namespace svg_diagram;
+
+int main() {
+    SVGDiagram diagram;
+    diagram.defaultNodeAttributes().setShape(SVGNode::SHAPE_RECORD);
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setLabel("horizontal|split|record");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setLabel("{vertical|split|record}");
+    const auto node3 = diagram.addNode("C");
+    node3->setCenter(300, 0);
+    node3->setLabel("foo|{foobar|{nested||record}|barfoo}|bar");
+    diagram.render("shape_record.svg");
+    return 0;
+}
+````
+`````
+
+![](_static/node_attr/shape_record.svg)
+
+
 ## Margin
 
 You can set horizontal and vertical margins. The default values are 8 and 4 respectively.

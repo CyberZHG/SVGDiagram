@@ -219,3 +219,22 @@ TEST(TestDocsEdgeAttributes, StrokeStyle) {
     }
     diagram.render(OUTPUT_DIR + "stroke_style.svg");
 }
+
+TEST(TestDocsEdgeAttributes, Field) {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setShape(SVGNode::SHAPE_RECORD);
+    node1->setLabel("|{|<foo> A|}|");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setShape(SVGNode::SHAPE_RECORD);
+    node2->setLabel("{|{|<bar> B|}|}");
+    const auto edge = diagram.addEdge("A", "B");
+    edge->setFieldFrom("foo");
+    edge->setFieldTo("bar");
+    edge->addConnectionPoint(50, -20);
+    edge->addConnectionPoint(100, 20);
+    edge->setArrowHead();
+    diagram.render(OUTPUT_DIR + "field.svg");
+}

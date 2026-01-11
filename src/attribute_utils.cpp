@@ -330,6 +330,9 @@ unique_ptr<RecordLabel> AttributeUtils::parseRecordLabel(const string& label) {
         recordLabel->children.emplace_back(parseRecordLabel(label, index));
         ++index;
     }
+    if (!label.empty() && label.back() == '|') {
+        recordLabel->children.emplace_back(make_unique<RecordLabel>());
+    }
     return recordLabel;
 }
 

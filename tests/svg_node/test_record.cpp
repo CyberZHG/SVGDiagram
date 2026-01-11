@@ -187,4 +187,260 @@ TEST(TestSVGNodeRecord, SpecialCase1) {
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
+TEST(TestSVGNodeRecord, RegularConnection) {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setShape(SVGNode::SHAPE_RECORD);
+    node1->setLabel("foo");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(100, 100);
+    node2->setShape(SVGNode::SHAPE_RECORD);
+    node2->setLabel("bar");
+    const auto edge = diagram.addEdge("A", "B");
+    const auto svg = diagram.render();
+    const auto expected = R"(<!-- Node: A -->
+<g class="node" id="A">
+  <title>A</title>
+  <rect x="-18.5" y="-11" width="37" height="22" fill="none" stroke="black"/>
+  <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">foo</text>
+</g>
+<!-- Node: B -->
+<g class="node" id="B">
+  <title>B</title>
+  <rect x="81.5" y="89" width="37" height="22" fill="none" stroke="black"/>
+  <text x="100" y="100" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">bar</text>
+</g>
+<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <line x1="11.358578643762694" y1="11.358578643762693" x2="88.64142135623732" y2="88.64142135623732" stroke="black"/>
+</g>
+)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodeRecord, FieldConnectionLine) {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setShape(SVGNode::SHAPE_RECORD);
+    node1->setLabel("{|{|<foo> foo|}|}");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(100, 100);
+    node2->setShape(SVGNode::SHAPE_RECORD);
+    node2->setLabel("|{|<bar>bar|}|");
+    const auto edge = diagram.addEdge("A", "B");
+    edge->setFieldFrom("foo");
+    edge->setFieldTo("bar");
+    edge->setArrowHead();
+    const auto svg = diagram.render();
+    const auto expected = R"(<!-- Node: A -->
+<g class="node" id="A">
+  <title>A</title>
+  <rect x="-41.5" y="-33" width="83" height="66" fill="none" stroke="black"/>
+  <line x1="-41.5" y1="-11" x2="41.5" y2="-11" stroke="black"/>
+  <line x1="-18.5" y1="-11" x2="-18.5" y2="11" stroke="black"/>
+  <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">foo</text>
+  <line x1="18.5" y1="-11" x2="18.5" y2="11" stroke="black"/>
+  <line x1="-41.5" y1="11" x2="41.5" y2="11" stroke="black"/>
+</g>
+<!-- Node: B -->
+<g class="node" id="B">
+  <title>B</title>
+  <rect x="58.5" y="67" width="83" height="66" fill="none" stroke="black"/>
+  <line x1="81.5" y1="67" x2="81.5" y2="133" stroke="black"/>
+  <line x1="81.5" y1="89" x2="118.5" y2="89" stroke="black"/>
+  <text x="100" y="100" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">bar</text>
+  <line x1="81.5" y1="111" x2="118.5" y2="111" stroke="black"/>
+  <line x1="118.5" y1="67" x2="118.5" y2="133" stroke="black"/>
+</g>
+<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <line x1="11.358578643762694" y1="11.358578643762693" x2="80.35869475500797" y2="80.35869475500797" stroke="black"/>
+  <polygon points="87.42976256687345,87.42976256687345 77.88382102085505,82.8335684891609 82.8335684891609,77.88382102085505 87.42976256687345,87.42976256687345" fill="black" stroke="black"/>
+</g>
+)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodeRecord, FieldConnectionTwoLines) {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setShape(SVGNode::SHAPE_RECORD);
+    node1->setLabel("{|{|<foo> foo|}|}");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(100, 100);
+    node2->setShape(SVGNode::SHAPE_RECORD);
+    node2->setLabel("|{|<bar>bar|}|");
+    const auto edge = diagram.addEdge("A", "B");
+    edge->setSplines(SVGEdge::SPLINES_LINE);
+    edge->setFieldFrom("foo");
+    edge->setFieldTo("bar");
+    edge->addConnectionPoint(-50, 50);
+    edge->setArrowHead();
+    const auto svg = diagram.render();
+    const auto expected = R"(<!-- Node: A -->
+<g class="node" id="A">
+  <title>A</title>
+  <rect x="-41.5" y="-33" width="83" height="66" fill="none" stroke="black"/>
+  <line x1="-41.5" y1="-11" x2="41.5" y2="-11" stroke="black"/>
+  <line x1="-18.5" y1="-11" x2="-18.5" y2="11" stroke="black"/>
+  <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">foo</text>
+  <line x1="18.5" y1="-11" x2="18.5" y2="11" stroke="black"/>
+  <line x1="-41.5" y1="11" x2="41.5" y2="11" stroke="black"/>
+</g>
+<!-- Node: B -->
+<g class="node" id="B">
+  <title>B</title>
+  <rect x="58.5" y="67" width="83" height="66" fill="none" stroke="black"/>
+  <line x1="81.5" y1="67" x2="81.5" y2="133" stroke="black"/>
+  <line x1="81.5" y1="89" x2="118.5" y2="89" stroke="black"/>
+  <text x="100" y="100" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">bar</text>
+  <line x1="81.5" y1="111" x2="118.5" y2="111" stroke="black"/>
+  <line x1="118.5" y1="67" x2="118.5" y2="133" stroke="black"/>
+</g>
+<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <line x1="-11.358578643762689" y1="11.35857864376269" x2="-50" y2="50" stroke="black"/>
+  <line x1="-50" y1="50" x2="70.07729282797335" y2="90.02576427599112" stroke="black"/>
+  <polygon points="79.5641258084785,93.18804193615951 68.97049564691443,93.34615581916793 71.18409000903229,86.70537273281433 79.5641258084785,93.18804193615951" fill="black" stroke="black"/>
+</g>
+)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodeRecord, FieldConnectionSpline) {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setShape(SVGNode::SHAPE_RECORD);
+    node1->setLabel("{|{|<foo> foo|}|}");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(100, 100);
+    node2->setShape(SVGNode::SHAPE_RECORD);
+    node2->setLabel("|{|<bar>bar|}|");
+    const auto edge = diagram.addEdge("A", "B");
+    edge->setFieldFrom("foo");
+    edge->setFieldTo("bar");
+    edge->addConnectionPoint(-50, 50);
+    edge->setArrowHead();
+    const auto svg = diagram.render();
+    const auto expected = R"(<!-- Node: A -->
+<g class="node" id="A">
+  <title>A</title>
+  <rect x="-41.5" y="-33" width="83" height="66" fill="none" stroke="black"/>
+  <line x1="-41.5" y1="-11" x2="41.5" y2="-11" stroke="black"/>
+  <line x1="-18.5" y1="-11" x2="-18.5" y2="11" stroke="black"/>
+  <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">foo</text>
+  <line x1="18.5" y1="-11" x2="18.5" y2="11" stroke="black"/>
+  <line x1="-41.5" y1="11" x2="41.5" y2="11" stroke="black"/>
+</g>
+<!-- Node: B -->
+<g class="node" id="B">
+  <title>B</title>
+  <rect x="58.5" y="67" width="83" height="66" fill="none" stroke="black"/>
+  <line x1="81.5" y1="67" x2="81.5" y2="133" stroke="black"/>
+  <line x1="81.5" y1="89" x2="118.5" y2="89" stroke="black"/>
+  <text x="100" y="100" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">bar</text>
+  <line x1="81.5" y1="111" x2="118.5" y2="111" stroke="black"/>
+  <line x1="118.5" y1="67" x2="118.5" y2="133" stroke="black"/>
+</g>
+<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <path d="M -11.499999999999998 11.5 C -17.916666666666664 17.916666666666668 -65.41666666666667 36.30555555555556 -50 50 C -36.46416666666667 62.023722222222226 37.45758000000001 80.98540044444444 70.070608162 90.35895195533334" fill="none" stroke="black"/>
+  <polygon points="79.55134594050354,93.22824022764296 68.96623574132386,93.6814974076439 70.99391678613308,86.98160863390136 79.55134594050354,93.22824022764296" fill="black" stroke="black"/>
+</g>
+)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodeRecord, FieldConnectionSelfLoop) {
+    SVGDiagram diagram;
+    const auto node = diagram.addNode("A");
+    node->setShape(SVGNode::SHAPE_RECORD);
+    node->setLabel("{|{|<foo> foo|}|}");
+    const auto edge = diagram.addSelfLoopToTop("A", 30);
+    edge->setFieldFrom("foo");
+    edge->setFieldTo("foo");
+    edge->setArrowHead();
+    const auto svg = diagram.render();
+    const auto expected = R"(<!-- Node: A -->
+<g class="node" id="A">
+  <title>A</title>
+  <rect x="-41.5" y="-33" width="83" height="66" fill="none" stroke="black"/>
+  <line x1="-41.5" y1="-11" x2="41.5" y2="-11" stroke="black"/>
+  <line x1="-18.5" y1="-11" x2="-18.5" y2="11" stroke="black"/>
+  <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">foo</text>
+  <line x1="18.5" y1="-11" x2="18.5" y2="11" stroke="black"/>
+  <line x1="-41.5" y1="11" x2="41.5" y2="11" stroke="black"/>
+</g>
+<!-- Edge: edge1 (A -> A) -->
+<g class="edge" id="edge1">
+  <title>A->A</title>
+  <path d="M 3.081415712957911 -11.500000000000002 C 14.331415712957913 -28.375 11.250000000000002 -41.5 2.541142108230758e-15 -41.5 C -8.853749999999998 -41.5 -12.648132118719026 -33.370781875 -8.379114833793334 -21.682127528125005" fill="none" stroke="black"/>
+  <polygon points="-3.7800041464366925,-12.84268035181136 -11.500469032098612,-20.098327941741655 -5.290698689169099,-23.32923374167967 -3.7800041464366925,-12.84268035181136" fill="black" stroke="black"/>
+</g>
+)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodeRecord, FieldConnectionLineUnknownField) {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setShape(SVGNode::SHAPE_RECORD);
+    node1->setLabel("{|{A|<foo> foo|}|}");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(100, 100);
+    node2->setShape(SVGNode::SHAPE_RECORD);
+    node2->setLabel("|{|<bar>bar|B}|");
+    const auto edge = diagram.addEdge("A", "B");
+    edge->setFieldFrom("foobar");
+    edge->setFieldTo("barfoo");
+    edge->setArrowHead();
+    const auto svg = diagram.render();
+    const auto expected = R"(<!-- Node: A -->
+<g class="node" id="A">
+  <title>A</title>
+  <rect x="-41.5" y="-33" width="83" height="66" fill="none" stroke="black"/>
+  <line x1="-41.5" y1="-11" x2="41.5" y2="-11" stroke="black"/>
+  <text x="-30" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">A</text>
+  <line x1="-18.5" y1="-11" x2="-18.5" y2="11" stroke="black"/>
+  <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">foo</text>
+  <line x1="18.5" y1="-11" x2="18.5" y2="11" stroke="black"/>
+  <line x1="-41.5" y1="11" x2="41.5" y2="11" stroke="black"/>
+</g>
+<!-- Node: B -->
+<g class="node" id="B">
+  <title>B</title>
+  <rect x="58.5" y="67" width="83" height="66" fill="none" stroke="black"/>
+  <line x1="81.5" y1="67" x2="81.5" y2="133" stroke="black"/>
+  <line x1="81.5" y1="89" x2="118.5" y2="89" stroke="black"/>
+  <text x="100" y="100" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">bar</text>
+  <line x1="81.5" y1="111" x2="118.5" y2="111" stroke="black"/>
+  <text x="100" y="122" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">B</text>
+  <line x1="118.5" y1="67" x2="118.5" y2="133" stroke="black"/>
+</g>
+<!-- Edge: edge1 (A -> B) -->
+<g class="edge" id="edge1">
+  <title>A->B</title>
+  <line x1="33.3585786437627" y1="33.35857864376269" x2="58.358694755007974" y2="58.358694755007974" stroke="black"/>
+  <polygon points="65.42976256687345,65.42976256687345 55.88382102085506,60.83356848916089 60.83356848916089,55.88382102085506 65.42976256687345,65.42976256687345" fill="black" stroke="black"/>
+</g>
+)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
 #endif

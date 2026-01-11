@@ -56,6 +56,14 @@ const string& SVGEdge::nodeTo() const {
     return _nodeTo;
 }
 
+void SVGEdge::setFieldFrom(const string& id) {
+    _fieldFrom = id;
+}
+
+void SVGEdge::setFieldTo(const string& id) {
+    _fieldTo = id;
+}
+
 void SVGEdge::setConnection(const string& idFrom, const string& idTo) {
     _nodeFrom = idFrom;
     _nodeTo = idTo;
@@ -155,23 +163,23 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
     vector<unique_ptr<SVGDraw>> svgDrawArrows;
     vector<pair<double, double>> drawPoints, distancePoints;
     if (_connectionPoints.empty()) {
-        const double angleFrom = nodeFrom->computeAngle(nodeTo->center());
-        const double angleTo = nodeTo->computeAngle(nodeFrom->center());
-        distancePoints.emplace_back(nodeFrom->computeConnectionPoint(angleFrom));
-        distancePoints.emplace_back(nodeTo->computeConnectionPoint(angleTo));
+        const double angleFrom = nodeFrom->computeFieldAngle(_fieldFrom, nodeTo->center());
+        const double angleTo = nodeTo->computeFieldAngle(_fieldTo, nodeFrom->center());
+        distancePoints.emplace_back(nodeFrom->computeFieldConnectionPoint(_fieldFrom, angleFrom));
+        distancePoints.emplace_back(nodeTo->computeFieldConnectionPoint(_fieldTo, angleTo));
         drawPoints.emplace_back(addArrow(arrowTailShape, svgDrawArrows, distancePoints[0], angleFrom));
         drawPoints.emplace_back(addArrow(arrowHeadShape, svgDrawArrows, distancePoints[1], angleTo));
     } else {
-        const double angleFrom = nodeFrom->computeAngle(_connectionPoints[0]);
-        distancePoints.emplace_back(nodeFrom->computeConnectionPoint(angleFrom));
+        const double angleFrom = nodeFrom->computeFieldAngle(_fieldFrom, _connectionPoints[0]);
+        distancePoints.emplace_back(nodeFrom->computeFieldConnectionPoint(_fieldFrom, angleFrom));
         drawPoints.emplace_back(addArrow(arrowTailShape, svgDrawArrows, distancePoints[0], angleFrom));
         for (const auto& [x, y] : _connectionPoints) {
             distancePoints.emplace_back(x, y);
             drawPoints.emplace_back(x, y);
         }
         const size_t n = _connectionPoints.size();
-        const double angleTo = nodeTo->computeAngle(_connectionPoints[n - 1]);
-        distancePoints.emplace_back(nodeTo->computeConnectionPoint(angleTo));
+        const double angleTo = nodeTo->computeFieldAngle(_fieldTo, _connectionPoints[n - 1]);
+        distancePoints.emplace_back(nodeTo->computeFieldConnectionPoint(_fieldTo, angleTo));
         drawPoints.emplace_back(addArrow(arrowHeadShape, svgDrawArrows, distancePoints.back(), angleTo));
     }
     for (size_t i = 0; i + 1 < drawPoints.size(); ++i) {
@@ -243,11 +251,11 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
         const double selfCycleHeight = stod(getAttribute(ATTR_KEY_SELF_LOOP_HEIGHT));
         const double nodeAngleFrom = selfCycleDir + selfCycleAngle / 2.0;
         const double nodeAngleTo = selfCycleDir - selfCycleAngle / 2.0;
-        auto [rx, ry] = nodeFrom->computeConnectionPoint(selfCycleDir);
+        auto [rx, ry] = nodeFrom->computeFieldConnectionPoint(_fieldFrom, selfCycleDir);
         rx += selfCycleHeight * cos(selfCycleDir);
         ry += selfCycleHeight * sin(selfCycleDir);
-        const auto startPoint = nodeFrom->computeConnectionPoint(nodeAngleFrom);
-        const auto stopPoint = nodeTo->computeConnectionPoint(nodeAngleTo);
+        const auto startPoint = nodeFrom->computeFieldConnectionPoint(_fieldFrom, nodeAngleFrom);
+        const auto stopPoint = nodeTo->computeFieldConnectionPoint(_fieldTo, nodeAngleTo);
         const double nx = cos(selfCycleDir), ny = sin(selfCycleDir);
         const double tx = ny, ty = -nx;
         const double radius = 0.5625 * selfCycleHeight;
@@ -264,15 +272,15 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
         splines.emplace_back(vector{{rx, ry}, {c3x, c3y}, {c4x, c4y}, stopPoint});
     } else {
         vector<pair<double, double>> points;
-        const double nodeAngleFrom = nodeFrom->computeAngle(_connectionPoints[0]);
-        const auto startPoint = nodeFrom->computeConnectionPoint(nodeAngleFrom);
+        const double nodeAngleFrom = nodeFrom->computeFieldAngle(_fieldFrom, _connectionPoints[0]);
+        const auto startPoint = nodeFrom->computeFieldConnectionPoint(_fieldFrom, nodeAngleFrom);
         points.emplace_back(startPoint);
         points.emplace_back(startPoint);
         for (const auto& [x, y] : _connectionPoints) {
             points.emplace_back(x, y);
         }
-        const double nodeAngleTo = nodeTo->computeAngle(_connectionPoints[_connectionPoints.size() - 1]);
-        const auto stopPoint = nodeTo->computeConnectionPoint(nodeAngleTo);
+        const double nodeAngleTo = nodeTo->computeFieldAngle(_fieldTo, _connectionPoints[_connectionPoints.size() - 1]);
+        const auto stopPoint = nodeTo->computeFieldConnectionPoint(_fieldTo, nodeAngleTo);
         points.emplace_back(stopPoint);
         points.emplace_back(stopPoint);
         for (int i = 1; i + 2 < static_cast<int>(points.size()); ++i) {
@@ -377,8 +385,6 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
     }
     return svgDraws;
 }
-
-
 
 void SVGEdge::setArrowStyles(SVGDraw *draw, const bool fill) const {
     if (const auto colorList = AttributeUtils::parseColorList(color()); !colorList.empty()) {

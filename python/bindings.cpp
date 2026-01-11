@@ -43,6 +43,7 @@ PYBIND11_MODULE(_core, m, py::mod_gil_not_used()) {
         .def_property_readonly_static("SHAPE_DOUBLE_CIRCLE", [](py::object) { return string(SVGNode::SHAPE_DOUBLE_CIRCLE); })
         .def_property_readonly_static("SHAPE_RECT", [](py::object) { return string(SVGNode::SHAPE_RECT); })
         .def_property_readonly_static("SHAPE_ELLIPSE", [](py::object) { return string(SVGNode::SHAPE_ELLIPSE); })
+        .def_property_readonly_static("SHAPE_RECORD", [](py::object) { return string(SVGNode::SHAPE_RECORD); })
         .def("set_center", py::overload_cast<double, double>(&SVGNode::setCenter), py::arg("cx"), py::arg("cy"))
         .def("set_shape", py::overload_cast<const string&>(&SVGNode::setShape), py::arg("shape"))
     ;
@@ -55,6 +56,8 @@ PYBIND11_MODULE(_core, m, py::mod_gil_not_used()) {
         .def_property_readonly_static("ARROW_EMPTY", [](py::object) { return string(SVGEdge::ARROW_EMPTY); })
         .def("set_connection", &SVGEdge::setConnection, py::arg("tail_node_id"), py::arg("head_node_id"))
         .def("set_splines", py::overload_cast<const string&>(&SVGEdge::setSplines), py::arg("splines"))
+        .def("set_field_from", &SVGEdge::setFieldFrom, py::arg("field_id"))
+        .def("set_field_to", &SVGEdge::setFieldTo, py::arg("field_id"))
         .def("add_connection_point", py::overload_cast<double, double>(&SVGEdge::addConnectionPoint), py::arg("x"), py::arg("y"))
         .def("set_arrow_head", py::overload_cast<const string_view&>(&SVGEdge::setArrowHead), py::arg("arrow_shape") = string(SVGEdge::ARROW_NORMAL))
         .def("set_arrow_tail", py::overload_cast<const string_view&>(&SVGEdge::setArrowTail), py::arg("arrow_shape") = string(SVGEdge::ARROW_NORMAL))
@@ -69,6 +72,8 @@ PYBIND11_MODULE(_core, m, py::mod_gil_not_used()) {
     ;
     py::class_<SVGDiagram>(m, "SVGDiagram")
         .def(py::init<>())
+        .def("default_node_attributes", &SVGDiagram::defaultNodeAttributes, py::return_value_policy::reference_internal)
+        .def("default_edge_attributes", &SVGDiagram::defaultEdgeAttributes, py::return_value_policy::reference_internal)
         .def("set_background_color", &SVGDiagram::setBackgroundColor, py::arg("color"))
         .def("set_fixed_view_box", &SVGDiagram::setFixedViewBox, py::arg("x0"), py::arg("y0"), py::arg("width"), py::arg("height"))
         .def("set_rotation", py::overload_cast<double>(&SVGDiagram::setRotation), py::arg("angle"))

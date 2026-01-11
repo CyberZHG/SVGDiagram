@@ -38,6 +38,22 @@ def test_shape():
     compare_svg("node_attr", "shape", svg)
 
 
+def test_shape_record():
+    diagram = SVGDiagram()
+    diagram.default_node_attributes().set_shape(SVGNode.SHAPE_RECORD)
+    node1 = diagram.add_node("A")
+    node1.set_center(0, 0)
+    node1.set_label("horizontal|split|record")
+    node2 = diagram.add_node("B")
+    node2.set_center(150, 0)
+    node2.set_label("{vertical|split|record}")
+    node3 = diagram.add_node("C")
+    node3.set_center(300, 0)
+    node3.set_label("foo|{foobar|{nested||record}|barfoo}|bar")
+    svg = diagram.render()
+    compare_svg("node_attr", "shape_record", svg)
+
+
 def test_margin():
     diagram = SVGDiagram()
     node1 = diagram.add_node("A")

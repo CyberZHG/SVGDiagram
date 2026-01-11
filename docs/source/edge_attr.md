@@ -667,3 +667,81 @@ int main() {
 `````
 
 ![](_static/edge_attr/stroke_style.svg)
+
+## Field
+
+If a node’s shape is of type `record`, you can name individual fields using `<>` when setting the node’s label. The start or end of an edge can then target the corresponding field.
+
+`````{tab-set}
+````{tab-item} Python
+```python
+from sp_svg_diagram import SVGDiagram, SVGNode
+
+diagram = SVGDiagram()
+node1 = diagram.add_node("A")
+node1.set_center(0, 0)
+node1.set_shape(SVGNode.SHAPE_RECORD)
+node1.set_label("|{|<foo> A|}|")
+node2 = diagram.add_node("B")
+node2.set_center(150, 0)
+node2.set_shape(SVGNode.SHAPE_RECORD)
+node2.set_label("{|{|<bar> B|}|}")
+edge = diagram.add_edge("A", "B")
+edge.set_field_from("foo")
+edge.set_field_to("bar")
+edge.add_connection_point(50, -20)
+edge.add_connection_point(100, 20)
+edge.set_arrow_head()
+svg = diagram.render()
+```
+````
+````{tab-item} JavaScript
+```javascript
+import { SVGDiagram, SVGNode } from 'sp-svg-diagram';
+
+const diagram = new SVGDiagram();
+const node1 = diagram.addNode("A");
+node1.setCenter(0, 0);
+node1.setShape(SVGNode.SHAPE_RECORD);
+node1.setLabel("|{|<foo> A|}|");
+const node2 = diagram.addNode("B");
+node2.setCenter(150, 0);
+node2.setShape(SVGNode.SHAPE_RECORD);
+node2.setLabel("{|{|<bar> B|}|}");
+const edge = diagram.addEdge("A", "B");
+edge.setFieldFrom("foo");
+edge.setFieldTo("bar");
+edge.addConnectionPoint(50, -20);
+edge.addConnectionPoint(100, 20);
+edge.setArrowHead();
+const svg = diagram.render();
+````
+
+````{tab-item} C++
+```c++
+#include "svg_diagram.h"
+using namespace svg_diagram;
+
+int main() {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setShape(SVGNode::SHAPE_RECORD);
+    node1->setLabel("|{|<foo> A|}|");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setShape(SVGNode::SHAPE_RECORD);
+    node2->setLabel("{|{|<bar> B|}|}");
+    const auto edge = diagram.addEdge("A", "B");
+    edge->setFieldFrom("foo");
+    edge->setFieldTo("bar");
+    edge->addConnectionPoint(50, -20);
+    edge->addConnectionPoint(100, 20);
+    edge->setArrowHead();
+    diagram.render("field.svg");
+    return 0;
+}
+````
+`````
+
+![](_static/edge_attr/field.svg)

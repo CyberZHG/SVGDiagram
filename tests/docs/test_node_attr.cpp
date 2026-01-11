@@ -57,6 +57,21 @@ TEST(TestDocsNodeAttributes, Shape) {
     diagram.render(OUTPUT_DIR + "shape.svg");
 }
 
+TEST(TestDocsNodeAttributes, ShapeRecord) {
+    SVGDiagram diagram;
+    diagram.defaultNodeAttributes().setShape(SVGNode::SHAPE_RECORD);
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setLabel("horizontal|split|record");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setLabel("{vertical|split|record}");
+    const auto node3 = diagram.addNode("C");
+    node3->setCenter(300, 0);
+    node3->setLabel("foo|{foobar|{nested||record}|barfoo}|bar");
+    diagram.render(OUTPUT_DIR + "shape_record.svg");
+}
+
 TEST(TestDocsNodeAttributes, ShapeDebug) {
     SVGDiagram diagram;
     diagram.enableDebug();

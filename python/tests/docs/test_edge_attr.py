@@ -1,4 +1,4 @@
-from sp_svg_diagram import SVGDiagram, SVGEdge
+from sp_svg_diagram import SVGDiagram, SVGEdge, SVGNode
 
 from .utils import compare_svg
 
@@ -167,3 +167,23 @@ def test_stroke_style():
             edge.append_style_dotted()
     svg = diagram.render()
     compare_svg("edge_attr", "stroke_style", svg)
+
+
+def test_field():
+    diagram = SVGDiagram()
+    node1 = diagram.add_node("A")
+    node1.set_center(0, 0)
+    node1.set_shape(SVGNode.SHAPE_RECORD)
+    node1.set_label("|{|<foo> A|}|")
+    node2 = diagram.add_node("B")
+    node2.set_center(150, 0)
+    node2.set_shape(SVGNode.SHAPE_RECORD)
+    node2.set_label("{|{|<bar> B|}|}")
+    edge = diagram.add_edge("A", "B")
+    edge.set_field_from("foo")
+    edge.set_field_to("bar")
+    edge.add_connection_point(50, -20)
+    edge.add_connection_point(100, 20)
+    edge.set_arrow_head()
+    svg = diagram.render()
+    compare_svg("edge_attr", "field", svg)

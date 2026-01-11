@@ -160,6 +160,16 @@ When using the record shape, you can divide the current node with straight lines
 from sp_svg_diagram import SVGDiagram, SVGNode
 
 diagram = SVGDiagram()
+diagram.default_node_attributes().set_shape(SVGNode.SHAPE_RECORD)
+node1 = diagram.add_node("A")
+node1.set_center(0, 0)
+node1.set_label("horizontal|split|record")
+node2 = diagram.add_node("B")
+node2.set_center(150, 0)
+node2.set_label("{vertical|split|record}")
+node3 = diagram.add_node("C")
+node3.set_center(300, 0)
+node3.set_label("foo|{foobar|{nested||record}|barfoo}|bar")
 svg = diagram.render()
 ```
 ````

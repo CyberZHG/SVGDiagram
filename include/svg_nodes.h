@@ -37,6 +37,7 @@ namespace svg_diagram {
 
         void setPrecomputedTextSize(double width, double height);
         [[nodiscard]] std::pair<double, double> precomputedTextSize() const;
+        void setPrecomputedTextSize(const std::string& text, double width, double height);
         [[nodiscard]] const std::string& id() const;
         void setID(const std::string& id);
         void setLabel(const std::string& label);
@@ -75,9 +76,11 @@ namespace svg_diagram {
         void appendSVGDrawsLabelWithLocation(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, const std::string& label, double cx, double cy, double textWidth = 0.0, double textHeight = 0.0);
 
         [[nodiscard]] std::pair<double, double> computeTextSize();
+        [[nodiscard]] std::pair<double, double> computeTextSize(const std::string& label);
 
         [[nodiscard]] std::pair<double, double> computeMargin();
         [[nodiscard]] std::pair<double, double> computeTextSizeWithMargin();
+        [[nodiscard]] std::pair<double, double> computeTextSizeWithMargin(const std::string& label);
 
         void setStrokeStyles(SVGDraw* draw) const;
         void setFillStyles(SVGDraw* draw, std::vector<std::unique_ptr<SVGDraw>>& svgDraws) const;
@@ -87,6 +90,7 @@ namespace svg_diagram {
         bool _enabledDebug = false;
         double _precomputedTextWidth = 0.0;
         double _precomputedTextHeight = 0.0;
+        std::unordered_map<std::string, std::pair<double, double>> _precomputedTextSizes;
         std::unordered_map<std::string_view, std::string> _attributes;
     };
 
@@ -202,6 +206,10 @@ namespace svg_diagram {
         void setArrowTail();
         void setArrowTail(const std::string_view& shape);
         void setArrowTail(const std::string& shape);
+        void setHeadLabel(const std::string& label);
+        void setTailLabel(const std::string& label);
+        void setLabelDistance(double distance);
+        [[nodiscard]] double labelDistance() const;
 
         void setSelfLoopAttributes(double dir, double height, double angle);
 
@@ -217,6 +225,9 @@ namespace svg_diagram {
         static constexpr double ARROW_HALF_HEIGHT = ARROW_HEIGHT / 2.0;
 
         std::pair<double, double> computeTextCenter(double cx, double cy, double dx, double dy);
+        std::pair<double, double> computeTextCenter(const std::string& label, double cx, double cy, double dx, double dy);
+
+        static std::pair<std::pair<double, double>, std::pair<double, double>> computePointAtDistanceLine(const std::vector<std::pair<double, double>>& points, double target);
 
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsLine(const NodesMapping& nodes);
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsSpline(const NodesMapping& nodes);

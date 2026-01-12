@@ -352,7 +352,12 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineWithLabel) {
     auto edge = std::make_shared<SVGEdge>("A", "B");
     edge->setSplines(SVGEdge::SPLINES_LINE);
     edge->setLabel("42");
+    edge->setTailLabel("tail");
+    edge->setHeadLabel("head");
     edge->setPrecomputedTextSize(20, 16);
+    edge->setPrecomputedTextSize("tail", 40, 16);
+    edge->setPrecomputedTextSize("head", 40, 16);
+    edge->setLabelDistance(10.0);
     edge->setMargin(2.0);
     diagram.addEdge(edge);
     const auto svg = diagram.render();
@@ -364,6 +369,12 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineWithLabel) {
   <rect x="129.70523846342462" y="127.85261923171234" width="20" height="16" fill="none" stroke="blue"/>
   <rect x="127.70523846342462" y="125.85261923171234" width="24" height="20" fill="none" stroke="red"/>
   <text x="139.70523846342462" y="135.85261923171234" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">42</text>
+  <rect x="96.8155178613811" y="121.40775893069056" width="40" height="16" fill="none" stroke="blue"/>
+  <rect x="94.8155178613811" y="119.40775893069056" width="44" height="20" fill="none" stroke="red"/>
+  <text x="116.8155178613811" y="129.40775893069056" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">tail</text>
+  <rect x="138.59495906546817" y="142.29747953273412" width="40" height="16" fill="none" stroke="blue"/>
+  <rect x="136.59495906546817" y="140.29747953273412" width="44" height="20" fill="none" stroke="red"/>
+  <text x="158.59495906546817" y="150.29747953273412" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">head</text>
 </g>)";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
@@ -380,7 +391,12 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionWithLabel) {
     edge->setSplines(SVGEdge::SPLINES_LINE);
     edge->addConnectionPoint(-50, 120);
     edge->setLabel("42");
+    edge->setTailLabel("tail");
+    edge->setHeadLabel("head");
     edge->setPrecomputedTextSize(20, 16);
+    edge->setPrecomputedTextSize("tail", 40, 16);
+    edge->setPrecomputedTextSize("head", 40, 16);
+    edge->setLabelDistance(20.0);
     edge->setMargin(2.0);
     diagram.addEdge(edge);
     const auto svg = diagram.render();
@@ -390,9 +406,15 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionWithLabel) {
   <title>A->B</title>
   <line x1="82.16601989629028" y1="102.37786401382796" x2="-50" y2="120" stroke="black"/>
   <line x1="-50" y1="120" x2="173.48943624376807" y2="146.81873234925217" stroke="black"/>
-  <rect x="-15.801535228950762" y="128.74381577252592" width="20" height="16" fill="none" stroke="blue"/>
-  <rect x="-17.801535228950762" y="126.74381577252592" width="24" height="20" fill="none" stroke="red"/>
-  <text x="-5.801535228950761" y="136.74381577252592" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">42</text>
+  <rect x="-15.801535228950755" y="128.74381577252592" width="20" height="16" fill="none" stroke="blue"/>
+  <rect x="-17.801535228950755" y="126.74381577252592" width="24" height="20" fill="none" stroke="red"/>
+  <text x="-5.801535228950754" y="136.74381577252592" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">42</text>
+  <rect x="40.44889315839625" y="84.3401475788805" width="40" height="16" fill="none" stroke="blue"/>
+  <rect x="38.44889315839625" y="82.3401475788805" width="44" height="20" fill="none" stroke="red"/>
+  <text x="60.44889315839625" y="92.3401475788805" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">tail</text>
+  <rect x="131.938055967531" y="148.8725667161037" width="40" height="16" fill="none" stroke="blue"/>
+  <rect x="129.938055967531" y="146.8725667161037" width="44" height="20" fill="none" stroke="red"/>
+  <text x="151.938055967531" y="156.8725667161037" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">head</text>
 </g>)";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();

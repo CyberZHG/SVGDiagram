@@ -48,6 +48,10 @@ pair<double, double> SVGItem::precomputedTextSize() const {
     return {_precomputedTextWidth, _precomputedTextHeight};
 }
 
+void SVGItem::setPrecomputedTextSize(const string& text, const double width, const double height) {
+    _precomputedTextSizes[text] = {width, height};
+}
+
 const string& SVGItem::id() const {
     const auto it = _attributes.find(ATTR_KEY_ID);
     if (it == _attributes.end()) {
@@ -210,7 +214,7 @@ void SVGItem::appendSVGDrawsLabelWithLocation(vector<unique_ptr<SVGDraw>>& svgDr
 
 void SVGItem::appendSVGDrawsLabelWithLocation(vector<unique_ptr<SVGDraw>>& svgDraws, const string& label, double cx, double cy, double textWidth, double textHeight) {
     if (textWidth == 0.0 || textHeight == 0.0) {
-        const auto [width, height] = computeTextSize();
+        const auto [width, height] = computeTextSize(label);
         textWidth = width;
         textHeight = height;
     }
@@ -238,12 +242,25 @@ void SVGItem::appendSVGDrawsLabelWithLocation(vector<unique_ptr<SVGDraw>>& svgDr
 }
 
 pair<double, double> SVGItem::computeTextSize() {
-    if (const auto [precomputedTextWidth, precomputedTextHeight] = precomputedTextSize();
-        precomputedTextWidth > 0 && precomputedTextHeight > 0) {
-        return {precomputedTextWidth, precomputedTextHeight};
+    if (_precomputedTextWidth > 0 && _precomputedTextHeight > 0) {
+        return {_precomputedTextWidth, _precomputedTextHeight};
+    }
+    const auto label = getAttribute(ATTR_KEY_LABEL);
+    const auto [width, height] = computeTextSize(label);
+    setPrecomputedTextSize(width, height);
+    _precomputedTextSizes[label] = {width, height};
+    return {width, height};
+}
+
+pair<double, double> SVGItem::computeTextSize(const string& label) {
+    if (const auto it = _precomputedTextSizes.find(label); it != _precomputedTextSizes.end()) {
+        return it->second;
+    }
+    if (label == getAttribute(ATTR_KEY_LABEL) && _precomputedTextWidth > 0 && _precomputedTextHeight > 0) {
+        _precomputedTextSizes[label] = {_precomputedTextWidth, _precomputedTextHeight};
+        return precomputedTextSize();
     }
     const SVGTextSize textSize;
-    const auto label = getAttribute(ATTR_KEY_LABEL);
     const double fontSize = stod(getAttribute(ATTR_KEY_FONT_SIZE));
     const string fontFamily = getAttribute(ATTR_KEY_FONT_NAME);
     auto [width, height] = textSize.computeTextSize(label, fontSize, fontFamily);
@@ -253,7 +270,7 @@ pair<double, double> SVGItem::computeTextSize() {
     if (height == 0.0) {
         height = fontSize * SVGTextSize::DEFAULT_APPROXIMATION_HEIGHT_SCALE;
     }
-    setPrecomputedTextSize(width, height);
+    _precomputedTextSizes[label] = {width, height};
     return {width, height};
 }
 
@@ -264,6 +281,12 @@ pair<double, double> SVGItem::computeMargin() {
 
 std::pair<double, double> SVGItem::computeTextSizeWithMargin() {
     const auto [width, height] = computeTextSize();
+    const auto [marginX, marginY] = computeMargin();
+    return {width + marginX * 2, height + marginY * 2};
+}
+
+std::pair<double, double> SVGItem::computeTextSizeWithMargin(const string& label) {
+    const auto [width, height] = computeTextSize(label);
     const auto [marginX, marginY] = computeMargin();
     return {width + marginX * 2, height + marginY * 2};
 }

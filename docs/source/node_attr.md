@@ -78,6 +78,15 @@ Multiline text is center-aligned by default. You can control the alignment of a 
 from sp_svg_diagram import SVGDiagram
 
 diagram = SVGDiagram()
+node1 = diagram.add_node("A")
+node1.set_center(0, 0)
+node1.set_label("align\\lleft\\lfoobar\\l")
+node2 = diagram.add_node("B")
+node2.set_center(150, 0)
+node2.set_label("align\\rright\\rfoobar\\r")
+node3 = diagram.add_node("C")
+node3.set_center(300, 0)
+node3.set_label("align\\lmixed\\rfoobar")
 svg = diagram.render()
 ```
 ````

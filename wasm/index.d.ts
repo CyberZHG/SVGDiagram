@@ -19,6 +19,7 @@ declare module 'sp-svg-diagram' {
         setLabel(label: string): void
         setFixedSize(width: number, height: number): void
         setTextSize(width: number, height: number): void
+        setPrecomputedTextSize(text: string, width: number, height: number): void
         setMargin(x: number, y: number): void
         setColor(color: string): void
         setFillColor(color: string): void
@@ -62,6 +63,9 @@ declare module 'sp-svg-diagram' {
         setArrowTail(arrow?: string): void
         _setArrowHead(arrow: string): void
         _setArrowTail(arrow: string): void
+        setTailLabel(label: string): void
+        setHeadLabel(label: string): void
+        setLabelDistance(scale: number): void
     }
 
     export class SVGGraph extends SVGItem {

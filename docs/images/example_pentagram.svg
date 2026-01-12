@@ -69,7 +69,7 @@
       <title>node_c->node_0</title>
       <line x1="4.6348625636861795" y1="-22.304183182463536" x2="21.214522087917622" y2="-102.08988514235723" stroke="peru"/>
       <polygon points="23.24908221844396,-111.88072601918046 24.641316394805752,-101.37778909667301 17.787727781029496,-102.80198118804144 23.24908221844396,-111.88072601918046" fill="peru" stroke="peru"/>
-      <text x="26.852155988509324" y="-65.28476274029988" text-anchor="middle" dominant-baseline="central" fill="peru" font-family="Times,serif" font-size="14">C1</text>
+      <text x="32.22376979723495" y="-91.13438756282765" text-anchor="middle" dominant-baseline="central" fill="peru" font-family="Times,serif" font-size="14">C1</text>
     </g>
     <!-- Edge: edge2 (node_0 -> node_0) -->
     <g class="edge" id="edge2">
@@ -83,7 +83,7 @@
       <title>node_c->node_1</title>
       <line x1="43.301192866553556" y1="-4.7505652430361724" x2="68.66047640144315" y2="-7.532727187637003" stroke="darkgoldenrod"/>
       <polygon points="78.60083307376519,-8.6232817378649 69.04217049402291,-4.0536023523242894 68.27878230886338,-11.011852022949718 78.60083307376519,-8.6232817378649" fill="darkgoldenrod" stroke="darkgoldenrod"/>
-      <text x="63.12595418937558" y="5.281271950283509" text-anchor="middle" dominant-baseline="central" fill="darkgoldenrod" font-family="Times,serif" font-size="14">C2</text>
+      <text x="61.54791588714678" y="5.454398218048257" text-anchor="middle" dominant-baseline="central" fill="darkgoldenrod" font-family="Times,serif" font-size="14">C2</text>
     </g>
     <!-- Edge: edge4 (node_1 -> node_1) -->
     <g class="edge" id="edge4">
@@ -97,7 +97,7 @@
       <title>node_c->node_2</title>
       <line x1="10.058467662536877" y1="22.31766317803607" x2="41.804655989960935" y2="92.75590109341823" stroke="limegreen"/>
       <polygon points="45.91357414322642,101.87274219161476 38.613761605592146,94.19402244706114 44.995550374329724,91.3177797397753 45.91357414322642,101.87274219161476" fill="limegreen" stroke="limegreen"/>
-      <text x="15.074575560611015" y="68.85410008716963" text-anchor="middle" dominant-baseline="central" fill="limegreen" font-family="Times,serif" font-size="14">C3</text>
+      <text x="25.054154793932895" y="90.99672612725057" text-anchor="middle" dominant-baseline="central" fill="limegreen" font-family="Times,serif" font-size="14">C3</text>
     </g>
     <!-- Edge: edge6 (node_2 -> node_2) -->
     <g class="edge" id="edge6">
@@ -111,7 +111,7 @@
       <title>node_c->node_3</title>
       <line x1="-24.613110170776036" y1="22.365498555621095" x2="-65.62594973330367" y2="59.633141597610155" stroke="dodgerblue"/>
       <polygon points="-73.02685532991619,66.35821381655543 -67.97972500993451,57.04282463879578 -63.27217445667282,62.22345855642454 -73.02685532991619,66.35821381655543" fill="dodgerblue" stroke="dodgerblue"/>
-      <text x="-59.90387603472258" y="33.43808853208312" text-anchor="middle" dominant-baseline="central" fill="dodgerblue" font-family="Times,serif" font-size="14">C4</text>
+      <text x="-69.7950082864989" y="42.42598573628214" text-anchor="middle" dominant-baseline="central" fill="dodgerblue" font-family="Times,serif" font-size="14">C4</text>
     </g>
     <!-- Edge: edge8 (node_3 -> node_3) -->
     <g class="edge" id="edge8">
@@ -125,7 +125,7 @@
       <title>node_c->node_4</title>
       <line x1="-39.21051760518911" y1="-22.400789642198188" x2="-61.60814888438174" y2="-35.196454107038456" stroke="lightcoral"/>
       <polygon points="-70.29107824388308,-40.15697199712913 -59.87196762285,-38.23547938286392 -63.344330145913474,-32.15742883121299 -70.29107824388308,-40.15697199712913" fill="lightcoral" stroke="lightcoral"/>
-      <text x="-48.050085068959724" y="-44.73504393139201" text-anchor="middle" dominant-baseline="central" fill="lightcoral" font-family="Times,serif" font-size="14">C5</text>
+      <text x="-46.7947772845897" y="-44.01789232689074" text-anchor="middle" dominant-baseline="central" fill="lightcoral" font-family="Times,serif" font-size="14">C5</text>
     </g>
     <!-- Edge: edge10 (node_4 -> node_4) -->
     <g class="edge" id="edge10">

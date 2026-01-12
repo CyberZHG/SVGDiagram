@@ -20,6 +20,21 @@ def test_label():
     compare_svg("node_attr", "label", svg)
 
 
+def test_label_align():
+    diagram = SVGDiagram()
+    node1 = diagram.add_node("A")
+    node1.set_center(0, 0)
+    node1.set_label("align\\lleft\\lfoobar\\l")
+    node2 = diagram.add_node("B")
+    node2.set_center(150, 0)
+    node2.set_label("align\\rright\\rfoobar\\r")
+    node3 = diagram.add_node("C")
+    node3.set_center(300, 0)
+    node3.set_label("align\\lmixed\\rfoobar")
+    svg = diagram.render()
+    compare_svg("node_attr", "label_align", svg)
+
+
 def test_shape():
     diagram = SVGDiagram()
     shapes = [

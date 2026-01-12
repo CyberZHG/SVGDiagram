@@ -228,8 +228,9 @@ namespace svg_diagram {
         std::pair<double, double> computeTextCenter(const std::string& label, double cx, double cy, double dx, double dy);
 
         static std::pair<std::pair<double, double>, std::pair<double, double>> computePointAtDistanceLine(const std::vector<std::pair<double, double>>& points, double target);
-
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsLine(const NodesMapping& nodes);
+
+        static std::pair<std::pair<double, double>, std::pair<double, double>> computePointAtDistanceSpline(const std::vector<std::vector<std::pair<double, double>>>& splines, const std::vector<double>& lengths, double target);
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsSpline(const NodesMapping& nodes);
 
         void setArrowStyles(SVGDraw* draw, bool fill) const;

@@ -44,7 +44,7 @@ namespace svg_diagram {
     constexpr std::string_view ATTR_DEF_MARGIN_EDGE = "0,0";
     constexpr std::string_view ATTR_DEF_MARGIN_GRAPH = "0.1111111111111111,0.1111111111111111";
     constexpr std::string_view ATTR_DEF_STYLE = "solid,filled";
-    constexpr std::string_view ATTR_DEF_LABEL_DISTANCE = "10";
+    constexpr std::string_view ATTR_DEF_LABEL_DISTANCE = "1.0";
 
     constexpr std::string_view ATTR_STYLE_SOLID = "solid";
     constexpr std::string_view ATTR_STYLE_DASHED = "dashed";

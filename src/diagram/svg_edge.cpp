@@ -137,7 +137,7 @@ void SVGEdge::setLabelDistance(const double distance) {
 }
 
 double SVGEdge::labelDistance() const {
-    return stod(getAttribute(ATTR_KEY_LABEL_DISTANCE));
+    return stod(getAttribute(ATTR_KEY_LABEL_DISTANCE)) * 10.0;
 }
 
 void SVGEdge::setSelfLoopAttributes(double dir, const double height, double angle) {
@@ -298,10 +298,42 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
     return svgDraws;
 }
 
-vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& nodes) {
+pair<pair<double, double>, pair<double, double>> SVGEdge::computePointAtDistanceSpline(const vector<vector<pair<double, double>>>& splines, const vector<double>& lengths, const double target) {
     static constexpr double NUM_SPLINE_LENGTH_APPROXIMATION_SEGMENTS = 100;
-    const auto splinesType = getAttribute(ATTR_KEY_SPLINES);
     constexpr double SPLINE_LENGTH_APPROXIMATION_STEP = 1.0 / NUM_SPLINE_LENGTH_APPROXIMATION_SEGMENTS;
+    double sumLength = 0.0;
+    double splineX = 0.0, splineY = 0.0;
+    double dx = 0.0, dy = 0.0;
+    for (size_t i = 0; i < splines.size(); ++i) {
+        const double nextSum = sumLength + lengths[i];
+        if (nextSum > target) {
+            const double targetLength = target - sumLength;
+            auto [x1, y1] = splines[i][0];
+            double totalSegmentLength = 0.0;
+            for (int j = 1; j < NUM_SPLINE_LENGTH_APPROXIMATION_SEGMENTS; ++j) {
+                const double t = j * SPLINE_LENGTH_APPROXIMATION_STEP;
+                const auto [x2, y2] = GeometryUtils::computeBezierAt(splines[i], t);
+                totalSegmentLength += GeometryUtils::distance(x1, y1, x2, y2);
+                if (j + 1 == NUM_SPLINE_LENGTH_APPROXIMATION_SEGMENTS || totalSegmentLength > targetLength - GeometryUtils::EPSILON) {
+                    const double tMid = t - SPLINE_LENGTH_APPROXIMATION_STEP * 0.5;
+                    auto point = GeometryUtils::computeBezierAt(splines[i], tMid);
+                    splineX = point.first, splineY = point.second;
+                    point = GeometryUtils::computeBezierDerivative(splines[i], tMid);
+                    dx = point.first, dy = point.second;
+                    break;
+                }
+                x1 = x2;
+                y1 = y2;
+            }
+            break;
+        }
+        sumLength = nextSum;
+    }
+    return {{splineX, splineY}, {dx, dy}};
+}
+
+vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& nodes) {
+    const auto splinesType = getAttribute(ATTR_KEY_SPLINES);
     if (_connectionPoints.empty() && splinesType != SPLINES_SELF_LOOP) {
         return produceSVGDrawsLine(nodes);
     }
@@ -411,44 +443,42 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
     for (auto& arrow : svgDrawArrows) {
         svgDraws.emplace_back(std::move(arrow));
     }
-    if (const auto label = getAttribute(ATTR_KEY_LABEL); !label.empty()) {
+    const auto label = getAttribute(ATTR_KEY_LABEL);
+    const auto tailLabel = getAttribute(ATTR_KEY_TAIL_LABEL);
+    const auto headLabel = getAttribute(ATTR_KEY_HEAD_LABEL);
+    if (!label.empty() || !tailLabel.empty() || !headLabel.empty()) {
         double totalLength = 0.0;
         vector<double> lengths(splines.size());
         for (size_t i = 0; i < splines.size(); ++i) {
             lengths[i] = GeometryUtils::computeBezierLength(splines[i][0], splines[i][1], splines[i][2], splines[i][3]);
             totalLength += lengths[i];
         }
-        const double halfLength = totalLength / 2.0;
-        double sumLength = 0.0;
-        double splineX = 0.0, splineY = 0.0;
-        double dx = 0.0, dy = 0.0;
-        for (size_t i = 0; i < splines.size(); ++i) {
-            const double nextSum = sumLength + lengths[i];
-            if (nextSum > halfLength) {
-                const double targetLength = halfLength - sumLength;
-                auto [x1, y1] = splines[i][0];
-                double totalSegmentLength = 0.0;
-                for (int j = 1; j < NUM_SPLINE_LENGTH_APPROXIMATION_SEGMENTS; ++j) {
-                    const double t = j * SPLINE_LENGTH_APPROXIMATION_STEP;
-                    const auto [x2, y2] = GeometryUtils::computeBezierAt(splines[i], t);
-                    totalSegmentLength += GeometryUtils::distance(x1, y1, x2, y2);
-                    if (j + 1 == NUM_SPLINE_LENGTH_APPROXIMATION_SEGMENTS || totalSegmentLength > targetLength - GeometryUtils::EPSILON) {
-                        const double tMid = t - SPLINE_LENGTH_APPROXIMATION_STEP * 0.5;
-                        auto point = GeometryUtils::computeBezierAt(splines[i], tMid);
-                        splineX = point.first, splineY = point.second;
-                        point = GeometryUtils::computeBezierDerivative(splines[i], tMid);
-                        dx = point.first, dy = point.second;
-                        break;
-                    }
-                    x1 = x2;
-                    y1 = y2;
-                }
-                break;
-            }
-            sumLength = nextSum;
+        if (!label.empty()) {
+            const double target = totalLength / 2.0;
+            const auto [position, direction] = computePointAtDistanceSpline(splines, lengths, target);
+            const auto& [splineX, splineY] = position;
+            const auto& [dx,dy] = direction;
+            const auto [cx, cy] = computeTextCenter(splineX, splineY, dx, dy);
+            appendSVGDrawsLabelWithLocation(svgDraws, cx, cy);
         }
-        const auto [cx, cy] = computeTextCenter(splineX, splineY, dx, dy);
-        appendSVGDrawsLabelWithLocation(svgDraws, cx, cy);
+        if (!tailLabel.empty()) {
+            setAttributeIfNotExist(ATTR_KEY_LABEL_DISTANCE, string(ATTR_DEF_LABEL_DISTANCE));
+            const double target = min(labelDistance(), totalLength);
+            const auto [position, direction] = computePointAtDistanceSpline(splines, lengths, target);
+            const auto& [lineX, lineY] = position;
+            const auto& [dx, dy] = direction;
+            const auto [cx, cy] = computeTextCenter(tailLabel, lineX, lineY, dx, dy);
+            appendSVGDrawsLabelWithLocation(svgDraws, tailLabel, cx, cy);
+        }
+        if (!headLabel.empty()) {
+            setAttributeIfNotExist(ATTR_KEY_LABEL_DISTANCE, string(ATTR_DEF_LABEL_DISTANCE));
+            const double target = max(0.0, totalLength - labelDistance());
+            const auto [position, direction] = computePointAtDistanceSpline(splines, lengths, target);
+            const auto& [lineX, lineY] = position;
+            const auto& [dx, dy] = direction;
+            const auto [cx, cy] = computeTextCenter(headLabel, lineX, lineY, dx, dy);
+            appendSVGDrawsLabelWithLocation(svgDraws, headLabel, cx, cy);
+        }
     }
     return svgDraws;
 }

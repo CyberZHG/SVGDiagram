@@ -286,6 +286,18 @@ You can place a label near the tail or the head of an edge. The default distance
 from sp_svg_diagram import SVGDiagram
 
 diagram = SVGDiagram()
+node1 = diagram.add_node("A")
+node1.set_center(0, 0)
+node1.set_label("A")
+node2 = diagram.add_node("B")
+node2.set_center(150, 0)
+node2.set_label("B")
+edge1 = diagram.add_edge("A", "B")
+edge1.set_arrow_head()
+edge1.set_tail_label("tail")
+edge1.set_head_label("head")
+edge1.set_label_distance(1.5)
+edge1.set_margin(2.0)
 svg = diagram.render()
 ```
 ````

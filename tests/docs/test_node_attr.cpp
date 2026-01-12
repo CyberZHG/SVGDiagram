@@ -38,6 +38,20 @@ TEST(TestDocsNodeAttributes, LabelDebug) {
     diagram.render(OUTPUT_DIR + "label_debug.svg");
 }
 
+TEST(TestDocsNodeAttributes, LabelAlign) {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setLabel("align\\lleft\\lfoobar\\l");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setLabel("align\\rright\\rfoobar\\r");
+    const auto node3 = diagram.addNode("C");
+    node3->setCenter(300, 0);
+    node3->setLabel("align\\lmixed\\rfoobar");
+    diagram.render(OUTPUT_DIR + "label_align.svg");
+}
+
 TEST(TestDocsNodeAttributes, Shape) {
     SVGDiagram diagram;
     const auto shapes = std::vector{

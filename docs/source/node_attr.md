@@ -68,6 +68,51 @@ In the figure below, the blue rectangle represents the estimated text size, the 
 
 ![](_static/node_attr/label_debug.svg)
 
+### Horizontal Align
+
+Multiline text is center-aligned by default. You can control the alignment of a line by appending `\l` or `\r` at the end of the line. No newline character is required after `\l` or `\r`; if they appear on the last line, the text is treated as having no trailing newline. Since the default rendering only estimates text sizes, using left or right alignment may result in some positional offset.
+
+`````{tab-set}
+````{tab-item} Python
+```python
+from sp_svg_diagram import SVGDiagram
+
+diagram = SVGDiagram()
+svg = diagram.render()
+```
+````
+````{tab-item} JavaScript
+```javascript
+import { SVGDiagram } from 'sp-svg-diagram';
+
+const diagram = new SVGDiagram();
+const svg = diagram.render();
+````
+
+````{tab-item} C++
+```c++
+#include "svg_diagram.h"
+using namespace svg_diagram;
+
+int main() {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setLabel("align\\lleft\\lfoobar\\l");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setLabel("align\\rright\\rfoobar\\r");
+    const auto node3 = diagram.addNode("C");
+    node3->setCenter(300, 0);
+    node3->setLabel("align\\lmixed\\rfoobar");
+    diagram.render("label_align.svg");
+    return 0;
+}
+````
+`````
+
+![](_static/node_attr/label_align.svg)
+
 ## Shape
 
 The default border shape of an SVGNode is an ellipse.

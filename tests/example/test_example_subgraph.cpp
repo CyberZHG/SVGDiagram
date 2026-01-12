@@ -14,12 +14,12 @@ TEST(TestExample, Subgraph) {
     diagram.defaultEdgeAttributes().setArrowHead();
 
     const auto labels = vector{
-        "O Lips, \nWeave Me Songs and Psalms",
-        "Twine Warnings and \nTales From the North",
-        "Seek Not to Tread \nthe Sly Fox's Path",
-        "Nor Yearn for \nthe Great Bear's Might",
-        "If Truth May \nBe Subject to Witness",
-        "I Offer Blood and \nTears to the Moonlight",
+        "O Lips,\\lWeave Me Songs and Psalms\\l",
+        "Twine Warnings and\nTales From the North",
+        "Seek Not to Tread\nthe Sly Fox's Path",
+        "Nor Yearn for\nthe Great Bear's Might",
+        "If Truth May\nBe Subject to Witness",
+        "I Offer Blood and\nTears to the Moonlight",
     };
     const auto strokeColors = vector{"darkgrey", "peru", "darkgoldenrod", "limegreen", "dodgerblue", "lightcoral"};
     const auto fillColors = vector{"floralwhite", "lightsalmon", "papayawhip", "lightgreen", "deepskyblue", "lightpink"};

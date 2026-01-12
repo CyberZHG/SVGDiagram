@@ -333,7 +333,12 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLineOneConnectionWithLabel) {
     edge->setSplines(SVGEdge::SPLINES_SPLINE);
     edge->addConnectionPoint(-50, 120);
     edge->setLabel("42");
+    edge->setTailLabel("tail");
+    edge->setHeadLabel("head");
     edge->setPrecomputedTextSize(20, 16);
+    edge->setPrecomputedTextSize("tail", 40, 16);
+    edge->setPrecomputedTextSize("head", 40, 16);
+    edge->setLabelDistance(3);
     edge->setMargin(2.0);
     diagram.addEdge(edge);
     const auto svg = diagram.render();
@@ -349,6 +354,12 @@ TEST(TestSVGEdgeSpline, TwoCircleOneLineOneConnectionWithLabel) {
   <rect x="-17.20122102712405" y="131.0871692690356" width="20" height="16" fill="none" stroke="blue"/>
   <rect x="-19.20122102712405" y="129.0871692690356" width="24" height="20" fill="none" stroke="red"/>
   <text x="-7.201221027124049" y="139.0871692690356" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">42</text>
+  <rect x="31.550302829854928" y="85.38918908533613" width="40" height="16" fill="none" stroke="blue"/>
+  <rect x="29.550302829854928" y="83.38918908533613" width="44" height="20" fill="none" stroke="red"/>
+  <text x="51.55030282985493" y="93.38918908533613" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">tail</text>
+  <rect x="121.80512369814704" y="147.68114655756878" width="40" height="16" fill="none" stroke="blue"/>
+  <rect x="119.80512369814704" y="145.68114655756878" width="44" height="20" fill="none" stroke="red"/>
+  <text x="141.80512369814704" y="155.68114655756878" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">head</text>
 </g>)";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();

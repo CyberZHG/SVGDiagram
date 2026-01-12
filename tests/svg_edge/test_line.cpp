@@ -357,7 +357,7 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineWithLabel) {
     edge->setPrecomputedTextSize(20, 16);
     edge->setPrecomputedTextSize("tail", 40, 16);
     edge->setPrecomputedTextSize("head", 40, 16);
-    edge->setLabelDistance(10.0);
+    edge->setLabelDistance(1);
     edge->setMargin(2.0);
     diagram.addEdge(edge);
     const auto svg = diagram.render();
@@ -396,7 +396,7 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionWithLabel) {
     edge->setPrecomputedTextSize(20, 16);
     edge->setPrecomputedTextSize("tail", 40, 16);
     edge->setPrecomputedTextSize("head", 40, 16);
-    edge->setLabelDistance(20.0);
+    edge->setLabelDistance(2);
     edge->setMargin(2.0);
     diagram.addEdge(edge);
     const auto svg = diagram.render();

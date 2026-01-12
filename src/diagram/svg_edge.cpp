@@ -124,6 +124,22 @@ void SVGEdge::setArrowTail(const string& shape) {
     setAttribute(ATTR_KEY_ARROW_TAIL, shape);
 }
 
+void SVGEdge::setHeadLabel(const string& label) {
+    setAttribute(ATTR_KEY_HEAD_LABEL, label);
+}
+
+void SVGEdge::setTailLabel(const string& label) {
+    setAttribute(ATTR_KEY_TAIL_LABEL, label);
+}
+
+void SVGEdge::setLabelDistance(const double distance) {
+    setAttribute(ATTR_KEY_LABEL_DISTANCE, distance);
+}
+
+double SVGEdge::labelDistance() const {
+    return stod(getAttribute(ATTR_KEY_LABEL_DISTANCE));
+}
+
 void SVGEdge::setSelfLoopAttributes(double dir, const double height, double angle) {
     dir = -dir / 180 * numbers::pi;
     angle = angle / 180 * numbers::pi;
@@ -152,6 +168,50 @@ std::pair<double, double> SVGEdge::computeTextCenter(const double cx, const doub
         maxShift = max(maxShift, shift);
     }
     return {cx + ux * maxShift, cy + uy * maxShift};
+}
+
+std::pair<double, double> SVGEdge::computeTextCenter(const string& label, const double cx, const double cy, double dx, double dy) {
+    const auto [width, height] = computeTextSizeWithMargin(label);
+    const auto points = vector<pair<double, double>>{
+        {cx - width / 2, cy - height / 2},
+        {cx - width / 2, cy + height / 2},
+        {cx + width / 2, cy + height / 2},
+        {cx + width / 2, cy - height / 2},
+    };
+    const auto d = GeometryUtils::normalize(dx, dy);
+    dx = d.first, dy = d.second;
+    const double ux = -dy, uy = dx;
+    double maxShift = 0.0;
+    for (const auto& [x, y] : points) {
+        const double totalArea = GeometryUtils::cross(x - cx, y - cy, dx, dy);
+        const double unitArea = GeometryUtils::cross(dx, dy, ux, uy);
+        const double shift = totalArea / unitArea;
+        maxShift = max(maxShift, shift);
+    }
+    return {cx + ux * maxShift, cy + uy * maxShift};
+}
+
+pair<pair<double, double>, pair<double, double>> SVGEdge::computePointAtDistanceLine(const vector<pair<double, double>>& points, const double target) {
+    double sumLength = 0.0;
+    size_t index = 0;
+    double lineX = 0.0, lineY = 0.0;
+    for (size_t i = 0; i + 1 < points.size(); ++i) {
+        const auto& [x1, y1] = points[i];
+        const auto& [x2, y2] = points[i + 1];
+        const double length = GeometryUtils::distance(x1, y1, x2, y2);
+        const double nextSum = sumLength + length;
+        if (nextSum > target) {
+            index = i;
+            const double ratio = (target - sumLength) / length;
+            lineX = x1 + ratio * (x2 - x1);
+            lineY = y1 + ratio * (y2 - y1);
+            break;
+        }
+        sumLength = nextSum;
+    }
+    const double dx = points[index + 1].first - points[index].first;
+    const double dy = points[index + 1].second - points[index].second;
+    return {{lineX, lineY}, {dx, dy}};
 }
 
 vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nodes) {
@@ -198,35 +258,42 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
     for (auto& arrow : svgDrawArrows) {
         svgDraws.emplace_back(std::move(arrow));
     }
-    if (const auto label = getAttribute(ATTR_KEY_LABEL); !label.empty()) {
+    const auto label = getAttribute(ATTR_KEY_LABEL);
+    const auto tailLabel = getAttribute(ATTR_KEY_TAIL_LABEL);
+    const auto headLabel = getAttribute(ATTR_KEY_HEAD_LABEL);
+    if (!label.empty() || !tailLabel.empty() || !headLabel.empty()) {
         double totalLength = 0.0;
         for (size_t i = 0; i + 1 < distancePoints.size(); ++i) {
             const auto& [x1, y1] = distancePoints[i];
             const auto& [x2, y2] = distancePoints[i + 1];
             totalLength += GeometryUtils::distance(x1, y1, x2, y2);
         }
-        const double halfLength = totalLength / 2.0;
-        double sumLength = 0.0;
-        size_t index = 0;
-        double lineX = 0.0, lineY = 0.0;
-        for (size_t i = 0; i + 1 < distancePoints.size(); ++i) {
-            const auto& [x1, y1] = distancePoints[i];
-            const auto& [x2, y2] = distancePoints[i + 1];
-            const double length = GeometryUtils::distance(x1, y1, x2, y2);
-            const double nextSum = sumLength + length;
-            if (nextSum > halfLength) {
-                index = i;
-                const double ratio = (halfLength - sumLength) / length;
-                lineX = x1 + ratio * (x2 - x1);
-                lineY = y1 + ratio * (y2 - y1);
-                break;
-            }
-            sumLength = nextSum;
+        if (!label.empty()) {
+            const double target = totalLength / 2.0;
+            const auto [position, direction] = computePointAtDistanceLine(distancePoints, target);
+            const auto& [lineX, lineY] = position;
+            const auto& [dx, dy] = direction;
+            const auto [cx, cy] = computeTextCenter(lineX, lineY, dx, dy);
+            appendSVGDrawsLabelWithLocation(svgDraws, cx, cy);
         }
-        const double dx = distancePoints[index + 1].first - distancePoints[index].first;
-        const double dy = distancePoints[index + 1].second - distancePoints[index].second;
-        const auto [cx, cy] = computeTextCenter(lineX, lineY, dx, dy);
-        appendSVGDrawsLabelWithLocation(svgDraws, cx, cy);
+        if (!tailLabel.empty()) {
+            setAttributeIfNotExist(ATTR_KEY_LABEL_DISTANCE, string(ATTR_DEF_LABEL_DISTANCE));
+            const double target = min(labelDistance(), totalLength);
+            const auto [position, direction] = computePointAtDistanceLine(distancePoints, target);
+            const auto& [lineX, lineY] = position;
+            const auto& [dx, dy] = direction;
+            const auto [cx, cy] = computeTextCenter(tailLabel, lineX, lineY, dx, dy);
+            appendSVGDrawsLabelWithLocation(svgDraws, tailLabel, cx, cy);
+        }
+        if (!headLabel.empty()) {
+            setAttributeIfNotExist(ATTR_KEY_LABEL_DISTANCE, string(ATTR_DEF_LABEL_DISTANCE));
+            const double target = max(0.0, totalLength - labelDistance());
+            const auto [position, direction] = computePointAtDistanceLine(distancePoints, target);
+            const auto& [lineX, lineY] = position;
+            const auto& [dx, dy] = direction;
+            const auto [cx, cy] = computeTextCenter(headLabel, lineX, lineY, dx, dy);
+            appendSVGDrawsLabelWithLocation(svgDraws, headLabel, cx, cy);
+        }
     }
     return svgDraws;
 }

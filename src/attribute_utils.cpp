@@ -341,6 +341,9 @@ unique_ptr<RecordLabel> AttributeUtils::parseRecordLabel(const string& label, si
     while (index < label.size()) {
         if (label[index] == '\\') {
             if (index + 1 < label.size()) {
+                if (label[index + 1] == 'l' || label[index + 1] == 'r') {
+                    recordLabel->label.push_back('\\');
+                }
                 recordLabel->label.push_back(label[index + 1]);
             }
             index += 2;

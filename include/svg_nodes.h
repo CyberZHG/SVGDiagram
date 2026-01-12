@@ -71,10 +71,11 @@ namespace svg_diagram {
         [[nodiscard]] double gradientAngle() const;
 
     protected:
-        void appendSVGDrawsLabelWithCenter(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, double cx, double cy);
-        void appendSVGDrawsLabelWithCenter(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, const std::string& label, double cx, double cy);
+        void appendSVGDrawsLabelWithLocation(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, double cx, double cy);
+        void appendSVGDrawsLabelWithLocation(std::vector<std::unique_ptr<SVGDraw>>& svgDraws, const std::string& label, double cx, double cy, double textWidth = 0.0, double textHeight = 0.0);
 
-        [[nodiscard]] std::pair<double, double> computeTextSize() const;
+        [[nodiscard]] std::pair<double, double> computeTextSize();
+
         [[nodiscard]] std::pair<double, double> computeMargin();
         [[nodiscard]] std::pair<double, double> computeTextSizeWithMargin();
 
@@ -113,7 +114,6 @@ namespace svg_diagram {
 
         void setCenter(double cx, double cy);
         [[nodiscard]] std::pair<double, double> center() const;
-        [[nodiscard]] std::pair<double, double> fieldCenter(const std::string& fieldId) const;
 
         void adjustNodeSize();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDraws();

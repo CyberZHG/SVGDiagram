@@ -153,6 +153,87 @@ TEST(TestSVGNodeRecord, Spaces) {
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
+TEST(TestSVGNodeRecord, AlignSingleLinesMix) {
+    SVGDiagram diagram;
+    const auto node = diagram.addNode("A");
+    node->setShape(SVGNode::SHAPE_RECORD);
+    node->setLabel("{ foo\\l | foobar | bar\\r }");
+    node->setFontSize(16);
+    const auto svg = diagram.render();
+    const auto expected = R"(<!-- Node: A -->
+<g class="node" id="A">
+  <title>A</title>
+  <rect x="-32" y="-36" width="64" height="72" fill="none" stroke="black"/>
+  <text x="-24" y="-24" text-anchor="start" dominant-baseline="central" font-family="Times,serif" font-size="16">foo</text>
+  <line x1="-32" y1="-12" x2="32" y2="-12" stroke="black"/>
+  <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="16">foobar</text>
+  <line x1="-32" y1="12" x2="32" y2="12" stroke="black"/>
+  <text x="24" y="24" text-anchor="end" dominant-baseline="central" font-family="Times,serif" font-size="16">bar</text>
+</g>
+)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodeRecord, AlignMultiLinesMix1) {
+    SVGDiagram diagram;
+    const auto node = diagram.addNode("A");
+    node->setShape(SVGNode::SHAPE_RECORD);
+    node->setLabel("{ foo\\lfoobar\\l | foobar\nfoo\nbar\nbarfoo | bar\\rbarfoo\\r }");
+    node->setFontSize(16);
+    const auto svg = diagram.render();
+    const auto expected = R"(<!-- Node: A -->
+<g class="node" id="A">
+  <title>A</title>
+  <rect x="-32" y="-84" width="64" height="168" fill="none" stroke="black"/>
+  <text x="0" y="-62.4" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="16">
+    <tspan text-anchor="start" x="-24" dy="-0.6em">foo</tspan><tspan text-anchor="start" x="-24" dy="1.2em">foobar</tspan>
+  </text>
+  <line x1="-32" y1="-40.8" x2="32" y2="-40.8" stroke="black"/>
+  <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="16">
+    <tspan x="0" dy="-1.7999999999999998em">foobar</tspan><tspan x="0" dy="1.2em">foo</tspan><tspan x="0" dy="1.2em">bar</tspan><tspan x="0" dy="1.2em">barfoo</tspan>
+  </text>
+  <line x1="-32" y1="40.8" x2="32" y2="40.8" stroke="black"/>
+  <text x="0" y="62.4" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="16">
+    <tspan text-anchor="end" x="24" dy="-0.6em">bar</tspan><tspan text-anchor="end" x="24" dy="1.2em">barfoo</tspan>
+  </text>
+</g>
+)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodeRecord, AlignMultiLinesMix2) {
+    SVGDiagram diagram;
+    const auto node = diagram.addNode("A");
+    node->setShape(SVGNode::SHAPE_RECORD);
+    node->setLabel("foo\\lfoobar\\l | foobar\nfoo\nbar\nbarfoo | bar\\rbarfoo\\r");
+    node->setFontSize(16);
+    const auto svg = diagram.render();
+    const auto expected = R"(<!-- Node: A -->
+<g class="node" id="A">
+  <title>A</title>
+  <rect x="-96" y="-40.8" width="192" height="81.6" fill="none" stroke="black"/>
+  <text x="-64" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="16">
+    <tspan text-anchor="start" x="-88" dy="-0.6em">foo</tspan><tspan text-anchor="start" x="-88" dy="1.2em">foobar</tspan>
+  </text>
+  <line x1="-32" y1="-40.8" x2="-32" y2="40.8" stroke="black"/>
+  <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="16">
+    <tspan x="0" dy="-1.7999999999999998em">foobar</tspan><tspan x="0" dy="1.2em">foo</tspan><tspan x="0" dy="1.2em">bar</tspan><tspan x="0" dy="1.2em">barfoo</tspan>
+  </text>
+  <line x1="32" y1="-40.8" x2="32" y2="40.8" stroke="black"/>
+  <text x="64" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="16">
+    <tspan text-anchor="end" x="88" dy="-0.6em">bar</tspan><tspan text-anchor="end" x="88" dy="1.2em">barfoo</tspan>
+  </text>
+</g>
+)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
 TEST(TestSVGNodeRecord, SpecialCase1) {
     SVGDiagram diagram;
     const auto node = diagram.addNode("A");

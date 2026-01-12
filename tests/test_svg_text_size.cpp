@@ -92,3 +92,51 @@ TEST(TestTextSizePangoCairo, SpecialCase5) {
     EXPECT_EQ(height, 127.998046875);
 }
 #endif
+
+TEST(TestTextSize, SingleLineAlignLeft) {
+    const SVGTextSize textSize;
+    auto [width1, height1] =  textSize.computeTextSize("foo", 16);
+    auto [width2, height2] =  textSize.computeTextSize("foo\\l", 16);
+    EXPECT_EQ(width1, width2);
+    EXPECT_EQ(height1, height2);
+}
+
+TEST(TestTextSize, SingleLineAlignRight) {
+    const SVGTextSize textSize;
+    auto [width1, height1] =  textSize.computeTextSize("foo", 16);
+    auto [width2, height2] =  textSize.computeTextSize("foo\\r", 16);
+    EXPECT_EQ(width1, width2);
+    EXPECT_EQ(height1, height2);
+}
+
+TEST(TestTextSize, MultiLineAlignLeft1) {
+    const SVGTextSize textSize;
+    auto [width1, height1] =  textSize.computeTextSize("foo\nbar\nfoobar", 16);
+    auto [width2, height2] =  textSize.computeTextSize("foo\\lbar\\lfoobar\\l", 16);
+    EXPECT_EQ(width1, width2);
+    EXPECT_EQ(height1, height2);
+}
+
+TEST(TestTextSize, MultiLineAlignLeft2) {
+    const SVGTextSize textSize;
+    auto [width1, height1] =  textSize.computeTextSize("foo\nfoobar\nbar", 16);
+    auto [width2, height2] =  textSize.computeTextSize("foo\\lfoobar\\lbar\\l", 16);
+    EXPECT_EQ(width1, width2);
+    EXPECT_EQ(height1, height2);
+}
+
+TEST(TestTextSize, MultiLineAlignRight) {
+    const SVGTextSize textSize;
+    auto [width1, height1] =  textSize.computeTextSize("foo\nbar\nfoobar", 16);
+    auto [width2, height2] =  textSize.computeTextSize("foo\\rbar\\rfoobar\\r", 16);
+    EXPECT_EQ(width1, width2);
+    EXPECT_EQ(height1, height2);
+}
+
+TEST(TestTextSize, MultiLineAlignMix) {
+    const SVGTextSize textSize;
+    auto [width1, height1] =  textSize.computeTextSize("foo\nbar\nfoobar", 16);
+    auto [width2, height2] =  textSize.computeTextSize("foo\\lbar\nfoobar\\r", 16);
+    EXPECT_EQ(width1, width2);
+    EXPECT_EQ(height1, height2);
+}

@@ -226,7 +226,7 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsLine(const NodesMapping& nod
         const double dx = distancePoints[index + 1].first - distancePoints[index].first;
         const double dy = distancePoints[index + 1].second - distancePoints[index].second;
         const auto [cx, cy] = computeTextCenter(lineX, lineY, dx, dy);
-        appendSVGDrawsLabelWithCenter(svgDraws, cx, cy);
+        appendSVGDrawsLabelWithLocation(svgDraws, cx, cy);
     }
     return svgDraws;
 }
@@ -381,7 +381,7 @@ vector<unique_ptr<SVGDraw>> SVGEdge::produceSVGDrawsSpline(const NodesMapping& n
             sumLength = nextSum;
         }
         const auto [cx, cy] = computeTextCenter(splineX, splineY, dx, dy);
-        appendSVGDrawsLabelWithCenter(svgDraws, cx, cy);
+        appendSVGDrawsLabelWithLocation(svgDraws, cx, cy);
     }
     return svgDraws;
 }

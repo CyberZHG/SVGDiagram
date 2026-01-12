@@ -49,15 +49,23 @@ pair<double, double> SVGTextSize::computeApproximateTextSize(const string& text,
     if (text.empty()) {
         return {0.0, 0.0};
     }
+    const size_t n = text.length();
     int numLines = 1, maxCharsInLine = 0;
     int numCharsInLine = 0;
-    for (int i = 0; i < static_cast<int>(text.length()); ++i) {
+    for (size_t i = 0; i < n; ++i) {
         if (text[i] == '\n' || text[i] == '\r') {
             maxCharsInLine = max(maxCharsInLine, numCharsInLine);
-            if (i + 1 < static_cast<int>(text.length()) && text[i + 1] == '\n') {
+            if (i + 1 < n && text[i + 1] == '\n') {
                 ++i;
             }
             ++numLines;
+            numCharsInLine = 0;
+        } else if (i + 1 < n && text[i] == '\\' && (text[i + 1] == 'l' || text[i + 1] == 'r')) {
+            maxCharsInLine = max(maxCharsInLine, numCharsInLine);
+            if (i + 2 < n) {
+                ++numLines;
+            }
+            ++i;
             numCharsInLine = 0;
         } else {
             ++numCharsInLine;

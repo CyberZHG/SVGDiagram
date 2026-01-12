@@ -46,14 +46,14 @@ void XMLElement::addAttribute(const string& name, const string& value) {
     if (!_attributes.contains(name)) {
         _attributeKeys.push_back(name);
     }
-    _attributes.emplace(name, escapeAttributeValue(value));
+    _attributes[name] = escapeAttributeValue(value);
 }
 
 void XMLElement::addAttribute(const string& name, const double value) {
     if (!_attributes.contains(name)) {
         _attributeKeys.push_back(name);
     }
-    _attributes.emplace(name, format("{}", value));
+    _attributes[name] = format("{}", value);
 }
 
 void XMLElement::addAttributes(const AttributesType& attributes) {

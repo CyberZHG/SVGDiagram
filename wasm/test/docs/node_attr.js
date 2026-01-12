@@ -17,6 +17,20 @@ describe("Docs/NodeAttributes", () => {
         const svg = diagram.render();
         await compareSVG("node_attr", "label", svg);
     });
+    it("label_align", async () => {
+        const diagram = new SVGDiagram();
+        const node1 = diagram.addNode("A");
+        node1.setCenter(0, 0);
+        node1.setLabel("align\\lleft\\lfoobar\\l");
+        const node2 = diagram.addNode("B");
+        node2.setCenter(150, 0);
+        node2.setLabel("align\\rright\\rfoobar\\r");
+        const node3 = diagram.addNode("C");
+        node3.setCenter(300, 0);
+        node3.setLabel("align\\lmixed\\rfoobar");
+        const svg = diagram.render();
+        await compareSVG("node_attr", "label_align", svg);
+    });
     it("shape", async () => {
         const diagram = new SVGDiagram();
         const shapes = [

@@ -44,7 +44,8 @@ TEST(TestExample, Pentagram) {
         const auto to = format("node_{}", i);
         const auto& edge = diagram.addEdge(from, to);
         edge->setColor(strokeColors[i]);
-        edge->setLabel(format("C{}", i + 1));
+        edge->setHeadLabel(format("C{}", i + 1));
+        edge->setLabelDistance(2.0);
         edge->setFontColor(strokeColors[i]);
 
         const auto& loop = diagram.addSelfLoop(to, selfLoopDirs[i], 30.0, 20.0);

@@ -276,6 +276,54 @@ int main() {
 
 ![](_static/edge_attr/label.svg)
 
+### Head & Tail Labels
+
+You can place a label near the tail or the head of an edge. The default distance is 10 points, and it can be adjusted using `labelDistance`; the actual distance is `(10 × labelDistance)` points.
+
+`````{tab-set}
+````{tab-item} Python
+```python
+from sp_svg_diagram import SVGDiagram
+
+diagram = SVGDiagram()
+svg = diagram.render()
+```
+````
+````{tab-item} JavaScript
+```javascript
+import { SVGDiagram } from 'sp-svg-diagram';
+
+const diagram = new SVGDiagram();
+const svg = diagram.render();
+````
+
+````{tab-item} C++
+```c++
+#include "svg_diagram.h"
+using namespace svg_diagram;
+
+int main() {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setLabel("A");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setLabel("B");
+    const auto edge1 = diagram.addEdge("A", "B");
+    edge1->setArrowHead();
+    edge1->setTailLabel("tail");
+    edge1->setHeadLabel("head");
+    edge1->setLabelDistance(1.5);
+    edge1->setMargin(2.0);
+    diagram.render("label_tail_head.svg");
+    return 0;
+}
+````
+`````
+
+![](_static/edge_attr/label_tail_head.svg)
+
 ## Self Loop
 
 There are some helper functions for drawing self-loops, which require specifying the height of the loop and the opening angle.

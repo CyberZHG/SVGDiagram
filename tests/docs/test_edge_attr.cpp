@@ -124,6 +124,23 @@ TEST(TestDocsEdgeAttributes, LabelDebug) {
     diagram.render(OUTPUT_DIR + "label_debug.svg");
 }
 
+TEST(TestDocsEdgeAttributes, LabelTailHead) {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setLabel("A");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(150, 0);
+    node2->setLabel("B");
+    const auto edge1 = diagram.addEdge("A", "B");
+    edge1->setArrowHead();
+    edge1->setTailLabel("tail");
+    edge1->setHeadLabel("head");
+    edge1->setLabelDistance(1.5);
+    edge1->setMargin(2.0);
+    diagram.render(OUTPUT_DIR + "label_tail_head.svg");
+}
+
 TEST(TestDocsEdgeAttributes, SelfLoop) {
     SVGDiagram diagram;
     constexpr double loopHeight = 30.0, loopAngle = 30.0;

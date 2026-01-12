@@ -294,6 +294,18 @@ svg = diagram.render()
 import { SVGDiagram } from 'sp-svg-diagram';
 
 const diagram = new SVGDiagram();
+const node1 = diagram.addNode("A");
+node1.setCenter(0, 0);
+node1.setLabel("A");
+const node2 = diagram.addNode("B");
+node2.setCenter(150, 0);
+node2.setLabel("B");
+const edge1 = diagram.addEdge("A", "B");
+edge1.setArrowHead();
+edge1.setTailLabel("tail");
+edge1.setHeadLabel("head");
+edge1.setLabelDistance(1.5);
+edge1.setMargin(2.0, 2.0);
 const svg = diagram.render();
 ````
 

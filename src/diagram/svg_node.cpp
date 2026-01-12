@@ -57,15 +57,6 @@ pair<double, double> SVGNode::center() const {
     return {_cx, _cy};
 }
 
-pair<double, double> SVGNode::fieldCenter(const string& fieldId) const {
-    const auto shape = getAttribute(ATTR_KEY_SHAPE);
-    if (shape != SHAPE_RECORD || !_recordPositions.contains(fieldId)) {
-        return center();
-    }
-    const auto& [cx, cy, width, height] = _recordPositions.at(fieldId);
-    return {cx, cy};
-}
-
 void SVGNode::adjustNodeSize() {
     setAttributeIfNotExist(ATTR_KEY_SHAPE, string(SHAPE_DEFAULT));
     setAttributeIfNotExist(ATTR_KEY_FONT_NAME, string(ATTR_DEF_FONT_NAME));
@@ -174,7 +165,7 @@ void SVGNode::updateNodeSize(const pair<double, double>& size) {
 }
 
 void SVGNode::appendSVGDrawsLabel(vector<unique_ptr<SVGDraw>>& svgDraws) {
-    appendSVGDrawsLabelWithCenter(svgDraws, _cx, _cy);
+    appendSVGDrawsLabelWithLocation(svgDraws, _cx, _cy);
 }
 
 vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsNone() {
@@ -346,6 +337,7 @@ std::vector<std::unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsRecord() {
     setStrokeStyles(rect.get());
     setFillStyles(rect.get(), svgDraws);
     svgDraws.emplace_back(std::move(rect));
+    const auto [marginX, marginY] = margin();
 
     _recordPositions.clear();
     function<void(const unique_ptr<RecordLabel>&, bool, double, double, double, double)> drawRecordLabel;
@@ -356,7 +348,7 @@ std::vector<std::unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsRecord() {
             _recordPositions[recordLabel->fieldId] = {cx, cy, x2 - x1, y2 - y1};
         }
         if (recordLabel->children.empty()) {
-            appendSVGDrawsLabelWithCenter(svgDraws, recordLabel->label, cx, cy);
+            appendSVGDrawsLabelWithLocation(svgDraws, recordLabel->label, cx, cy, x2 - x1 - marginX * 2, y2 - y1 - marginY * 2);
             return;
         }
         bool first = true;

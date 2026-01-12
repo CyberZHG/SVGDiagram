@@ -204,13 +204,17 @@ double SVGItem::gradientAngle() const {
     return 0.0;
 }
 
-void SVGItem::appendSVGDrawsLabelWithCenter(vector<unique_ptr<SVGDraw>>& svgDraws, const double cx, const double cy) {
-    appendSVGDrawsLabelWithCenter(svgDraws, getAttribute(ATTR_KEY_LABEL), cx, cy);
+void SVGItem::appendSVGDrawsLabelWithLocation(vector<unique_ptr<SVGDraw>>& svgDraws, const double cx, const double cy) {
+    appendSVGDrawsLabelWithLocation(svgDraws, getAttribute(ATTR_KEY_LABEL), cx, cy);
 }
 
-void SVGItem::appendSVGDrawsLabelWithCenter(vector<unique_ptr<SVGDraw>>& svgDraws, const string& label, double cx, double cy) {
+void SVGItem::appendSVGDrawsLabelWithLocation(vector<unique_ptr<SVGDraw>>& svgDraws, const string& label, double cx, double cy, double textWidth, double textHeight) {
+    if (textWidth == 0.0 || textHeight == 0.0) {
+        const auto [width, height] = computeTextSize();
+        textWidth = width;
+        textHeight = height;
+    }
     if (enabledDebug()) {
-        const auto [textWidth, textHeight] = computeTextSize();
         const auto [marginX, marginY] = computeMargin();
         auto textRect = make_unique<SVGDrawRect>(cx, cy, textWidth, textHeight);
         textRect->setFill("none");
@@ -222,7 +226,7 @@ void SVGItem::appendSVGDrawsLabelWithCenter(vector<unique_ptr<SVGDraw>>& svgDraw
         svgDraws.emplace_back(std::move(marginRect));
     }
     if (!label.empty()) {
-        auto draw = make_unique<SVGDrawText>(cx, cy, label);
+        auto draw = make_unique<SVGDrawText>(cx, cy, textWidth, textHeight, label);
         if (const auto& color = fontColor(); color != "black") {
             draw->setFill(color);
         }
@@ -233,7 +237,7 @@ void SVGItem::appendSVGDrawsLabelWithCenter(vector<unique_ptr<SVGDraw>>& svgDraw
     }
 }
 
-pair<double, double> SVGItem::computeTextSize() const {
+pair<double, double> SVGItem::computeTextSize() {
     if (const auto [precomputedTextWidth, precomputedTextHeight] = precomputedTextSize();
         precomputedTextWidth > 0 && precomputedTextHeight > 0) {
         return {precomputedTextWidth, precomputedTextHeight};
@@ -249,6 +253,7 @@ pair<double, double> SVGItem::computeTextSize() const {
     if (height == 0.0) {
         height = fontSize * SVGTextSize::DEFAULT_APPROXIMATION_HEIGHT_SCALE;
     }
+    setPrecomputedTextSize(width, height);
     return {width, height};
 }
 

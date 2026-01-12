@@ -130,8 +130,11 @@ namespace svg_diagram {
     public:
         SVGDrawText();
         SVGDrawText(double x, double y, const std::string& text);
+        SVGDrawText(double x, double y, double width, double height, const std::string& text);
 
         std::string text;
+        double width = 0.0;
+        double height = 0.0;
 
         void setFont(const std::string& fontFamily, double fontSize);
 

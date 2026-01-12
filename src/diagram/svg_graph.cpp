@@ -253,7 +253,7 @@ std::vector<std::unique_ptr<SVGDraw>> SVGGraph::produceClusterSVGDraws() {
             svgDraws.emplace_back(std::move(group));
         }
         if (const auto& _label = getAttribute(ATTR_KEY_LABEL); !_label.empty()) {
-            appendSVGDrawsLabelWithCenter(svgDraws, _cx, _textY);
+            appendSVGDrawsLabelWithLocation(svgDraws, _cx, _textY);
         }
     }
     for (const auto& graph : _graphs) {

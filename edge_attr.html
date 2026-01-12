@@ -57,7 +57,10 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Edge Attributes</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#splines">Splines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#arrow">Arrow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#label">Label</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#label">Label</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#head-tail-labels">Head &amp; Tail Labels</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#self-loop">Self Loop</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#color">Color</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pen-width-margin">Pen Width &amp; Margin</a></li>
@@ -382,13 +385,90 @@ C++</label><div class="sd-tab-content docutils">
 </div>
 </div>
 <p><img alt="" src="_images/label.svg" /></p>
+<section id="head-tail-labels">
+<h3>Head &amp; Tail Labels<a class="headerlink" href="#head-tail-labels" title="Permalink to this heading"></a></h3>
+<p>You can place a label near the tail or the head of an edge. The default distance is 10 points, and it can be adjusted using <code class="docutils literal notranslate"><span class="pre">labelDistance</span></code>; the actual distance is <code class="docutils literal notranslate"><span class="pre">(10</span> <span class="pre">×</span> <span class="pre">labelDistance)</span></code> points.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-9" name="sd-tab-set-3" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-9">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sp_svg_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVGDiagram</span>
+
+<span class="n">diagram</span> <span class="o">=</span> <span class="n">SVGDiagram</span><span class="p">()</span>
+<span class="n">node1</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
+<span class="n">node1</span><span class="o">.</span><span class="n">set_center</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">node1</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
+<span class="n">node2</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
+<span class="n">node2</span><span class="o">.</span><span class="n">set_center</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">node2</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
+<span class="n">edge1</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">)</span>
+<span class="n">edge1</span><span class="o">.</span><span class="n">set_arrow_head</span><span class="p">()</span>
+<span class="n">edge1</span><span class="o">.</span><span class="n">set_tail_label</span><span class="p">(</span><span class="s2">&quot;tail&quot;</span><span class="p">)</span>
+<span class="n">edge1</span><span class="o">.</span><span class="n">set_head_label</span><span class="p">(</span><span class="s2">&quot;head&quot;</span><span class="p">)</span>
+<span class="n">edge1</span><span class="o">.</span><span class="n">set_label_distance</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">edge1</span><span class="o">.</span><span class="n">set_margin</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="n">svg</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-10" name="sd-tab-set-3" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-10">
+JavaScript</label><div class="sd-tab-content docutils">
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sp-svg-diagram&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">diagram</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="p">();</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">node1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addNode</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">);</span>
+<span class="nx">node1</span><span class="p">.</span><span class="nx">setCenter</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span>
+<span class="nx">node1</span><span class="p">.</span><span class="nx">setLabel</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">node2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addNode</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">);</span>
+<span class="nx">node2</span><span class="p">.</span><span class="nx">setCenter</span><span class="p">(</span><span class="mf">150</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span>
+<span class="nx">node2</span><span class="p">.</span><span class="nx">setLabel</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">edge1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">addEdge</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;B&quot;</span><span class="p">);</span>
+<span class="nx">edge1</span><span class="p">.</span><span class="nx">setArrowHead</span><span class="p">();</span>
+<span class="nx">edge1</span><span class="p">.</span><span class="nx">setTailLabel</span><span class="p">(</span><span class="s2">&quot;tail&quot;</span><span class="p">);</span>
+<span class="nx">edge1</span><span class="p">.</span><span class="nx">setHeadLabel</span><span class="p">(</span><span class="s2">&quot;head&quot;</span><span class="p">);</span>
+<span class="nx">edge1</span><span class="p">.</span><span class="nx">setLabelDistance</span><span class="p">(</span><span class="mf">1.5</span><span class="p">);</span>
+<span class="nx">edge1</span><span class="p">.</span><span class="nx">setMargin</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">svg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagram</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-11" name="sd-tab-set-3" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-11">
+C++</label><div class="sd-tab-content docutils">
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;svg_diagram.h&quot;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">svg_diagram</span><span class="p">;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">SVGDiagram</span><span class="w"> </span><span class="n">diagram</span><span class="p">;</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">node1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addNode</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node1</span><span class="o">-&gt;</span><span class="n">setCenter</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node1</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">node2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addNode</span><span class="p">(</span><span class="s">&quot;B&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node2</span><span class="o">-&gt;</span><span class="n">setCenter</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">node2</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="s">&quot;B&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">edge1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagram</span><span class="p">.</span><span class="n">addEdge</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;B&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">edge1</span><span class="o">-&gt;</span><span class="n">setArrowHead</span><span class="p">();</span>
+<span class="w">    </span><span class="n">edge1</span><span class="o">-&gt;</span><span class="n">setTailLabel</span><span class="p">(</span><span class="s">&quot;tail&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">edge1</span><span class="o">-&gt;</span><span class="n">setHeadLabel</span><span class="p">(</span><span class="s">&quot;head&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">edge1</span><span class="o">-&gt;</span><span class="n">setLabelDistance</span><span class="p">(</span><span class="mf">1.5</span><span class="p">);</span>
+<span class="w">    </span><span class="n">edge1</span><span class="o">-&gt;</span><span class="n">setMargin</span><span class="p">(</span><span class="mf">2.0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">diagram</span><span class="p">.</span><span class="n">render</span><span class="p">(</span><span class="s">&quot;label_tail_head.svg&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><img alt="" src="_images/label_tail_head.svg" /></p>
+</section>
 </section>
 <section id="self-loop">
 <h2>Self Loop<a class="headerlink" href="#self-loop" title="Permalink to this heading"></a></h2>
 <p>There are some helper functions for drawing self-loops, which require specifying the height of the loop and the opening angle.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-9" name="sd-tab-set-3" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-9">
+<input checked="checked" id="sd-tab-item-12" name="sd-tab-set-4" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-12">
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sp_svg_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVGDiagram</span>
 
@@ -412,8 +492,8 @@ Python</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-10" name="sd-tab-set-3" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-10">
+<input id="sd-tab-item-13" name="sd-tab-set-4" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-13">
 JavaScript</label><div class="sd-tab-content docutils">
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sp-svg-diagram&#39;</span><span class="p">;</span>
 
@@ -437,8 +517,8 @@ JavaScript</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-11" name="sd-tab-set-3" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-11">
+<input id="sd-tab-item-14" name="sd-tab-set-4" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-14">
 C++</label><div class="sd-tab-content docutils">
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;svg_diagram.h&quot;</span>
 <span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">svg_diagram</span><span class="p">;</span>
@@ -473,8 +553,8 @@ C++</label><div class="sd-tab-content docutils">
 <h2>Color<a class="headerlink" href="#color" title="Permalink to this heading"></a></h2>
 <p>You can set the color of the line and the font. The arrow color matches the line color and is independent of fill color.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-12" name="sd-tab-set-4" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-12">
+<input checked="checked" id="sd-tab-item-15" name="sd-tab-set-5" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-15">
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sp_svg_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVGDiagram</span><span class="p">,</span> <span class="n">SVGEdge</span>
 
@@ -495,8 +575,8 @@ Python</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-13" name="sd-tab-set-4" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-13">
+<input id="sd-tab-item-16" name="sd-tab-set-5" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-16">
 JavaScript</label><div class="sd-tab-content docutils">
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="p">,</span><span class="w"> </span><span class="nx">SVGEdge</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sp-svg-diagram&#39;</span><span class="p">;</span>
 
@@ -517,8 +597,8 @@ JavaScript</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-14" name="sd-tab-set-4" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-14">
+<input id="sd-tab-item-17" name="sd-tab-set-5" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-17">
 C++</label><div class="sd-tab-content docutils">
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;svg_diagram.h&quot;</span>
 <span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">svg_diagram</span><span class="p">;</span>
@@ -550,8 +630,8 @@ C++</label><div class="sd-tab-content docutils">
 <h2>Pen Width &amp; Margin<a class="headerlink" href="#pen-width-margin" title="Permalink to this heading"></a></h2>
 <p>The thickness of the line, which also affects the arrow.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-15" name="sd-tab-set-5" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-15">
+<input checked="checked" id="sd-tab-item-18" name="sd-tab-set-6" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-18">
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sp_svg_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVGDiagram</span><span class="p">,</span> <span class="n">SVGEdge</span>
 
@@ -572,8 +652,8 @@ Python</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-16" name="sd-tab-set-5" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-16">
+<input id="sd-tab-item-19" name="sd-tab-set-6" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-19">
 JavaScript</label><div class="sd-tab-content docutils">
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="p">,</span><span class="w"> </span><span class="nx">SVGEdge</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sp-svg-diagram&#39;</span><span class="p">;</span>
 
@@ -594,8 +674,8 @@ JavaScript</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-17" name="sd-tab-set-5" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-17">
+<input id="sd-tab-item-20" name="sd-tab-set-6" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-20">
 C++</label><div class="sd-tab-content docutils">
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;svg_diagram.h&quot;</span>
 <span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">svg_diagram</span><span class="p">;</span>
@@ -626,8 +706,8 @@ C++</label><div class="sd-tab-content docutils">
 <section id="font">
 <h2>Font<a class="headerlink" href="#font" title="Permalink to this heading"></a></h2>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-18" name="sd-tab-set-6" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-18">
+<input checked="checked" id="sd-tab-item-21" name="sd-tab-set-7" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-21">
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sp_svg_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVGDiagram</span>
 
@@ -648,8 +728,8 @@ Python</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-19" name="sd-tab-set-6" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-19">
+<input id="sd-tab-item-22" name="sd-tab-set-7" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-22">
 JavaScript</label><div class="sd-tab-content docutils">
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sp-svg-diagram&#39;</span><span class="p">;</span>
 
@@ -670,8 +750,8 @@ JavaScript</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-20" name="sd-tab-set-6" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-20">
+<input id="sd-tab-item-23" name="sd-tab-set-7" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-23">
 C++</label><div class="sd-tab-content docutils">
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;svg_diagram.h&quot;</span>
 <span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">svg_diagram</span><span class="p">;</span>
@@ -703,8 +783,8 @@ C++</label><div class="sd-tab-content docutils">
 <h2>Stroke Style<a class="headerlink" href="#stroke-style" title="Permalink to this heading"></a></h2>
 <p>The default edge style is <code class="docutils literal notranslate"><span class="pre">solid</span></code>, rendered as solid lines. Two dashed styles are also available: <code class="docutils literal notranslate"><span class="pre">dashed</span></code> and <code class="docutils literal notranslate"><span class="pre">dotted</span></code>. These three styles are mutually exclusive, and the one specified last takes precedence.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-21" name="sd-tab-set-7" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-21">
+<input checked="checked" id="sd-tab-item-24" name="sd-tab-set-8" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-24">
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sp_svg_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVGDiagram</span>
 
@@ -730,8 +810,8 @@ Python</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-22" name="sd-tab-set-7" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-22">
+<input id="sd-tab-item-25" name="sd-tab-set-8" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-25">
 JavaScript</label><div class="sd-tab-content docutils">
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sp-svg-diagram&#39;</span><span class="p">;</span>
 
@@ -760,8 +840,8 @@ JavaScript</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-23" name="sd-tab-set-7" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-23">
+<input id="sd-tab-item-26" name="sd-tab-set-8" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-26">
 C++</label><div class="sd-tab-content docutils">
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;svg_diagram.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;format&gt;</span>
@@ -804,8 +884,8 @@ C++</label><div class="sd-tab-content docutils">
 <h2>Field<a class="headerlink" href="#field" title="Permalink to this heading"></a></h2>
 <p>If a node’s shape is of type <code class="docutils literal notranslate"><span class="pre">record</span></code>, you can name individual fields using <code class="docutils literal notranslate"><span class="pre">&lt;&gt;</span></code> when setting the node’s label. The start or end of an edge can then target the corresponding field.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-24" name="sd-tab-set-8" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-24">
+<input checked="checked" id="sd-tab-item-27" name="sd-tab-set-9" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-27">
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sp_svg_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVGDiagram</span><span class="p">,</span> <span class="n">SVGNode</span>
 
@@ -828,8 +908,8 @@ Python</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-25" name="sd-tab-set-8" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-25">
+<input id="sd-tab-item-28" name="sd-tab-set-9" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-28">
 JavaScript</label><div class="sd-tab-content docutils">
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="p">,</span><span class="w"> </span><span class="nx">SVGNode</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sp-svg-diagram&#39;</span><span class="p">;</span>
 
@@ -852,8 +932,8 @@ JavaScript</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-26" name="sd-tab-set-8" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-26">
+<input id="sd-tab-item-29" name="sd-tab-set-9" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-29">
 C++</label><div class="sd-tab-content docutils">
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;svg_diagram.h&quot;</span>
 <span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">svg_diagram</span><span class="p">;</span>

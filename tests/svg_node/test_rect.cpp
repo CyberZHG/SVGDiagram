@@ -73,7 +73,7 @@ TEST(TestSVGNodeRect, RectConnectionOnCorner) {
 </g>
 <!-- Edge: edge1 (A -> B) -->
 <g class="edge" id="edge1">
-  <title>A->B</title>
+  <title>A-&gt;B</title>
   <line x1="10.35857864376269" y1="10.35857864376269" x2="19.64142135623731" y2="19.64142135623731" stroke="black"/>
 </g>)";
     compareSVGWithDefaultGraphContent(svg, expected);
@@ -93,10 +93,10 @@ TEST(TestSVGNodeRect, TextSingeLineAlignLeft) {
     const auto expected = R"(<!-- Node: A -->
 <g class="node" id="A">
   <title>A</title>
-  <rect x="-18.5" y="-11" width="37" height="22" fill="none" stroke="black"/>
-  <rect x="-10.5" y="-7" width="21" height="14" fill="none" stroke="blue"/>
-  <rect x="-18.5" y="-11" width="37" height="22" fill="none" stroke="red"/>
-  <text x="-10.5" y="0" text-anchor="start" dominant-baseline="central" font-family="Times,serif" font-size="14">foo</text>
+  <rect x="-20.599999999999998" y="-11" width="41.199999999999996" height="22" fill="none" stroke="black"/>
+  <rect x="-12.599999999999998" y="-7" width="25.199999999999996" height="14" fill="none" stroke="blue"/>
+  <rect x="-20.599999999999998" y="-11" width="41.199999999999996" height="22" fill="none" stroke="red"/>
+  <text x="-12.599999999999998" y="0" text-anchor="start" dominant-baseline="central" font-family="Times,serif" font-size="14">foo</text>
 </g>
 )";
     compareSVGWithDefaultGraphContent(svg, expected);
@@ -114,10 +114,10 @@ TEST(TestSVGNodeRect, TextSingeLineAlignRight) {
     const auto expected = R"(<!-- Node: A -->
 <g class="node" id="A">
   <title>A</title>
-  <rect x="-18.5" y="-11" width="37" height="22" fill="none" stroke="black"/>
-  <rect x="-10.5" y="-7" width="21" height="14" fill="none" stroke="blue"/>
-  <rect x="-18.5" y="-11" width="37" height="22" fill="none" stroke="red"/>
-  <text x="10.5" y="0" text-anchor="end" dominant-baseline="central" font-family="Times,serif" font-size="14">foo</text>
+  <rect x="-20.599999999999998" y="-11" width="41.199999999999996" height="22" fill="none" stroke="black"/>
+  <rect x="-12.599999999999998" y="-7" width="25.199999999999996" height="14" fill="none" stroke="blue"/>
+  <rect x="-20.599999999999998" y="-11" width="41.199999999999996" height="22" fill="none" stroke="red"/>
+  <text x="12.599999999999998" y="0" text-anchor="end" dominant-baseline="central" font-family="Times,serif" font-size="14">foo</text>
 </g>
 )";
     compareSVGWithDefaultGraphContent(svg, expected);
@@ -130,16 +130,16 @@ TEST(TestSVGNodeRect, TextAlignLeft) {
     diagram.enableDebug();
     const auto node = diagram.addNode("A");
     node->setShape(SVGNode::SHAPE_RECT);
-    node->setLabel("foo\\lfoobar\\lbar\\l");
+    node->setLabel(R"(foo\lfoobar\lbar\l)");
     const auto svg = diagram.render();
     const auto expected = R"(<!-- Node: A -->
 <g class="node" id="A">
   <title>A</title>
-  <rect x="-29" y="-27.8" width="58" height="55.6" fill="none" stroke="black"/>
-  <rect x="-21" y="-23.8" width="42" height="47.6" fill="none" stroke="blue"/>
-  <rect x="-29" y="-27.8" width="58" height="55.6" fill="none" stroke="red"/>
+  <rect x="-33.199999999999996" y="-27.8" width="66.39999999999999" height="55.6" fill="none" stroke="black"/>
+  <rect x="-25.199999999999996" y="-23.8" width="50.39999999999999" height="47.6" fill="none" stroke="blue"/>
+  <rect x="-33.199999999999996" y="-27.8" width="66.39999999999999" height="55.6" fill="none" stroke="red"/>
   <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">
-    <tspan text-anchor="start" x="-21" dy="-1.2em">foo</tspan><tspan text-anchor="start" x="-21" dy="1.2em">foobar</tspan><tspan text-anchor="start" x="-21" dy="1.2em">bar</tspan>
+    <tspan text-anchor="start" x="-25.199999999999996" dy="-1.2em">foo</tspan><tspan text-anchor="start" x="-25.199999999999996" dy="1.2em">foobar</tspan><tspan text-anchor="start" x="-25.199999999999996" dy="1.2em">bar</tspan>
   </text>
 </g>
 )";
@@ -153,16 +153,16 @@ TEST(TestSVGNodeRect, TextAlignRight) {
     diagram.enableDebug();
     const auto node = diagram.addNode("A");
     node->setShape(SVGNode::SHAPE_RECT);
-    node->setLabel("foo\\rfoobar\\rbar\\r");
+    node->setLabel(R"(foo\rfoobar\rbar\r)");
     const auto svg = diagram.render();
     const auto expected = R"(<!-- Node: A -->
 <g class="node" id="A">
   <title>A</title>
-  <rect x="-29" y="-27.8" width="58" height="55.6" fill="none" stroke="black"/>
-  <rect x="-21" y="-23.8" width="42" height="47.6" fill="none" stroke="blue"/>
-  <rect x="-29" y="-27.8" width="58" height="55.6" fill="none" stroke="red"/>
+  <rect x="-33.199999999999996" y="-27.8" width="66.39999999999999" height="55.6" fill="none" stroke="black"/>
+  <rect x="-25.199999999999996" y="-23.8" width="50.39999999999999" height="47.6" fill="none" stroke="blue"/>
+  <rect x="-33.199999999999996" y="-27.8" width="66.39999999999999" height="55.6" fill="none" stroke="red"/>
   <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">
-    <tspan text-anchor="end" x="21" dy="-1.2em">foo</tspan><tspan text-anchor="end" x="21" dy="1.2em">foobar</tspan><tspan text-anchor="end" x="21" dy="1.2em">bar</tspan>
+    <tspan text-anchor="end" x="25.199999999999996" dy="-1.2em">foo</tspan><tspan text-anchor="end" x="25.199999999999996" dy="1.2em">foobar</tspan><tspan text-anchor="end" x="25.199999999999996" dy="1.2em">bar</tspan>
   </text>
 </g>
 )";
@@ -181,11 +181,11 @@ TEST(TestSVGNodeRect, TextAlignMix) {
     const auto expected = R"(<!-- Node: A -->
 <g class="node" id="A">
   <title>A</title>
-  <rect x="-29" y="-27.8" width="58" height="55.6" fill="none" stroke="black"/>
-  <rect x="-21" y="-23.8" width="42" height="47.6" fill="none" stroke="blue"/>
-  <rect x="-29" y="-27.8" width="58" height="55.6" fill="none" stroke="red"/>
+  <rect x="-33.199999999999996" y="-27.8" width="66.39999999999999" height="55.6" fill="none" stroke="black"/>
+  <rect x="-25.199999999999996" y="-23.8" width="50.39999999999999" height="47.6" fill="none" stroke="blue"/>
+  <rect x="-33.199999999999996" y="-27.8" width="66.39999999999999" height="55.6" fill="none" stroke="red"/>
   <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">
-    <tspan text-anchor="start" x="-21" dy="-1.2em">foo</tspan><tspan x="0" dy="1.2em">foobar</tspan><tspan text-anchor="end" x="21" dy="1.2em">bar</tspan>
+    <tspan text-anchor="start" x="-25.199999999999996" dy="-1.2em">foo</tspan><tspan x="0" dy="1.2em">foobar</tspan><tspan text-anchor="end" x="25.199999999999996" dy="1.2em">bar</tspan>
   </text>
 </g>
 )";

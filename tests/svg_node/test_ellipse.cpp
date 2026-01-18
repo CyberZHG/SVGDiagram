@@ -59,7 +59,7 @@ TEST(TestSVGNodeEllipse, StrokeOpacity) {
     const auto expected = R"(<!-- Node: A -->
 <g class="node" id="A">
   <title>A</title>
-  <ellipse cx="0" cy="0" rx="16.263455967290593" ry="15.556349186104047" fill="none" stroke="#FF0000" stroke-opacity="0.06666666666666667"/>
+  <ellipse cx="0" cy="0" rx="17.25340546095176" ry="15.556349186104047" fill="none" stroke="#FF0000" stroke-opacity="0.06666666666666667"/>
 </g>)";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
@@ -77,7 +77,7 @@ TEST(TestSVGNodeEllipse, FillOpacity) {
     const auto expected = R"(<!-- Node: A -->
 <g class="node" id="A">
   <title>A</title>
-  <ellipse cx="0" cy="0" rx="16.263455967290593" ry="15.556349186104047" fill="#FF0000" stroke="none" fill-opacity="0.06666666666666667"/>
+  <ellipse cx="0" cy="0" rx="17.25340546095176" ry="15.556349186104047" fill="#FF0000" fill-opacity="0.06666666666666667" stroke="none"/>
 </g>)";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
@@ -102,7 +102,7 @@ TEST(TestSVGNodeEllipse, FillGradientColor2) {
       <stop offset="100%" stop-color="gold"/>
     </linearGradient>
   </defs>
-  <ellipse cx="0" cy="0" rx="16.263455967290593" ry="15.556349186104047" fill="url('#A__fill_color')" stroke="none"/>
+  <ellipse cx="0" cy="0" rx="17.25340546095176" ry="15.556349186104047" fill="url('#A__fill_color')" stroke="none"/>
 </g>)s";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
@@ -127,7 +127,7 @@ TEST(TestSVGNodeEllipse, FillGradientColor3) {
       <stop offset="100%" stop-color="#FF00FF" stop-opacity="0.5333333333333333"/>
     </linearGradient>
   </defs>
-  <ellipse cx="0" cy="0" rx="16.263455967290593" ry="15.556349186104047" fill="url('#A__fill_color')" stroke="none"/>
+  <ellipse cx="0" cy="0" rx="17.25340546095176" ry="15.556349186104047" fill="url('#A__fill_color')" stroke="none"/>
 </g>)s";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
@@ -148,11 +148,11 @@ TEST(TestSVGNodeEllipse, FillColorSegment2) {
   <title>A</title>
   <defs>
     <linearGradient gradientTransform="rotate(-45,0.5,0.5)" id="A__fill_color">
-      <stop offset="39.9999%" stop-color="red"/>
+      <stop offset="39.999900000000004%" stop-color="red"/>
       <stop offset="40%" stop-color="gold"/>
     </linearGradient>
   </defs>
-  <ellipse cx="0" cy="0" rx="16.263455967290593" ry="15.556349186104047" fill="url('#A__fill_color')" stroke="none"/>
+  <ellipse cx="0" cy="0" rx="17.25340546095176" ry="15.556349186104047" fill="url('#A__fill_color')" stroke="none"/>
 </g>)s";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
@@ -172,13 +172,13 @@ TEST(TestSVGNodeEllipse, FillColorSegment3) {
   <title>A</title>
   <defs>
     <linearGradient id="A__fill_color">
-      <stop offset="39.9999%" stop-color="red"/>
+      <stop offset="39.999900000000004%" stop-color="red"/>
       <stop offset="40%" stop-color="gold"/>
-      <stop offset="59.9999%" stop-color="gold"/>
-      <stop offset="60%" stop-color="#FF00FF" stop-opacity="0.5333333333333333"/>
+      <stop offset="59.999900000000004%" stop-color="gold"/>
+      <stop offset="60.00000000000001%" stop-color="#FF00FF" stop-opacity="0.5333333333333333"/>
     </linearGradient>
   </defs>
-  <ellipse cx="0" cy="0" rx="16.263455967290593" ry="15.556349186104047" fill="url('#A__fill_color')" stroke="none"/>
+  <ellipse cx="0" cy="0" rx="17.25340546095176" ry="15.556349186104047" fill="url('#A__fill_color')" stroke="none"/>
 </g>)s";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();

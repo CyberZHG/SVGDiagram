@@ -28,7 +28,7 @@ TEST(TestXMLElementParse, SingleTagAttributes) {
 }
 
 TEST(TestXMLElementParse, SingleTagContent) {
-    const auto expected = R"(<text> foo </text>)" + string("\n");
+    const auto expected = R"(<text>&#160;foo&#160;</text>)" + string("\n");
     const auto elements = XMLElement::parse(expected);
     const auto output = elements[0]->toString();
     EXPECT_EQ(output, expected);

@@ -18,9 +18,9 @@ TEST(TestSVGNodeCircle, OneCircleAutoSizeNoText) {
     const auto expected = R"(<!-- Node: circle -->
 <g class="node" id="circle">
   <title>circle</title>
-  <circle cx="0" cy="0" r="15.913830462839549" fill="none" stroke="black"/>
-  <rect x="-3.5" y="-7" width="7" height="14" fill="none" stroke="blue"/>
-  <rect x="-11.5" y="-11" width="23" height="22" fill="none" stroke="red"/>
+  <circle cx="0" cy="0" r="16.426807358704856" fill="none" stroke="black"/>
+  <rect x="-4.2" y="-7" width="8.4" height="14" fill="none" stroke="blue"/>
+  <rect x="-12.2" y="-11" width="24.4" height="22" fill="none" stroke="red"/>
 </g>)";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();

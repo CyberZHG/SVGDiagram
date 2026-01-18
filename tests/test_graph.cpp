@@ -42,8 +42,8 @@ TEST(TestSVGGraph, OneCircle) {
 <g class="node" id="node1">
   <title>node1</title>
   <circle cx="0" cy="0" r="10" fill="none" stroke="black" stroke-width="10"/>
-  <rect x="-3.5" y="-7" width="7" height="14" fill="none" stroke="blue"/>
-  <rect x="-11.5" y="-11" width="23" height="22" fill="none" stroke="red"/>
+  <rect x="-4.2" y="-7" width="8.4" height="14" fill="none" stroke="blue"/>
+  <rect x="-12.2" y="-11" width="24.4" height="22" fill="none" stroke="red"/>
 </g>)";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
@@ -77,8 +77,8 @@ TEST(TestSVGGraph, OneCircleWithLabel) {
 <g class="node" id="node1">
   <title>node1</title>
   <ellipse cx="0" cy="0" rx="50" ry="50" fill="none" stroke="black"/>
-  <rect x="-3.5" y="-7" width="7" height="14" fill="none" stroke="blue"/>
-  <rect x="-11.5" y="-11" width="23" height="22" fill="none" stroke="red"/>
+  <rect x="-4.2" y="-7" width="8.4" height="14" fill="none" stroke="blue"/>
+  <rect x="-12.2" y="-11" width="24.4" height="22" fill="none" stroke="red"/>
 </g>)";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
@@ -112,8 +112,8 @@ TEST(TestSVGGraph, OneCircleWithLongLabel) {
 <g class="node" id="node1">
   <title>node1</title>
   <ellipse cx="0" cy="0" rx="10" ry="10" fill="none" stroke="black"/>
-  <rect x="-3.5" y="-7" width="7" height="14" fill="none" stroke="blue"/>
-  <rect x="-11.5" y="-11" width="23" height="22" fill="none" stroke="red"/>
+  <rect x="-4.2" y="-7" width="8.4" height="14" fill="none" stroke="blue"/>
+  <rect x="-12.2" y="-11" width="24.4" height="22" fill="none" stroke="red"/>
 </g>)";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
@@ -138,7 +138,7 @@ TEST(TestSVGGraph, GraphGradientColor) {
   </linearGradient>
 </defs>
 <g class="cluster" id="G">
-  <rect x="-24.263455967290593" y="-23.556349186104047" width="48.526911934581186" height="47.112698372208094" fill="url('#G__fill_color')" stroke="none"/>
+  <rect x="-25.25340546095176" y="-23.556349186104047" width="50.50681092190352" height="47.112698372208094" fill="url('#G__fill_color')" stroke="none"/>
 </g>
 <!-- Node: A -->
 <g class="node" id="A">
@@ -149,7 +149,7 @@ TEST(TestSVGGraph, GraphGradientColor) {
       <stop offset="100%" stop-color="gold"/>
     </linearGradient>
   </defs>
-  <ellipse cx="0" cy="0" rx="16.263455967290593" ry="15.556349186104047" fill="url('#A__fill_color')" stroke="none"/>
+  <ellipse cx="0" cy="0" rx="17.25340546095176" ry="15.556349186104047" fill="url('#A__fill_color')" stroke="none"/>
 </g>)s";
     compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();

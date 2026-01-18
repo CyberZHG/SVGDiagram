@@ -67,6 +67,7 @@ namespace svg_diagram {
         std::string _content;
 
         static std::string escapeAttributeValue(const std::string& value);
+        static std::string escapeContent(const std::string& content);
 
         static std::pair<ChildrenType, int> parse(const std::string& source, int start);
     };

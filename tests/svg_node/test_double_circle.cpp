@@ -80,7 +80,7 @@ TEST(TestSVGNodeDoubleCircle, TwoCirclesPenWidth) {
 </g>
 <!-- Edge: edge1 (A -> B) -->
 <g class="edge" id="edge1">
-  <title>A->B</title>
+  <title>A-&gt;B</title>
   <line x1="34.205350305841066" y1="0" x2="65.79464969415893" y2="4.18894727657622e-15" stroke="black"/>
   <polygon points="24.205350305841066,0 34.205350305841066,-3.4999999999999996 34.205350305841066,3.4999999999999996 24.205350305841066,0" fill="black" stroke="black"/>
   <polygon points="75.79464969415893,2.964300477428867e-15 65.79464969415893,3.500000000000005 65.79464969415893,-3.499999999999997 75.79464969415893,2.964300477428867e-15" fill="black" stroke="black"/>

@@ -115,7 +115,7 @@ string XMLElement::toString(const int indent) const {
             }
             s += indentStr;
         }
-        s += _content;
+        s += escapeContent(_content);
         s += "</" + _tag + ">\n";
     }
     return s;
@@ -311,6 +311,22 @@ string XMLElement::escapeAttributeValue(const string& value) {
         }
     }
     return escapedValue;
+}
+
+string XMLElement::escapeContent(const string& content) {
+    string escapedContent;
+    for (const auto ch : content) {
+        if (ch == ' ') {
+            escapedContent += "&#160;";
+        } else if (ch == '<') {
+            escapedContent += "&lt;";
+        } else if (ch == '>') {
+            escapedContent += "&gt;";
+        } else {
+            escapedContent += ch;
+        }
+    }
+    return escapedContent;
 }
 
 XMLElementComment::XMLElementComment(const string& content) {

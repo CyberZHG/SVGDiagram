@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "sp-svg-diagram"
-version = "1.7.0"
+version = "1.7.1"
 description = "A library for rendering diagrams to SVG."
 requires-python = ">=3.8"
 readme = "python/README.md"
@@ -31,12 +31,20 @@ SVG_DIAGRAM_BIND_PYTHON = "ON"
 
 [tool.scikit-build.sdist]
 exclude = [
-    ".github",
-    ".gitignore",
+    ".*",
+    "build*",
+    "cmake-build*",
+    "dist",
     "demo",
     "docs",
     "tests",
     "wasm",
+    "web",
+    "*.md",
+    "python/tests",
+]
+include = [
+    "python/README.md",
 ]
 
 

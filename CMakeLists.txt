@@ -38,6 +38,15 @@ if(SVG_DIAGRAM_ENABLE_COVERAGE)
     endif()
 endif()
 
+include(FetchContent)
+
+FetchContent_Declare(
+        UnicodeWidthApproximation
+        GIT_REPOSITORY https://github.com/CyberZHG/UnicodeWidthApproximation.git
+        GIT_TAG v1.0.0
+)
+FetchContent_MakeAvailable(UnicodeWidthApproximation)
+
 add_library(SVGDiagram STATIC
         include/svg_diagram.h
         src/svg_diagram.cpp
@@ -68,6 +77,9 @@ target_include_directories(SVGDiagram
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+target_link_libraries(SVGDiagram
+        PRIVATE UnicodeWidthApproximation
+)
 
 if (SVG_DIAGRAM_ENABLE_PANGO_CAIRO)
     find_package(PkgConfig REQUIRED)

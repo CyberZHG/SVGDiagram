@@ -7,6 +7,8 @@
 #include <cairo.h>
 #include <cairo-svg.h>
 #include <pango/pangocairo.h>
+#else
+#include "unicode_width.h"
 #endif
 using namespace std;
 using namespace svg_diagram;
@@ -50,30 +52,30 @@ pair<double, double> SVGTextSize::computeApproximateTextSize(const string& text,
         return {0.0, 0.0};
     }
     const size_t n = text.length();
-    int numLines = 1, maxCharsInLine = 0;
-    int numCharsInLine = 0;
+    int numLines = 1, maxWidth = 0;
+    string currentLine;
     for (size_t i = 0; i < n; ++i) {
         if (text[i] == '\n' || text[i] == '\r') {
-            maxCharsInLine = max(maxCharsInLine, numCharsInLine);
+            maxWidth = max(maxWidth, unicode_width::getStringWidth(currentLine));
             if (i + 1 < n && text[i + 1] == '\n') {
                 ++i;
             }
             ++numLines;
-            numCharsInLine = 0;
+            currentLine.clear();
         } else if (i + 1 < n && text[i] == '\\' && (text[i + 1] == 'l' || text[i + 1] == 'r')) {
-            maxCharsInLine = max(maxCharsInLine, numCharsInLine);
+            maxWidth = max(maxWidth, unicode_width::getStringWidth(currentLine));
             if (i + 2 < n) {
                 ++numLines;
             }
             ++i;
-            numCharsInLine = 0;
+            currentLine.clear();
         } else {
-            ++numCharsInLine;
+            currentLine += text[i];
         }
     }
-    maxCharsInLine = max(maxCharsInLine, numCharsInLine);
+    maxWidth = max(maxWidth, unicode_width::getStringWidth(currentLine));
     const double approximateHeight = fontSize * (numLines * _heightScale + (numLines - 1) * _lineSpacingScale);
-    const double approximateWidth = fontSize * (maxCharsInLine * _widthScale);
+    const double approximateWidth = fontSize * (maxWidth * _widthScale);
     return {approximateWidth, approximateHeight};
 }
 

@@ -35,6 +35,7 @@ describe("Docs/NodeAttributes", () => {
         const diagram = new SVGDiagram();
         const shapes = [
             SVGNode.SHAPE_ELLIPSE,
+            SVGNode.SHAPE_DOUBLE_ELLIPSE,
             SVGNode.SHAPE_NONE,
             SVGNode.SHAPE_CIRCLE,
             SVGNode.SHAPE_DOUBLE_CIRCLE,

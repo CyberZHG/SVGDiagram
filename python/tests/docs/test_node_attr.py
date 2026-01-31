@@ -39,6 +39,7 @@ def test_shape():
     diagram = SVGDiagram()
     shapes = [
         SVGNode.SHAPE_ELLIPSE,
+        SVGNode.SHAPE_DOUBLE_ELLIPSE,
         SVGNode.SHAPE_NONE,
         SVGNode.SHAPE_CIRCLE,
         SVGNode.SHAPE_DOUBLE_CIRCLE,

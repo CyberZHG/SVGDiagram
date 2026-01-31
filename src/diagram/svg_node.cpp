@@ -70,6 +70,8 @@ void SVGNode::adjustNodeSize() {
         adjustNodeSizeRect();
     } else if (shape == SHAPE_ELLIPSE) {
         adjustNodeSizeEllipse();
+    } else if (shape == SHAPE_DOUBLE_ELLIPSE) {
+        adjustNodeSizeDoubleEllipse();
     } else if (shape == SHAPE_RECORD) {
         adjustNodeSizeRecord();
     }
@@ -96,6 +98,9 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
     if (shape == SHAPE_ELLIPSE) {
         return produceSVGDrawsEllipse();
     }
+    if (shape == SHAPE_DOUBLE_ELLIPSE) {
+        return produceSVGDrawsDoubleEllipse();
+    }
     if (shape == SHAPE_RECORD) {
         return produceSVGDrawsRecord();
     }
@@ -116,6 +121,9 @@ pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
     }
     if (shape == SHAPE_RECORD) {
         return computeConnectionPointRecord(angle);
+    }
+    if (shape == SHAPE_DOUBLE_ELLIPSE) {
+        return computeConnectionPointDoubleEllipse(angle);
     }
     return computeConnectionPointEllipse(angle);
 }
@@ -282,6 +290,35 @@ pair<double, double> SVGNode::computeConnectionPointEllipse(const double angle) 
     const double strokeWidth = penWidth();
     const double totalWidth = width() + strokeWidth;
     const double totalHeight = height() + strokeWidth;
+    const double rx = totalWidth / 2, ry = totalHeight / 2;
+    const double base = sqrt(ry * ry * cos(angle) * cos(angle) + rx * rx * sin(angle) * sin(angle));
+    const double x = rx * ry * cos(angle) / base;
+    const double y = rx * ry * sin(angle) / base;
+    return {_cx + x, _cy + y};
+}
+
+void SVGNode::adjustNodeSizeDoubleEllipse() {
+    adjustNodeSizeEllipse();
+}
+
+vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsDoubleEllipse() {
+    vector<unique_ptr<SVGDraw>> svgDraws;
+    auto ellipseInner = make_unique<SVGDrawEllipse>(_cx, _cy, width(), height());
+    setStrokeStyles(ellipseInner.get());
+    setFillStyles(ellipseInner.get(), svgDraws);
+    svgDraws.emplace_back(std::move(ellipseInner));
+    auto ellipseOuter = make_unique<SVGDrawEllipse>(_cx, _cy, width() + DOUBLE_BORDER_MARGIN * 2, height() + DOUBLE_BORDER_MARGIN * 2);
+    setStrokeStyles(ellipseOuter.get());
+    ellipseOuter->setFill("none");
+    svgDraws.emplace_back(std::move(ellipseOuter));
+    appendSVGDrawsLabel(svgDraws);
+    return svgDraws;
+}
+
+std::pair<double, double> SVGNode::computeConnectionPointDoubleEllipse(const double angle) const {
+    const double strokeWidth = penWidth();
+    const double totalWidth = width() + strokeWidth + DOUBLE_BORDER_MARGIN * 2;
+    const double totalHeight = height() + strokeWidth + DOUBLE_BORDER_MARGIN * 2;
     const double rx = totalWidth / 2, ry = totalHeight / 2;
     const double base = sqrt(ry * ry * cos(angle) * cos(angle) + rx * rx * sin(angle) * sin(angle));
     const double x = rx * ry * cos(angle) / base;

@@ -56,6 +56,7 @@ TEST(TestDocsNodeAttributes, Shape) {
     SVGDiagram diagram;
     const auto shapes = std::vector{
         SVGNode::SHAPE_ELLIPSE,
+        SVGNode::SHAPE_DOUBLE_ELLIPSE,
         SVGNode::SHAPE_NONE,
         SVGNode::SHAPE_CIRCLE,
         SVGNode::SHAPE_DOUBLE_CIRCLE,
@@ -91,6 +92,7 @@ TEST(TestDocsNodeAttributes, ShapeDebug) {
     diagram.enableDebug();
     const auto shapes = std::vector{
         SVGNode::SHAPE_ELLIPSE,
+        SVGNode::SHAPE_DOUBLE_ELLIPSE,
         SVGNode::SHAPE_NONE,
         SVGNode::SHAPE_CIRCLE,
         SVGNode::SHAPE_DOUBLE_CIRCLE,

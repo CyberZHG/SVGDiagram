@@ -257,6 +257,7 @@ Python</label><div class="sd-tab-content docutils">
 <span class="n">diagram</span> <span class="o">=</span> <span class="n">SVGDiagram</span><span class="p">()</span>
 <span class="n">shapes</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">SVGNode</span><span class="o">.</span><span class="n">SHAPE_ELLIPSE</span><span class="p">,</span>
+    <span class="n">SVGNode</span><span class="o">.</span><span class="n">SHAPE_DOUBLE_ELLIPSE</span><span class="p">,</span>
     <span class="n">SVGNode</span><span class="o">.</span><span class="n">SHAPE_NONE</span><span class="p">,</span>
     <span class="n">SVGNode</span><span class="o">.</span><span class="n">SHAPE_CIRCLE</span><span class="p">,</span>
     <span class="n">SVGNode</span><span class="o">.</span><span class="n">SHAPE_DOUBLE_CIRCLE</span><span class="p">,</span>
@@ -279,6 +280,7 @@ JavaScript</label><div class="sd-tab-content docutils">
 <span class="kd">const</span><span class="w"> </span><span class="nx">diagram</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">SVGDiagram</span><span class="p">();</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">shapes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="nx">SVGNode</span><span class="p">.</span><span class="nx">SHAPE_ELLIPSE</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">SVGNode</span><span class="p">.</span><span class="nx">SHAPE_DOUBLE_ELLIPSE</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">SVGNode</span><span class="p">.</span><span class="nx">SHAPE_NONE</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">SVGNode</span><span class="p">.</span><span class="nx">SHAPE_CIRCLE</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">SVGNode</span><span class="p">.</span><span class="nx">SHAPE_DOUBLE_CIRCLE</span><span class="p">,</span>
@@ -306,11 +308,12 @@ C++</label><div class="sd-tab-content docutils">
 <span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">SVGDiagram</span><span class="w"> </span><span class="n">diagram</span><span class="p">;</span>
 <span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">shapes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="p">{</span>
-<span class="w">        </span><span class="n">SVGNode</span><span class="o">::</span><span class="n">NODE_SHAPE_ELLIPSE</span><span class="p">,</span>
-<span class="w">        </span><span class="n">SVGNode</span><span class="o">::</span><span class="n">NODE_SHAPE_NONE</span><span class="p">,</span>
-<span class="w">        </span><span class="n">SVGNode</span><span class="o">::</span><span class="n">NODE_SHAPE_CIRCLE</span><span class="p">,</span>
-<span class="w">        </span><span class="n">SVGNode</span><span class="o">::</span><span class="n">NODE_SHAPE_DOUBLE_CIRCLE</span><span class="p">,</span>
-<span class="w">        </span><span class="n">SVGNode</span><span class="o">::</span><span class="n">NODE_SHAPE_RECT</span><span class="p">,</span>
+<span class="w">        </span><span class="n">SVGNode</span><span class="o">::</span><span class="n">SHAPE_ELLIPSE</span><span class="p">,</span>
+<span class="w">        </span><span class="n">SVGNode</span><span class="o">::</span><span class="n">SHAPE_DOUBLE_ELLIPSE</span><span class="p">,</span>
+<span class="w">        </span><span class="n">SVGNode</span><span class="o">::</span><span class="n">SHAPE_NONE</span><span class="p">,</span>
+<span class="w">        </span><span class="n">SVGNode</span><span class="o">::</span><span class="n">SHAPE_CIRCLE</span><span class="p">,</span>
+<span class="w">        </span><span class="n">SVGNode</span><span class="o">::</span><span class="n">SHAPE_DOUBLE_CIRCLE</span><span class="p">,</span>
+<span class="w">        </span><span class="n">SVGNode</span><span class="o">::</span><span class="n">SHAPE_RECT</span><span class="p">,</span>
 <span class="w">    </span><span class="p">};</span>
 <span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">shapes</span><span class="p">.</span><span class="n">size</span><span class="p">());</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">shape</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">shapes</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>

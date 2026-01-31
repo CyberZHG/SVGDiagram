@@ -143,6 +143,7 @@ from sp_svg_diagram import SVGDiagram, SVGNode
 diagram = SVGDiagram()
 shapes = [
     SVGNode.SHAPE_ELLIPSE,
+    SVGNode.SHAPE_DOUBLE_ELLIPSE,
     SVGNode.SHAPE_NONE,
     SVGNode.SHAPE_CIRCLE,
     SVGNode.SHAPE_DOUBLE_CIRCLE,
@@ -163,6 +164,7 @@ import { SVGDiagram, SVGNode } from 'sp-svg-diagram';
 const diagram = new SVGDiagram();
 const shapes = [
     SVGNode.SHAPE_ELLIPSE,
+    SVGNode.SHAPE_DOUBLE_ELLIPSE,
     SVGNode.SHAPE_NONE,
     SVGNode.SHAPE_CIRCLE,
     SVGNode.SHAPE_DOUBLE_CIRCLE,
@@ -188,11 +190,12 @@ using namespace svg_diagram;
 int main() {
     SVGDiagram diagram;
     const auto shapes = std::vector{
-        SVGNode::NODE_SHAPE_ELLIPSE,
-        SVGNode::NODE_SHAPE_NONE,
-        SVGNode::NODE_SHAPE_CIRCLE,
-        SVGNode::NODE_SHAPE_DOUBLE_CIRCLE,
-        SVGNode::NODE_SHAPE_RECT,
+        SVGNode::SHAPE_ELLIPSE,
+        SVGNode::SHAPE_DOUBLE_ELLIPSE,
+        SVGNode::SHAPE_NONE,
+        SVGNode::SHAPE_CIRCLE,
+        SVGNode::SHAPE_DOUBLE_CIRCLE,
+        SVGNode::SHAPE_RECT,
     };
     for (int i = 0; i < static_cast<int>(shapes.size()); ++i) {
         const auto shape = std::string(shapes[i]);

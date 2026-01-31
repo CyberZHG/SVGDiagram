@@ -104,6 +104,7 @@ namespace svg_diagram {
         static constexpr std::string_view SHAPE_DOUBLE_CIRCLE = "doublecircle";
         static constexpr std::string_view SHAPE_RECT = "rect";
         static constexpr std::string_view SHAPE_ELLIPSE = "ellipse";
+        static constexpr std::string_view SHAPE_DOUBLE_ELLIPSE = "doubleellipse";
         static constexpr std::string_view SHAPE_RECORD = "record";
         static constexpr std::string_view SHAPE_DEFAULT = SHAPE_ELLIPSE;
 
@@ -161,6 +162,10 @@ namespace svg_diagram {
         void adjustNodeSizeEllipse();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsEllipse();
         [[nodiscard]] std::pair<double, double> computeConnectionPointEllipse(double angle) const;
+
+        void adjustNodeSizeDoubleEllipse();
+        std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsDoubleEllipse();
+        [[nodiscard]] std::pair<double, double> computeConnectionPointDoubleEllipse(double angle) const;
 
         void adjustNodeSizeRecord();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsRecord();

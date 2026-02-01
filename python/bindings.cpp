@@ -46,9 +46,13 @@ PYBIND11_MODULE(_core, m, py::mod_gil_not_used()) {
         .def_property_readonly_static("SHAPE_RECT", [](py::object) { return string(SVGNode::SHAPE_RECT); })
         .def_property_readonly_static("SHAPE_ELLIPSE", [](py::object) { return string(SVGNode::SHAPE_ELLIPSE); })
         .def_property_readonly_static("SHAPE_DOUBLE_ELLIPSE", [](py::object) { return string(SVGNode::SHAPE_DOUBLE_ELLIPSE); })
+        .def_property_readonly_static("SHAPE_POLYGON", [](py::object) { return string(SVGNode::SHAPE_POLYGON); })
         .def_property_readonly_static("SHAPE_RECORD", [](py::object) { return string(SVGNode::SHAPE_RECORD); })
         .def("set_center", py::overload_cast<double, double>(&SVGNode::setCenter), py::arg("cx"), py::arg("cy"))
         .def("set_shape", py::overload_cast<const string&>(&SVGNode::setShape), py::arg("shape"))
+        .def("set_sides", &SVGNode::setSides, py::arg("sides"))
+        .def("set_skew", &SVGNode::setSkew, py::arg("skew"))
+        .def("set_distortion", &SVGNode::setDistortion, py::arg("distortion"))
     ;
     py::class_<SVGEdge, shared_ptr<SVGEdge>, SVGItem>(m, "SVGEdge")
         .def(py::init<const string&>(), py::arg("edge_id") = string())

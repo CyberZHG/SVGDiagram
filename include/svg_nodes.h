@@ -105,6 +105,7 @@ namespace svg_diagram {
         static constexpr std::string_view SHAPE_RECT = "rect";
         static constexpr std::string_view SHAPE_ELLIPSE = "ellipse";
         static constexpr std::string_view SHAPE_DOUBLE_ELLIPSE = "doubleellipse";
+        static constexpr std::string_view SHAPE_POLYGON = "polygon";
         static constexpr std::string_view SHAPE_RECORD = "record";
         static constexpr std::string_view SHAPE_DEFAULT = SHAPE_ELLIPSE;
 
@@ -116,6 +117,10 @@ namespace svg_diagram {
 
         void setShape(const std::string& shape);
         void setShape(const std::string_view& shape);
+
+        void setSides(int sides);
+        void setSkew(double skew);
+        void setDistortion(double distortion);
 
         void setCenter(double cx, double cy);
         [[nodiscard]] std::pair<double, double> center() const;
@@ -166,6 +171,11 @@ namespace svg_diagram {
         void adjustNodeSizeDoubleEllipse();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsDoubleEllipse();
         [[nodiscard]] std::pair<double, double> computeConnectionPointDoubleEllipse(double angle) const;
+
+        void adjustNodeSizePolygon();
+        std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsPolygon();
+        [[nodiscard]] std::pair<double, double> computeConnectionPointPolygon(double angle) const;
+        [[nodiscard]] std::vector<std::pair<double, double>> computePolygonVertices() const;
 
         void adjustNodeSizeRecord();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsRecord();

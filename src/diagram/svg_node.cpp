@@ -3,6 +3,7 @@
 #include <format>
 #include <cmath>
 #include <functional>
+#include <numbers>
 
 #include "attribute_utils.h"
 #include "svg_text_size.h"
@@ -48,6 +49,18 @@ void SVGNode::setShape(const string_view& shape) {
     setShape(string(shape));
 }
 
+void SVGNode::setSides(const int sides) {
+    setAttribute(ATTR_KEY_SIDES, sides);
+}
+
+void SVGNode::setSkew(const double skew) {
+    setAttribute(ATTR_KEY_SKEW, skew);
+}
+
+void SVGNode::setDistortion(const double distortion) {
+    setAttribute(ATTR_KEY_DISTORTION, distortion);
+}
+
 void SVGNode::setCenter(const double cx, const double cy) {
     _cx = cx;
     _cy = cy;
@@ -72,6 +85,8 @@ void SVGNode::adjustNodeSize() {
         adjustNodeSizeEllipse();
     } else if (shape == SHAPE_DOUBLE_ELLIPSE) {
         adjustNodeSizeDoubleEllipse();
+    } else if (shape == SHAPE_POLYGON) {
+        adjustNodeSizePolygon();
     } else if (shape == SHAPE_RECORD) {
         adjustNodeSizeRecord();
     }
@@ -101,6 +116,9 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
     if (shape == SHAPE_DOUBLE_ELLIPSE) {
         return produceSVGDrawsDoubleEllipse();
     }
+    if (shape == SHAPE_POLYGON) {
+        return produceSVGDrawsPolygon();
+    }
     if (shape == SHAPE_RECORD) {
         return produceSVGDrawsRecord();
     }
@@ -124,6 +142,9 @@ pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
     }
     if (shape == SHAPE_DOUBLE_ELLIPSE) {
         return computeConnectionPointDoubleEllipse(angle);
+    }
+    if (shape == SHAPE_POLYGON) {
+        return computeConnectionPointPolygon(angle);
     }
     return computeConnectionPointEllipse(angle);
 }
@@ -324,6 +345,97 @@ std::pair<double, double> SVGNode::computeConnectionPointDoubleEllipse(const dou
     const double x = rx * ry * cos(angle) / base;
     const double y = rx * ry * sin(angle) / base;
     return {_cx + x, _cy + y};
+}
+
+void SVGNode::adjustNodeSizePolygon() {
+    setAttributeIfNotExist(ATTR_KEY_SIDES, string(ATTR_DEF_SIDES));
+    setAttributeIfNotExist(ATTR_KEY_SKEW, string(ATTR_DEF_SKEW));
+    setAttributeIfNotExist(ATTR_KEY_DISTORTION, string(ATTR_DEF_DISTORTION));
+
+    if (stoi(getAttribute(ATTR_KEY_SIDES)) == 4) {
+        adjustNodeSizeRect();
+    } else {
+        adjustNodeSizeEllipse();
+    }
+}
+
+vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsPolygon() {
+    vector<unique_ptr<SVGDraw>> svgDraws;
+    if (enabledDebug()) {
+        auto ellipse = make_unique<SVGDrawEllipse>(_cx, _cy, width(), height());
+        ellipse->setStroke("green");
+        ellipse->setFill("none");
+        svgDraws.emplace_back(std::move(ellipse));
+    }
+    const auto vertices = computePolygonVertices();
+    auto polygon = make_unique<SVGDrawPolygon>(vertices);
+    setStrokeStyles(polygon.get());
+    setFillStyles(polygon.get(), svgDraws);
+    svgDraws.emplace_back(std::move(polygon));
+    appendSVGDrawsLabel(svgDraws);
+    return svgDraws;
+}
+
+vector<pair<double, double>> SVGNode::computePolygonVertices() const {
+    auto sides = stoi(getAttribute(ATTR_KEY_SIDES));
+    const auto skew = stod(getAttribute(ATTR_KEY_SKEW));
+    const auto distortion = stod(getAttribute(ATTR_KEY_DISTORTION));
+    if (sides < 3) {
+        sides = 3;
+    }
+    const double rx = width() / 2.0;
+    const double ry = height() / 2.0;
+    const double sectorAngle = 2.0 * numbers::pi / sides;
+    const double skewDist = hypot(fabs(distortion) + fabs(skew), 1.0);
+    const double gDistortion = distortion * numbers::sqrt2 / cos(sectorAngle / 2.0) / 2.0;
+    const double gSkew = -skew / 2.0;
+
+    vector<pair<double, double>> vertices;
+    vertices.reserve(sides);
+
+    if (sides == 4) {
+        const auto corners = vector<pair<double, double>>{{1, -1}, {1, 1}, {-1, 1}, {-1, -1}};
+        for (const auto& [unitX, unitY] : corners) {
+            const double x = unitX * (skewDist + unitY * gDistortion) + unitY * gSkew;
+            const double y = unitY;
+            vertices.emplace_back(_cx + x * rx, _cy + y * ry);
+        }
+    } else {
+        for (int i = 0; i < sides; ++i) {
+            const double angle = -numbers::pi / 2.0 + 2.0 * numbers::pi * i / sides;
+            const double unitX = cos(angle);
+            const double unitY = sin(angle);
+            const double x = unitX * (skewDist + unitY * gDistortion) + unitY * gSkew;
+            const double y = unitY;
+            vertices.emplace_back(_cx + x * rx, _cy + y * ry);
+        }
+    }
+    return vertices;
+}
+
+pair<double, double> SVGNode::computeConnectionPointPolygon(const double angle) const {
+    const auto sides = stoi(getAttribute(ATTR_KEY_SIDES));
+    const auto skew = stod(getAttribute(ATTR_KEY_SKEW));
+    const auto distortion = stod(getAttribute(ATTR_KEY_DISTORTION));
+    if (sides == 4 && skew == 0.0 && distortion == 0.0) {
+        return computeConnectionPointRect(angle);
+    }
+    const auto vertices = computePolygonVertices();
+    const int n = static_cast<int>(vertices.size());
+    for (int i = 0; i < n; ++i) {
+        const auto& [x1, y1] = vertices[i];
+        const auto& [x2, y2] = vertices[(i + 1) % n];
+
+        const double rx1 = x1 - _cx;
+        const double ry1 = y1 - _cy;
+        const double rx2 = x2 - _cx;
+        const double ry2 = y2 - _cy;
+
+        if (const auto intersect = GeometryUtils::intersect(angle, rx1, ry1, rx2, ry2); intersect != nullopt) {
+            return {_cx + intersect.value().first, _cy + intersect.value().second};
+        }
+    }
+    return computeConnectionPointEllipse(angle);
 }
 
 void SVGNode::adjustNodeSizeRecord() {

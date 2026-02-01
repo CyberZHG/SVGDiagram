@@ -41,6 +41,7 @@ EMSCRIPTEN_BINDINGS(SVGDiagramWASM) {
     constant("NODE_SHAPE_RECT", string(SVGNode::SHAPE_RECT));
     constant("NODE_SHAPE_ELLIPSE", string(SVGNode::SHAPE_ELLIPSE));
     constant("NODE_SHAPE_DOUBLE_ELLIPSE", string(SVGNode::SHAPE_DOUBLE_ELLIPSE));
+    constant("NODE_SHAPE_POLYGON", string(SVGNode::SHAPE_POLYGON));
     constant("NODE_SHAPE_RECORD", string(SVGNode::SHAPE_RECORD));
     constant("EDGE_SPLINES_LINE", string(SVGEdge::SPLINES_LINE));
     constant("EDGE_SPLINES_SPLINE", string(SVGEdge::SPLINES_SPLINE));
@@ -74,6 +75,9 @@ EMSCRIPTEN_BINDINGS(SVGDiagramWASM) {
         .smart_ptr<shared_ptr<SVGNode>>("SVGNode")
         .function("setCenter", &SVGNode::setCenter)
         .function("setShape", select_overload<void(const string&)>(&SVGNode::setShape))
+        .function("setSides", &SVGNode::setSides)
+        .function("setSkew", &SVGNode::setSkew)
+        .function("setDistortion", &SVGNode::setDistortion)
     ;
     class_<SVGEdge, base<SVGItem>>("SVGEdge")
         .constructor<>()

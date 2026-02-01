@@ -57,7 +57,7 @@ describe("Docs/NodeAttributes", () => {
         for (const [i, shape] of shapes.entries()) {
             const node = diagram.addNode(shape);
             node.setShape(shape);
-            node.setCenter((i % 4) * 160.0, Math.floor(i / 4) * 90.0);
+            node.setCenter((i % 4) * 160.0, Math.floor(i / 4) * 100.0);
             node.setLabel(shape);
             if (shape === SVGNode.SHAPE_POLYGON) {
                 node.setSides(7);

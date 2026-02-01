@@ -165,7 +165,7 @@ shapes = [
 for i, shape in enumerate(shapes):
     node = diagram.add_node(shape)
     node.set_shape(shape)
-    node.set_center((i % 4) * 160.0, (i // 4) * 90.0)
+    node.set_center((i % 4) * 160.0, (i // 4) * 100.0)
     node.set_label(shape)
     if shape == SVGNode.SHAPE_POLYGON:
         node.set_sides(7)
@@ -201,7 +201,7 @@ const shapes = [
 for (const [i, shape] of shapes.entries()) {
     const node = diagram.addNode(shape);
     node.setShape(shape);
-    node.setCenter((i % 4) * 160.0, Math.floor(i / 4) * 90.0);
+    node.setCenter((i % 4) * 160.0, Math.floor(i / 4) * 100.0);
     node.setLabel(shape);
     if (shape === SVGNode.SHAPE_POLYGON) {
         node.setSides(7);
@@ -244,7 +244,7 @@ int main() {
         const auto shape = std::string(shapes[i]);
         const auto node = diagram.addNode(std::string(shapes[i]));
         node->setShape(shapes[i]);
-        node->setCenter((i % 4) * 160.0, (i / 4) * 90.0);
+        node->setCenter((i % 4) * 160.0, (i / 4) * 100.0);
         node->setLabel(shape);
         if (shapes[i] == SVGNode::SHAPE_POLYGON) {
             node->setSides(7);

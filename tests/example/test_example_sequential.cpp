@@ -9,7 +9,7 @@ using namespace svg_diagram;
 
 TEST(TestExample, Sequential) {
     SVGDiagram diagram;
-    diagram.defaultNodeAttributes().setShape(SVGNode::SHAPE_ELLIPSE);
+    diagram.defaultNodeAttributes().setShape(SVGNode::SHAPE_POLYGON);
     diagram.defaultNodeAttributes().setMargin(10, 20);
     diagram.defaultEdgeAttributes().setMargin(4.0);
     diagram.defaultEdgeAttributes().setArrowHead(SVGEdge::ARROW_EMPTY);
@@ -31,6 +31,7 @@ TEST(TestExample, Sequential) {
         constexpr double Y_SHIFT = 80.0;
 
         const auto& node = diagram.addNode(format("node_{}", i));
+        node->setSides(5 + i);
         node->setCenter(i * X_SHIFT, i * Y_SHIFT);
         node->setLabel(labels[i]);
         node->setColor(strokeColors[i]);

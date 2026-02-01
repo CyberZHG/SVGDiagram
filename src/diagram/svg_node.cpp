@@ -87,6 +87,21 @@ void SVGNode::adjustNodeSize() {
         adjustNodeSizeDoubleEllipse();
     } else if (shape == SHAPE_POLYGON) {
         adjustNodeSizePolygon();
+    } else if (shape == SHAPE_TRIANGLE) {
+        setSides(3);
+        adjustNodeSizePolygon();
+    } else if (shape == SHAPE_PENTAGON) {
+        setSides(5);
+        adjustNodeSizePolygon();
+    } else if (shape == SHAPE_HEXAGON) {
+        setSides(6);
+        adjustNodeSizePolygon();
+    } else if (shape == SHAPE_SEPTAGON) {
+        setSides(7);
+        adjustNodeSizePolygon();
+    } else if (shape == SHAPE_OCTAGON) {
+        setSides(8);
+        adjustNodeSizePolygon();
     } else if (shape == SHAPE_RECORD) {
         adjustNodeSizeRecord();
     }
@@ -116,7 +131,8 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
     if (shape == SHAPE_DOUBLE_ELLIPSE) {
         return produceSVGDrawsDoubleEllipse();
     }
-    if (shape == SHAPE_POLYGON) {
+    if (shape == SHAPE_POLYGON || shape == SHAPE_TRIANGLE || shape == SHAPE_PENTAGON ||
+        shape == SHAPE_HEXAGON || shape == SHAPE_SEPTAGON || shape == SHAPE_OCTAGON) {
         return produceSVGDrawsPolygon();
     }
     if (shape == SHAPE_RECORD) {
@@ -143,7 +159,8 @@ pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
     if (shape == SHAPE_DOUBLE_ELLIPSE) {
         return computeConnectionPointDoubleEllipse(angle);
     }
-    if (shape == SHAPE_POLYGON) {
+    if (shape == SHAPE_POLYGON || shape == SHAPE_TRIANGLE || shape == SHAPE_PENTAGON ||
+        shape == SHAPE_HEXAGON || shape == SHAPE_SEPTAGON || shape == SHAPE_OCTAGON) {
         return computeConnectionPointPolygon(angle);
     }
     return computeConnectionPointEllipse(angle);

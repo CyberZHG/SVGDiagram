@@ -62,12 +62,17 @@ TEST(TestDocsNodeAttributes, Shape) {
         SVGNode::SHAPE_DOUBLE_CIRCLE,
         SVGNode::SHAPE_RECT,
         SVGNode::SHAPE_POLYGON,
+        SVGNode::SHAPE_TRIANGLE,
+        SVGNode::SHAPE_PENTAGON,
+        SVGNode::SHAPE_HEXAGON,
+        SVGNode::SHAPE_SEPTAGON,
+        SVGNode::SHAPE_OCTAGON,
     };
     for (int i = 0; i < static_cast<int>(shapes.size()); ++i) {
         const auto shape = std::string(shapes[i]);
         const auto node = diagram.addNode(std::string(shapes[i]));
         node->setShape(shapes[i]);
-        node->setCenter((i % 3) * 150.0, (i / 3) * 100.0);
+        node->setCenter((i % 4) * 120.0, (i / 4) * 80.0);
         node->setLabel(shape);
         if (shapes[i] == SVGNode::SHAPE_POLYGON) {
             node->setSides(7);
@@ -102,12 +107,17 @@ TEST(TestDocsNodeAttributes, ShapeDebug) {
         SVGNode::SHAPE_DOUBLE_CIRCLE,
         SVGNode::SHAPE_RECT,
         SVGNode::SHAPE_POLYGON,
+        SVGNode::SHAPE_TRIANGLE,
+        SVGNode::SHAPE_PENTAGON,
+        SVGNode::SHAPE_HEXAGON,
+        SVGNode::SHAPE_SEPTAGON,
+        SVGNode::SHAPE_OCTAGON,
     };
     for (int i = 0; i < static_cast<int>(shapes.size()); ++i) {
         const auto shape = std::string(shapes[i]);
         const auto node = diagram.addNode(std::string(shapes[i]));
         node->setShape(shapes[i]);
-        node->setCenter((i % 3) * 150.0, (i / 3) * 100.0);
+        node->setCenter((i % 4) * 120.0, (i / 4) * 80.0);
         node->setLabel(shape);
         if (shapes[i] == SVGNode::SHAPE_POLYGON) {
             node->setSides(7);

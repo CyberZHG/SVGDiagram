@@ -377,12 +377,7 @@ void SVGNode::adjustNodeSizePolygon() {
     const auto [marginX, marginY] = computeMargin();
     const double boxWidth = textWidth + marginX * 2;
     const double boxHeight = textHeight + marginY * 2;
-    if (sides % 2 == 0) {
-        const double scale = 1.0 / cos(numbers::pi / sides);
-        updateNodeSize(boxWidth * scale, boxHeight * scale);
-    } else {
-        updateNodeSize(boxWidth * numbers::sqrt2, boxHeight * numbers::sqrt2);
-    }
+    updateNodeSize(boxWidth * numbers::sqrt2, boxHeight * numbers::sqrt2);
 }
 
 vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsPolygon() {

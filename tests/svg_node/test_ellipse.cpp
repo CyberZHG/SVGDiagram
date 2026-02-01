@@ -56,13 +56,8 @@ TEST(TestSVGNodeEllipse, StrokeOpacity) {
     node->setMargin(8, 4);
     node->setColor("#FF000011");
     const auto svg = diagram.render();
-    const auto expected = R"(<!-- Node: A -->
-<g class="node" id="A">
-  <title>A</title>
-  <ellipse cx="0" cy="0" rx="17.25340546095176" ry="15.556349186104047" fill="none" stroke="#FF0000" stroke-opacity="0.06666666666666667"/>
-</g>)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -74,13 +69,8 @@ TEST(TestSVGNodeEllipse, FillOpacity) {
     node->setColor("none");
     node->setFillColor("#FF000011");
     const auto svg = diagram.render();
-    const auto expected = R"(<!-- Node: A -->
-<g class="node" id="A">
-  <title>A</title>
-  <ellipse cx="0" cy="0" rx="17.25340546095176" ry="15.556349186104047" fill="#FF0000" fill-opacity="0.06666666666666667" stroke="none"/>
-</g>)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -93,19 +83,8 @@ TEST(TestSVGNodeEllipse, FillGradientColor2) {
     node->setFillColor("red:gold");
     node->setGradientAngle(-45);
     const auto svg = diagram.render();
-    const auto expected = R"s(<!-- Node: A -->
-<g class="node" id="A">
-  <title>A</title>
-  <defs>
-    <linearGradient gradientTransform="rotate(45,0.5,0.5)" id="A__fill_color">
-      <stop offset="0%" stop-color="red"/>
-      <stop offset="100%" stop-color="gold"/>
-    </linearGradient>
-  </defs>
-  <ellipse cx="0" cy="0" rx="17.25340546095176" ry="15.556349186104047" fill="url('#A__fill_color')" stroke="none"/>
-</g>)s";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -117,20 +96,8 @@ TEST(TestSVGNodeEllipse, FillGradientColor3) {
     node->setColor("none");
     node->setFillColor("red:gold:#FF00FF88");
     const auto svg = diagram.render();
-    const auto expected = R"s(<!-- Node: A -->
-<g class="node" id="A">
-  <title>A</title>
-  <defs>
-    <linearGradient id="A__fill_color">
-      <stop offset="0%" stop-color="red"/>
-      <stop offset="50%" stop-color="gold"/>
-      <stop offset="100%" stop-color="#FF00FF" stop-opacity="0.5333333333333333"/>
-    </linearGradient>
-  </defs>
-  <ellipse cx="0" cy="0" rx="17.25340546095176" ry="15.556349186104047" fill="url('#A__fill_color')" stroke="none"/>
-</g>)s";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -143,19 +110,8 @@ TEST(TestSVGNodeEllipse, FillColorSegment2) {
     node->setFillColor("red;0.4:gold");
     node->setGradientAngle(45);
     const auto svg = diagram.render();
-    const auto expected = R"s(<!-- Node: A -->
-<g class="node" id="A">
-  <title>A</title>
-  <defs>
-    <linearGradient gradientTransform="rotate(-45,0.5,0.5)" id="A__fill_color">
-      <stop offset="39.999900000000004%" stop-color="red"/>
-      <stop offset="40%" stop-color="gold"/>
-    </linearGradient>
-  </defs>
-  <ellipse cx="0" cy="0" rx="17.25340546095176" ry="15.556349186104047" fill="url('#A__fill_color')" stroke="none"/>
-</g>)s";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -167,20 +123,7 @@ TEST(TestSVGNodeEllipse, FillColorSegment3) {
     node->setColor("none");
     node->setFillColor("red:gold;.2:#FF00FF88");
     const auto svg = diagram.render();
-    const auto expected = R"s(<!-- Node: A -->
-<g class="node" id="A">
-  <title>A</title>
-  <defs>
-    <linearGradient id="A__fill_color">
-      <stop offset="39.999900000000004%" stop-color="red"/>
-      <stop offset="40%" stop-color="gold"/>
-      <stop offset="59.999900000000004%" stop-color="gold"/>
-      <stop offset="60.00000000000001%" stop-color="#FF00FF" stop-opacity="0.5333333333333333"/>
-    </linearGradient>
-  </defs>
-  <ellipse cx="0" cy="0" rx="17.25340546095176" ry="15.556349186104047" fill="url('#A__fill_color')" stroke="none"/>
-</g>)s";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }

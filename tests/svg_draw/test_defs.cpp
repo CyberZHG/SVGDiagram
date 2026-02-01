@@ -26,14 +26,7 @@ TEST(TestSVGDrawDefs, LinearGradient) {
     circle->setFill("url('#gradient-test')");
     diagram.addSVGDraw(std::move(circle));
     const auto svg = diagram.render();
-    const auto expected = R"s(<defs>
-  <linearGradient gradientTransform="rotate(90,0.5,0.5)" id="gradient-test">
-    <stop offset="5%" stop-color="gold"/>
-    <stop offset="95%" stop-color="red" stop-opacity="0.8"/>
-  </linearGradient>
-</defs>
-<circle cx="5" cy="5" r="4" fill="url('#gradient-test')"/>)s";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }

@@ -61,23 +61,8 @@ TEST(TestSVGNodeRect, RectConnectionOnCorner) {
     const auto edge = diagram.addEdge("A", "B");
 
     const auto svg = diagram.render();
-    const auto expected = R"(<!-- Node: A -->
-<g class="node" id="A">
-  <title>A</title>
-  <rect x="-10" y="-10" width="20" height="20" fill="none" stroke="black"/>
-</g>
-<!-- Node: B -->
-<g class="node" id="B">
-  <title>B</title>
-  <rect x="20" y="20" width="20" height="20" fill="none" stroke="black"/>
-</g>
-<!-- Edge: edge1 (A -> B) -->
-<g class="edge" id="edge1">
-  <title>A-&gt;B</title>
-  <line x1="10.35857864376269" y1="10.35857864376269" x2="19.64142135623731" y2="19.64142135623731" stroke="black"/>
-</g>)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -90,17 +75,8 @@ TEST(TestSVGNodeRect, TextSingeLineAlignLeft) {
     node->setShape(SVGNode::SHAPE_RECT);
     node->setLabel("foo\\l");
     const auto svg = diagram.render();
-    const auto expected = R"(<!-- Node: A -->
-<g class="node" id="A">
-  <title>A</title>
-  <rect x="-20.599999999999998" y="-11" width="41.199999999999996" height="22" fill="none" stroke="black"/>
-  <rect x="-12.599999999999998" y="-7" width="25.199999999999996" height="14" fill="none" stroke="blue"/>
-  <rect x="-20.599999999999998" y="-11" width="41.199999999999996" height="22" fill="none" stroke="red"/>
-  <text x="-12.599999999999998" y="0" text-anchor="start" dominant-baseline="central" font-family="Times,serif" font-size="14">foo</text>
-</g>
-)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -111,17 +87,8 @@ TEST(TestSVGNodeRect, TextSingeLineAlignRight) {
     node->setShape(SVGNode::SHAPE_RECT);
     node->setLabel("foo\\r");
     const auto svg = diagram.render();
-    const auto expected = R"(<!-- Node: A -->
-<g class="node" id="A">
-  <title>A</title>
-  <rect x="-20.599999999999998" y="-11" width="41.199999999999996" height="22" fill="none" stroke="black"/>
-  <rect x="-12.599999999999998" y="-7" width="25.199999999999996" height="14" fill="none" stroke="blue"/>
-  <rect x="-20.599999999999998" y="-11" width="41.199999999999996" height="22" fill="none" stroke="red"/>
-  <text x="12.599999999999998" y="0" text-anchor="end" dominant-baseline="central" font-family="Times,serif" font-size="14">foo</text>
-</g>
-)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -132,19 +99,8 @@ TEST(TestSVGNodeRect, TextAlignLeft) {
     node->setShape(SVGNode::SHAPE_RECT);
     node->setLabel(R"(foo\lfoobar\lbar\l)");
     const auto svg = diagram.render();
-    const auto expected = R"(<!-- Node: A -->
-<g class="node" id="A">
-  <title>A</title>
-  <rect x="-33.199999999999996" y="-27.8" width="66.39999999999999" height="55.6" fill="none" stroke="black"/>
-  <rect x="-25.199999999999996" y="-23.8" width="50.39999999999999" height="47.6" fill="none" stroke="blue"/>
-  <rect x="-33.199999999999996" y="-27.8" width="66.39999999999999" height="55.6" fill="none" stroke="red"/>
-  <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">
-    <tspan text-anchor="start" x="-25.199999999999996" dy="-1.2em">foo</tspan><tspan text-anchor="start" x="-25.199999999999996" dy="1.2em">foobar</tspan><tspan text-anchor="start" x="-25.199999999999996" dy="1.2em">bar</tspan>
-  </text>
-</g>
-)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -155,19 +111,8 @@ TEST(TestSVGNodeRect, TextAlignRight) {
     node->setShape(SVGNode::SHAPE_RECT);
     node->setLabel(R"(foo\rfoobar\rbar\r)");
     const auto svg = diagram.render();
-    const auto expected = R"(<!-- Node: A -->
-<g class="node" id="A">
-  <title>A</title>
-  <rect x="-33.199999999999996" y="-27.8" width="66.39999999999999" height="55.6" fill="none" stroke="black"/>
-  <rect x="-25.199999999999996" y="-23.8" width="50.39999999999999" height="47.6" fill="none" stroke="blue"/>
-  <rect x="-33.199999999999996" y="-27.8" width="66.39999999999999" height="55.6" fill="none" stroke="red"/>
-  <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">
-    <tspan text-anchor="end" x="25.199999999999996" dy="-1.2em">foo</tspan><tspan text-anchor="end" x="25.199999999999996" dy="1.2em">foobar</tspan><tspan text-anchor="end" x="25.199999999999996" dy="1.2em">bar</tspan>
-  </text>
-</g>
-)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -178,19 +123,8 @@ TEST(TestSVGNodeRect, TextAlignMix) {
     node->setShape(SVGNode::SHAPE_RECT);
     node->setLabel("foo\\lfoobar\nbar\\r");
     const auto svg = diagram.render();
-    const auto expected = R"(<!-- Node: A -->
-<g class="node" id="A">
-  <title>A</title>
-  <rect x="-33.199999999999996" y="-27.8" width="66.39999999999999" height="55.6" fill="none" stroke="black"/>
-  <rect x="-25.199999999999996" y="-23.8" width="50.39999999999999" height="47.6" fill="none" stroke="blue"/>
-  <rect x="-33.199999999999996" y="-27.8" width="66.39999999999999" height="55.6" fill="none" stroke="red"/>
-  <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">
-    <tspan text-anchor="start" x="-25.199999999999996" dy="-1.2em">foo</tspan><tspan x="0" dy="1.2em">foobar</tspan><tspan text-anchor="end" x="25.199999999999996" dy="1.2em">bar</tspan>
-  </text>
-</g>
-)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 

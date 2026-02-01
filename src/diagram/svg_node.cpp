@@ -61,6 +61,10 @@ void SVGNode::setDistortion(const double distortion) {
     setAttribute(ATTR_KEY_DISTORTION, distortion);
 }
 
+void SVGNode::setOrientation(const double orientation) {
+    setAttribute(ATTR_KEY_ORIENTATION, orientation);
+}
+
 void SVGNode::setCenter(const double cx, const double cy) {
     _cx = cx;
     _cy = cy;
@@ -102,6 +106,36 @@ void SVGNode::adjustNodeSize() {
     } else if (shape == SHAPE_OCTAGON) {
         setSides(8);
         adjustNodeSizePolygon();
+    } else if (shape == SHAPE_TRAPEZIUM) {
+        setSides(4);
+        setDistortion(-0.4);
+        adjustNodeSizePolygon();
+    } else if (shape == SHAPE_PARALLELOGRAM) {
+        setSides(4);
+        setSkew(0.6);
+        adjustNodeSizePolygon();
+    } else if (shape == SHAPE_HOUSE) {
+        setSides(5);
+        setDistortion(-0.64);
+        adjustNodeSizePolygon();
+    } else if (shape == SHAPE_DIAMOND) {
+        setSides(4);
+        setOrientation(45);
+        adjustNodeSizePolygon();
+    } else if (shape == SHAPE_INV_TRIANGLE) {
+        setSides(3);
+        setOrientation(180);
+        adjustNodeSizePolygon();
+    } else if (shape == SHAPE_INV_TRAPEZIUM) {
+        setSides(4);
+        setDistortion(-0.4);
+        setOrientation(180);
+        adjustNodeSizePolygon();
+    } else if (shape == SHAPE_INV_HOUSE) {
+        setSides(5);
+        setDistortion(-0.64);
+        setOrientation(180);
+        adjustNodeSizePolygon();
     } else if (shape == SHAPE_RECORD) {
         adjustNodeSizeRecord();
     }
@@ -132,7 +166,10 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
         return produceSVGDrawsDoubleEllipse();
     }
     if (shape == SHAPE_POLYGON || shape == SHAPE_TRIANGLE || shape == SHAPE_PENTAGON ||
-        shape == SHAPE_HEXAGON || shape == SHAPE_SEPTAGON || shape == SHAPE_OCTAGON) {
+        shape == SHAPE_HEXAGON || shape == SHAPE_SEPTAGON || shape == SHAPE_OCTAGON ||
+        shape == SHAPE_TRAPEZIUM || shape == SHAPE_PARALLELOGRAM || shape == SHAPE_HOUSE ||
+        shape == SHAPE_DIAMOND || shape == SHAPE_INV_TRIANGLE || shape == SHAPE_INV_TRAPEZIUM ||
+        shape == SHAPE_INV_HOUSE) {
         return produceSVGDrawsPolygon();
     }
     if (shape == SHAPE_RECORD) {
@@ -160,7 +197,10 @@ pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
         return computeConnectionPointDoubleEllipse(angle);
     }
     if (shape == SHAPE_POLYGON || shape == SHAPE_TRIANGLE || shape == SHAPE_PENTAGON ||
-        shape == SHAPE_HEXAGON || shape == SHAPE_SEPTAGON || shape == SHAPE_OCTAGON) {
+        shape == SHAPE_HEXAGON || shape == SHAPE_SEPTAGON || shape == SHAPE_OCTAGON ||
+        shape == SHAPE_TRAPEZIUM || shape == SHAPE_PARALLELOGRAM || shape == SHAPE_HOUSE ||
+        shape == SHAPE_DIAMOND || shape == SHAPE_INV_TRIANGLE || shape == SHAPE_INV_TRAPEZIUM ||
+        shape == SHAPE_INV_HOUSE) {
         return computeConnectionPointPolygon(angle);
     }
     return computeConnectionPointEllipse(angle);
@@ -368,11 +408,7 @@ void SVGNode::adjustNodeSizePolygon() {
     setAttributeIfNotExist(ATTR_KEY_SIDES, string(ATTR_DEF_SIDES));
     setAttributeIfNotExist(ATTR_KEY_SKEW, string(ATTR_DEF_SKEW));
     setAttributeIfNotExist(ATTR_KEY_DISTORTION, string(ATTR_DEF_DISTORTION));
-
-    auto sides = stoi(getAttribute(ATTR_KEY_SIDES));
-    if (sides < 3) {
-        sides = 3;
-    }
+    setAttributeIfNotExist(ATTR_KEY_ORIENTATION, string(ATTR_DEF_ORIENTATION));
     const auto [textWidth, textHeight] = computeTextSize();
     const auto [marginX, marginY] = computeMargin();
     const double boxWidth = textWidth + marginX * 2;
@@ -401,6 +437,7 @@ vector<pair<double, double>> SVGNode::computePolygonVertices() const {
     auto sides = stoi(getAttribute(ATTR_KEY_SIDES));
     const auto skew = stod(getAttribute(ATTR_KEY_SKEW));
     const auto distortion = stod(getAttribute(ATTR_KEY_DISTORTION));
+    const auto orientation = stod(getAttribute(ATTR_KEY_ORIENTATION));
     if (sides < 3) {
         sides = 3;
     }
@@ -408,19 +445,25 @@ vector<pair<double, double>> SVGNode::computePolygonVertices() const {
     const double ry = height() / 2.0;
     const double sectorAngle = 2.0 * numbers::pi / sides;
     const double skewDist = hypot(fabs(distortion) + fabs(skew), 1.0);
-    const double gDistortion = distortion * numbers::sqrt2 / cos(sectorAngle / 2.0) / 2.0;
+    const double gDistortion = -distortion * numbers::sqrt2 / cos(sectorAngle / 2.0) / 2.0;
     const double gSkew = -skew / 2.0;
+    const double orientationRad = -orientation * numbers::pi / 180.0;
+    const double cosOri = cos(orientationRad);
+    const double sinOri = sin(orientationRad);
 
     vector<pair<double, double>> vertices;
     vertices.reserve(sides);
     const double angleOffset = (sides % 2 == 0) ? sectorAngle / 2.0 : 0.0;
     for (int i = 0; i < sides; ++i) {
-        const double angle = -numbers::pi / 2.0 + angleOffset + sectorAngle * i;
-        const double unitX = cos(angle);
-        const double unitY = sin(angle);
+        const double baseAngle = -numbers::pi / 2.0 + angleOffset + sectorAngle * i;
+        const double unitX = cos(baseAngle);
+        const double unitY = sin(baseAngle);
         const double x = unitX * (skewDist + unitY * gDistortion) + unitY * gSkew;
         const double y = unitY;
-        vertices.emplace_back(_cx + x * rx, _cy + y * ry);
+
+        const double rotX = x * cosOri - y * sinOri;
+        const double rotY = x * sinOri + y * cosOri;
+        vertices.emplace_back(_cx + rotX * rx, _cy + rotY * ry);
     }
     return vertices;
 }

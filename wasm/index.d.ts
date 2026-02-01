@@ -43,8 +43,27 @@ declare module 'sp-svg-diagram' {
         static SHAPE_DOUBLE_CIRCLE: string
         static SHAPE_RECT: string
         static SHAPE_ELLIPSE: string
+        static SHAPE_DOUBLE_ELLIPSE: string
+        static SHAPE_POLYGON: string
+        static SHAPE_TRIANGLE: string
+        static SHAPE_PENTAGON: string
+        static SHAPE_HEXAGON: string
+        static SHAPE_SEPTAGON: string
+        static SHAPE_OCTAGON: string
+        static SHAPE_TRAPEZIUM: string
+        static SHAPE_PARALLELOGRAM: string
+        static SHAPE_HOUSE: string
+        static SHAPE_DIAMOND: string
+        static SHAPE_INV_TRIANGLE: string
+        static SHAPE_INV_TRAPEZIUM: string
+        static SHAPE_INV_HOUSE: string
+        static SHAPE_RECORD: string
         setCenter(cx: number, cy: number): void
         setShape(shape: string): void
+        setSides(sides: number): void
+        setSkew(skew: number): void
+        setDistortion(distortion: number): void
+        setOrientation(orientation: number): void
     }
 
     export class SVGEdge extends SVGItem {

@@ -50,11 +50,18 @@ def test_shape():
         SVGNode.SHAPE_HEXAGON,
         SVGNode.SHAPE_SEPTAGON,
         SVGNode.SHAPE_OCTAGON,
+        SVGNode.SHAPE_TRAPEZIUM,
+        SVGNode.SHAPE_PARALLELOGRAM,
+        SVGNode.SHAPE_HOUSE,
+        SVGNode.SHAPE_DIAMOND,
+        SVGNode.SHAPE_INV_TRIANGLE,
+        SVGNode.SHAPE_INV_TRAPEZIUM,
+        SVGNode.SHAPE_INV_HOUSE,
     ]
     for i, shape in enumerate(shapes):
         node = diagram.add_node(shape)
         node.set_shape(shape)
-        node.set_center((i % 4) * 120.0, (i // 4) * 80.0)
+        node.set_center((i % 4) * 160.0, (i // 4) * 90.0)
         node.set_label(shape)
         if shape == SVGNode.SHAPE_POLYGON:
             node.set_sides(7)

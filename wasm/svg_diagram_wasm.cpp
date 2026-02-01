@@ -47,6 +47,13 @@ EMSCRIPTEN_BINDINGS(SVGDiagramWASM) {
     constant("NODE_SHAPE_HEXAGON", string(SVGNode::SHAPE_HEXAGON));
     constant("NODE_SHAPE_SEPTAGON", string(SVGNode::SHAPE_SEPTAGON));
     constant("NODE_SHAPE_OCTAGON", string(SVGNode::SHAPE_OCTAGON));
+    constant("NODE_SHAPE_TRAPEZIUM", string(SVGNode::SHAPE_TRAPEZIUM));
+    constant("NODE_SHAPE_PARALLELOGRAM", string(SVGNode::SHAPE_PARALLELOGRAM));
+    constant("NODE_SHAPE_HOUSE", string(SVGNode::SHAPE_HOUSE));
+    constant("NODE_SHAPE_DIAMOND", string(SVGNode::SHAPE_DIAMOND));
+    constant("NODE_SHAPE_INV_TRIANGLE", string(SVGNode::SHAPE_INV_TRIANGLE));
+    constant("NODE_SHAPE_INV_TRAPEZIUM", string(SVGNode::SHAPE_INV_TRAPEZIUM));
+    constant("NODE_SHAPE_INV_HOUSE", string(SVGNode::SHAPE_INV_HOUSE));
     constant("NODE_SHAPE_RECORD", string(SVGNode::SHAPE_RECORD));
     constant("EDGE_SPLINES_LINE", string(SVGEdge::SPLINES_LINE));
     constant("EDGE_SPLINES_SPLINE", string(SVGEdge::SPLINES_SPLINE));
@@ -83,6 +90,7 @@ EMSCRIPTEN_BINDINGS(SVGDiagramWASM) {
         .function("setSides", &SVGNode::setSides)
         .function("setSkew", &SVGNode::setSkew)
         .function("setDistortion", &SVGNode::setDistortion)
+        .function("setOrientation", &SVGNode::setOrientation)
     ;
     class_<SVGEdge, base<SVGItem>>("SVGEdge")
         .constructor<>()

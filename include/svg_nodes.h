@@ -111,6 +111,13 @@ namespace svg_diagram {
         static constexpr std::string_view SHAPE_HEXAGON = "hexagon";
         static constexpr std::string_view SHAPE_SEPTAGON = "septagon";
         static constexpr std::string_view SHAPE_OCTAGON = "octagon";
+        static constexpr std::string_view SHAPE_TRAPEZIUM = "trapezium";
+        static constexpr std::string_view SHAPE_PARALLELOGRAM = "parallelogram";
+        static constexpr std::string_view SHAPE_HOUSE = "house";
+        static constexpr std::string_view SHAPE_DIAMOND = "diamond";
+        static constexpr std::string_view SHAPE_INV_TRIANGLE = "invtriangle";
+        static constexpr std::string_view SHAPE_INV_TRAPEZIUM = "invtrapezium";
+        static constexpr std::string_view SHAPE_INV_HOUSE = "invhouse";
         static constexpr std::string_view SHAPE_RECORD = "record";
         static constexpr std::string_view SHAPE_DEFAULT = SHAPE_ELLIPSE;
 
@@ -126,6 +133,7 @@ namespace svg_diagram {
         void setSides(int sides);
         void setSkew(double skew);
         void setDistortion(double distortion);
+        void setOrientation(double orientation);
 
         void setCenter(double cx, double cy);
         [[nodiscard]] std::pair<double, double> center() const;

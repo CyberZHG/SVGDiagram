@@ -139,6 +139,51 @@ TEST(TestSVGNodePolygon, SkewAndDistortion) {
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
+TEST(TestSVGNodePolygon, Orientation45) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node = diagram.addNode("orientation");
+    node->setShape(SVGNode::SHAPE_POLYGON);
+    node->setSides(4);
+    node->setOrientation(45);
+    node->setPrecomputedTextSize(67.2, 14);
+    node->setLabel("ori=45");
+    const auto svg = diagram.render();
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodePolygon, Orientation90) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node = diagram.addNode("orientation");
+    node->setShape(SVGNode::SHAPE_POLYGON);
+    node->setSides(3);
+    node->setOrientation(90);
+    node->setPrecomputedTextSize(67.2, 14);
+    node->setLabel("ori=90");
+    const auto svg = diagram.render();
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodePolygon, OrientationNegative) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node = diagram.addNode("orientation");
+    node->setShape(SVGNode::SHAPE_POLYGON);
+    node->setSides(5);
+    node->setOrientation(-36);
+    node->setPrecomputedTextSize(67.2, 14);
+    node->setLabel("ori=-36");
+    const auto svg = diagram.render();
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
 TEST(TestSVGNodePolygon, PolygonConnections) {
     SVGDiagram diagram;
     const auto& central = diagram.addNode("c");
@@ -259,6 +304,97 @@ TEST(TestSVGNodePolygon, ShapeOctagon) {
     node->setShape(SVGNode::SHAPE_OCTAGON);
     node->setPrecomputedTextSize(58.8, 14);
     node->setLabel("octagon");
+    const auto svg = diagram.render();
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodePolygon, ShapeTrapezium) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node = diagram.addNode("trapezium");
+    node->setShape(SVGNode::SHAPE_TRAPEZIUM);
+    node->setPrecomputedTextSize(67.2, 14);
+    node->setLabel("trapezium");
+    const auto svg = diagram.render();
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodePolygon, ShapeParallelogram) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node = diagram.addNode("parallelogram");
+    node->setShape(SVGNode::SHAPE_PARALLELOGRAM);
+    node->setPrecomputedTextSize(100.8, 14);
+    node->setLabel("parallelogram");
+    const auto svg = diagram.render();
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodePolygon, ShapeHouse) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node = diagram.addNode("house");
+    node->setShape(SVGNode::SHAPE_HOUSE);
+    node->setPrecomputedTextSize(42, 14);
+    node->setLabel("house");
+    const auto svg = diagram.render();
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodePolygon, ShapeDiamond) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node = diagram.addNode("diamond");
+    node->setShape(SVGNode::SHAPE_DIAMOND);
+    node->setPrecomputedTextSize(58.8, 14);
+    node->setLabel("diamond");
+    const auto svg = diagram.render();
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodePolygon, ShapeInvTriangle) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node = diagram.addNode("invtriangle");
+    node->setShape(SVGNode::SHAPE_INV_TRIANGLE);
+    node->setPrecomputedTextSize(84, 14);
+    node->setLabel("invtriangle");
+    const auto svg = diagram.render();
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodePolygon, ShapeInvTrapezium) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node = diagram.addNode("invtrapezium");
+    node->setShape(SVGNode::SHAPE_INV_TRAPEZIUM);
+    node->setPrecomputedTextSize(92.4, 14);
+    node->setLabel("invtrapezium");
+    const auto svg = diagram.render();
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodePolygon, ShapeInvHouse) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node = diagram.addNode("invhouse");
+    node->setShape(SVGNode::SHAPE_INV_HOUSE);
+    node->setPrecomputedTextSize(58.8, 14);
+    node->setLabel("invhouse");
     const auto svg = diagram.render();
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());

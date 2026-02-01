@@ -41,11 +41,16 @@ describe("Docs/NodeAttributes", () => {
             SVGNode.SHAPE_DOUBLE_CIRCLE,
             SVGNode.SHAPE_RECT,
             SVGNode.SHAPE_POLYGON,
+            SVGNode.SHAPE_TRIANGLE,
+            SVGNode.SHAPE_PENTAGON,
+            SVGNode.SHAPE_HEXAGON,
+            SVGNode.SHAPE_SEPTAGON,
+            SVGNode.SHAPE_OCTAGON,
         ];
         for (const [i, shape] of shapes.entries()) {
             const node = diagram.addNode(shape);
             node.setShape(shape);
-            node.setCenter((i % 3) * 150.0, Math.floor(i / 3) * 100.0);
+            node.setCenter((i % 4) * 120.0, Math.floor(i / 4) * 80.0);
             node.setLabel(shape);
             if (shape === SVGNode.SHAPE_POLYGON) {
                 node.setSides(7);

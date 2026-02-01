@@ -45,11 +45,16 @@ def test_shape():
         SVGNode.SHAPE_DOUBLE_CIRCLE,
         SVGNode.SHAPE_RECT,
         SVGNode.SHAPE_POLYGON,
+        SVGNode.SHAPE_TRIANGLE,
+        SVGNode.SHAPE_PENTAGON,
+        SVGNode.SHAPE_HEXAGON,
+        SVGNode.SHAPE_SEPTAGON,
+        SVGNode.SHAPE_OCTAGON,
     ]
     for i, shape in enumerate(shapes):
         node = diagram.add_node(shape)
         node.set_shape(shape)
-        node.set_center((i % 3) * 150.0, (i // 3) * 100.0)
+        node.set_center((i % 4) * 120.0, (i // 4) * 80.0)
         node.set_label(shape)
         if shape == SVGNode.SHAPE_POLYGON:
             node.set_sides(7)

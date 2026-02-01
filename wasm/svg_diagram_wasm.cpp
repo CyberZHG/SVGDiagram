@@ -42,6 +42,11 @@ EMSCRIPTEN_BINDINGS(SVGDiagramWASM) {
     constant("NODE_SHAPE_ELLIPSE", string(SVGNode::SHAPE_ELLIPSE));
     constant("NODE_SHAPE_DOUBLE_ELLIPSE", string(SVGNode::SHAPE_DOUBLE_ELLIPSE));
     constant("NODE_SHAPE_POLYGON", string(SVGNode::SHAPE_POLYGON));
+    constant("NODE_SHAPE_TRIANGLE", string(SVGNode::SHAPE_TRIANGLE));
+    constant("NODE_SHAPE_PENTAGON", string(SVGNode::SHAPE_PENTAGON));
+    constant("NODE_SHAPE_HEXAGON", string(SVGNode::SHAPE_HEXAGON));
+    constant("NODE_SHAPE_SEPTAGON", string(SVGNode::SHAPE_SEPTAGON));
+    constant("NODE_SHAPE_OCTAGON", string(SVGNode::SHAPE_OCTAGON));
     constant("NODE_SHAPE_RECORD", string(SVGNode::SHAPE_RECORD));
     constant("EDGE_SPLINES_LINE", string(SVGEdge::SPLINES_LINE));
     constant("EDGE_SPLINES_SPLINE", string(SVGEdge::SPLINES_SPLINE));

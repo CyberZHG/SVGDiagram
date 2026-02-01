@@ -308,3 +308,155 @@ TEST(TestSVGNodePolygon, PolygonStyles) {
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
+
+TEST(TestSVGNodePolygon, ShapeTriangle) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node = diagram.addNode("triangle");
+    node->setShape(SVGNode::SHAPE_TRIANGLE);
+    node->setPrecomputedTextSize(58.8, 14);
+    node->setLabel("triangle");
+    const auto svg = diagram.render();
+    const auto expected = R"(<!-- Node: triangle -->
+<g class="node" id="triangle">
+  <title>triangle</title>
+  <ellipse cx="0" cy="0" rx="52.891587232753764" ry="15.556349186104047" fill="none" stroke="green"/>
+  <polygon points="3.2386756503207453e-15,-15.556349186104047 45.80545819004544,7.778174593052021 -45.80545819004543,7.778174593052029" fill="none" stroke="black"/>
+  <rect x="-29.4" y="-7" width="58.8" height="14" fill="none" stroke="blue"/>
+  <rect x="-37.4" y="-11" width="74.8" height="22" fill="none" stroke="red"/>
+  <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">triangle</text>
+</g>)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodePolygon, ShapePentagon) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node = diagram.addNode("pentagon");
+    node->setShape(SVGNode::SHAPE_PENTAGON);
+    node->setPrecomputedTextSize(67.2, 14);
+    node->setLabel("pentagon");
+    const auto svg = diagram.render();
+    const auto expected = R"(<!-- Node: pentagon -->
+<g class="node" id="pentagon">
+  <title>pentagon</title>
+  <ellipse cx="0" cy="0" rx="58.83128419472076" ry="15.556349186104047" fill="none" stroke="green"/>
+  <polygon points="3.602377193939652e-15,-15.556349186104047 55.951876195401255,-4.807176268937032 34.580161223084126,12.585350861989056 -34.58016122308412,12.585350861989056 -55.951876195401255,-4.80717626893703" fill="none" stroke="black"/>
+  <rect x="-33.6" y="-7" width="67.2" height="14" fill="none" stroke="blue"/>
+  <rect x="-41.6" y="-11" width="83.2" height="22" fill="none" stroke="red"/>
+  <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">pentagon</text>
+</g>)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodePolygon, ShapeHexagon) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node = diagram.addNode("hexagon");
+    node->setShape(SVGNode::SHAPE_HEXAGON);
+    node->setPrecomputedTextSize(58.8, 14);
+    node->setLabel("hexagon");
+    const auto svg = diagram.render();
+    const auto expected = R"(<!-- Node: hexagon -->
+<g class="node" id="hexagon">
+  <title>hexagon</title>
+  <ellipse cx="0" cy="0" rx="43.185800135384" ry="12.701705922171765" fill="none" stroke="green"/>
+  <polygon points="21.592900067691996,-11 43.185800135384,-2.82034527336256e-15 21.592900067692014,10.999999999999996 -21.592900067691975,11.000000000000004 -43.185800135384,7.196200896854983e-15 -21.592900067692018,-10.999999999999995" fill="none" stroke="black"/>
+  <rect x="-29.4" y="-7" width="58.8" height="14" fill="none" stroke="blue"/>
+  <rect x="-37.4" y="-11" width="74.8" height="22" fill="none" stroke="red"/>
+  <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">hexagon</text>
+</g>)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodePolygon, ShapeSeptagon) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node = diagram.addNode("septagon");
+    node->setShape(SVGNode::SHAPE_SEPTAGON);
+    node->setPrecomputedTextSize(67.2, 14);
+    node->setLabel("septagon");
+    const auto svg = diagram.render();
+    const auto expected = R"(<!-- Node: septagon -->
+<g class="node" id="septagon">
+  <title>septagon</title>
+  <ellipse cx="0" cy="0" rx="58.83128419472076" ry="15.556349186104047" fill="none" stroke="green"/>
+  <polygon points="3.602377193939652e-15,-15.556349186104047 45.9961501374565,-9.699225071689282 57.35626107093463,3.4616133498424237 25.525937563493144,14.015786314898882 -25.525937563493137,14.015786314898882 -57.35626107093463,3.4616133498424255 -45.99615013745651,-9.69922507168928" fill="none" stroke="black"/>
+  <rect x="-33.6" y="-7" width="67.2" height="14" fill="none" stroke="blue"/>
+  <rect x="-41.6" y="-11" width="83.2" height="22" fill="none" stroke="red"/>
+  <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">septagon</text>
+</g>)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodePolygon, ShapeOctagon) {
+    SVGDiagram diagram;
+    diagram.enableDebug();
+    const auto node = diagram.addNode("octagon");
+    node->setShape(SVGNode::SHAPE_OCTAGON);
+    node->setPrecomputedTextSize(58.8, 14);
+    node->setLabel("octagon");
+    const auto svg = diagram.render();
+    const auto expected = R"(<!-- Node: octagon -->
+<g class="node" id="octagon">
+  <title>octagon</title>
+  <ellipse cx="0" cy="0" rx="40.48146829093554" ry="11.906314203216334" fill="none" stroke="green"/>
+  <polygon points="15.491587232753758,-11 37.400000000000006,-4.556349186104046 37.400000000000006,4.556349186104046 15.491587232753758,11 -15.491587232753755,11 -37.400000000000006,4.556349186104048 -37.400000000000006,-4.556349186104045 -15.49158723275378,-10.999999999999998" fill="none" stroke="black"/>
+  <rect x="-29.4" y="-7" width="58.8" height="14" fill="none" stroke="blue"/>
+  <rect x="-37.4" y="-11" width="74.8" height="22" fill="none" stroke="red"/>
+  <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">octagon</text>
+</g>)";
+    compareSVGWithDefaultGraphContent(svg, expected);
+
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodePolygon, ShapeConnections) {
+    SVGDiagram diagram;
+    const auto& central = diagram.addNode("c");
+    central->setCenter(0.0, 0.0);
+    central->setShape(SVGNode::SHAPE_HEXAGON);
+    central->setPrecomputedTextSize(50.4, 14);
+    central->setLabel("Center");
+
+    const auto shapes = vector{
+        SVGNode::SHAPE_TRIANGLE,
+        SVGNode::SHAPE_POLYGON,
+        SVGNode::SHAPE_PENTAGON,
+        SVGNode::SHAPE_HEXAGON,
+        SVGNode::SHAPE_SEPTAGON,
+        SVGNode::SHAPE_OCTAGON,
+    };
+
+    for (int i = 0; i < static_cast<int>(shapes.size()); ++i) {
+        const auto nodeName = format("n_{}", i);
+        const auto& node = diagram.addNode(nodeName);
+        const double angle = i * numbers::pi / 3.0;
+        node->setCenter(120.0 * cos(angle), 120.0 * sin(angle));
+        node->setShape(shapes[i]);
+        if (shapes[i] == SVGNode::SHAPE_POLYGON) {
+            node->setSides(4);
+        }
+        node->setPrecomputedTextSize(8.4, 14);
+        node->setLabel(format("{}", i));
+
+        const auto& edge = diagram.addEdge("c", nodeName);
+        edge->setArrowHead();
+    }
+
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}

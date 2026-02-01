@@ -149,12 +149,19 @@ shapes = [
     SVGNode.SHAPE_DOUBLE_CIRCLE,
     SVGNode.SHAPE_RECT,
     SVGNode.SHAPE_POLYGON,
+    SVGNode.SHAPE_TRIANGLE,
+    SVGNode.SHAPE_PENTAGON,
+    SVGNode.SHAPE_HEXAGON,
+    SVGNode.SHAPE_SEPTAGON,
+    SVGNode.SHAPE_OCTAGON,
 ]
 for i, shape in enumerate(shapes):
     node = diagram.add_node(shape)
     node.set_shape(shape)
-    node.set_center((i % 3) * 150.0, (i // 3) * 100.0)
+    node.set_center((i % 4) * 120.0, (i // 4) * 80.0)
     node.set_label(shape)
+    if shape == SVGNode.SHAPE_POLYGON:
+        node.set_sides(7)
 svg = diagram.render()
 ```
 ````
@@ -171,13 +178,20 @@ const shapes = [
     SVGNode.SHAPE_DOUBLE_CIRCLE,
     SVGNode.SHAPE_RECT,
     SVGNode.SHAPE_POLYGON,
+    SVGNode.SHAPE_TRIANGLE,
+    SVGNode.SHAPE_PENTAGON,
+    SVGNode.SHAPE_HEXAGON,
+    SVGNode.SHAPE_SEPTAGON,
+    SVGNode.SHAPE_OCTAGON,
 ];
 for (const [i, shape] of shapes.entries()) {
-    console.log(shape);
     const node = diagram.addNode(shape);
     node.setShape(shape);
-    node.setCenter((i % 3) * 150.0, Math.floor(i / 3) * 100.0);
+    node.setCenter((i % 4) * 120.0, Math.floor(i / 4) * 80.0);
     node.setLabel(shape);
+    if (shape === SVGNode.SHAPE_POLYGON) {
+        node.setSides(7);
+    }
 }
 const svg = diagram.render();
 ````
@@ -199,13 +213,21 @@ int main() {
         SVGNode::SHAPE_DOUBLE_CIRCLE,
         SVGNode::SHAPE_RECT,
         SVGNode::SHAPE_POLYGON,
+        SVGNode::SHAPE_TRIANGLE,
+        SVGNode::SHAPE_PENTAGON,
+        SVGNode::SHAPE_HEXAGON,
+        SVGNode::SHAPE_SEPTAGON,
+        SVGNode::SHAPE_OCTAGON,
     };
     for (int i = 0; i < static_cast<int>(shapes.size()); ++i) {
         const auto shape = std::string(shapes[i]);
         const auto node = diagram.addNode(std::string(shapes[i]));
         node->setShape(shapes[i]);
-        node->setCenter((i % 3) * 150.0, (i / 3) * 100.0);
+        node->setCenter((i % 4) * 120.0, (i / 4) * 80.0);
         node->setLabel(shape);
+        if (shapes[i] == SVGNode::SHAPE_POLYGON) {
+            node->setSides(7);
+        }
     }
     diagram.render("shape.svg");
     return 0;

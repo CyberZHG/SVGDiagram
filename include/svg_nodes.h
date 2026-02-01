@@ -106,6 +106,11 @@ namespace svg_diagram {
         static constexpr std::string_view SHAPE_ELLIPSE = "ellipse";
         static constexpr std::string_view SHAPE_DOUBLE_ELLIPSE = "doubleellipse";
         static constexpr std::string_view SHAPE_POLYGON = "polygon";
+        static constexpr std::string_view SHAPE_TRIANGLE = "triangle";
+        static constexpr std::string_view SHAPE_PENTAGON = "pentagon";
+        static constexpr std::string_view SHAPE_HEXAGON = "hexagon";
+        static constexpr std::string_view SHAPE_SEPTAGON = "septagon";
+        static constexpr std::string_view SHAPE_OCTAGON = "octagon";
         static constexpr std::string_view SHAPE_RECORD = "record";
         static constexpr std::string_view SHAPE_DEFAULT = SHAPE_ELLIPSE;
 

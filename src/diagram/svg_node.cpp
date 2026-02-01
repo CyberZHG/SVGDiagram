@@ -352,10 +352,19 @@ void SVGNode::adjustNodeSizePolygon() {
     setAttributeIfNotExist(ATTR_KEY_SKEW, string(ATTR_DEF_SKEW));
     setAttributeIfNotExist(ATTR_KEY_DISTORTION, string(ATTR_DEF_DISTORTION));
 
-    if (stoi(getAttribute(ATTR_KEY_SIDES)) == 4) {
-        adjustNodeSizeRect();
+    auto sides = stoi(getAttribute(ATTR_KEY_SIDES));
+    if (sides < 3) {
+        sides = 3;
+    }
+    const auto [textWidth, textHeight] = computeTextSize();
+    const auto [marginX, marginY] = computeMargin();
+    const double boxWidth = textWidth + marginX * 2;
+    const double boxHeight = textHeight + marginY * 2;
+    if (sides % 2 == 0) {
+        const double scale = 1.0 / cos(numbers::pi / sides);
+        updateNodeSize(boxWidth * scale, boxHeight * scale);
     } else {
-        adjustNodeSizeEllipse();
+        updateNodeSize(boxWidth * numbers::sqrt2, boxHeight * numbers::sqrt2);
     }
 }
 
@@ -392,34 +401,19 @@ vector<pair<double, double>> SVGNode::computePolygonVertices() const {
 
     vector<pair<double, double>> vertices;
     vertices.reserve(sides);
-
-    if (sides == 4) {
-        const auto corners = vector<pair<double, double>>{{1, -1}, {1, 1}, {-1, 1}, {-1, -1}};
-        for (const auto& [unitX, unitY] : corners) {
-            const double x = unitX * (skewDist + unitY * gDistortion) + unitY * gSkew;
-            const double y = unitY;
-            vertices.emplace_back(_cx + x * rx, _cy + y * ry);
-        }
-    } else {
-        for (int i = 0; i < sides; ++i) {
-            const double angle = -numbers::pi / 2.0 + 2.0 * numbers::pi * i / sides;
-            const double unitX = cos(angle);
-            const double unitY = sin(angle);
-            const double x = unitX * (skewDist + unitY * gDistortion) + unitY * gSkew;
-            const double y = unitY;
-            vertices.emplace_back(_cx + x * rx, _cy + y * ry);
-        }
+    const double angleOffset = (sides % 2 == 0) ? sectorAngle / 2.0 : 0.0;
+    for (int i = 0; i < sides; ++i) {
+        const double angle = -numbers::pi / 2.0 + angleOffset + sectorAngle * i;
+        const double unitX = cos(angle);
+        const double unitY = sin(angle);
+        const double x = unitX * (skewDist + unitY * gDistortion) + unitY * gSkew;
+        const double y = unitY;
+        vertices.emplace_back(_cx + x * rx, _cy + y * ry);
     }
     return vertices;
 }
 
 pair<double, double> SVGNode::computeConnectionPointPolygon(const double angle) const {
-    const auto sides = stoi(getAttribute(ATTR_KEY_SIDES));
-    const auto skew = stod(getAttribute(ATTR_KEY_SKEW));
-    const auto distortion = stod(getAttribute(ATTR_KEY_DISTORTION));
-    if (sides == 4 && skew == 0.0 && distortion == 0.0) {
-        return computeConnectionPointRect(angle);
-    }
     const auto vertices = computePolygonVertices();
     const int n = static_cast<int>(vertices.size());
     for (int i = 0; i < n; ++i) {

@@ -43,14 +43,8 @@ TEST(TestSVGEdgeLine, TwoCircleOneLine) {
     edge->setSplines(SVGEdge::SPLINES_LINE);
     diagram.addEdge(edge);
     const auto svg = diagram.render();
-    const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
-        R"(<!-- Edge: edge1 (A -> B) -->
-<g class="edge" id="edge1">
-  <title>A-&gt;B</title>
-  <line x1="116.09236051318196" y1="108.04618025659099" x2="176.1181164136673" y2="138.05905820683367" stroke="black"/>
-</g>)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -62,15 +56,8 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnection) {
     edge->addConnectionPoint(-50, 120);
     diagram.addEdge(edge);
     const auto svg = diagram.render();
-    const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
-        R"(<!-- Edge: edge1 (A -> B) -->
-<g class="edge" id="edge1">
-  <title>A-&gt;B</title>
-  <line x1="82.16601989629028" y1="102.37786401382796" x2="-50" y2="120" stroke="black"/>
-  <line x1="-50" y1="120" x2="173.48943624376807" y2="146.81873234925217" stroke="black"/>
-</g>)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -90,25 +77,8 @@ TEST(TestSVGEdgeLine, TwoCircleTwoLineSelfCycle) {
     edge2->addConnectionPoint(250, 170);
     diagram.addEdge("B -> B", edge2);
     const auto svg = diagram.render();
-    const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
-        R"(<!-- Edge: edge1 (A -> A) -->
-<g class="edge" id="edge1">
-  <title>A-&gt;A</title>
-  <line x1="110.79508360777247" y1="114.3934448103633" x2="130" y2="140" stroke="black"/>
-  <line x1="130" y1="140" x2="100" y2="160" stroke="black"/>
-  <line x1="100" y1="160" x2="70" y2="140" stroke="black"/>
-  <line x1="70" y1="140" x2="89.20491639222753" y2="114.3934448103633" stroke="black"/>
-</g>
-<!-- Edge: B -> B (B -> B) -->
-<g class="edge" id="B -> B">
-  <title>B-&gt;B</title>
-  <line x1="224.7910310279769" y1="140.08358758880922" x2="250" y2="130" stroke="black"/>
-  <line x1="250" y1="130" x2="270" y2="150" stroke="black"/>
-  <line x1="270" y1="150" x2="250" y2="170" stroke="black"/>
-  <line x1="250" y1="170" x2="224.7910310279769" y2="159.91641241119078" stroke="black"/>
-</g>)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -129,15 +99,8 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineArrowHead) {
     edge->setArrowHead(SVGEdge::ARROW_NORMAL);
     diagram.addEdge(edge);
     const auto svg = diagram.render();
-    const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
-        R"s(<!-- Edge: edge1 (A -> B) -->
-<g class="edge" id="edge1">
-  <title>A-&gt;B</title>
-  <line x1="116.09236051318196" y1="108.04618025659099" x2="165.64120389512738" y2="132.8206019475637" stroke="black"/>
-  <polygon points="174.58547580512652,137.29273790256326 164.0759563108775,135.95109711606338 167.20645147937722,129.69010677906397 174.58547580512652,137.29273790256326" fill="black" stroke="black"/>
-</g>)s";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -149,15 +112,8 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineArrowTail) {
     edge->setArrowTail(SVGEdge::ARROW_NORMAL);
     diagram.addEdge(edge);
     const auto svg = diagram.render();
-    const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
-        R"s(<!-- Edge: edge1 (A -> B) -->
-<g class="edge" id="edge1">
-  <title>A-&gt;B</title>
-  <line x1="126.56927303172192" y1="113.28463651586095" x2="176.1181164136673" y2="138.05905820683367" stroke="black"/>
-  <polygon points="117.62500112172276,108.81250056086138 128.13452061597178,110.15414134736126 125.00402544747207,116.41513168436066 117.62500112172276,108.81250056086138" fill="black" stroke="black"/>
-</g>)s";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -170,16 +126,8 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineArrowBoth) {
     edge->setArrowTail(SVGEdge::ARROW_NORMAL);
     diagram.addEdge(edge);
     const auto svg = diagram.render();
-    const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
-        R"s(<!-- Edge: edge1 (A -> B) -->
-<g class="edge" id="edge1">
-  <title>A-&gt;B</title>
-  <line x1="126.56927303172192" y1="113.28463651586095" x2="165.64120389512738" y2="132.8206019475637" stroke="black"/>
-  <polygon points="117.62500112172276,108.81250056086138 128.13452061597178,110.15414134736126 125.00402544747207,116.41513168436066 117.62500112172276,108.81250056086138" fill="black" stroke="black"/>
-  <polygon points="174.58547580512652,137.29273790256326 164.0759563108775,135.95109711606338 167.20645147937722,129.69010677906397 174.58547580512652,137.29273790256326" fill="black" stroke="black"/>
-</g>)s";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -192,16 +140,8 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowHead) {
     edge->setArrowHead(SVGEdge::ARROW_NORMAL);
     diagram.addEdge(edge);
     const auto svg = diagram.render();
-    const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
-        R"s(<!-- Edge: edge1 (A -> B) -->
-<g class="edge" id="edge1">
-  <title>A-&gt;B</title>
-  <line x1="82.16601989629028" y1="102.37786401382796" x2="-50" y2="120" stroke="black"/>
-  <line x1="-50" y1="120" x2="161.85932941877" y2="145.42311953025242" stroke="black"/>
-  <polygon points="171.7880978036392,146.61457173643672 161.44232114660548,148.89818846495663 162.2763376909345,141.94805059554818 171.7880978036392,146.61457173643672" fill="black" stroke="black"/>
-</g>)s";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -214,16 +154,8 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowTail) {
     edge->setArrowTail(SVGEdge::ARROW_NORMAL);
     diagram.addEdge(edge);
     const auto svg = diagram.render();
-    const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
-        R"s(<!-- Edge: edge1 (A -> B) -->
-<g class="edge" id="edge1">
-  <title>A-&gt;B</title>
-  <line x1="70.5552279772989" y1="103.92596960302681" x2="-50" y2="120" stroke="black"/>
-  <line x1="-50" y1="120" x2="173.48943624376807" y2="146.81873234925217" stroke="black"/>
-  <polygon points="80.46750698412525,102.60433240211664 71.01780099761747,107.39526725541604 70.09265495698034,100.4566719506376 80.46750698412525,102.60433240211664" fill="black" stroke="black"/>
-</g>)s";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -237,17 +169,8 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowBoth) {
     edge->setArrowTail(SVGEdge::ARROW_NORMAL);
     diagram.addEdge(edge);
     const auto svg = diagram.render();
-    const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
-        R"s(<!-- Edge: edge1 (A -> B) -->
-<g class="edge" id="edge1">
-  <title>A-&gt;B</title>
-  <line x1="70.5552279772989" y1="103.92596960302681" x2="-50" y2="120" stroke="black"/>
-  <line x1="-50" y1="120" x2="161.85932941877" y2="145.42311953025242" stroke="black"/>
-  <polygon points="80.46750698412525,102.60433240211664 71.01780099761747,107.39526725541604 70.09265495698034,100.4566719506376 80.46750698412525,102.60433240211664" fill="black" stroke="black"/>
-  <polygon points="171.7880978036392,146.61457173643672 161.44232114660548,148.89818846495663 162.2763376909345,141.94805059554818 171.7880978036392,146.61457173643672" fill="black" stroke="black"/>
-</g>)s";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -262,17 +185,8 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowBothDashed) {
     edge->appendStyleDashed();
     diagram.addEdge(edge);
     const auto svg = diagram.render();
-    const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
-        R"s(<!-- Edge: edge1 (A -> B) -->
-<g class="edge" id="edge1">
-  <title>A-&gt;B</title>
-  <line x1="70.5552279772989" y1="103.92596960302681" x2="-50" y2="120" stroke="black" stroke-dasharray="5,2"/>
-  <line x1="-50" y1="120" x2="161.85932941877" y2="145.42311953025242" stroke="black" stroke-dasharray="5,2"/>
-  <polygon points="80.46750698412525,102.60433240211664 71.01780099761747,107.39526725541604 70.09265495698034,100.4566719506376 80.46750698412525,102.60433240211664" fill="black" stroke="black"/>
-  <polygon points="171.7880978036392,146.61457173643672 161.44232114660548,148.89818846495663 162.2763376909345,141.94805059554818 171.7880978036392,146.61457173643672" fill="black" stroke="black"/>
-</g>)s";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -287,17 +201,8 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowBothDotted) {
     edge->appendStyleDotted();
     diagram.addEdge(edge);
     const auto svg = diagram.render();
-    const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
-        R"s(<!-- Edge: edge1 (A -> B) -->
-<g class="edge" id="edge1">
-  <title>A-&gt;B</title>
-  <line x1="70.5552279772989" y1="103.92596960302681" x2="-50" y2="120" stroke="black" stroke-dasharray="1,5"/>
-  <line x1="-50" y1="120" x2="161.85932941877" y2="145.42311953025242" stroke="black" stroke-dasharray="1,5"/>
-  <polygon points="80.46750698412525,102.60433240211664 71.01780099761747,107.39526725541604 70.09265495698034,100.4566719506376 80.46750698412525,102.60433240211664" fill="black" stroke="black"/>
-  <polygon points="171.7880978036392,146.61457173643672 161.44232114660548,148.89818846495663 162.2763376909345,141.94805059554818 171.7880978036392,146.61457173643672" fill="black" stroke="black"/>
-</g>)s";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -312,17 +217,8 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionArrowBothOpacity) {
     edge->setColor("#00000088");
     diagram.addEdge(edge);
     const auto svg = diagram.render();
-    const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1() +
-        R"s(<!-- Edge: edge1 (A -> B) -->
-<g class="edge" id="edge1">
-  <title>A-&gt;B</title>
-  <line x1="70.5552279772989" y1="103.92596960302681" x2="-50" y2="120" stroke="#000000" stroke-opacity="0.5333333333333333"/>
-  <line x1="-50" y1="120" x2="161.85932941877" y2="145.42311953025242" stroke="#000000" stroke-opacity="0.5333333333333333"/>
-  <polygon points="80.46750698412525,102.60433240211664 71.01780099761747,107.39526725541604 70.09265495698034,100.4566719506376 80.46750698412525,102.60433240211664" fill="none" stroke="#000000" stroke-opacity="0.5333333333333333"/>
-  <polygon points="171.7880978036392,146.61457173643672 161.44232114660548,148.89818846495663 162.2763376909345,141.94805059554818 171.7880978036392,146.61457173643672" fill="#000000" fill-opacity="0.5333333333333333" stroke="#000000" stroke-opacity="0.5333333333333333"/>
-</g>)s";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -361,23 +257,8 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineWithLabel) {
     edge->setMargin(2.0);
     diagram.addEdge(edge);
     const auto svg = diagram.render();
-    const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1WithDebug() +
-        R"(<!-- Edge: edge1 (A -> B) -->
-<g class="edge" id="edge1">
-  <title>A-&gt;B</title>
-  <line x1="116.09236051318196" y1="108.04618025659099" x2="176.1181164136673" y2="138.05905820683367" stroke="black"/>
-  <rect x="129.70523846342462" y="127.85261923171234" width="20" height="16" fill="none" stroke="blue"/>
-  <rect x="127.70523846342462" y="125.85261923171234" width="24" height="20" fill="none" stroke="red"/>
-  <text x="139.70523846342462" y="135.85261923171234" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">42</text>
-  <rect x="96.8155178613811" y="121.40775893069056" width="40" height="16" fill="none" stroke="blue"/>
-  <rect x="94.8155178613811" y="119.40775893069056" width="44" height="20" fill="none" stroke="red"/>
-  <text x="116.8155178613811" y="129.40775893069056" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">tail</text>
-  <rect x="138.59495906546817" y="142.29747953273412" width="40" height="16" fill="none" stroke="blue"/>
-  <rect x="136.59495906546817" y="140.29747953273412" width="44" height="20" fill="none" stroke="red"/>
-  <text x="158.59495906546817" y="150.29747953273412" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">head</text>
-</g>)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -400,23 +281,7 @@ TEST(TestSVGEdgeLine, TwoCircleOneLineOneConnectionWithLabel) {
     edge->setMargin(2.0);
     diagram.addEdge(edge);
     const auto svg = diagram.render();
-    const auto expected = TestSVGEdgeLineExpectedNodesSVGCase1WithDebug() +
-        R"(<!-- Edge: edge1 (A -> B) -->
-<g class="edge" id="edge1">
-  <title>A-&gt;B</title>
-  <line x1="82.16601989629028" y1="102.37786401382796" x2="-50" y2="120" stroke="black"/>
-  <line x1="-50" y1="120" x2="173.48943624376807" y2="146.81873234925217" stroke="black"/>
-  <rect x="-15.801535228950755" y="128.74381577252592" width="20" height="16" fill="none" stroke="blue"/>
-  <rect x="-17.801535228950755" y="126.74381577252592" width="24" height="20" fill="none" stroke="red"/>
-  <text x="-5.801535228950754" y="136.74381577252592" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">42</text>
-  <rect x="40.44889315839625" y="84.3401475788805" width="40" height="16" fill="none" stroke="blue"/>
-  <rect x="38.44889315839625" y="82.3401475788805" width="44" height="20" fill="none" stroke="red"/>
-  <text x="60.44889315839625" y="92.3401475788805" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">tail</text>
-  <rect x="131.938055967531" y="148.8725667161037" width="40" height="16" fill="none" stroke="blue"/>
-  <rect x="129.938055967531" y="146.8725667161037" width="44" height="20" fill="none" stroke="red"/>
-  <text x="151.938055967531" y="156.8725667161037" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">head</text>
-</g>)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }

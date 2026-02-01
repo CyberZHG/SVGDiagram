@@ -14,16 +14,8 @@ TEST(TestSVGNodeDoubleCircle, OneCircle) {
     node->setShape(SVGNode::SHAPE_DOUBLE_CIRCLE);
     node->setPrecomputedTextSize(10, 16);
     const auto svg = diagram.render();
-    const auto expected = R"(<!-- Node: circle -->
-<g class="node" id="circle">
-  <title>circle</title>
-  <circle cx="0" cy="0" r="17.69180601295413" fill="none" stroke="black"/>
-  <circle cx="0" cy="0" r="21.69180601295413" fill="none" stroke="black"/>
-  <rect x="-5" y="-8" width="10" height="16" fill="none" stroke="blue"/>
-  <rect x="-13" y="-12" width="26" height="24" fill="none" stroke="red"/>
-</g>)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -36,16 +28,8 @@ TEST(TestSVGNodeDoubleCircle, OneCircleColor) {
     node->setColor("red");
     node->setFillColor("white");
     const auto svg = diagram.render();
-    const auto expected = R"(<!-- Node: circle -->
-<g class="node" id="circle">
-  <title>circle</title>
-  <circle cx="0" cy="0" r="17.69180601295413" fill="white" stroke="red"/>
-  <circle cx="0" cy="0" r="21.69180601295413" fill="none" stroke="red"/>
-  <rect x="-5" y="-8" width="10" height="16" fill="none" stroke="blue"/>
-  <rect x="-13" y="-12" width="26" height="24" fill="none" stroke="red"/>
-</g>)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -66,27 +50,8 @@ TEST(TestSVGNodeDoubleCircle, TwoCirclesPenWidth) {
     edge->setArrowTail();
 
     const auto svg = diagram.render();
-    const auto expected = R"(<!-- Node: A -->
-<g class="node" id="A">
-  <title>A</title>
-  <circle cx="0" cy="0" r="17.69180601295413" fill="none" stroke="black" stroke-width="2"/>
-  <circle cx="0" cy="0" r="21.69180601295413" fill="none" stroke="black" stroke-width="2"/>
-</g>
-<!-- Node: B -->
-<g class="node" id="B">
-  <title>B</title>
-  <circle cx="100" cy="0" r="17.69180601295413" fill="none" stroke="black" stroke-width="2"/>
-  <circle cx="100" cy="0" r="21.69180601295413" fill="none" stroke="black" stroke-width="2"/>
-</g>
-<!-- Edge: edge1 (A -> B) -->
-<g class="edge" id="edge1">
-  <title>A-&gt;B</title>
-  <line x1="34.205350305841066" y1="0" x2="65.79464969415893" y2="4.18894727657622e-15" stroke="black"/>
-  <polygon points="24.205350305841066,0 34.205350305841066,-3.4999999999999996 34.205350305841066,3.4999999999999996 24.205350305841066,0" fill="black" stroke="black"/>
-  <polygon points="75.79464969415893,2.964300477428867e-15 65.79464969415893,3.500000000000005 65.79464969415893,-3.499999999999997 75.79464969415893,2.964300477428867e-15" fill="black" stroke="black"/>
-</g>)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -98,16 +63,8 @@ TEST(TestSVGNodeDoubleCircle, Dashed) {
     node->appendStyleDashed();
     node->setPrecomputedTextSize(10, 16);
     const auto svg = diagram.render();
-    const auto expected = R"(<!-- Node: circle -->
-<g class="node" id="circle">
-  <title>circle</title>
-  <circle cx="0" cy="0" r="17.69180601295413" fill="none" stroke="black" stroke-dasharray="5,2"/>
-  <circle cx="0" cy="0" r="21.69180601295413" fill="none" stroke="black" stroke-dasharray="5,2"/>
-  <rect x="-5" y="-8" width="10" height="16" fill="none" stroke="blue"/>
-  <rect x="-13" y="-12" width="26" height="24" fill="none" stroke="red"/>
-</g>)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -119,15 +76,7 @@ TEST(TestSVGNodeDoubleCircle, Dotted) {
     node->appendStyleDotted();
     node->setPrecomputedTextSize(10, 16);
     const auto svg = diagram.render();
-    const auto expected = R"(<!-- Node: circle -->
-<g class="node" id="circle">
-  <title>circle</title>
-  <circle cx="0" cy="0" r="17.69180601295413" fill="none" stroke="black" stroke-dasharray="1,5"/>
-  <circle cx="0" cy="0" r="21.69180601295413" fill="none" stroke="black" stroke-dasharray="1,5"/>
-  <rect x="-5" y="-8" width="10" height="16" fill="none" stroke="blue"/>
-  <rect x="-13" y="-12" width="26" height="24" fill="none" stroke="red"/>
-</g>)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }

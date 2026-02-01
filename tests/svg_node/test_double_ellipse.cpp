@@ -14,16 +14,8 @@ TEST(TestSVGNodeDoubleEllipse, OneEllipse) {
     node->setShape(SVGNode::SHAPE_DOUBLE_ELLIPSE);
     node->setPrecomputedTextSize(10, 16);
     const auto svg = diagram.render();
-    const auto expected = R"(<!-- Node: ellipse -->
-<g class="node" id="ellipse">
-  <title>ellipse</title>
-  <ellipse cx="0" cy="0" rx="18.38477631085024" ry="16.970562748477143" fill="none" stroke="black"/>
-  <ellipse cx="0" cy="0" rx="22.38477631085024" ry="20.970562748477143" fill="none" stroke="black"/>
-  <rect x="-5" y="-8" width="10" height="16" fill="none" stroke="blue"/>
-  <rect x="-13" y="-12" width="26" height="24" fill="none" stroke="red"/>
-</g>)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -36,16 +28,8 @@ TEST(TestSVGNodeDoubleEllipse, OneEllipseColor) {
     node->setColor("red");
     node->setFillColor("white");
     const auto svg = diagram.render();
-    const auto expected = R"(<!-- Node: ellipse -->
-<g class="node" id="ellipse">
-  <title>ellipse</title>
-  <ellipse cx="0" cy="0" rx="18.38477631085024" ry="16.970562748477143" fill="white" stroke="red"/>
-  <ellipse cx="0" cy="0" rx="22.38477631085024" ry="20.970562748477143" fill="none" stroke="red"/>
-  <rect x="-5" y="-8" width="10" height="16" fill="none" stroke="blue"/>
-  <rect x="-13" y="-12" width="26" height="24" fill="none" stroke="red"/>
-</g>)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -65,28 +49,8 @@ TEST(TestSVGNodeDoubleEllipse, TwoEllipsesPenWidth) {
     edge->setArrowHead();
     edge->setArrowTail();
     const auto svg = diagram.render();
-    const auto expected = R"(<!-- Node: A -->
-<g class="node" id="A">
-  <title>A</title>
-  <ellipse cx="0" cy="0" rx="18.38477631085024" ry="16.970562748477143" fill="none" stroke="black" stroke-width="2"/>
-  <ellipse cx="0" cy="0" rx="22.38477631085024" ry="20.970562748477143" fill="none" stroke="black" stroke-width="2"/>
-</g>
-<!-- Node: B -->
-<g class="node" id="B">
-  <title>B</title>
-  <ellipse cx="100" cy="0" rx="18.38477631085024" ry="16.970562748477143" fill="none" stroke="black" stroke-width="2"/>
-  <ellipse cx="100" cy="0" rx="22.38477631085024" ry="20.970562748477143" fill="none" stroke="black" stroke-width="2"/>
-</g>
-<!-- Edge: edge1 (A -> B) -->
-<g class="edge" id="edge1">
-  <title>A-&gt;B</title>
-  <line x1="34.89832060373717" y1="0" x2="65.10167939626282" y2="4.2738116622984855e-15" stroke="black"/>
-  <polygon points="24.89832060373717,0 34.89832060373717,-3.4999999999999996 34.89832060373717,3.4999999999999996 24.89832060373717,0" fill="black" stroke="black"/>
-  <polygon points="75.10167939626282,3.049164863151132e-15 65.10167939626282,3.500000000000005 65.10167939626282,-3.4999999999999964 75.10167939626282,3.049164863151132e-15" fill="black" stroke="black"/>
-</g>)";
-    compareSVGWithDefaultGraphContent(svg, expected);
-
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
@@ -98,15 +62,7 @@ TEST(TestSVGNodeDoubleEllipse, Dashed) {
     node->appendStyleDashed();
     node->setPrecomputedTextSize(10, 16);
     const auto svg = diagram.render();
-    const auto expected = R"(<!-- Node: ellipse -->
-<g class="node" id="ellipse">
-  <title>ellipse</title>
-  <ellipse cx="0" cy="0" rx="18.38477631085024" ry="16.970562748477143" fill="none" stroke="black" stroke-dasharray="5,2"/>
-  <ellipse cx="0" cy="0" rx="22.38477631085024" ry="20.970562748477143" fill="none" stroke="black" stroke-dasharray="5,2"/>
-  <rect x="-5" y="-8" width="10" height="16" fill="none" stroke="blue"/>
-  <rect x="-13" y="-12" width="26" height="24" fill="none" stroke="red"/>
-</g>)";
-    compareSVGWithDefaultGraphContent(svg, expected);
     const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }

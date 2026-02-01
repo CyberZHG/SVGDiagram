@@ -19,8 +19,8 @@ TEST(TestSVGNodePolygon, DefaultSquare) {
     const auto expected = R"(<!-- Node: polygon -->
 <g class="node" id="polygon">
   <title>polygon</title>
-  <ellipse cx="0" cy="0" rx="37.39999999999999" ry="11" fill="none" stroke="green"/>
-  <polygon points="37.39999999999999,-11 37.39999999999999,11 -37.39999999999999,11 -37.39999999999999,-11" fill="none" stroke="black"/>
+  <ellipse cx="0" cy="0" rx="52.89158723275375" ry="15.556349186104043" fill="none" stroke="green"/>
+  <polygon points="37.4,-10.999999999999998 37.4,10.999999999999998 -37.39999999999999,11 -37.400000000000006,-10.999999999999998" fill="none" stroke="black"/>
   <rect x="-29.4" y="-7" width="58.8" height="14" fill="none" stroke="blue"/>
   <rect x="-37.4" y="-11" width="74.8" height="22" fill="none" stroke="red"/>
   <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">polygon</text>
@@ -91,8 +91,8 @@ TEST(TestSVGNodePolygon, Hexagon) {
     const auto expected = R"(<!-- Node: hexagon -->
 <g class="node" id="hexagon">
   <title>hexagon</title>
-  <ellipse cx="0" cy="0" rx="52.891587232753764" ry="15.556349186104047" fill="none" stroke="green"/>
-  <polygon points="3.2386756503207453e-15,-15.556349186104047 45.805458190045435,-7.778174593052023 45.80545819004544,7.778174593052021 3.2386756503207453e-15,15.556349186104047 -45.80545819004543,7.778174593052029 -45.805458190045435,-7.778174593052025" fill="none" stroke="black"/>
+  <ellipse cx="0" cy="0" rx="43.185800135384" ry="12.701705922171765" fill="none" stroke="green"/>
+  <polygon points="21.592900067691996,-11 43.185800135384,-2.82034527336256e-15 21.592900067692014,10.999999999999996 -21.592900067691975,11.000000000000004 -43.185800135384,7.196200896854983e-15 -21.592900067692018,-10.999999999999995" fill="none" stroke="black"/>
   <rect x="-29.4" y="-7" width="58.8" height="14" fill="none" stroke="blue"/>
   <rect x="-37.4" y="-11" width="74.8" height="22" fill="none" stroke="red"/>
   <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">hexagon</text>
@@ -116,8 +116,8 @@ TEST(TestSVGNodePolygon, SkewPositive) {
     const auto expected = R"(<!-- Node: skew -->
 <g class="node" id="skew">
   <title>skew</title>
-  <ellipse cx="0" cy="0" rx="41.6" ry="11" fill="none" stroke="green"/>
-  <polygon points="56.91021393199563,-11 36.11021393199563,11 -56.91021393199563,11 -36.11021393199563,-11" fill="none" stroke="black"/>
+  <ellipse cx="0" cy="0" rx="58.83128419472075" ry="15.556349186104043" fill="none" stroke="green"/>
+  <polygon points="56.91021393199563,-10.999999999999998 36.11021393199563,10.999999999999998 -56.91021393199563,11 -36.11021393199564,-10.999999999999998" fill="none" stroke="black"/>
   <rect x="-33.6" y="-7" width="67.2" height="14" fill="none" stroke="blue"/>
   <rect x="-41.6" y="-11" width="83.2" height="22" fill="none" stroke="red"/>
   <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">skew=0.5</text>
@@ -141,8 +141,8 @@ TEST(TestSVGNodePolygon, SkewNegative) {
     const auto expected = R"(<!-- Node: skew -->
 <g class="node" id="skew">
   <title>skew</title>
-  <ellipse cx="0" cy="0" rx="45.8" ry="11" fill="none" stroke="green"/>
-  <polygon points="39.755956684745186,-11 62.655956684745185,11 -39.755956684745186,11 -62.655956684745185,-11" fill="none" stroke="black"/>
+  <ellipse cx="0" cy="0" rx="64.77098115668774" ry="15.556349186104043" fill="none" stroke="green"/>
+  <polygon points="39.75595668474518,-10.999999999999998 62.65595668474517,10.999999999999998 -39.75595668474517,11 -62.655956684745185,-10.999999999999998" fill="none" stroke="black"/>
   <rect x="-37.8" y="-7" width="75.6" height="14" fill="none" stroke="blue"/>
   <rect x="-45.8" y="-11" width="91.6" height="22" fill="none" stroke="red"/>
   <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">skew=-0.5</text>
@@ -166,8 +166,8 @@ TEST(TestSVGNodePolygon, DistortionPositive) {
     const auto expected = R"(<!-- Node: distortion -->
 <g class="node" id="distortion">
   <title>distortion</title>
-  <ellipse cx="0" cy="0" rx="41.6" ry="11" fill="none" stroke="green"/>
-  <polygon points="25.71021393199563,-11 67.31021393199563,11 -67.31021393199563,11 -25.71021393199563,-11" fill="none" stroke="black"/>
+  <ellipse cx="0" cy="0" rx="58.83128419472075" ry="15.556349186104043" fill="none" stroke="green"/>
+  <polygon points="31.802392883315438,-10.999999999999998 61.218034980675824,10.999999999999998 -61.21803498067581,11 -31.802392883315445,-10.999999999999998" fill="none" stroke="black"/>
   <rect x="-33.6" y="-7" width="67.2" height="14" fill="none" stroke="blue"/>
   <rect x="-41.6" y="-11" width="83.2" height="22" fill="none" stroke="red"/>
   <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">dist=0.5</text>
@@ -191,8 +191,8 @@ TEST(TestSVGNodePolygon, DistortionNegative) {
     const auto expected = R"(<!-- Node: distortion -->
 <g class="node" id="distortion">
   <title>distortion</title>
-  <ellipse cx="0" cy="0" rx="45.8" ry="11" fill="none" stroke="green"/>
-  <polygon points="74.10595668474518,-11 28.305956684745183,11 -28.305956684745183,11 -74.10595668474518,-11" fill="none" stroke="black"/>
+  <ellipse cx="0" cy="0" rx="64.77098115668774" ry="15.556349186104043" fill="none" stroke="green"/>
+  <polygon points="67.39870197391711,-10.999999999999998 35.013211395573244,10.999999999999998 -35.013211395573244,11 -67.39870197391711,-10.999999999999998" fill="none" stroke="black"/>
   <rect x="-37.8" y="-7" width="75.6" height="14" fill="none" stroke="blue"/>
   <rect x="-45.8" y="-11" width="91.6" height="22" fill="none" stroke="red"/>
   <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">dist=-0.5</text>
@@ -217,8 +217,8 @@ TEST(TestSVGNodePolygon, SkewAndDistortion) {
     const auto expected = R"(<!-- Node: combined -->
 <g class="node" id="combined">
   <title>combined</title>
-  <ellipse cx="0" cy="0" rx="41.6" ry="11" fill="none" stroke="green"/>
-  <polygon points="42.273519765112894,-11 54.753519765112905,11 -67.2335197651129,11 -29.793519765112894,-11" fill="none" stroke="black"/>
+  <ellipse cx="0" cy="0" rx="58.83128419472075" ry="15.556349186104043" fill="none" stroke="green"/>
+  <polygon points="45.92882713590478,-10.999999999999998 51.09821239432101,10.999999999999998 -63.578212394321,11 -33.44882713590479,-10.999999999999998" fill="none" stroke="black"/>
   <rect x="-33.6" y="-7" width="67.2" height="14" fill="none" stroke="blue"/>
   <rect x="-41.6" y="-11" width="83.2" height="22" fill="none" stroke="red"/>
   <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="Times,serif" font-size="14">combined</text>

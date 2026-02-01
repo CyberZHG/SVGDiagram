@@ -61,6 +61,7 @@ TEST(TestDocsNodeAttributes, Shape) {
         SVGNode::SHAPE_CIRCLE,
         SVGNode::SHAPE_DOUBLE_CIRCLE,
         SVGNode::SHAPE_RECT,
+        SVGNode::SHAPE_POLYGON,
     };
     for (int i = 0; i < static_cast<int>(shapes.size()); ++i) {
         const auto shape = std::string(shapes[i]);
@@ -68,6 +69,9 @@ TEST(TestDocsNodeAttributes, Shape) {
         node->setShape(shapes[i]);
         node->setCenter((i % 3) * 150.0, (i / 3) * 100.0);
         node->setLabel(shape);
+        if (shapes[i] == SVGNode::SHAPE_POLYGON) {
+            node->setSides(7);
+        }
     }
     diagram.render(OUTPUT_DIR + "shape.svg");
 }
@@ -97,6 +101,7 @@ TEST(TestDocsNodeAttributes, ShapeDebug) {
         SVGNode::SHAPE_CIRCLE,
         SVGNode::SHAPE_DOUBLE_CIRCLE,
         SVGNode::SHAPE_RECT,
+        SVGNode::SHAPE_POLYGON,
     };
     for (int i = 0; i < static_cast<int>(shapes.size()); ++i) {
         const auto shape = std::string(shapes[i]);
@@ -104,6 +109,9 @@ TEST(TestDocsNodeAttributes, ShapeDebug) {
         node->setShape(shapes[i]);
         node->setCenter((i % 3) * 150.0, (i / 3) * 100.0);
         node->setLabel(shape);
+        if (shapes[i] == SVGNode::SHAPE_POLYGON) {
+            node->setSides(7);
+        }
     }
     diagram.render(OUTPUT_DIR + "shape_debug.svg");
 }

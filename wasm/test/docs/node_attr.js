@@ -40,12 +40,16 @@ describe("Docs/NodeAttributes", () => {
             SVGNode.SHAPE_CIRCLE,
             SVGNode.SHAPE_DOUBLE_CIRCLE,
             SVGNode.SHAPE_RECT,
+            SVGNode.SHAPE_POLYGON,
         ];
         for (const [i, shape] of shapes.entries()) {
             const node = diagram.addNode(shape);
             node.setShape(shape);
             node.setCenter((i % 3) * 150.0, Math.floor(i / 3) * 100.0);
             node.setLabel(shape);
+            if (shape === SVGNode.SHAPE_POLYGON) {
+                node.setSides(7);
+            }
         }
         const svg = diagram.render();
         await compareSVG("node_attr", "shape", svg);

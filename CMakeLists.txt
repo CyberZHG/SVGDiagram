@@ -159,6 +159,7 @@ if(SVG_DIAGRAM_ENABLE_TESTS)
             tests/svg_edge/test_self_loop.cpp
             tests/svg_node/test_record.cpp
             tests/svg_node/test_double_ellipse.cpp
+            tests/svg_node/test_polygon.cpp
     )
 
     target_link_libraries(runTests

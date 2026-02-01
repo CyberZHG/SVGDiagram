@@ -15,9 +15,11 @@ TEST(TestExample, Random) {
     static mt19937 rng{random_device{}()};
 
     const auto shapes = vector{
-        SVGNode::SHAPE_ELLIPSE, SVGNode::SHAPE_CIRCLE, SVGNode::SHAPE_DOUBLE_CIRCLE, SVGNode::SHAPE_RECT,
+        SVGNode::SHAPE_ELLIPSE, SVGNode::SHAPE_CIRCLE, SVGNode::SHAPE_DOUBLE_ELLIPSE, SVGNode::SHAPE_RECT,
+        SVGNode::SHAPE_POLYGON,
     };
     uniform_int_distribution distShape(0, static_cast<int>(shapes.size() - 1));
+    uniform_int_distribution distSides(3, 9);
     const auto styles = vector<string>{
         "solid", "dashed",
     };
@@ -40,6 +42,7 @@ TEST(TestExample, Random) {
         const double angle = start + i * shift;
         node->setCenter(130.0 * cos(angle), 130.0 * sin(angle));
         node->setShape(shapes[distShape(rng)]);
+        node->setSides(distSides(rng));
         node->setStyle(styles[distStyle(rng)]);
         node->setLabel(format("{}", i));
         if (i % 2 == 0) {
@@ -71,6 +74,7 @@ TEST(TestExample, Random) {
         const double angle = start + i * shift;
         node->setCenter(290.0 * cos(angle), 290.0 * sin(angle));
         node->setShape(shapes[distShape(rng)]);
+        node->setSides(distSides(rng));
         node->setStyle(styles[distStyle(rng)]);
         node->setLabel(format("{}", i));
         const int center = i / 2.4;

@@ -148,6 +148,7 @@ shapes = [
     SVGNode.SHAPE_CIRCLE,
     SVGNode.SHAPE_DOUBLE_CIRCLE,
     SVGNode.SHAPE_RECT,
+    SVGNode.SHAPE_POLYGON,
 ]
 for i, shape in enumerate(shapes):
     node = diagram.add_node(shape)
@@ -169,6 +170,7 @@ const shapes = [
     SVGNode.SHAPE_CIRCLE,
     SVGNode.SHAPE_DOUBLE_CIRCLE,
     SVGNode.SHAPE_RECT,
+    SVGNode.SHAPE_POLYGON,
 ];
 for (const [i, shape] of shapes.entries()) {
     console.log(shape);
@@ -196,6 +198,7 @@ int main() {
         SVGNode::SHAPE_CIRCLE,
         SVGNode::SHAPE_DOUBLE_CIRCLE,
         SVGNode::SHAPE_RECT,
+        SVGNode::SHAPE_POLYGON,
     };
     for (int i = 0; i < static_cast<int>(shapes.size()); ++i) {
         const auto shape = std::string(shapes[i]);

@@ -128,4 +128,45 @@ TEST(TestSVGNodeRect, TextAlignMix) {
     diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
 }
 
+TEST(TestSVGNodeRect, Peripheries) {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setShape(SVGNode::SHAPE_RECT);
+    node1->setLabel("P=1");
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(100, 0);
+    node2->setShape(SVGNode::SHAPE_RECT);
+    node2->setLabel("P=2");
+    node2->setPeripheries(2);
+    const auto node3 = diagram.addNode("C");
+    node3->setCenter(200, 0);
+    node3->setShape(SVGNode::SHAPE_RECT);
+    node3->setLabel("P=3");
+    node3->setPeripheries(3);
+    const auto svg = diagram.render();
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
+TEST(TestSVGNodeRect, PeripheriesConnection) {
+    SVGDiagram diagram;
+    const auto node1 = diagram.addNode("A");
+    node1->setCenter(0, 0);
+    node1->setShape(SVGNode::SHAPE_RECT);
+    node1->setLabel("A");
+    node1->setPeripheries(2);
+    const auto node2 = diagram.addNode("B");
+    node2->setCenter(100, 0);
+    node2->setShape(SVGNode::SHAPE_RECT);
+    node2->setLabel("B");
+    node2->setPeripheries(2);
+    diagram.addEdge("A", "B");
+    const auto svg = diagram.render();
+    const ::testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
+    compareSVGWithExpectedFile(svg, info->test_suite_name(), info->name());
+    diagram.render(format("{}_{}.svg", info->test_suite_name(), info->name()));
+}
+
 #endif

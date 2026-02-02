@@ -50,6 +50,8 @@ declare module 'sp-svg-diagram' {
         static SHAPE_HEXAGON: string
         static SHAPE_SEPTAGON: string
         static SHAPE_OCTAGON: string
+        static SHAPE_DOUBLE_OCTAGON: string
+        static SHAPE_TRIPLE_OCTAGON: string
         static SHAPE_TRAPEZIUM: string
         static SHAPE_PARALLELOGRAM: string
         static SHAPE_HOUSE: string
@@ -64,6 +66,7 @@ declare module 'sp-svg-diagram' {
         setSkew(skew: number): void
         setDistortion(distortion: number): void
         setOrientation(orientation: number): void
+        setPeripheries(peripheries: number): void
     }
 
     export class SVGEdge extends SVGItem {

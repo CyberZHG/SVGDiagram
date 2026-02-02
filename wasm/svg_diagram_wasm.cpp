@@ -47,6 +47,8 @@ EMSCRIPTEN_BINDINGS(SVGDiagramWASM) {
     constant("NODE_SHAPE_HEXAGON", string(SVGNode::SHAPE_HEXAGON));
     constant("NODE_SHAPE_SEPTAGON", string(SVGNode::SHAPE_SEPTAGON));
     constant("NODE_SHAPE_OCTAGON", string(SVGNode::SHAPE_OCTAGON));
+    constant("NODE_SHAPE_DOUBLE_OCTAGON", string(SVGNode::SHAPE_DOUBLE_OCTAGON));
+    constant("NODE_SHAPE_TRIPLE_OCTAGON", string(SVGNode::SHAPE_TRIPLE_OCTAGON));
     constant("NODE_SHAPE_TRAPEZIUM", string(SVGNode::SHAPE_TRAPEZIUM));
     constant("NODE_SHAPE_PARALLELOGRAM", string(SVGNode::SHAPE_PARALLELOGRAM));
     constant("NODE_SHAPE_HOUSE", string(SVGNode::SHAPE_HOUSE));
@@ -91,6 +93,7 @@ EMSCRIPTEN_BINDINGS(SVGDiagramWASM) {
         .function("setSkew", &SVGNode::setSkew)
         .function("setDistortion", &SVGNode::setDistortion)
         .function("setOrientation", &SVGNode::setOrientation)
+        .function("setPeripheries", &SVGNode::setPeripheries)
     ;
     class_<SVGEdge, base<SVGItem>>("SVGEdge")
         .constructor<>()

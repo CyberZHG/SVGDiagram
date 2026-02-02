@@ -32,6 +32,7 @@ namespace svg_diagram {
     constexpr std::string_view ATTR_KEY_SKEW = "skew";
     constexpr std::string_view ATTR_KEY_DISTORTION = "distortion";
     constexpr std::string_view ATTR_KEY_ORIENTATION = "orientation";
+    constexpr std::string_view ATTR_KEY_PERIPHERIES = "peripheries";
 
     constexpr std::string_view ATTR_KEY_SELF_LOOP_DIR = "__self_loop_dir__";
     constexpr std::string_view ATTR_KEY_SELF_LOOP_ANGLE = "__self_loop_angle__";
@@ -53,6 +54,7 @@ namespace svg_diagram {
     constexpr std::string_view ATTR_DEF_SKEW = "0";
     constexpr std::string_view ATTR_DEF_DISTORTION = "0";
     constexpr std::string_view ATTR_DEF_ORIENTATION = "0";
+    constexpr std::string_view ATTR_DEF_PERIPHERIES = "1";
 
     constexpr std::string_view ATTR_STYLE_SOLID = "solid";
     constexpr std::string_view ATTR_STYLE_DASHED = "dashed";

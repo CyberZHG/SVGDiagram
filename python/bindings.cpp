@@ -52,6 +52,8 @@ PYBIND11_MODULE(_core, m, py::mod_gil_not_used()) {
         .def_property_readonly_static("SHAPE_HEXAGON", [](py::object) { return string(SVGNode::SHAPE_HEXAGON); })
         .def_property_readonly_static("SHAPE_SEPTAGON", [](py::object) { return string(SVGNode::SHAPE_SEPTAGON); })
         .def_property_readonly_static("SHAPE_OCTAGON", [](py::object) { return string(SVGNode::SHAPE_OCTAGON); })
+        .def_property_readonly_static("SHAPE_DOUBLE_OCTAGON", [](py::object) { return string(SVGNode::SHAPE_DOUBLE_OCTAGON); })
+        .def_property_readonly_static("SHAPE_TRIPLE_OCTAGON", [](py::object) { return string(SVGNode::SHAPE_TRIPLE_OCTAGON); })
         .def_property_readonly_static("SHAPE_TRAPEZIUM", [](py::object) { return string(SVGNode::SHAPE_TRAPEZIUM); })
         .def_property_readonly_static("SHAPE_PARALLELOGRAM", [](py::object) { return string(SVGNode::SHAPE_PARALLELOGRAM); })
         .def_property_readonly_static("SHAPE_HOUSE", [](py::object) { return string(SVGNode::SHAPE_HOUSE); })
@@ -66,6 +68,7 @@ PYBIND11_MODULE(_core, m, py::mod_gil_not_used()) {
         .def("set_skew", &SVGNode::setSkew, py::arg("skew"))
         .def("set_distortion", &SVGNode::setDistortion, py::arg("distortion"))
         .def("set_orientation", &SVGNode::setOrientation, py::arg("orientation"))
+        .def("set_peripheries", &SVGNode::setPeripheries, py::arg("peripheries"))
     ;
     py::class_<SVGEdge, shared_ptr<SVGEdge>, SVGItem>(m, "SVGEdge")
         .def(py::init<const string&>(), py::arg("edge_id") = string())

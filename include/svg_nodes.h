@@ -111,6 +111,8 @@ namespace svg_diagram {
         static constexpr std::string_view SHAPE_HEXAGON = "hexagon";
         static constexpr std::string_view SHAPE_SEPTAGON = "septagon";
         static constexpr std::string_view SHAPE_OCTAGON = "octagon";
+        static constexpr std::string_view SHAPE_DOUBLE_OCTAGON = "doubleoctagon";
+        static constexpr std::string_view SHAPE_TRIPLE_OCTAGON = "tripleoctagon";
         static constexpr std::string_view SHAPE_TRAPEZIUM = "trapezium";
         static constexpr std::string_view SHAPE_PARALLELOGRAM = "parallelogram";
         static constexpr std::string_view SHAPE_HOUSE = "house";
@@ -134,6 +136,7 @@ namespace svg_diagram {
         void setSkew(double skew);
         void setDistortion(double distortion);
         void setOrientation(double orientation);
+        void setPeripheries(int peripheries);
 
         void setCenter(double cx, double cy);
         [[nodiscard]] std::pair<double, double> center() const;
@@ -168,9 +171,6 @@ namespace svg_diagram {
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsCircle();
         [[nodiscard]] std::pair<double, double> computeConnectionPointCircle(double angle) const;
 
-        void adjustNodeSizeDoubleCircle();
-        std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsDoubleCircle();
-        [[nodiscard]] std::pair<double, double> computeConnectionPointDoubleCircle(double angle) const;
 
         void adjustNodeSizeRect();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsRect();
@@ -181,14 +181,12 @@ namespace svg_diagram {
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsEllipse();
         [[nodiscard]] std::pair<double, double> computeConnectionPointEllipse(double angle) const;
 
-        void adjustNodeSizeDoubleEllipse();
-        std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsDoubleEllipse();
-        [[nodiscard]] std::pair<double, double> computeConnectionPointDoubleEllipse(double angle) const;
 
         void adjustNodeSizePolygon();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsPolygon();
         [[nodiscard]] std::pair<double, double> computeConnectionPointPolygon(double angle) const;
         [[nodiscard]] std::vector<std::pair<double, double>> computePolygonVertices() const;
+        [[nodiscard]] std::vector<std::pair<double, double>> computePolygonVertices(double scaleOffset) const;
 
         void adjustNodeSizeRecord();
         std::vector<std::unique_ptr<SVGDraw>> produceSVGDrawsRecord();

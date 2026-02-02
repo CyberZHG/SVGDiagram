@@ -154,6 +154,8 @@ shapes = [
     SVGNode.SHAPE_HEXAGON,
     SVGNode.SHAPE_SEPTAGON,
     SVGNode.SHAPE_OCTAGON,
+    SVGNode.SHAPE_DOUBLE_OCTAGON,
+    SVGNode.SHAPE_TRIPLE_OCTAGON,
     SVGNode.SHAPE_TRAPEZIUM,
     SVGNode.SHAPE_PARALLELOGRAM,
     SVGNode.SHAPE_HOUSE,
@@ -165,7 +167,7 @@ shapes = [
 for i, shape in enumerate(shapes):
     node = diagram.add_node(shape)
     node.set_shape(shape)
-    node.set_center((i % 4) * 160.0, (i // 4) * 100.0)
+    node.set_center((i % 4) * 180.0, (i // 4) * 100.0)
     node.set_label(shape)
     if shape == SVGNode.SHAPE_POLYGON:
         node.set_sides(7)
@@ -190,6 +192,8 @@ const shapes = [
     SVGNode.SHAPE_HEXAGON,
     SVGNode.SHAPE_SEPTAGON,
     SVGNode.SHAPE_OCTAGON,
+    SVGNode.SHAPE_DOUBLE_OCTAGON,
+    SVGNode.SHAPE_TRIPLE_OCTAGON,
     SVGNode.SHAPE_TRAPEZIUM,
     SVGNode.SHAPE_PARALLELOGRAM,
     SVGNode.SHAPE_HOUSE,
@@ -201,7 +205,7 @@ const shapes = [
 for (const [i, shape] of shapes.entries()) {
     const node = diagram.addNode(shape);
     node.setShape(shape);
-    node.setCenter((i % 4) * 160.0, Math.floor(i / 4) * 100.0);
+    node.setCenter((i % 4) * 180.0, Math.floor(i / 4) * 100.0);
     node.setLabel(shape);
     if (shape === SVGNode.SHAPE_POLYGON) {
         node.setSides(7);
@@ -232,6 +236,8 @@ int main() {
         SVGNode::SHAPE_HEXAGON,
         SVGNode::SHAPE_SEPTAGON,
         SVGNode::SHAPE_OCTAGON,
+        SVGNode::SHAPE_DOUBLE_OCTAGON,
+        SVGNode::SHAPE_TRIPLE_OCTAGON,
         SVGNode::SHAPE_TRAPEZIUM,
         SVGNode::SHAPE_PARALLELOGRAM,
         SVGNode::SHAPE_HOUSE,
@@ -244,7 +250,7 @@ int main() {
         const auto shape = std::string(shapes[i]);
         const auto node = diagram.addNode(std::string(shapes[i]));
         node->setShape(shapes[i]);
-        node->setCenter((i % 4) * 160.0, (i / 4) * 100.0);
+        node->setCenter((i % 4) * 180.0, (i / 4) * 100.0);
         node->setLabel(shape);
         if (shapes[i] == SVGNode::SHAPE_POLYGON) {
             node->setSides(7);
@@ -916,3 +922,80 @@ int main() {
 `````
 
 ![](_static/node_attr/stroke_style.svg)
+
+## Peripheries
+
+The `peripheries` attribute controls the number of concentric borders drawn around a node. The default value is 1. Shapes like `doublecircle` and `doubleellipse` are equivalent to `circle` and `ellipse` with `peripheries=2`. You can also use shapes like `doubleoctagon` (peripheries=2) and `tripleoctagon` (peripheries=3).
+
+`````{tab-set}
+````{tab-item} Python
+```python
+from sp_svg_diagram import SVGDiagram, SVGNode
+
+diagram = SVGDiagram()
+shapes = [
+    SVGNode.SHAPE_CIRCLE,
+    SVGNode.SHAPE_ELLIPSE,
+    SVGNode.SHAPE_RECT,
+    SVGNode.SHAPE_OCTAGON,
+]
+for i, shape in enumerate(shapes):
+    node = diagram.add_node(shape)
+    node.set_shape(shape)
+    node.set_center(i * 120.0, 0)
+    node.set_label(shape)
+    node.set_peripheries(2)
+svg = diagram.render()
+```
+````
+````{tab-item} JavaScript
+```javascript
+import { SVGDiagram, SVGNode } from 'sp-svg-diagram';
+
+const diagram = new SVGDiagram();
+const shapes = [
+    SVGNode.SHAPE_CIRCLE,
+    SVGNode.SHAPE_ELLIPSE,
+    SVGNode.SHAPE_RECT,
+    SVGNode.SHAPE_OCTAGON,
+];
+for (const [i, shape] of shapes.entries()) {
+    const node = diagram.addNode(shape);
+    node.setShape(shape);
+    node.setCenter(i * 120.0, 0);
+    node.setLabel(shape);
+    node.setPeripheries(2);
+}
+const svg = diagram.render();
+````
+
+````{tab-item} C++
+```c++
+#include "svg_diagram.h"
+#include <string>
+#include <vector>
+using namespace svg_diagram;
+
+int main() {
+    SVGDiagram diagram;
+    const auto shapes = std::vector{
+        SVGNode::SHAPE_CIRCLE,
+        SVGNode::SHAPE_ELLIPSE,
+        SVGNode::SHAPE_RECT,
+        SVGNode::SHAPE_OCTAGON,
+    };
+    for (int i = 0; i < static_cast<int>(shapes.size()); ++i) {
+        const auto shape = std::string(shapes[i]);
+        const auto node = diagram.addNode(shape);
+        node->setShape(shapes[i]);
+        node->setCenter(i * 120.0, 0);
+        node->setLabel(shape);
+        node->setPeripheries(2);
+    }
+    diagram.render("peripheries.svg");
+    return 0;
+}
+````
+`````
+
+![](_static/node_attr/peripheries.svg)

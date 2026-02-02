@@ -50,6 +50,8 @@ def test_shape():
         SVGNode.SHAPE_HEXAGON,
         SVGNode.SHAPE_SEPTAGON,
         SVGNode.SHAPE_OCTAGON,
+        SVGNode.SHAPE_DOUBLE_OCTAGON,
+        SVGNode.SHAPE_TRIPLE_OCTAGON,
         SVGNode.SHAPE_TRAPEZIUM,
         SVGNode.SHAPE_PARALLELOGRAM,
         SVGNode.SHAPE_HOUSE,
@@ -61,7 +63,7 @@ def test_shape():
     for i, shape in enumerate(shapes):
         node = diagram.add_node(shape)
         node.set_shape(shape)
-        node.set_center((i % 4) * 160.0, (i // 4) * 100.0)
+        node.set_center((i % 4) * 180.0, (i // 4) * 100.0)
         node.set_label(shape)
         if shape == SVGNode.SHAPE_POLYGON:
             node.set_sides(7)
@@ -214,3 +216,21 @@ def test_stroke_style():
             node.append_style_dotted()
     svg = diagram.render()
     compare_svg("node_attr", "stroke_style", svg)
+
+
+def test_peripheries():
+    diagram = SVGDiagram()
+    shapes = [
+        SVGNode.SHAPE_CIRCLE,
+        SVGNode.SHAPE_ELLIPSE,
+        SVGNode.SHAPE_RECT,
+        SVGNode.SHAPE_OCTAGON,
+    ]
+    for i, shape in enumerate(shapes):
+        node = diagram.add_node(shape)
+        node.set_shape(shape)
+        node.set_center(i * 120.0, 0)
+        node.set_label(shape)
+        node.set_peripheries(2)
+    svg = diagram.render()
+    compare_svg("node_attr", "peripheries", svg)

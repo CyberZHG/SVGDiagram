@@ -67,6 +67,8 @@ TEST(TestDocsNodeAttributes, Shape) {
         SVGNode::SHAPE_HEXAGON,
         SVGNode::SHAPE_SEPTAGON,
         SVGNode::SHAPE_OCTAGON,
+        SVGNode::SHAPE_DOUBLE_OCTAGON,
+        SVGNode::SHAPE_TRIPLE_OCTAGON,
         SVGNode::SHAPE_TRAPEZIUM,
         SVGNode::SHAPE_PARALLELOGRAM,
         SVGNode::SHAPE_HOUSE,
@@ -79,7 +81,7 @@ TEST(TestDocsNodeAttributes, Shape) {
         const auto shape = std::string(shapes[i]);
         const auto node = diagram.addNode(std::string(shapes[i]));
         node->setShape(shapes[i]);
-        node->setCenter((i % 4) * 160.0, (i / 4) * 100.0);
+        node->setCenter((i % 4) * 180.0, (i / 4) * 100.0);
         node->setLabel(shape);
         if (shapes[i] == SVGNode::SHAPE_POLYGON) {
             node->setSides(7);
@@ -119,6 +121,8 @@ TEST(TestDocsNodeAttributes, ShapeDebug) {
         SVGNode::SHAPE_HEXAGON,
         SVGNode::SHAPE_SEPTAGON,
         SVGNode::SHAPE_OCTAGON,
+        SVGNode::SHAPE_DOUBLE_OCTAGON,
+        SVGNode::SHAPE_TRIPLE_OCTAGON,
         SVGNode::SHAPE_TRAPEZIUM,
         SVGNode::SHAPE_PARALLELOGRAM,
         SVGNode::SHAPE_HOUSE,
@@ -131,7 +135,7 @@ TEST(TestDocsNodeAttributes, ShapeDebug) {
         const auto shape = std::string(shapes[i]);
         const auto node = diagram.addNode(std::string(shapes[i]));
         node->setShape(shapes[i]);
-        node->setCenter((i % 4) * 160.0, (i / 4) * 90.0);
+        node->setCenter((i % 4) * 180.0, (i / 4) * 90.0);
         node->setLabel(shape);
         if (shapes[i] == SVGNode::SHAPE_POLYGON) {
             node->setSides(7);
@@ -309,4 +313,23 @@ TEST(TestDocsNodeAttributes, StrokeStyle) {
         }
     }
     diagram.render(OUTPUT_DIR + "stroke_style.svg");
+}
+
+TEST(TestDocsNodeAttributes, Peripheries) {
+    SVGDiagram diagram;
+    const auto shapes = std::vector{
+        SVGNode::SHAPE_CIRCLE,
+        SVGNode::SHAPE_ELLIPSE,
+        SVGNode::SHAPE_RECT,
+        SVGNode::SHAPE_OCTAGON,
+    };
+    for (int i = 0; i < static_cast<int>(shapes.size()); ++i) {
+        const auto shape = std::string(shapes[i]);
+        const auto node = diagram.addNode(shape);
+        node->setShape(shapes[i]);
+        node->setCenter(i * 120.0, 0);
+        node->setLabel(shape);
+        node->setPeripheries(2);
+    }
+    diagram.render(OUTPUT_DIR + "peripheries.svg");
 }

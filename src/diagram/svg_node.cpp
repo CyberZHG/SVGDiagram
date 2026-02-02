@@ -65,6 +65,10 @@ void SVGNode::setOrientation(const double orientation) {
     setAttribute(ATTR_KEY_ORIENTATION, orientation);
 }
 
+void SVGNode::setPeripheries(const int peripheries) {
+    setAttribute(ATTR_KEY_PERIPHERIES, peripheries);
+}
+
 void SVGNode::setCenter(const double cx, const double cy) {
     _cx = cx;
     _cy = cy;
@@ -82,13 +86,15 @@ void SVGNode::adjustNodeSize() {
     if (shape == SHAPE_CIRCLE) {
         adjustNodeSizeCircle();
     } else if (shape == SHAPE_DOUBLE_CIRCLE) {
-        adjustNodeSizeDoubleCircle();
+        setPeripheries(2);
+        adjustNodeSizeCircle();
     } else if (shape == SHAPE_NONE || shape == SHAPE_RECT) {
         adjustNodeSizeRect();
     } else if (shape == SHAPE_ELLIPSE) {
         adjustNodeSizeEllipse();
     } else if (shape == SHAPE_DOUBLE_ELLIPSE) {
-        adjustNodeSizeDoubleEllipse();
+        setPeripheries(2);
+        adjustNodeSizeEllipse();
     } else if (shape == SHAPE_POLYGON) {
         adjustNodeSizePolygon();
     } else if (shape == SHAPE_TRIANGLE) {
@@ -105,6 +111,14 @@ void SVGNode::adjustNodeSize() {
         adjustNodeSizePolygon();
     } else if (shape == SHAPE_OCTAGON) {
         setSides(8);
+        adjustNodeSizePolygon();
+    } else if (shape == SHAPE_DOUBLE_OCTAGON) {
+        setSides(8);
+        setPeripheries(2);
+        adjustNodeSizePolygon();
+    } else if (shape == SHAPE_TRIPLE_OCTAGON) {
+        setSides(8);
+        setPeripheries(3);
         adjustNodeSizePolygon();
     } else if (shape == SHAPE_TRAPEZIUM) {
         setSides(4);
@@ -150,23 +164,18 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
     setAttributeIfNotExist(ATTR_KEY_FONT_SIZE, string(ATTR_DEF_FONT_SIZE));
     setAttributeIfNotExist(ATTR_KEY_STYLE, string(ATTR_DEF_STYLE));
     const auto shape = getAttribute(ATTR_KEY_SHAPE);
-    if (shape == SHAPE_CIRCLE) {
+    if (shape == SHAPE_CIRCLE || shape == SHAPE_DOUBLE_CIRCLE) {
         return produceSVGDrawsCircle();
-    }
-    if (shape == SHAPE_DOUBLE_CIRCLE) {
-        return produceSVGDrawsDoubleCircle();
     }
     if (shape == SHAPE_RECT) {
         return produceSVGDrawsRect();
     }
-    if (shape == SHAPE_ELLIPSE) {
+    if (shape == SHAPE_ELLIPSE || shape == SHAPE_DOUBLE_ELLIPSE) {
         return produceSVGDrawsEllipse();
-    }
-    if (shape == SHAPE_DOUBLE_ELLIPSE) {
-        return produceSVGDrawsDoubleEllipse();
     }
     if (shape == SHAPE_POLYGON || shape == SHAPE_TRIANGLE || shape == SHAPE_PENTAGON ||
         shape == SHAPE_HEXAGON || shape == SHAPE_SEPTAGON || shape == SHAPE_OCTAGON ||
+        shape == SHAPE_DOUBLE_OCTAGON || shape == SHAPE_TRIPLE_OCTAGON ||
         shape == SHAPE_TRAPEZIUM || shape == SHAPE_PARALLELOGRAM || shape == SHAPE_HOUSE ||
         shape == SHAPE_DIAMOND || shape == SHAPE_INV_TRIANGLE || shape == SHAPE_INV_TRAPEZIUM ||
         shape == SHAPE_INV_HOUSE) {
@@ -181,11 +190,8 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDraws() {
 pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
     setAttributeIfNotExist(ATTR_KEY_SHAPE, string(SHAPE_DEFAULT));
     const auto shape = getAttribute(ATTR_KEY_SHAPE);
-    if (shape == SHAPE_CIRCLE) {
+    if (shape == SHAPE_CIRCLE || shape == SHAPE_DOUBLE_CIRCLE) {
         return computeConnectionPointCircle(angle);
-    }
-    if (shape == SHAPE_DOUBLE_CIRCLE) {
-        return computeConnectionPointDoubleCircle(angle);
     }
     if (shape == SHAPE_RECT || shape == SHAPE_NONE) {
         return computeConnectionPointRect(angle);
@@ -193,11 +199,12 @@ pair<double, double> SVGNode::computeConnectionPoint(const double angle) {
     if (shape == SHAPE_RECORD) {
         return computeConnectionPointRecord(angle);
     }
-    if (shape == SHAPE_DOUBLE_ELLIPSE) {
-        return computeConnectionPointDoubleEllipse(angle);
+    if (shape == SHAPE_ELLIPSE || shape == SHAPE_DOUBLE_ELLIPSE) {
+        return computeConnectionPointEllipse(angle);
     }
     if (shape == SHAPE_POLYGON || shape == SHAPE_TRIANGLE || shape == SHAPE_PENTAGON ||
         shape == SHAPE_HEXAGON || shape == SHAPE_SEPTAGON || shape == SHAPE_OCTAGON ||
+        shape == SHAPE_DOUBLE_OCTAGON || shape == SHAPE_TRIPLE_OCTAGON ||
         shape == SHAPE_TRAPEZIUM || shape == SHAPE_PARALLELOGRAM || shape == SHAPE_HOUSE ||
         shape == SHAPE_DIAMOND || shape == SHAPE_INV_TRIANGLE || shape == SHAPE_INV_TRAPEZIUM ||
         shape == SHAPE_INV_HOUSE) {
@@ -266,41 +273,28 @@ void SVGNode::adjustNodeSizeCircle() {
 }
 
 vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsCircle() {
+    setAttributeIfNotExist(ATTR_KEY_PERIPHERIES, string(ATTR_DEF_PERIPHERIES));
+    const int peripheries = stoi(getAttribute(ATTR_KEY_PERIPHERIES));
     vector<unique_ptr<SVGDraw>> svgDraws;
-    auto circle = make_unique<SVGDrawCircle>(_cx, _cy, max(width(), height()) / 2.0);
+    const double radius = max(width(), height()) / 2.0;
+    auto circle = make_unique<SVGDrawCircle>(_cx, _cy, radius);
     setStrokeStyles(circle.get());
     setFillStyles(circle.get(), svgDraws);
     svgDraws.emplace_back(std::move(circle));
+    for (int p = 1; p < peripheries; ++p) {
+        auto circleOuter = make_unique<SVGDrawCircle>(_cx, _cy, radius + DOUBLE_BORDER_MARGIN * p);
+        setStrokeStyles(circleOuter.get());
+        circleOuter->setFill("none");
+        svgDraws.emplace_back(std::move(circleOuter));
+    }
     appendSVGDrawsLabel(svgDraws);
     return svgDraws;
 }
 
 pair<double, double> SVGNode::computeConnectionPointCircle(const double angle) const {
-    const double radius = (width() + penWidth()) / 2.0;
-    return {_cx + radius * cos(angle), _cy + radius * sin(angle)};
-}
-
-void SVGNode::adjustNodeSizeDoubleCircle() {
-    adjustNodeSizeCircle();
-}
-
-vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsDoubleCircle() {
-    vector<unique_ptr<SVGDraw>> svgDraws;
-    const double radius = max(width(), height()) / 2.0;
-    auto circleInner = make_unique<SVGDrawCircle>(_cx, _cy, radius);
-    setStrokeStyles(circleInner.get());
-    setFillStyles(circleInner.get(), svgDraws);
-    svgDraws.emplace_back(std::move(circleInner));
-    auto circleOuter = make_unique<SVGDrawCircle>(_cx, _cy, radius + DOUBLE_BORDER_MARGIN);
-    setStrokeStyles(circleOuter.get());
-    circleOuter->setFill("none");
-    svgDraws.emplace_back(std::move(circleOuter));
-    appendSVGDrawsLabel(svgDraws);
-    return svgDraws;
-}
-
-std::pair<double, double> SVGNode::computeConnectionPointDoubleCircle(const double angle) const {
-    const double radius = (width() + penWidth()) / 2.0 + DOUBLE_BORDER_MARGIN;
+    const auto& peripheriesStr = getAttribute(ATTR_KEY_PERIPHERIES);
+    const int peripheries = peripheriesStr.empty() ? 1 : stoi(peripheriesStr);
+    const double radius = (width() + penWidth()) / 2.0 + DOUBLE_BORDER_MARGIN * (peripheries - 1);
     return {_cx + radius * cos(angle), _cy + radius * sin(angle)};
 }
 
@@ -309,17 +303,28 @@ void SVGNode::adjustNodeSizeRect() {
 }
 
 vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsRect() {
+    setAttributeIfNotExist(ATTR_KEY_PERIPHERIES, string(ATTR_DEF_PERIPHERIES));
+    const int peripheries = stoi(getAttribute(ATTR_KEY_PERIPHERIES));
     vector<unique_ptr<SVGDraw>> svgDraws;
     auto rect = make_unique<SVGDrawRect>(_cx, _cy, width(), height());
     setStrokeStyles(rect.get());
     setFillStyles(rect.get(), svgDraws);
     svgDraws.emplace_back(std::move(rect));
+    for (int p = 1; p < peripheries; ++p) {
+        auto rectOuter = make_unique<SVGDrawRect>(_cx, _cy, width() + DOUBLE_BORDER_MARGIN * 2 * p, height() + DOUBLE_BORDER_MARGIN * 2 * p);
+        setStrokeStyles(rectOuter.get());
+        rectOuter->setFill("none");
+        svgDraws.emplace_back(std::move(rectOuter));
+    }
     appendSVGDrawsLabel(svgDraws);
     return svgDraws;
 }
 
 pair<double, double> SVGNode::computeConnectionPointRect(const double angle) const {
-    return computeConnectionPointRect(_cx, _cy, width(), height(), angle);
+    const auto& peripheriesStr = getAttribute(ATTR_KEY_PERIPHERIES);
+    const int peripheries = peripheriesStr.empty() ? 1 : stoi(peripheriesStr);
+    const double offset = DOUBLE_BORDER_MARGIN * (peripheries - 1);
+    return computeConnectionPointRect(_cx, _cy, width() + offset * 2, height() + offset * 2, angle);
 }
 
 pair<double, double> SVGNode::computeConnectionPointRect(const double cx, const double cy, const double width, const double height, const double angle) const {
@@ -355,48 +360,29 @@ void SVGNode::adjustNodeSizeEllipse() {
 }
 
 vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsEllipse() {
+    setAttributeIfNotExist(ATTR_KEY_PERIPHERIES, string(ATTR_DEF_PERIPHERIES));
+    const int peripheries = stoi(getAttribute(ATTR_KEY_PERIPHERIES));
     vector<unique_ptr<SVGDraw>> svgDraws;
     auto ellipse = make_unique<SVGDrawEllipse>(_cx, _cy, width(), height());
     setStrokeStyles(ellipse.get());
     setFillStyles(ellipse.get(), svgDraws);
     svgDraws.emplace_back(std::move(ellipse));
+    for (int p = 1; p < peripheries; ++p) {
+        auto ellipseOuter = make_unique<SVGDrawEllipse>(_cx, _cy, width() + DOUBLE_BORDER_MARGIN * 2 * p, height() + DOUBLE_BORDER_MARGIN * 2 * p);
+        setStrokeStyles(ellipseOuter.get());
+        ellipseOuter->setFill("none");
+        svgDraws.emplace_back(std::move(ellipseOuter));
+    }
     appendSVGDrawsLabel(svgDraws);
     return svgDraws;
 }
 
 pair<double, double> SVGNode::computeConnectionPointEllipse(const double angle) const {
+    const auto& peripheriesStr = getAttribute(ATTR_KEY_PERIPHERIES);
+    const int peripheries = peripheriesStr.empty() ? 1 : stoi(peripheriesStr);
     const double strokeWidth = penWidth();
-    const double totalWidth = width() + strokeWidth;
-    const double totalHeight = height() + strokeWidth;
-    const double rx = totalWidth / 2, ry = totalHeight / 2;
-    const double base = sqrt(ry * ry * cos(angle) * cos(angle) + rx * rx * sin(angle) * sin(angle));
-    const double x = rx * ry * cos(angle) / base;
-    const double y = rx * ry * sin(angle) / base;
-    return {_cx + x, _cy + y};
-}
-
-void SVGNode::adjustNodeSizeDoubleEllipse() {
-    adjustNodeSizeEllipse();
-}
-
-vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsDoubleEllipse() {
-    vector<unique_ptr<SVGDraw>> svgDraws;
-    auto ellipseInner = make_unique<SVGDrawEllipse>(_cx, _cy, width(), height());
-    setStrokeStyles(ellipseInner.get());
-    setFillStyles(ellipseInner.get(), svgDraws);
-    svgDraws.emplace_back(std::move(ellipseInner));
-    auto ellipseOuter = make_unique<SVGDrawEllipse>(_cx, _cy, width() + DOUBLE_BORDER_MARGIN * 2, height() + DOUBLE_BORDER_MARGIN * 2);
-    setStrokeStyles(ellipseOuter.get());
-    ellipseOuter->setFill("none");
-    svgDraws.emplace_back(std::move(ellipseOuter));
-    appendSVGDrawsLabel(svgDraws);
-    return svgDraws;
-}
-
-std::pair<double, double> SVGNode::computeConnectionPointDoubleEllipse(const double angle) const {
-    const double strokeWidth = penWidth();
-    const double totalWidth = width() + strokeWidth + DOUBLE_BORDER_MARGIN * 2;
-    const double totalHeight = height() + strokeWidth + DOUBLE_BORDER_MARGIN * 2;
+    const double totalWidth = width() + strokeWidth + DOUBLE_BORDER_MARGIN * 2 * (peripheries - 1);
+    const double totalHeight = height() + strokeWidth + DOUBLE_BORDER_MARGIN * 2 * (peripheries - 1);
     const double rx = totalWidth / 2, ry = totalHeight / 2;
     const double base = sqrt(ry * ry * cos(angle) * cos(angle) + rx * rx * sin(angle) * sin(angle));
     const double x = rx * ry * cos(angle) / base;
@@ -417,6 +403,8 @@ void SVGNode::adjustNodeSizePolygon() {
 }
 
 vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsPolygon() {
+    setAttributeIfNotExist(ATTR_KEY_PERIPHERIES, string(ATTR_DEF_PERIPHERIES));
+    const int peripheries = stoi(getAttribute(ATTR_KEY_PERIPHERIES));
     vector<unique_ptr<SVGDraw>> svgDraws;
     if (enabledDebug()) {
         auto ellipse = make_unique<SVGDrawEllipse>(_cx, _cy, width(), height());
@@ -429,6 +417,13 @@ vector<unique_ptr<SVGDraw>> SVGNode::produceSVGDrawsPolygon() {
     setStrokeStyles(polygon.get());
     setFillStyles(polygon.get(), svgDraws);
     svgDraws.emplace_back(std::move(polygon));
+    for (int p = 1; p < peripheries; ++p) {
+        const auto verticesOuter = computePolygonVertices(DOUBLE_BORDER_MARGIN * p);
+        auto polygonOuter = make_unique<SVGDrawPolygon>(verticesOuter);
+        setStrokeStyles(polygonOuter.get());
+        polygonOuter->setFill("none");
+        svgDraws.emplace_back(std::move(polygonOuter));
+    }
     appendSVGDrawsLabel(svgDraws);
     return svgDraws;
 }
@@ -468,8 +463,45 @@ vector<pair<double, double>> SVGNode::computePolygonVertices() const {
     return vertices;
 }
 
+vector<pair<double, double>> SVGNode::computePolygonVertices(const double scaleOffset) const {
+    auto sides = stoi(getAttribute(ATTR_KEY_SIDES));
+    const auto skew = stod(getAttribute(ATTR_KEY_SKEW));
+    const auto distortion = stod(getAttribute(ATTR_KEY_DISTORTION));
+    const auto orientation = stod(getAttribute(ATTR_KEY_ORIENTATION));
+    if (sides < 3) {
+        sides = 3;
+    }
+    const double rx = width() / 2.0 + scaleOffset;
+    const double ry = height() / 2.0 + scaleOffset;
+    const double sectorAngle = 2.0 * numbers::pi / sides;
+    const double skewDist = hypot(fabs(distortion) + fabs(skew), 1.0);
+    const double gDistortion = -distortion * numbers::sqrt2 / cos(sectorAngle / 2.0) / 2.0;
+    const double gSkew = -skew / 2.0;
+    const double orientationRad = -orientation * numbers::pi / 180.0;
+    const double cosOri = cos(orientationRad);
+    const double sinOri = sin(orientationRad);
+
+    vector<pair<double, double>> vertices;
+    vertices.reserve(sides);
+    const double angleOffset = (sides % 2 == 0) ? sectorAngle / 2.0 : 0.0;
+    for (int i = 0; i < sides; ++i) {
+        const double baseAngle = -numbers::pi / 2.0 + angleOffset + sectorAngle * i;
+        const double unitX = cos(baseAngle);
+        const double unitY = sin(baseAngle);
+        const double x = unitX * (skewDist + unitY * gDistortion) + unitY * gSkew;
+        const double y = unitY;
+
+        const double rotX = x * cosOri - y * sinOri;
+        const double rotY = x * sinOri + y * cosOri;
+        vertices.emplace_back(_cx + rotX * rx, _cy + rotY * ry);
+    }
+    return vertices;
+}
+
 pair<double, double> SVGNode::computeConnectionPointPolygon(const double angle) const {
-    const auto vertices = computePolygonVertices();
+    const auto& peripheriesStr = getAttribute(ATTR_KEY_PERIPHERIES);
+    const int peripheries = peripheriesStr.empty() ? 1 : stoi(peripheriesStr);
+    const auto vertices = computePolygonVertices(DOUBLE_BORDER_MARGIN * (peripheries - 1));
     const int n = static_cast<int>(vertices.size());
     for (int i = 0; i < n; ++i) {
         const auto& [x1, y1] = vertices[i];
